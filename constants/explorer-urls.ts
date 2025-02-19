@@ -1,0 +1,7 @@
+import { CHAIN_IDS } from '@clober/v2-sdk'
+
+export const EXPLORER_URL: {
+  [chain in number]: string
+} = {
+  [CHAIN_IDS.BASE]: `https://basescan.org`,
+}

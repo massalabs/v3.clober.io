@@ -1,0 +1,323 @@
+import React, { useCallback } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useWalletClient } from 'wagmi'
+import {
+  addLiquidity,
+  getContractAddresses,
+  getQuoteToken,
+  removeLiquidity,
+} from '@clober/v2-sdk'
+import { isAddressEqual, parseUnits, zeroAddress, zeroHash } from 'viem'
+import BigNumber from 'bignumber.js'
+
+import { Currency } from '../../model/currency'
+import { Confirmation, useTransactionContext } from '../transaction-context'
+import { useChainContext } from '../chain-context'
+import { useCurrencyContext } from '../currency-context'
+import { maxApprove } from '../../utils/approve20'
+import { toPlacesAmountString } from '../../utils/bignumber'
+import { sendTransaction } from '../../utils/transaction'
+
+type VaultContractContext = {
+  mint: (
+    currency0: Currency,
+    currency1: Currency,
+    amount0: string,
+    amount1: string,
+    disableSwap: boolean,
+    slippage: number,
+  ) => Promise<void>
+  burn: (
+    currency0: Currency,
+    currency1: Currency,
+    lpCurrencyAmount: string,
+    slippageInput: string,
+  ) => Promise<void>
+}
+
+const Context = React.createContext<VaultContractContext>({
+  mint: () => Promise.resolve(),
+  burn: () => Promise.resolve(),
+})
+
+export const VaultContractProvider = ({
+  children,
+}: React.PropsWithChildren<{}>) => {
+  const queryClient = useQueryClient()
+
+  const { data: walletClient } = useWalletClient()
+  const { setConfirmation } = useTransactionContext()
+  const { selectedChain } = useChainContext()
+  const { allowances, prices } = useCurrencyContext()
+
+  const mint = useCallback(
+    async (
+      currency0: Currency,
+      currency1: Currency,
+      amount0: string,
+      amount1: string,
+      disableSwap: boolean,
+      slippage: number,
+    ) => {
+      if (!walletClient || !selectedChain) {
+        return
+      }
+      console.log('mint', {
+        currency0,
+        currency1,
+        amount0,
+        amount1,
+        disableSwap,
+        slippage,
+      })
+
+      try {
+        setConfirmation({
+          title: `Add Liquidity`,
+          body: 'Please confirm in your wallet.',
+          fields: [],
+        })
+
+        const spender = getContractAddresses({
+          chainId: selectedChain.id,
+        }).Minter
+        // Max approve for currency0
+        if (
+          !isAddressEqual(currency0.address, zeroAddress) &&
+          allowances[spender][currency0.address] <
+            parseUnits(amount0, currency0.decimals)
+        ) {
+          setConfirmation({
+            title: 'Approve',
+            body: 'Please confirm in your wallet.',
+            fields: [],
+          })
+          await maxApprove(walletClient, currency0, spender)
+        }
+
+        // Max approve for currency1
+        if (
+          !isAddressEqual(currency1.address, zeroAddress) &&
+          allowances[spender][currency1.address] <
+            parseUnits(amount1, currency1.decimals)
+        ) {
+          setConfirmation({
+            title: 'Approve',
+            body: 'Please confirm in your wallet.',
+            fields: [],
+          })
+          await maxApprove(walletClient, currency1, spender)
+        }
+
+        const baseCurrency = isAddressEqual(
+          getQuoteToken({
+            chainId: selectedChain.id,
+            token0: currency0.address,
+            token1: currency1.address,
+          }),
+          currency0.address,
+        )
+          ? currency1
+          : currency0
+
+        const { transaction, result } = await addLiquidity({
+          chainId: selectedChain.id,
+          userAddress: walletClient.account.address,
+          token0: currency0.address,
+          token1: currency1.address,
+          salt: zeroHash,
+          amount0,
+          amount1,
+          options: {
+            gasLimit: 800_000n,
+            useSubgraph: false,
+            disableSwap,
+            slippage,
+            testnetPrice: prices[baseCurrency.address] ?? 0,
+          },
+        })
+
+        setConfirmation({
+          title: `Add Liquidity`,
+          body: 'Please confirm in your wallet.',
+          fields: [
+            new BigNumber(result.currencyA.amount).isZero()
+              ? undefined
+              : {
+                  direction: result.currencyA.direction,
+                  currency: result.currencyA.currency,
+                  label: result.currencyA.currency.symbol,
+                  value: toPlacesAmountString(
+                    result.currencyA.amount,
+                    prices[result.currencyA.currency.address] ?? 0,
+                  ),
+                },
+            new BigNumber(result.currencyB.amount).isZero()
+              ? undefined
+              : {
+                  direction: result.currencyB.direction,
+                  currency: result.currencyB.currency,
+                  label: result.currencyB.currency.symbol,
+                  value: toPlacesAmountString(
+                    result.currencyB.amount,
+                    prices[result.currencyB.currency.address] ?? 0,
+                  ),
+                },
+            new BigNumber(result.lpCurrency.amount).isZero()
+              ? undefined
+              : {
+                  direction: result.lpCurrency.direction,
+                  currency: result.lpCurrency.currency,
+                  label: result.lpCurrency.currency.symbol,
+                  value: toPlacesAmountString(
+                    result.lpCurrency.amount,
+                    prices[baseCurrency.address] ?? 0,
+                  ),
+                },
+          ].filter((field) => field !== undefined) as Confirmation['fields'],
+        })
+        if (transaction) {
+          await sendTransaction(walletClient, transaction)
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['allowances'] }),
+          queryClient.invalidateQueries({ queryKey: ['vaults'] }),
+          queryClient.invalidateQueries({ queryKey: ['vault-lp-balances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [
+      allowances,
+      prices,
+      queryClient,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
+  const burn = useCallback(
+    async (
+      currency0: Currency,
+      currency1: Currency,
+      lpCurrencyAmount: string,
+      slippageInput: string,
+    ) => {
+      if (!walletClient || !selectedChain) {
+        return
+      }
+      console.log('burn', {
+        currency0,
+        currency1,
+        lpCurrencyAmount,
+        slippageInput,
+      })
+
+      try {
+        setConfirmation({
+          title: `Remove Liquidity`,
+          body: 'Please confirm in your wallet.',
+          fields: [],
+        })
+
+        const baseCurrency = isAddressEqual(
+          getQuoteToken({
+            chainId: selectedChain.id,
+            token0: currency0.address,
+            token1: currency1.address,
+          }),
+          currency0.address,
+        )
+          ? currency1
+          : currency0
+
+        const { result, transaction } = await removeLiquidity({
+          chainId: selectedChain.id,
+          userAddress: walletClient.account.address,
+          token0: currency0.address,
+          token1: currency1.address,
+          salt: zeroHash,
+          amount: lpCurrencyAmount,
+          options: {
+            gasLimit: 800_000n,
+            useSubgraph: false,
+            slippage: Number(slippageInput),
+          },
+        })
+
+        setConfirmation({
+          title: `Remove Liquidity`,
+          body: 'Please confirm in your wallet.',
+          fields: [
+            new BigNumber(result.currencyA.amount).isZero()
+              ? undefined
+              : {
+                  direction: result.currencyA.direction,
+                  currency: result.currencyA.currency,
+                  label: result.currencyA.currency.symbol,
+                  value: toPlacesAmountString(
+                    result.currencyA.amount,
+                    prices[result.currencyA.currency.address] ?? 0,
+                  ),
+                },
+            new BigNumber(result.currencyB.amount).isZero()
+              ? undefined
+              : {
+                  direction: result.currencyB.direction,
+                  currency: result.currencyB.currency,
+                  label: result.currencyB.currency.symbol,
+                  value: toPlacesAmountString(
+                    result.currencyB.amount,
+                    prices[result.currencyB.currency.address] ?? 0,
+                  ),
+                },
+            new BigNumber(result.lpCurrency.amount).isZero()
+              ? undefined
+              : {
+                  direction: result.lpCurrency.direction,
+                  currency: result.lpCurrency.currency,
+                  label: result.lpCurrency.currency.symbol,
+                  value: toPlacesAmountString(
+                    result.lpCurrency.amount,
+                    prices[baseCurrency.address] ?? 0,
+                  ),
+                },
+          ].filter((field) => field !== undefined) as Confirmation['fields'],
+        })
+
+        if (transaction) {
+          await sendTransaction(walletClient, transaction)
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['vaults'] }),
+          queryClient.invalidateQueries({ queryKey: ['vault-lp-balances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [prices, queryClient, selectedChain, setConfirmation, walletClient],
+  )
+
+  return (
+    <Context.Provider
+      value={{
+        mint,
+        burn,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  )
+}
+
+export const useVaultContractContext = () =>
+  React.useContext(Context) as VaultContractContext
