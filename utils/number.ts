@@ -15,8 +15,12 @@ export const toCommaSeparated = (number: string) => {
 }
 
 export const toShortNumber = (number: number): string => {
+  const integer = new BigNumber(number).integerValue()
+  if (integer.gt(0)) {
+    return number.toFixed(2)
+  }
   const index = findFirstNonZeroIndex(number) - 1
-  if (index === 0) {
+  if (index === -1) {
     return number.toFixed(2)
   }
   if (index <= 3) {
