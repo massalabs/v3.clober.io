@@ -98,7 +98,7 @@ export const AddLiquidityForm = ({
                     formatUnits(
                       receiveLpCurrencyAmount,
                       vault.lpCurrency.decimals,
-                      prices[vault.lpCurrency.address] ?? 0,
+                      vault.lpUsdValue,
                     ),
                   )}
                   {' LP'}
@@ -108,7 +108,7 @@ export const AddLiquidityForm = ({
                   {formatDollarValue(
                     receiveLpCurrencyAmount,
                     vault.lpCurrency.decimals,
-                    prices[vault.lpCurrency.address] ?? 0,
+                    vault.lpUsdValue,
                   )}
                   )
                 </div>

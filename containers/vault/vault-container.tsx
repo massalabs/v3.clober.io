@@ -25,10 +25,10 @@ export const VaultContainer = () => {
         <div className="w-[960px] mt-8 sm:mt-16 flex flex-col sm:gap-12 items-center">
           <div className="flex w-full h-12 sm:h-[72px] flex-col justify-start items-center gap-2 sm:gap-3">
             <div className="self-stretch text-center text-white text-lg sm:text-4xl font-bold">
-              Liquidity Vault
+              Clober Liquidity Vault (CLV)
             </div>
             <div className="self-stretch text-center text-gray-400 text-xs sm:text-sm font-bold">
-              Provide liquidity and earn real yield!
+              Provide liquidity and earn fees!
             </div>
           </div>
           <div className="flex w-full h-20 mt-6 sm:mt-0 sm:h-28 px-4 justify-start items-center gap-3 sm:gap-4">
