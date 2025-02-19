@@ -16,7 +16,7 @@ export const toCommaSeparated = (number: string) => {
 
 export const toShortNumber = (number: number): string => {
   const index = findFirstNonZeroIndex(number) - 1
-  if (index === -1) {
+  if (index === 0) {
     return number.toFixed(2)
   }
   if (index <= 3) {

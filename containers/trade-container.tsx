@@ -377,7 +377,7 @@ export const TradeContainer = () => {
                       ? getAddress(tokenInfo.pairAddress)
                       : undefined
                   }
-                  chainName={selectedChain.name}
+                  chainName={selectedChain.name.toLowerCase()}
                 />
               ) : (
                 <></>
