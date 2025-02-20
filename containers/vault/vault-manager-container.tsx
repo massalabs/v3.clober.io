@@ -6,6 +6,7 @@ import { isAddressEqual, parseUnits, zeroAddress, zeroHash } from 'viem'
 import { addLiquidity, getQuoteToken, removeLiquidity } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
+import Image from 'next/image'
 
 import { Vault } from '../../model/vault'
 import { useChainContext } from '../../contexts/chain-context'
@@ -17,7 +18,6 @@ import { toPlacesAmountString } from '../../utils/bignumber'
 import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form'
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
-import { SettingSvg } from '../../components/svg/setting-svg'
 
 import { VaultChartContainer } from './vault-chart-container'
 
@@ -43,7 +43,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
     vaultLpBalances,
   } = useVaultContext()
   const { mint, burn } = useVaultContractContext()
-  const [advancedMode, setAdvancedMode] = React.useState(false)
+  const [showPnL, setShowPnL] = React.useState(false)
   const previousValues = useRef({
     currency0Amount,
     currency1Amount,
@@ -317,8 +317,34 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
               <div className="flex flex-col gap-0.5">
                 <div className="text-white text-sm md:text-base font-bold flex flex-row gap-1 items-center justify-center">
                   Historical Performance
-                  <button onClick={() => setAdvancedMode(!advancedMode)}>
-                    <SettingSvg className="sm:w-4 sm:h-4 w-3 h-3 fill-white" />
+                  <button onClick={() => setShowPnL(!showPnL)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="13"
+                      height="12"
+                      viewBox="0 0 13 12"
+                      fill="none"
+                    >
+                      <g clipPath="url(#clip0_164_5640)">
+                        <path
+                          d="M10.6304 8.5H1.63037M10.6304 8.5L9.13037 10M10.6304 8.5L9.13037 7M3.13037 5L1.63037 3.5M1.63037 3.5L3.13037 2M1.63037 3.5H10.6304"
+                          stroke="#3B82F6"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_164_5640">
+                          <rect
+                            width="12"
+                            height="12"
+                            fill="white"
+                            transform="translate(0.130371)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
                   </button>
                 </div>
                 <div className="flex flex-row gap-2">
@@ -346,7 +372,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
               </div>
               <VaultChartContainer
                 historicalPriceIndex={vault.historicalPriceIndex}
-                advancedMode={advancedMode}
+                showPnL={showPnL}
               />
             </div>
           </div>
