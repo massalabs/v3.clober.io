@@ -316,7 +316,6 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
             <div className="flex-col items-start gap-3 md:gap-4 self-stretch hidden sm:flex">
               <div className="flex flex-col gap-0.5">
                 <div className="text-white text-sm md:text-base font-bold flex flex-row gap-1 items-center justify-center">
-                  Historical Performance
                   <button onClick={() => setShowPnL(!showPnL)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -346,6 +345,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                       </defs>
                     </svg>
                   </button>
+                  {showPnL ? 'Relative Price Index' : 'Historical Performance'}
                 </div>
                 <div className="flex flex-row gap-2">
                   <div className="flex text-gray-500 text-xs md:text-sm">
