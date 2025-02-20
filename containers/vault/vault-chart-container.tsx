@@ -17,7 +17,6 @@ export const VaultChartContainer = ({
   showPnL: boolean
 }) => {
   const lastEntry = historicalPriceIndex[historicalPriceIndex.length - 1]
-  console.log('lastEntry', lastEntry)
   const params = useMemo(
     () => ({
       data: historicalPriceIndex.map((entry) => ({

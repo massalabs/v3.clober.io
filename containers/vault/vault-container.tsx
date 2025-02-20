@@ -81,7 +81,7 @@ export const VaultContainer = () => {
                   />
                 </svg>
                 <div className="text-center text-white text-sm sm:text-base font-bold">
-                  SLV
+                  CLV
                 </div>
               </button>
               <button

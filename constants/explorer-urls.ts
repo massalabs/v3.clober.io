@@ -4,4 +4,5 @@ export const EXPLORER_URL: {
   [chain in number]: string
 } = {
   [CHAIN_IDS.BASE]: `https://basescan.org`,
+  [CHAIN_IDS.MONAD_TESTNET]: `https://testnet.monadexplorer.com/`,
 }

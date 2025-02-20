@@ -20,4 +20,5 @@ export const AGGREGATORS: {
       findSupportChain(CHAIN_IDS.BASE.valueOf())!,
     ),
   ],
+  [CHAIN_IDS.MONAD_TESTNET]: [],
 }

@@ -652,7 +652,7 @@ export const TradeContainer = () => {
                                         outputCurrency.address,
                                         WETH[selectedChain.id].address,
                                       )
-                                    ? 'Wrap ETH'
+                                    ? 'Wrap'
                                     : isAddressEqual(
                                           inputCurrency.address,
                                           WETH[selectedChain.id].address,
@@ -661,7 +661,7 @@ export const TradeContainer = () => {
                                           outputCurrency.address,
                                           zeroAddress,
                                         )
-                                      ? 'Unwrap WETH'
+                                      ? 'Unwrap'
                                       : `Swap`,
                   }}
                 />
@@ -1000,7 +1000,7 @@ export const TradeContainer = () => {
                                       outputCurrency.address,
                                       WETH[selectedChain.id].address,
                                     )
-                                  ? 'Wrap ETH'
+                                  ? 'Wrap'
                                   : isAddressEqual(
                                         inputCurrency.address,
                                         WETH[selectedChain.id].address,
@@ -1009,7 +1009,7 @@ export const TradeContainer = () => {
                                         outputCurrency.address,
                                         zeroAddress,
                                       )
-                                    ? 'Unwrap WETH'
+                                    ? 'Unwrap'
                                     : `Swap`,
                 }}
               />

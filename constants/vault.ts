@@ -13,6 +13,7 @@ export const START_LP_INFO: {
     baseAmount: 0.1,
     lpAmount: 271.254,
   },
+  [CHAIN_IDS.MONAD_TESTNET]: null,
 }
 
 export const VAULT_KEY_INFOS: {
@@ -31,4 +32,5 @@ export const VAULT_KEY_INFOS: {
       key: '0xc8cbe608c82ee9c4c30f01d7c0eefd977538ac396ed34430aa3993bfe0d363ae',
     },
   ],
+  [CHAIN_IDS.MONAD_TESTNET]: [],
 }
