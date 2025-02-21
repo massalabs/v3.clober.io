@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { useSwitchChain } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 import { getChainId } from '@wagmi/core'
 
 import { Chain } from '../model/chain'
@@ -27,23 +27,27 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [selectedChain, _setSelectedChain] = React.useState<Chain>(
     supportChains.find((chain) => chain.id === DEFAULT_CHAIN_ID)!,
   )
+  const { chainId } = useAccount()
 
   const { switchChain } = useSwitchChain({
     config: wagmiConfig,
-    mutation: {
-      onSuccess(data) {
-        const chain = findSupportChain(data.id)
-        if (chain) {
-          setSelectedChain(chain)
-        }
-      },
-    },
   })
 
-  const setSelectedChain = useCallback((_chain: Chain) => {
-    _setSelectedChain(_chain)
-    localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, _chain.id.toString())
-  }, [])
+  const setSelectedChain = useCallback(
+    (_chain: Chain) => {
+      _setSelectedChain(_chain)
+      localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, _chain.id.toString())
+      if (switchChain) {
+        try {
+          switchChain({ chainId: _chain.id })
+          window.history.replaceState({}, '', `?chain=${_chain.id}`)
+        } catch (e) {
+          console.error('switchChain error', e)
+        }
+      }
+    },
+    [switchChain],
+  )
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -55,10 +59,13 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
           parseInt(localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY)!, 10),
         )
       : undefined
-    const walletConnectedChain = getChainId(wagmiConfig)
-      ? findSupportChain(getChainId(wagmiConfig))
-      : undefined
+    const walletConnectedChain = chainId ? findSupportChain(chainId) : undefined
 
+    console.log({
+      walletConnectedChainId: walletConnectedChain?.id,
+      queryParamChainId: queryParamChain?.id,
+      localStorageChainId: localStorageChain?.id,
+    })
     const chain = walletConnectedChain || queryParamChain || localStorageChain
     if (chain) {
       if (switchChain) {
@@ -66,7 +73,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
       }
       setSelectedChain(chain)
     }
-  }, [setSelectedChain, switchChain])
+  }, [chainId, setSelectedChain, switchChain])
 
   return (
     <Context.Provider value={{ selectedChain, setSelectedChain }}>
