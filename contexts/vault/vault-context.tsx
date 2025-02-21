@@ -66,7 +66,12 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }
 
   const { data: vaultLpBalances } = useQuery({
-    queryKey: ['vault-lp-balances', userAddress, selectedChain.id],
+    queryKey: [
+      'vault-lp-balances',
+      userAddress,
+      selectedChain.id,
+      Object.values(prices).reduce((acc, price) => acc + price, 0) !== 0,
+    ],
     queryFn: async () => {
       if (!userAddress) {
         return {}
