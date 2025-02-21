@@ -11,6 +11,9 @@ export async function fetchPrices(aggregators: Aggregator[]): Promise<Prices> {
     Object.entries(prices).forEach(([address, price]) => {
       acc[getAddress(address)] = price
     })
+    Object.entries(prices).forEach(([address, price]) => {
+      acc[address.toLowerCase() as `0x${string}`] = price
+    })
     return acc
   }, {} as Prices)
 }

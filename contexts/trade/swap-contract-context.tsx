@@ -93,7 +93,8 @@ export const SwapContractProvider = ({
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(inputCurrency.address, zeroAddress) &&
-          allowances[spender][inputCurrency.address] < amountIn
+          allowances[getAddress(spender)][getAddress(inputCurrency.address)] <
+            amountIn
         ) {
           setConfirmation({
             title: 'Approve',
@@ -180,7 +181,8 @@ export const SwapContractProvider = ({
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(inputCurrency.address, zeroAddress) &&
-          allowances[spender][inputCurrency.address] < amountIn
+          allowances[getAddress(spender)][getAddress(inputCurrency.address)] <
+            amountIn
         ) {
           setConfirmation({
             title: 'Approve',

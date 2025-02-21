@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { getAddress, isAddressEqual, parseUnits } from 'viem'
+import { isAddressEqual, parseUnits } from 'viem'
 
 import CurrencyAmountInput from '../input/currency-amount-input'
 import { Currency } from '../../model/currency'
@@ -193,7 +193,7 @@ export const SwapForm = ({
                 }
                 price={
                   inputCurrency
-                    ? (prices[getAddress(inputCurrency.address)] ?? 0)
+                    ? (prices[inputCurrency.address] ?? 0)
                     : undefined
                 }
               />
@@ -215,7 +215,7 @@ export const SwapForm = ({
                 }
                 price={
                   outputCurrency
-                    ? (prices[getAddress(outputCurrency.address)] ?? 0)
+                    ? (prices[outputCurrency.address] ?? 0)
                     : undefined
                 }
                 disabled={true}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { getAddress, isAddressEqual } from 'viem'
+import { isAddressEqual } from 'viem'
 import { getMarketPrice, getPriceNeighborhood, Market } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 
@@ -381,7 +381,7 @@ export const LimitForm = ({
                   }
                   price={
                     inputCurrency
-                      ? (prices[getAddress(inputCurrency.address)] ?? 0)
+                      ? (prices[inputCurrency.address] ?? 0)
                       : undefined
                   }
                 />
@@ -403,7 +403,7 @@ export const LimitForm = ({
                   }
                   price={
                     outputCurrency
-                      ? (prices[getAddress(outputCurrency.address)] ?? 0)
+                      ? (prices[outputCurrency.address] ?? 0)
                       : undefined
                   }
                 />

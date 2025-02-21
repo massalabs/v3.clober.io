@@ -7,7 +7,13 @@ import {
   getQuoteToken,
   removeLiquidity,
 } from '@clober/v2-sdk'
-import { isAddressEqual, parseUnits, zeroAddress, zeroHash } from 'viem'
+import {
+  getAddress,
+  isAddressEqual,
+  parseUnits,
+  zeroAddress,
+  zeroHash,
+} from 'viem'
 import BigNumber from 'bignumber.js'
 
 import { Currency } from '../../model/currency'
@@ -84,7 +90,7 @@ export const VaultContractProvider = ({
         // Max approve for currency0
         if (
           !isAddressEqual(currency0.address, zeroAddress) &&
-          allowances[spender][currency0.address] <
+          allowances[getAddress(spender)][getAddress(currency0.address)] <
             parseUnits(amount0, currency0.decimals)
         ) {
           setConfirmation({
@@ -98,7 +104,7 @@ export const VaultContractProvider = ({
         // Max approve for currency1
         if (
           !isAddressEqual(currency1.address, zeroAddress) &&
-          allowances[spender][currency1.address] <
+          allowances[getAddress(spender)][getAddress(currency1.address)] <
             parseUnits(amount1, currency1.decimals)
         ) {
           setConfirmation({

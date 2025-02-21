@@ -441,9 +441,7 @@ export const TradeContainer = () => {
                   inputCurrencyAmount={inputCurrencyAmount}
                   setInputCurrencyAmount={setInputCurrencyAmount}
                   availableInputCurrencyBalance={
-                    inputCurrency
-                      ? (balances[getAddress(inputCurrency.address)] ?? 0n)
-                      : 0n
+                    inputCurrency ? (balances[inputCurrency.address] ?? 0n) : 0n
                   }
                   showOutputCurrencySelect={showOutputCurrencySelect}
                   setShowOutputCurrencySelect={setShowOutputCurrencySelect}
@@ -453,7 +451,7 @@ export const TradeContainer = () => {
                   setOutputCurrencyAmount={setOutputCurrencyAmount}
                   availableOutputCurrencyBalance={
                     outputCurrency
-                      ? (balances[getAddress(outputCurrency.address)] ?? 0n)
+                      ? (balances[outputCurrency.address] ?? 0n)
                       : 0n
                   }
                   swapInputCurrencyAndOutputCurrency={() => {
@@ -508,8 +506,7 @@ export const TradeContainer = () => {
                             ],
                           )) ||
                         amount === 0n ||
-                        amount >
-                          (balances[getAddress(inputCurrency.address)] ?? 0n)),
+                        amount > (balances[inputCurrency.address] ?? 0n)),
                     onClick: async () => {
                       if (!walletClient && openConnectModal) {
                         openConnectModal()
@@ -545,8 +542,7 @@ export const TradeContainer = () => {
                           ? 'Select output currency'
                           : amount === 0n
                             ? 'Enter amount'
-                            : amount >
-                                balances[getAddress(inputCurrency.address)]
+                            : amount > balances[inputCurrency.address]
                               ? 'Insufficient balance'
                               : `Place Order`,
                   }}
@@ -565,9 +561,7 @@ export const TradeContainer = () => {
                   inputCurrencyAmount={inputCurrencyAmount}
                   setInputCurrencyAmount={setInputCurrencyAmount}
                   availableInputCurrencyBalance={
-                    inputCurrency
-                      ? (balances[getAddress(inputCurrency.address)] ?? 0n)
-                      : 0n
+                    inputCurrency ? (balances[inputCurrency.address] ?? 0n) : 0n
                   }
                   showOutputCurrencySelect={showOutputCurrencySelect}
                   setShowOutputCurrencySelect={setShowOutputCurrencySelect}
@@ -586,7 +580,7 @@ export const TradeContainer = () => {
                         BigInt(quotes?.gasLimit ?? 0n) * (gasPrice ?? 0n),
                         selectedChain.nativeCurrency.decimals,
                       ),
-                    ) * (prices[getAddress(zeroAddress)] ?? 0)
+                    ) * (prices[zeroAddress] ?? 0)
                   }
                   refreshQuotesAction={() => setLatestRefreshTime(Date.now())}
                   closeSwapFormAction={() => setShowMobileModal(false)}
@@ -598,7 +592,7 @@ export const TradeContainer = () => {
                       !inputCurrency ||
                       !outputCurrency ||
                       amount === 0n ||
-                      amount > balances[getAddress(inputCurrency.address)],
+                      amount > balances[inputCurrency.address],
                     onClick: async () => {
                       if (!userAddress && openConnectModal) {
                         openConnectModal()
@@ -641,8 +635,7 @@ export const TradeContainer = () => {
                               ? 'Select output currency'
                               : amount === 0n
                                 ? 'Enter amount'
-                                : amount >
-                                    balances[getAddress(inputCurrency.address)]
+                                : amount > balances[inputCurrency.address]
                                   ? 'Insufficient balance'
                                   : isAddressEqual(
                                         inputCurrency.address,
@@ -803,9 +796,7 @@ export const TradeContainer = () => {
                 inputCurrencyAmount={inputCurrencyAmount}
                 setInputCurrencyAmount={setInputCurrencyAmount}
                 availableInputCurrencyBalance={
-                  inputCurrency
-                    ? (balances[getAddress(inputCurrency.address)] ?? 0n)
-                    : 0n
+                  inputCurrency ? (balances[inputCurrency.address] ?? 0n) : 0n
                 }
                 showOutputCurrencySelect={showOutputCurrencySelect}
                 setShowOutputCurrencySelect={setShowOutputCurrencySelect}
@@ -814,9 +805,7 @@ export const TradeContainer = () => {
                 outputCurrencyAmount={outputCurrencyAmount}
                 setOutputCurrencyAmount={setOutputCurrencyAmount}
                 availableOutputCurrencyBalance={
-                  outputCurrency
-                    ? (balances[getAddress(outputCurrency.address)] ?? 0n)
-                    : 0n
+                  outputCurrency ? (balances[outputCurrency.address] ?? 0n) : 0n
                 }
                 swapInputCurrencyAndOutputCurrency={() => {
                   setIsBid((prevState) => !prevState)
@@ -868,8 +857,7 @@ export const TradeContainer = () => {
                           ],
                         )) ||
                       amount === 0n ||
-                      amount >
-                        (balances[getAddress(inputCurrency.address)] ?? 0n)),
+                      amount > (balances[inputCurrency.address] ?? 0n)),
                   onClick: async () => {
                     if (!walletClient && openConnectModal) {
                       openConnectModal()
@@ -894,7 +882,7 @@ export const TradeContainer = () => {
                         ? 'Select output currency'
                         : amount === 0n
                           ? 'Enter amount'
-                          : amount > balances[getAddress(inputCurrency.address)]
+                          : amount > balances[inputCurrency.address]
                             ? 'Insufficient balance'
                             : `Place Order`,
                 }}
@@ -913,9 +901,7 @@ export const TradeContainer = () => {
                 inputCurrencyAmount={inputCurrencyAmount}
                 setInputCurrencyAmount={setInputCurrencyAmount}
                 availableInputCurrencyBalance={
-                  inputCurrency
-                    ? (balances[getAddress(inputCurrency.address)] ?? 0n)
-                    : 0n
+                  inputCurrency ? (balances[inputCurrency.address] ?? 0n) : 0n
                 }
                 showOutputCurrencySelect={showOutputCurrencySelect}
                 setShowOutputCurrencySelect={setShowOutputCurrencySelect}
@@ -934,7 +920,7 @@ export const TradeContainer = () => {
                       BigInt(quotes?.gasLimit ?? 0n) * (gasPrice ?? 0n),
                       selectedChain.nativeCurrency.decimals,
                     ),
-                  ) * (prices[getAddress(zeroAddress)] ?? 0)
+                  ) * (prices[zeroAddress] ?? 0)
                 }
                 refreshQuotesAction={() => setLatestRefreshTime(Date.now())}
                 closeSwapFormAction={() => setShowMobileModal(false)}
@@ -946,7 +932,7 @@ export const TradeContainer = () => {
                     !inputCurrency ||
                     !outputCurrency ||
                     amount === 0n ||
-                    amount > balances[getAddress(inputCurrency.address)],
+                    amount > balances[inputCurrency.address],
                   onClick: async () => {
                     if (!userAddress && openConnectModal) {
                       openConnectModal()
@@ -989,8 +975,7 @@ export const TradeContainer = () => {
                             ? 'Select output currency'
                             : amount === 0n
                               ? 'Enter amount'
-                              : amount >
-                                  balances[getAddress(inputCurrency.address)]
+                              : amount > balances[inputCurrency.address]
                                 ? 'Insufficient balance'
                                 : isAddressEqual(
                                       inputCurrency.address,

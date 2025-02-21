@@ -114,6 +114,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
           return {
             ...acc,
             [getAddress(currency.address)]: result ?? 0n,
+            [currency.address.toLowerCase()]: result ?? 0n,
           }
         },
         {

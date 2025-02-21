@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
-import { isAddressEqual, parseUnits, zeroAddress } from 'viem'
+import { getAddress, isAddressEqual, parseUnits, zeroAddress } from 'viem'
 import {
   cancelOrders,
   claimOrders,
@@ -108,7 +108,7 @@ export const LimitContractProvider = ({
         }).Controller
         if (
           !isAddressEqual(inputCurrency.address, zeroAddress) &&
-          allowances[spender][inputCurrency.address] <
+          allowances[getAddress(spender)][getAddress(inputCurrency.address)] <
             parseUnits(amount, inputCurrency.decimals)
         ) {
           setConfirmation({
