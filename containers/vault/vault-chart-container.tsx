@@ -68,7 +68,7 @@ export const VaultChartContainer = ({
                         ]
                       : [
                           {
-                            label: 'Index',
+                            label: 'PI',
                             color: '#4C82FB',
                             value: `${(
                               (crosshairData as any)?.values[0] ?? 0
