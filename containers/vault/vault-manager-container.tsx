@@ -345,11 +345,13 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                       </defs>
                     </svg>
                   </button>
-                  {showPnL ? 'Relative Price Index' : 'Historical Performance'}
+                  Historical Performance
                 </div>
                 <div className="flex flex-row gap-2">
                   <div className="flex text-gray-500 text-xs md:text-sm">
-                    Performance Index (PI)
+                    {showPnL
+                      ? 'Relative Price Index(RPI)'
+                      : 'Performance Index (PI)'}
                   </div>
                   <div className="flex mr-auto justify-center items-center z-50">
                     <QuestionMarkSvg
