@@ -1,27 +1,17 @@
 import React, { useState } from 'react'
-import { getAddress } from 'viem'
 
 import { Currency } from '../../model/currency'
-
-const cache = new Map<string, string>() // baseCurrency -> poolAddress
 
 export const IframeChartContainer = ({
   setShowOrderBook,
   baseCurrency,
-  poolAddress,
   chainName,
 }: {
   setShowOrderBook: (showOrderBook: boolean) => void
   baseCurrency: Currency
-  poolAddress: `0x${string}` | undefined
   chainName: string
 }) => {
   const [fullscreen, setFullscreen] = useState(false)
-  if (poolAddress) {
-    cache.set(baseCurrency.symbol, poolAddress)
-  } else if (!poolAddress && cache.has(baseCurrency.symbol)) {
-    poolAddress = getAddress(cache.get(baseCurrency.symbol)!)
-  }
 
   return (
     <>
@@ -113,16 +103,13 @@ export const IframeChartContainer = ({
             </button>
           </div>
         </div>
-        {poolAddress ? (
-          <iframe
-            id="dextools-widget"
-            title="DEXTools Trading Chart"
-            className="w-full h-full"
-            src={`https://www.dextools.io/widget-chart/en/${chainName}/pe-light/${poolAddress.toLowerCase()}?theme=dark&chartType=1&chartResolution=30&drawingToolbars=true`}
-          />
-        ) : (
-          <></>
-        )}
+        <iframe
+          width="100%"
+          height="600"
+          src={`https://birdeye.so/tv-widget/${baseCurrency.address}?chain=${chainName}&viewMode=pair&chartInterval=15&chartType=Candle&chartLeftToolbar=show&theme=dark`}
+          frameBorder="0"
+          allowfullscreen
+        />
       </div>
     </>
   )

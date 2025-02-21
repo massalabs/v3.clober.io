@@ -1,11 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  getAddress,
-  isAddress,
-  isAddressEqual,
-  parseUnits,
-  zeroAddress,
-} from 'viem'
+import { isAddressEqual, parseUnits, zeroAddress } from 'viem'
 import { useAccount, useGasPrice, useWalletClient } from 'wagmi'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getMarketId, getQuoteToken } from '@clober/v2-sdk'
@@ -370,13 +364,10 @@ export const TradeContainer = () => {
               {!showOrderBook && baseCurrency ? (
                 <IframeChartContainer
                   setShowOrderBook={setShowOrderBook}
-                  baseCurrency={baseCurrency}
-                  poolAddress={
-                    tokenInfo &&
-                    tokenInfo.pairAddress &&
-                    isAddress(tokenInfo.pairAddress)
-                      ? getAddress(tokenInfo.pairAddress)
-                      : undefined
+                  baseCurrency={
+                    isAddressEqual(zeroAddress, baseCurrency.address)
+                      ? WETH[selectedChain.id]
+                      : baseCurrency
                   }
                   chainName={selectedChain.name.toLowerCase()}
                 />
