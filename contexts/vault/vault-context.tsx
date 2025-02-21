@@ -73,6 +73,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
       }
       const results = await readContracts(wagmiConfig, {
         contracts: VAULT_KEY_INFOS[selectedChain.id].map(({ key }) => ({
+          chainId: selectedChain.id,
           address: getContractAddresses({ chainId: selectedChain.id })
             .Rebalancer,
           abi: [

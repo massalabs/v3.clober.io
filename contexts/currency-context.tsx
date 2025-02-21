@@ -100,13 +100,17 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
       const [results, balance] = await Promise.all([
         readContracts(wagmiConfig, {
           contracts: uniqueCurrencies.map((currency) => ({
+            chainId: selectedChain.id,
             address: currency.address,
             abi: ERC20_PERMIT_ABI,
             functionName: 'balanceOf',
             args: [userAddress],
           })),
         }),
-        getBalance(wagmiConfig, { address: userAddress }),
+        getBalance(wagmiConfig, {
+          address: userAddress,
+          chainId: selectedChain.id,
+        }),
       ])
       return results.reduce(
         (acc: {}, { result }, index: number) => {
@@ -168,6 +172,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         ...spenders
           .map((spender) => {
             return currencies.map((currency) => ({
+              chainId: selectedChain.id,
               address: currency.address,
               abi: ERC20_PERMIT_ABI,
               functionName: 'allowance',
@@ -176,6 +181,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
           }, [])
           .flat(),
         {
+          chainId: selectedChain.id,
           address: getContractAddresses({ chainId: selectedChain.id })
             .BookManager,
           abi: _abi,
