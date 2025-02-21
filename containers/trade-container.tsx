@@ -367,9 +367,10 @@ export const TradeContainer = () => {
                 </button>
               </div>
 
-              {!showOrderBook ? (
+              {!showOrderBook && baseCurrency ? (
                 <IframeChartContainer
                   setShowOrderBook={setShowOrderBook}
+                  baseCurrency={baseCurrency}
                   poolAddress={
                     tokenInfo &&
                     tokenInfo.pairAddress &&

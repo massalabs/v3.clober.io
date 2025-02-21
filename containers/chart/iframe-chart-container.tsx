@@ -1,15 +1,27 @@
 import React, { useState } from 'react'
+import { getAddress } from 'viem'
+
+import { Currency } from '../../model/currency'
+
+const cache = new Map<string, string>() // baseCurrency -> poolAddress
 
 export const IframeChartContainer = ({
   setShowOrderBook,
+  baseCurrency,
   poolAddress,
   chainName,
 }: {
   setShowOrderBook: (showOrderBook: boolean) => void
+  baseCurrency: Currency
   poolAddress: `0x${string}` | undefined
   chainName: string
 }) => {
   const [fullscreen, setFullscreen] = useState(false)
+  if (poolAddress) {
+    cache.set(baseCurrency.symbol, poolAddress)
+  } else if (!poolAddress && cache.has(baseCurrency.symbol)) {
+    poolAddress = getAddress(cache.get(baseCurrency.symbol)!)
+  }
 
   return (
     <>
