@@ -108,7 +108,7 @@ export const IframeChartContainer = ({
           height="600"
           src={`https://birdeye.so/tv-widget/${baseCurrency.address}?chain=${chainName}&viewMode=pair&chartInterval=15&chartType=Candle&chartLeftToolbar=show&theme=dark`}
           frameBorder="0"
-          allowfullscreen
+          // allowfullscreen
         />
       </div>
     </>
