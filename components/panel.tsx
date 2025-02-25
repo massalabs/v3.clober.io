@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { NextRouter } from 'next/router'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
+import { monadTestnet } from '../constants/monad-testnet-chain'
+
 import { TwitterLogoSvg } from './svg/twitter-logo-svg'
 import { DiscordLogoSvg } from './svg/discord-logo-svg'
 import { DocsIconSvg } from './svg/docs-icon-svg'
@@ -81,6 +83,20 @@ const Panel = ({
                           <VaultPageSvg className="w-4 h-4" />
                           Vault
                         </PageButton>
+
+                        {chainId === monadTestnet.id ? (
+                          <PageButton
+                            disabled={router.pathname.includes('/mint')}
+                            onClick={() => {
+                              router.push(`/mint?chain=${chainId}`)
+                            }}
+                          >
+                            <SwapPageSvg className="w-4 h-4" />
+                            Mint
+                          </PageButton>
+                        ) : (
+                          <></>
+                        )}
                       </div>
 
                       <svg

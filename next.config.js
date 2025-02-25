@@ -18,6 +18,7 @@ const nextConfig = {
       'dd.dexscreener.com',
       'avatars.githubusercontent.com',
       'cryptologos.cc',
+      'pyth.network',
     ],
   },
 }
