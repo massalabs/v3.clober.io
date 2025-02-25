@@ -56,13 +56,13 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
           {selectedChain.id === monadTestnet.id ? (
             <PageButton
-              disabled={router.pathname.includes('/mint')}
+              disabled={router.pathname.includes('/future')}
               onClick={() => {
-                router.push(`/mint?chain=${selectedChain.id}`)
+                router.push(`/future?chain=${selectedChain.id}`)
               }}
             >
               <SwapPageSvg className="w-4 h-4" />
-              Mint
+              Future
             </PageButton>
           ) : (
             <></>

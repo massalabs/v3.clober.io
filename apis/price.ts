@@ -1,10 +1,13 @@
 import { getQuoteToken } from '@clober/v2-sdk'
 import { isAddressEqual, parseUnits } from 'viem'
 import BigNumber from 'bignumber.js'
+import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 
 import { AGGREGATORS } from '../constants/aggregators'
 import { formatUnits } from '../utils/bigint'
 import { Currency } from '../model/currency'
+import { Prices } from '../model/prices'
+import { Asset } from '../model/future/asset'
 
 import { fetchQuotes } from './swap/quotes'
 
@@ -38,4 +41,26 @@ export const fetchPrice = async (
     console.error(e)
     return new BigNumber(0)
   }
+}
+
+export const fetchPythPrice = async (assets: Asset[]): Promise<Prices> => {
+  const pythPriceService = new EvmPriceServiceConnection(
+    'https://hermes.pyth.network',
+  )
+  const prices: PriceFeed[] | undefined =
+    await pythPriceService.getLatestPriceFeeds(
+      assets.map((asset) => asset.priceFeedId),
+    )
+  if (prices === undefined) {
+    return {}
+  }
+  return prices.reduce((acc, priceFeed, index) => {
+    const price = priceFeed.getPriceUnchecked()
+    return {
+      ...acc,
+      [assets[index].currency.address]: new BigNumber(
+        price.getPriceAsNumberUnchecked(),
+      ),
+    }
+  }, {})
 }

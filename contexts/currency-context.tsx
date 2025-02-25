@@ -13,9 +13,11 @@ import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { fetchPrices } from '../apis/swap/prices'
 import { AGGREGATORS } from '../constants/aggregators'
 import { Allowances } from '../model/allowances'
-import { testnetChainIds, wagmiConfig } from '../constants/chain'
-import { TESTNET_PRICES } from '../constants/testnet-price'
+import { wagmiConfig } from '../constants/chain'
 import { deduplicateCurrencies } from '../utils/currency'
+import { monadTestnet } from '../constants/monad-testnet-chain'
+import { fetchPythPrice } from '../apis/price'
+import { ASSETS } from '../constants/future/asset'
 
 import { useChainContext } from './chain-context'
 
@@ -135,8 +137,8 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { data: prices } = useQuery({
     queryKey: ['prices', selectedChain.id],
     queryFn: async () => {
-      if (testnetChainIds.includes(selectedChain.id)) {
-        return (TESTNET_PRICES[selectedChain.id] ?? 0) as Prices
+      if (selectedChain.id === monadTestnet.id) {
+        return fetchPythPrice(ASSETS[monadTestnet.id])
       }
       return fetchPrices(AGGREGATORS[selectedChain.id])
     },

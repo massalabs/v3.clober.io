@@ -86,13 +86,13 @@ const Panel = ({
 
                         {chainId === monadTestnet.id ? (
                           <PageButton
-                            disabled={router.pathname.includes('/mint')}
+                            disabled={router.pathname.includes('/future')}
                             onClick={() => {
-                              router.push(`/mint?chain=${chainId}`)
+                              router.push(`/future?chain=${chainId}`)
                             }}
                           >
                             <SwapPageSvg className="w-4 h-4" />
-                            Mint
+                            Future
                           </PageButton>
                         ) : (
                           <></>

@@ -3,17 +3,17 @@ import { Meta, StoryObj } from '@storybook/react'
 import { base } from 'viem/chains'
 import { zeroAddress } from 'viem'
 
-import { AssetCard } from './asset-card'
+import { FutureAssetCard } from './future-asset-card'
 
 export default {
-  title: 'AssetCard',
-  component: AssetCard,
+  title: 'FutureAssetCard',
+  component: FutureAssetCard,
   parameters: {
     layout: 'centered',
   },
-} as Meta<typeof AssetCard>
+} as Meta<typeof FutureAssetCard>
 
-type Story = StoryObj<typeof AssetCard>
+type Story = StoryObj<typeof FutureAssetCard>
 
 export const Default: Story = {
   args: {
@@ -21,7 +21,7 @@ export const Default: Story = {
     asset: {
       id: '0x',
       currency: {
-        address: zeroAddress, // Todo: change to real address
+        address: zeroAddress,
         decimals: 18,
         name: 'AAPL',
         symbol: 'AAPL',
@@ -35,8 +35,8 @@ export const Default: Story = {
         symbol: 'USDC',
         decimals: 6,
       },
-      expiration: 1635724800, // todo: change to real expiration
-      ltv: 700000n,
+      expiration: 1635724800,
+      maxLTV: 700000n,
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
       minDebt: 10n * 10n ** 6n,

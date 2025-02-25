@@ -5,7 +5,7 @@ import { NextRouter } from 'next/router'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { Asset } from '../../model/future/asset'
 
-export const AssetCard = ({
+export const FutureAssetCard = ({
   chainId,
   asset,
   router,
@@ -14,7 +14,7 @@ export const AssetCard = ({
   asset: Asset
   router: NextRouter
 }) => {
-  const ltv = (Number(asset.ltv) * 100) / Number(asset.ltvPrecision)
+  const ltv = (Number(asset.maxLTV) * 100) / Number(asset.ltvPrecision)
   return (
     <>
       <div className="hidden lg:flex w-[960px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
@@ -65,7 +65,7 @@ export const AssetCard = ({
             </div>
           </button>
           <button
-            onClick={() => router.push(`/mint/${asset.id}?chain=${chainId}`)}
+            onClick={() => router.push(`/future/${asset.id}?chain=${chainId}`)}
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
             rel="noreferrer"
           >
@@ -90,7 +90,7 @@ export const AssetCard = ({
             </div>
           </div>
           <button
-            onClick={() => router.push(`/mint/${asset.id}?chain=${chainId}`)}
+            onClick={() => router.push(`/future/${asset.id}?chain=${chainId}`)}
             className="flex ml-auto"
             rel="noreferrer"
           >
