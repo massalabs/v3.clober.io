@@ -11,10 +11,14 @@ export const monadTestnet = /*#__PURE__*/ defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['https://monad-api.blockvision.org/testnet/api'],
+      http: [
+        'https://side-cold-water.monad-testnet.quiknode.pro/cdca51dfe940664aca31fad3acaee682eee43c3b/',
+      ],
     },
     public: {
-      http: ['https://monad-api.blockvision.org/testnet/api'],
+      http: [
+        'https://side-cold-water.monad-testnet.quiknode.pro/cdca51dfe940664aca31fad3acaee682eee43c3b/',
+      ],
     },
   },
   blockExplorers: {
