@@ -62,7 +62,7 @@ export const VaultContainer = () => {
               <button
                 onClick={() => setTab('vault')}
                 disabled={tab === 'vault'}
-                className="flex flex-1 gap-2 items-center justify-center w-full h-full disabled:bg-gray-950 bg-transparent rounded-tl-2xl rounded-tr-2xl"
+                className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -80,14 +80,14 @@ export const VaultContainer = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <div className="text-center text-white text-sm sm:text-base font-bold">
+                <div className="text-center text-sm sm:text-base font-bold">
                   CLV
                 </div>
               </button>
               <button
                 onClick={() => userAddress && setTab('my-liquidity')}
                 disabled={tab === 'my-liquidity'}
-                className="flex flex-1 gap-2 items-center justify-center w-full h-full disabled:bg-gray-950 bg-transparent rounded-tl-2xl rounded-tr-2xl"
+                className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@ export const VaultContainer = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <div className="text-center text-gray-500 text-sm sm:text-base font-bold">
+                <div className="text-center text-sm sm:text-base font-bold">
                   My Vaults
                 </div>
               </button>
