@@ -256,7 +256,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
         {advanced ? (
           <div className="flex flex-col gap-2 w-full">
             <iframe
-              src="http://mm.clober.io:3000/d-solo/dduzjbo4k05j4b/clober-market-making?orgId=1&from=1740439318018&to=1740442918018&panelId=3"
+              src="https://mm.clober.io/d-solo/dduzjbo4k05j4b/clober-market-making?orgId=1&from=1740439318018&to=1740442918018&panelId=3"
               width="1000"
               height="400"
               frameBorder="0"
