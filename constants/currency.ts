@@ -27,10 +27,10 @@ export const ETH: Currency = {
   decimals: 18,
 }
 
-const MOD: Currency = {
+const MON: Currency = {
   address: zeroAddress,
   name: 'Monad Token',
-  symbol: 'MOD',
+  symbol: 'MON',
   decimals: 18,
   icon: '/monad.svg',
 }
@@ -40,7 +40,7 @@ export const WHITELISTED_CURRENCIES: {
 } = {
   [CHAIN_IDS.BASE]: [],
   [CHAIN_IDS.MONAD_TESTNET]: [
-    MOD,
+    MON,
     {
       address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
       name: 'USD Coin',
@@ -68,7 +68,7 @@ export const DEFAULT_INPUT_CURRENCY: {
   [CHAIN_IDS.MONAD_TESTNET]: {
     address: zeroAddress,
     name: 'Monad Token',
-    symbol: 'MOD',
+    symbol: 'MON',
     decimals: 18,
     icon: '/monad.svg',
   },
