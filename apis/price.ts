@@ -47,20 +47,31 @@ export const fetchPythPrice = async (assets: Asset[]): Promise<Prices> => {
   const pythPriceService = new EvmPriceServiceConnection(
     'https://hermes.pyth.network',
   )
+  const keys = [
+    ...assets.map((asset) => {
+      return {
+        priceFeedId: asset.currency.priceFeedId,
+        address: asset.currency.address,
+      }
+    }),
+    ...assets.map((asset) => {
+      return {
+        priceFeedId: asset.collateral.priceFeedId,
+        address: asset.collateral.address,
+      }
+    }),
+  ]
   const prices: PriceFeed[] | undefined =
-    await pythPriceService.getLatestPriceFeeds(
-      assets.map((asset) => asset.priceFeedId),
-    )
+    await pythPriceService.getLatestPriceFeeds(keys.map((id) => id.priceFeedId))
   if (prices === undefined) {
     return {}
   }
   return prices.reduce((acc, priceFeed, index) => {
     const price = priceFeed.getPriceUnchecked()
+    const key = keys[index]
     return {
       ...acc,
-      [assets[index].currency.address]: new BigNumber(
-        price.getPriceAsNumberUnchecked(),
-      ),
+      [key.address]: price.getPriceAsNumberUnchecked(),
     }
-  }, {})
+  }, {} as Prices)
 }

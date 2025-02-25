@@ -65,7 +65,9 @@ export const FutureAssetCard = ({
             </div>
           </button>
           <button
-            onClick={() => router.push(`/future/${asset.id}?chain=${chainId}`)}
+            onClick={() =>
+              router.push(`/future/mint/${asset.id}?chain=${chainId}`)
+            }
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
             rel="noreferrer"
           >
@@ -90,7 +92,9 @@ export const FutureAssetCard = ({
             </div>
           </div>
           <button
-            onClick={() => router.push(`/future/${asset.id}?chain=${chainId}`)}
+            onClick={() =>
+              router.push(`/future/mint/${asset.id}?chain=${chainId}`)
+            }
             className="flex ml-auto"
             rel="noreferrer"
           >

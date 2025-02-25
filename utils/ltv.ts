@@ -1,4 +1,9 @@
+import BigNumber from 'bignumber.js'
+
 import { Asset } from '../model/future/asset'
+import { Currency } from '../model/currency'
+
+import { dollarValue } from './bigint'
 
 export const getLTVTextColor = (ltv: number, asset: Asset): string => {
   const liquidationThreshold =
@@ -15,4 +20,79 @@ export const getLTVTextColor = (ltv: number, asset: Asset): string => {
     return 'text-yellow-500'
   }
   return 'text-green-500'
+}
+
+export const calculateMaxLoanableAmount = (
+  loanCurrency: Currency,
+  loanAssetPrice: bigint,
+  collateral: Currency,
+  collateralPrice: bigint,
+  collateralAmount: bigint,
+  maxLTV: bigint,
+  ltvPrecision: bigint,
+): bigint => {
+  return loanAssetPrice > 0n && collateralPrice > 0n
+    ? (collateralAmount *
+        maxLTV *
+        collateralPrice *
+        10n ** BigInt(18 - collateral.decimals)) /
+        (ltvPrecision *
+          loanAssetPrice *
+          10n ** BigInt(18 - loanCurrency.decimals))
+    : 0n
+}
+
+export const calculateLtv = (
+  debtCurrency: Currency,
+  debtCurrencyPrice: number,
+  debtAmount: bigint,
+  collateral: Currency,
+  collateralPrice: number,
+  collateralAmount: bigint,
+): number => {
+  if (debtCurrencyPrice === 0 || collateralPrice === 0) {
+    return 0
+  }
+  return debtAmount > 0n && collateralAmount <= 0n
+    ? Infinity
+    : collateralAmount === 0n
+      ? 0
+      : Math.max(
+          dollarValue(debtAmount, debtCurrency.decimals, debtCurrencyPrice)
+            .times(100)
+            .div(
+              dollarValue(
+                collateralAmount,
+                collateral.decimals,
+                collateralPrice,
+              ),
+            )
+            .toNumber(),
+          0,
+        )
+}
+
+export const calculateLiquidationPrice = (
+  loanCurrency: Currency,
+  loanAssetPrice: number,
+  collateral: Currency,
+  collateralPrice: number,
+  loanAmount: bigint,
+  collateralAmount: bigint,
+  liquidationThreshold: bigint,
+  ltvPrecision: bigint,
+): number => {
+  if (loanAmount === 0n || collateralAmount === 0n) {
+    return 0
+  }
+  const factor = new BigNumber(
+    Number(liquidationThreshold) / Number(ltvPrecision),
+  )
+    .times(dollarValue(collateralAmount, collateral.decimals, collateralPrice))
+    .div(dollarValue(loanAmount, loanCurrency.decimals, loanAssetPrice))
+  const currentPrice =
+    loanAssetPrice && collateralPrice
+      ? Number(loanAssetPrice) / Number(collateralPrice)
+      : 0
+  return factor.times(currentPrice).toNumber()
 }

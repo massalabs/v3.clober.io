@@ -7,6 +7,7 @@ import { getLTVTextColor } from '../../../utils/ltv'
 import { Balances } from '../../../model/balances'
 import { Prices } from '../../../model/prices'
 import { Asset } from '../../../model/future/asset'
+import { formatDollarValue } from '../../../utils/bigint'
 
 export const MintFutureAssetForm = ({
   asset,
@@ -71,6 +72,18 @@ export const MintFutureAssetForm = ({
             Transaction Overview
           </div>
           <div className="flex flex-col items-start gap-3 self-stretch">
+            <div className="flex w-full">
+              <div className="text-gray-400 text-sm sm:text-base">
+                Mark Price
+              </div>
+              <div className="ml-auto text-sm sm:text-base">
+                {formatDollarValue(
+                  10n ** 18n,
+                  18,
+                  prices[asset.currency.address] ?? 0,
+                )}
+              </div>
+            </div>
             <div className="flex w-full">
               <div className="text-gray-400 text-sm sm:text-base">LTV</div>
               <div

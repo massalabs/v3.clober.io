@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { ASSETS } from '../../constants/future/asset'
-import { useChainContext } from '../../contexts/chain-context'
-import { FutureManagerContainer } from '../../containers/future/future-manager-container'
-import { CurrencyIcon } from '../../components/icon/currency-icon'
-import BackSvg from '../../components/svg/back-svg'
+import { ASSETS } from '../../../constants/future/asset'
+import { useChainContext } from '../../../contexts/chain-context'
+import { FutureManagerContainer } from '../../../containers/future/future-manager-container'
+import { CurrencyIcon } from '../../../components/icon/currency-icon'
+import BackSvg from '../../../components/svg/back-svg'
 
-export default function MintManage() {
+export default function MintFutureAssetManage() {
   const router = useRouter()
   const { selectedChain } = useChainContext()
   const asset = ASSETS[selectedChain.id]?.find(
