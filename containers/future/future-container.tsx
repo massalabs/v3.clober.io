@@ -5,10 +5,54 @@ import { useAccount } from 'wagmi'
 import { FutureAssetCard } from '../../components/card/future-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
 import { ASSETS } from '../../constants/future/asset'
+import { UserPosition } from '../../model/future/user-position'
+import { FutureAssetPositionCard } from '../../components/card/future-asset-position-card'
+import { useCurrencyContext } from '../../contexts/currency-context'
+
+const asset = ASSETS[10143][0]
+const positions: UserPosition[] = [
+  {
+    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
+    asset,
+    collateralAmount: 1000n * 10n ** 6n,
+    debtAmount: 10n ** 18n,
+    averageDebtCurrencyPrice: 230,
+    liquidationPrice: 500,
+    ltv: 40,
+  },
+  {
+    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
+    asset,
+    collateralAmount: 1000n * 10n ** 6n,
+    debtAmount: 10n ** 18n,
+    averageDebtCurrencyPrice: 230,
+    liquidationPrice: 500,
+    ltv: 40,
+  },
+  {
+    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
+    asset,
+    collateralAmount: 1000n * 10n ** 6n,
+    debtAmount: 10n ** 18n,
+    averageDebtCurrencyPrice: 230,
+    liquidationPrice: 500,
+    ltv: 40,
+  },
+  {
+    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
+    asset: ASSETS[10143][0],
+    collateralAmount: 1000n * 10n ** 6n,
+    debtAmount: 10n ** 18n,
+    averageDebtCurrencyPrice: 230,
+    liquidationPrice: 500,
+    ltv: 40,
+  },
+]
 
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
+  const { prices } = useCurrencyContext()
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-position' | 'mint'>('mint')
@@ -50,36 +94,57 @@ export const FutureContainer = () => {
           </div>
         </div>
       </div>
-      <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
-        <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
-          <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-            <div className="w-36 text-gray-400 text-sm font-semibold">
-              Asset
+      {tab === 'mint' ? (
+        <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
+          <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
+            <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
+              <div className="w-36 text-gray-400 text-sm font-semibold">
+                Asset
+              </div>
+              <div className="w-36 text-gray-400 text-sm font-semibold">
+                Collateral
+              </div>
+              <div className="w-[140px] text-gray-400 text-sm font-semibold">
+                Max LTV
+              </div>
+              <div className="w-[140px] text-gray-400 text-sm font-semibold">
+                Expired Date
+              </div>
             </div>
-            <div className="w-36 text-gray-400 text-sm font-semibold">
-              Collateral
-            </div>
-            <div className="w-[140px] text-gray-400 text-sm font-semibold">
-              Max LTV
-            </div>
-            <div className="w-[140px] text-gray-400 text-sm font-semibold">
-              Expired Date
+            <div className="relative flex justify-center w-full h-full lg:h-[360px]">
+              <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
+                {(ASSETS[selectedChain.id] ?? []).map((asset, index) => (
+                  <FutureAssetCard
+                    chainId={selectedChain.id}
+                    key={index}
+                    asset={asset}
+                    router={router}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-          <div className="relative flex justify-center w-full h-full lg:h-[360px]">
-            <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
-              {(ASSETS[selectedChain.id] ?? []).map((asset, index) => (
-                <FutureAssetCard
-                  chainId={selectedChain.id}
+        </div>
+      ) : tab === 'my-position' ? (
+        <div className="flex flex-1 flex-col justify-center items-center pt-6">
+          <div className="flex flex-1 flex-col w-full md:w-[640px] lg:w-[960px]">
+            <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
+              {positions.map((position, index) => (
+                <FutureAssetPositionCard
                   key={index}
-                  asset={asset}
-                  router={router}
+                  position={position}
+                  loanAssetPrice={prices[position.asset.currency.address] ?? 0}
+                  collateralPrice={
+                    prices[position.asset.collateral.address] ?? 0
+                  }
                 />
               ))}
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

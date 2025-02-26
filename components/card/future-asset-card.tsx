@@ -4,6 +4,7 @@ import { NextRouter } from 'next/router'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { Asset } from '../../model/future/asset'
+import { formatDate } from '../../utils/date'
 
 export const FutureAssetCard = ({
   chainId,
@@ -44,11 +45,7 @@ export const FutureAssetCard = ({
           {ltv.toFixed(2)} %
         </div>
         <div className="w-[140px] text-white text-base font-bold">
-          {new Date(asset.expiration * 1000).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: '2-digit',
-          })}
+          {formatDate(new Date(asset.expiration * 1000))}
         </div>
         <div className="flex flex-row gap-2">
           <button
@@ -133,11 +130,7 @@ export const FutureAssetCard = ({
               Expired Date
             </div>
             <div className="self-stretch text-center text-white text-sm font-bold">
-              {new Date(asset.expiration * 1000).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit',
-              })}
+              {formatDate(new Date(asset.expiration * 1000))}
             </div>
           </div>
         </div>
