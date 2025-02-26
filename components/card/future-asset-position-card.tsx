@@ -13,15 +13,15 @@ import { toCommaSeparated } from '../../utils/number'
 export const FutureAssetPositionCard = ({
   position,
   loanAssetPrice,
-  collateralPrice,
+  onAdjustMultiple,
 }: {
   position: UserPosition
   loanAssetPrice: number
-  collateralPrice: number
+  onAdjustMultiple: () => void
 }) => {
   const now = currentTimestampInSeconds()
-  const pnl = 2
-  const profit = 3
+  const pnl = 2 // todo
+  const profit = 3 // todo
 
   return (
     <div className="flex w-full pb-4 flex-col items-center gap-3 shrink-0 bg-gray-800 rounded-xl">
@@ -62,11 +62,11 @@ export const FutureAssetPositionCard = ({
             <div className="flex gap-1">
               <div className="text-sm sm:text-base">
                 {formatUnits(
-                  position.collateralAmount,
-                  position.asset.collateral.decimals,
-                  collateralPrice,
+                  position.debtAmount,
+                  position.asset.currency.decimals,
+                  loanAssetPrice,
                 )}{' '}
-                {position.asset.collateral.symbol}
+                {position.asset.currency.symbol}
               </div>
             </div>
           </div>
@@ -138,9 +138,7 @@ export const FutureAssetPositionCard = ({
         <div className="flex items-start gap-3 self-stretch">
           <button
             className="w-full flex items-center font-bold justify-center rounded-xl bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-800 disabled:text-gray-500 px-3 py-2 text-sm"
-            onClick={() => {
-              console.log('Adjust')
-            }}
+            onClick={onAdjustMultiple}
           >
             Adjust
           </button>

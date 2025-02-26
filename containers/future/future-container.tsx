@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 
@@ -9,6 +9,8 @@ import { UserPosition } from '../../model/future/user-position'
 import { FutureAssetPositionCard } from '../../components/card/future-asset-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
 
+import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
+
 const asset = ASSETS[10143][0]
 const positions: UserPosition[] = [
   {
@@ -18,7 +20,7 @@ const positions: UserPosition[] = [
     debtAmount: 10n ** 18n,
     averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
-    ltv: 40,
+    ltv: 25,
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
@@ -27,7 +29,7 @@ const positions: UserPosition[] = [
     debtAmount: 10n ** 18n,
     averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
-    ltv: 40,
+    ltv: 25,
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
@@ -36,7 +38,7 @@ const positions: UserPosition[] = [
     debtAmount: 10n ** 18n,
     averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
-    ltv: 40,
+    ltv: 25,
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
@@ -45,7 +47,7 @@ const positions: UserPosition[] = [
     debtAmount: 10n ** 18n,
     averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
-    ltv: 40,
+    ltv: 25,
   },
 ]
 
@@ -56,6 +58,9 @@ export const FutureContainer = () => {
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-position' | 'mint'>('mint')
+  const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
+    null,
+  )
 
   return (
     <div className="w-full flex flex-col text-white mt-8">
@@ -131,17 +136,26 @@ export const FutureContainer = () => {
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
               {positions.map((position, index) => (
                 <FutureAssetPositionCard
-                  key={index}
+                  key={`position-${position.asset.id}-${index}`}
                   position={position}
                   loanAssetPrice={prices[position.asset.currency.address] ?? 0}
-                  collateralPrice={
-                    prices[position.asset.collateral.address] ?? 0
-                  }
+                  onAdjustMultiple={() => {
+                    setAdjustPosition(position)
+                  }}
                 />
               ))}
             </div>
           </div>
         </div>
+      ) : (
+        <></>
+      )}
+
+      {adjustPosition ? (
+        <FuturePositionAdjustModalContainer
+          userPosition={positions[0]}
+          onClose={() => setAdjustPosition(null)}
+        />
       ) : (
         <></>
       )}
