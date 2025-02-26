@@ -8,6 +8,7 @@ import { useChainContext } from '../../../contexts/chain-context'
 import { FutureManagerContainer } from '../../../containers/future/future-manager-container'
 import { CurrencyIcon } from '../../../components/icon/currency-icon'
 import BackSvg from '../../../components/svg/back-svg'
+import { TradingViewContainer } from '../../../containers/chart/trading-view-container'
 
 export default function MintFutureAssetManage() {
   const router = useRouter()
@@ -31,14 +32,16 @@ export default function MintFutureAssetManage() {
           >
             <BackSvg className="w-4 h-4 sm:w-8 sm:h-8" />
             <div className="flex gap-2">
+              Short
               <CurrencyIcon
                 currency={asset.currency}
                 className="w-6 h-6 sm:w-8 sm:h-8"
               />
-              <div>{asset.currency.symbol}</div>
+              {asset.currency.symbol}
             </div>
           </Link>
           <div className="flex flex-col lg:flex-row sm:items-center lg:items-start justify-center gap-4 mb-4 px-2 md:px-0">
+            <TradingViewContainer />
             <FutureManagerContainer asset={asset} />
           </div>
         </div>
