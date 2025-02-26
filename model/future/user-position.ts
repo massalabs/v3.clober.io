@@ -5,7 +5,7 @@ export type UserPosition = {
   asset: Asset
   collateralAmount: bigint
   debtAmount: bigint
-  averageDebtCurrencyPrice: number
   liquidationPrice: number
   ltv: number
+  type: 'long' | 'short'
 }

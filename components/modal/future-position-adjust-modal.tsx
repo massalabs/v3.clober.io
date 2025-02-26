@@ -41,7 +41,7 @@ export const FuturePositionAdjustModal = ({
     <Modal show onClose={() => {}} onButtonClick={onClose}>
       <h1 className="flex font-bold text-xl mb-2">Adjust Position</h1>
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col bg-gray-800">
+        <div className="flex flex-col bg-[#171b24]">
           <div className="flex justify-between flex-col relative rounded-lg sm:py-10">
             <div className="sm:px-6 sm:mb-2 my-8 sm:my-0">
               <Slider

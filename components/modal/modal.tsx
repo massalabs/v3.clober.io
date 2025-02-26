@@ -25,7 +25,7 @@ const Modal = ({
       onClick={onClose}
     >
       <div
-        className="relative flex flex-col w-full sm:w-[480px] bg-gray-800 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6"
+        className="relative flex flex-col w-full sm:w-[480px] bg-[#171b24] text-white rounded-xl sm:rounded-2xl p-4 sm:p-6"
         onClick={(e) => {
           onModalClick?.()
           e.stopPropagation()

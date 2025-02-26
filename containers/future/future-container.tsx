@@ -6,7 +6,7 @@ import { FutureAssetCard } from '../../components/card/future-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
 import { ASSETS } from '../../constants/future/asset'
 import { UserPosition } from '../../model/future/user-position'
-import { FutureAssetPositionCard } from '../../components/card/future-asset-position-card'
+import { FutureAssetShortPositionCard } from '../../components/card/future-asset-short-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
@@ -18,36 +18,36 @@ const positions: UserPosition[] = [
     asset,
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
-    averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
     ltv: 25,
+    type: 'long',
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
     asset,
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
-    averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
     ltv: 25,
+    type: 'long',
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
     asset,
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
-    averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
     ltv: 25,
+    type: 'short',
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
     asset: ASSETS[10143][0],
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
-    averageDebtCurrencyPrice: 230,
     liquidationPrice: 500,
     ltv: 25,
+    type: 'short',
   },
 ]
 
@@ -135,7 +135,7 @@ export const FutureContainer = () => {
           <div className="flex flex-1 flex-col w-full md:w-[640px] lg:w-[960px]">
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
               {positions.map((position, index) => (
-                <FutureAssetPositionCard
+                <FutureAssetShortPositionCard
                   key={`position-${position.asset.id}-${index}`}
                   position={position}
                   loanAssetPrice={prices[position.asset.currency.address] ?? 0}

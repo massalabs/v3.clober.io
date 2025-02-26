@@ -10,7 +10,7 @@ import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { UserPosition } from '../../model/future/user-position'
 import { toCommaSeparated } from '../../utils/number'
 
-export const FutureAssetPositionCard = ({
+export const FutureAssetShortPositionCard = ({
   position,
   loanAssetPrice,
   onAdjustMultiple,
@@ -20,8 +20,6 @@ export const FutureAssetPositionCard = ({
   onAdjustMultiple: () => void
 }) => {
   const now = currentTimestampInSeconds()
-  const pnl = 2 // todo
-  const profit = 3 // todo
 
   return (
     <div className="flex w-full pb-4 flex-col items-center gap-3 shrink-0 bg-gray-800 rounded-xl">
@@ -32,6 +30,9 @@ export const FutureAssetPositionCard = ({
             className="w-8 h-8 sm:w-10 sm:h-10"
           />
           <div className="flex flex-col">
+            <div className="w-[89px] text-xs text-red-400 font-semibold">
+              Short
+            </div>
             <div className="text-base font-bold">
               {position.asset.currency.symbol}
             </div>
@@ -72,36 +73,9 @@ export const FutureAssetPositionCard = ({
           </div>
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              PnL
-            </div>
-            {pnl ? (
-              <div className="flex gap-1">
-                <div
-                  className={`text-sm sm:text-base flex gap-1 ${
-                    pnl >= 1 ? 'text-green-500' : 'text-red-500'
-                  }`}
-                >
-                  {pnl >= 1 ? '+' : '-'}$
-                  {toCommaSeparated(Math.abs(profit).toFixed(2))} (
-                  {pnl >= 1 ? '+' : ''}
-                  {((pnl - 1) * 100).toFixed(2)}%)
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className="flex items-center gap-1 self-stretch">
-            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              Average / Mark
+              Mark Price
             </div>
             <div className="text-sm sm:text-base">
-              {formatDollarValue(
-                BigInt(10 ** position.asset.currency.decimals),
-                position.asset.currency.decimals,
-                position.averageDebtCurrencyPrice,
-              )}
-              {' / '}
               {formatDollarValue(
                 BigInt(10 ** position.asset.collateral.decimals),
                 position.asset.collateral.decimals,
