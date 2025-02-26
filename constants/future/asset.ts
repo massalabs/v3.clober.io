@@ -29,7 +29,7 @@ export const ASSETS: {
       maxLTV: 700000n,
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
-      minDebt: 10n * 10n ** 6n,
+      minDebt: 10n ** 18n,
     },
   ],
 }

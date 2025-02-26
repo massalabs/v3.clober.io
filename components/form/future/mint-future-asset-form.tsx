@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { toCommaSeparated } from '../../../utils/number'
-import { ActionButtonProps } from '../../button/action-button'
+import { ActionButton, ActionButtonProps } from '../../button/action-button'
 import CurrencyAmountInput from '../../input/currency-amount-input'
 import { getLTVTextColor } from '../../../utils/ltv'
 import { Balances } from '../../../model/balances'
@@ -35,7 +35,6 @@ export const MintFutureAssetForm = ({
   liquidationPrice: number
   actionButtonProps: ActionButtonProps
 } & React.PropsWithChildren) => {
-  console.log('MintFutureAssetForm', actionButtonProps)
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 bg-[#171b24] rounded-xl sm:rounded-3xl p-4 sm:p-6 sm:pb-8 w-full sm:w-[480px]">
@@ -129,7 +128,7 @@ export const MintFutureAssetForm = ({
             </div>
           </div>
         </div>
-        {/*<ActionButton {...actionButtonProps} />*/}
+        <ActionButton {...actionButtonProps} />
       </div>
     </div>
   )
