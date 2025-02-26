@@ -5,7 +5,7 @@ import { FuturePositionAdjustModal } from '../../components/modal/future-positio
 import { UserPosition } from '../../model/future/user-position'
 import { calculateLtv, calculateMaxLoanableAmount } from '../../utils/ltv'
 import { useCurrencyContext } from '../../contexts/currency-context'
-import { applyPercent } from '../../utils/bigint'
+import { applyPercent, formatUnits } from '../../utils/bigint'
 
 export const FuturePositionAdjustModalContainer = ({
   userPosition,
@@ -30,43 +30,49 @@ export const FuturePositionAdjustModalContainer = ({
     updateAt: Date.now(),
   })
 
-  const [expectedCollateralAmount, expectedDebtAmount] = useMemo(() => {
-    const maxLTV =
-      (Number(userPosition.asset.maxLTV) * 100) /
-      Number(userPosition.asset.ltvPrecision)
-    const maxLoanableAmount = calculateMaxLoanableAmount(
-      userPosition.asset.currency,
-      parseUnits(
-        (prices[userPosition.asset.currency.address] ?? 0).toFixed(18),
-        18,
-      ),
-      userPosition.asset.collateral,
-      parseUnits(
-        (prices[userPosition.asset.collateral.address] ?? 0).toFixed(18),
-        18,
-      ),
-      userPosition.collateralAmount,
-      userPosition.asset.maxLTV,
-      userPosition.asset.ltvPrecision,
-    )
-    if (newLTV !== ltv) {
-      return [
+  const [maxLoanableAmount, expectedCollateralAmount, expectedDebtAmount] =
+    useMemo(() => {
+      const maxLTV =
+        (Number(userPosition.asset.maxLTV) * 100) /
+        Number(userPosition.asset.ltvPrecision)
+      const maxLoanableAmount = calculateMaxLoanableAmount(
+        userPosition.asset.currency,
+        parseUnits(
+          (prices[userPosition.asset.currency.address] ?? 0).toFixed(18),
+          18,
+        ),
+        userPosition.asset.collateral,
+        parseUnits(
+          (prices[userPosition.asset.collateral.address] ?? 0).toFixed(18),
+          18,
+        ),
         userPosition.collateralAmount,
-        applyPercent(maxLoanableAmount, (newLTV * 100) / maxLTV),
+        userPosition.asset.maxLTV,
+        userPosition.asset.ltvPrecision,
+      )
+      if (newLTV !== ltv) {
+        return [
+          maxLoanableAmount,
+          userPosition.collateralAmount,
+          applyPercent(maxLoanableAmount, (newLTV * 100) / maxLTV),
+        ]
+      }
+      return [
+        maxLoanableAmount,
+        userPosition.collateralAmount,
+        userPosition.debtAmount,
       ]
-    }
-    return [userPosition.collateralAmount, userPosition.debtAmount]
-  }, [
-    ltv,
-    newLTV,
-    prices,
-    userPosition.asset.collateral,
-    userPosition.asset.currency,
-    userPosition.asset.ltvPrecision,
-    userPosition.asset.maxLTV,
-    userPosition.collateralAmount,
-    userPosition.debtAmount,
-  ])
+    }, [
+      ltv,
+      newLTV,
+      prices,
+      userPosition.asset.collateral,
+      userPosition.asset.currency,
+      userPosition.asset.ltvPrecision,
+      userPosition.asset.maxLTV,
+      userPosition.collateralAmount,
+      userPosition.debtAmount,
+    ])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -99,8 +105,24 @@ export const FuturePositionAdjustModalContainer = ({
       collateralPrice={prices[userPosition.asset.collateral.address] ?? 0}
       actionButtonProps={{
         onClick: async () => {},
-        text: 'Adjust position',
-        disabled: false,
+        disabled:
+          ltv === newLTV ||
+          (newLTV > ltv && expectedDebtAmount > maxLoanableAmount) ||
+          (userPosition.asset.minDebt > expectedDebtAmount &&
+            expectedDebtAmount > 0n),
+        text:
+          newLTV > ltv && expectedDebtAmount > maxLoanableAmount
+            ? 'Not enough collateral'
+            : userPosition.asset.minDebt > expectedDebtAmount &&
+                expectedDebtAmount > 0n
+              ? `Remaining debt must be ≥ ${formatUnits(
+                  userPosition.asset.minDebt,
+                  userPosition.asset.currency.decimals,
+                  prices[userPosition.asset.currency.address] ?? 0,
+                )} ${userPosition.asset.currency.symbol}`
+              : newLTV === 0
+                ? 'Close Position'
+                : 'Adjust Position',
       }}
     />
   )
