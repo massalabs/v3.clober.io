@@ -58,7 +58,7 @@ export const FutureAssetCard = ({
             rel="noreferrer"
           >
             <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
-              Market
+              Trade
             </div>
           </button>
           <button

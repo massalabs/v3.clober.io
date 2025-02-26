@@ -8,6 +8,7 @@ import { ASSETS } from '../../constants/future/asset'
 import { UserPosition } from '../../model/future/user-position'
 import { FutureAssetShortPositionCard } from '../../components/card/future-asset-short-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
+import { FutureAssetLongPositionCard } from '../../components/card/future-asset-long-position-card'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
@@ -15,7 +16,10 @@ const asset = ASSETS[10143][0]
 const positions: UserPosition[] = [
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset,
+    asset: {
+      ...asset,
+      totalSupply: 1000n * 10n ** 18n,
+    },
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
     liquidationPrice: 500,
@@ -24,7 +28,10 @@ const positions: UserPosition[] = [
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset,
+    asset: {
+      ...asset,
+      totalSupply: 1000n * 10n ** 18n,
+    },
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
     liquidationPrice: 500,
@@ -33,7 +40,10 @@ const positions: UserPosition[] = [
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset,
+    asset: {
+      ...asset,
+      totalSupply: 1000n * 10n ** 18n,
+    },
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
     liquidationPrice: 500,
@@ -42,7 +52,10 @@ const positions: UserPosition[] = [
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset: ASSETS[10143][0],
+    asset: {
+      ...asset,
+      totalSupply: 1000n * 10n ** 18n,
+    },
     collateralAmount: 1000n * 10n ** 6n,
     debtAmount: 10n ** 18n,
     liquidationPrice: 500,
@@ -134,16 +147,31 @@ export const FutureContainer = () => {
         <div className="flex flex-1 flex-col justify-center items-center pt-6">
           <div className="flex flex-1 flex-col w-full md:w-[640px] lg:w-[960px]">
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
-              {positions.map((position, index) => (
-                <FutureAssetShortPositionCard
-                  key={`position-${position.asset.id}-${index}`}
-                  position={position}
-                  loanAssetPrice={prices[position.asset.currency.address] ?? 0}
-                  onAdjustMultiple={() => {
-                    setAdjustPosition(position)
-                  }}
-                />
-              ))}
+              {positions.map((position, index) =>
+                position.type === 'short' ? (
+                  <FutureAssetShortPositionCard
+                    key={`${position.type}-${position.asset.id}-${index}`}
+                    position={position}
+                    loanAssetPrice={
+                      prices[position.asset.currency.address] ?? 0
+                    }
+                    onAdjustMultiple={() => {
+                      setAdjustPosition(position)
+                    }}
+                  />
+                ) : (
+                  <FutureAssetLongPositionCard
+                    chainId={selectedChain.id}
+                    key={`${position.type}-${position.asset.id}-${index}`}
+                    position={position}
+                    loanAssetPrice={
+                      prices[position.asset.currency.address] ?? 0
+                    }
+                    loanAssetTotalSupply={position.asset.totalSupply}
+                    router={router}
+                  />
+                ),
+              )}
             </div>
           </div>
         </div>

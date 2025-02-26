@@ -2,17 +2,17 @@ import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
 
-import { FutureAssetShortPositionCard } from './future-asset-short-position-card'
+import { FutureAssetLongPositionCard } from './future-asset-long-position-card'
 
 export default {
-  title: 'FutureAssetShortPositionCard',
-  component: FutureAssetShortPositionCard,
+  title: 'FutureAssetLongPositionCard',
+  component: FutureAssetLongPositionCard,
   parameters: {
     layout: 'centered',
   },
-} as Meta<typeof FutureAssetShortPositionCard>
+} as Meta<typeof FutureAssetLongPositionCard>
 
-type Story = StoryObj<typeof FutureAssetShortPositionCard>
+type Story = StoryObj<typeof FutureAssetLongPositionCard>
 
 export const Default: Story = {
   args: {
@@ -48,7 +48,7 @@ export const Default: Story = {
       debtAmount: 10n * 10n ** 18n,
       liquidationPrice: 123.12,
       ltv: 10,
-      type: 'short',
+      type: 'long',
     },
     loanAssetPrice: 145.12,
   },

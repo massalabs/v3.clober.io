@@ -1,4 +1,5 @@
 import React from 'react'
+import { NextRouter } from 'next/router'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import {
@@ -8,16 +9,19 @@ import {
 } from '../../utils/date'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { UserPosition } from '../../model/future/user-position'
-import { toCommaSeparated } from '../../utils/number'
 
-export const FutureAssetShortPositionCard = ({
+export const FutureAssetLongPositionCard = ({
+  chainId,
   position,
   loanAssetPrice,
-  onAdjustMultiple,
+  loanAssetTotalSupply,
+  router,
 }: {
+  chainId: number
   position: UserPosition
   loanAssetPrice: number
-  onAdjustMultiple: () => void
+  loanAssetTotalSupply: bigint
+  router: NextRouter
 }) => {
   const now = currentTimestampInSeconds()
 
@@ -30,8 +34,8 @@ export const FutureAssetShortPositionCard = ({
             className="w-8 h-8 sm:w-10 sm:h-10"
           />
           <div className="flex flex-col">
-            <div className="w-[89px] text-xs text-red-400 font-semibold">
-              Short
+            <div className="w-[89px] text-xs text-green-400 font-semibold">
+              Long
             </div>
             <div className="text-base font-bold">
               {position.asset.currency.symbol}
@@ -73,37 +77,40 @@ export const FutureAssetShortPositionCard = ({
           </div>
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              Mark / Liq. Price
+              Mark Price
             </div>
             <div className="text-sm sm:text-base">
               {formatDollarValue(
                 BigInt(10 ** position.asset.collateral.decimals),
                 position.asset.collateral.decimals,
                 loanAssetPrice,
-              )}{' '}
-              / ${toCommaSeparated(position.liquidationPrice.toFixed(2))}
+              )}
             </div>
           </div>
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              Current / Liq. LTV
+              Total Supply
             </div>
             <div className="text-sm sm:text-base">
-              {position.ltv.toFixed(2)}% /{'  '}
-              {(
-                (Number(position.asset.liquidationThreshold) * 100) /
-                Number(position.asset.ltvPrecision)
-              ).toFixed(2)}
-              %
+              {formatUnits(
+                loanAssetTotalSupply,
+                position.asset.currency.decimals,
+                loanAssetPrice,
+              )}{' '}
+              {position.asset.currency.symbol}
             </div>
           </div>
         </div>
         <div className="flex items-start gap-3 self-stretch">
           <button
+            onClick={() =>
+              router.push(
+                `/trade?chain=${chainId}?inputCurrency=${position.asset.currency.address}&outputCurrency=${position.asset.collateral.address}`,
+              )
+            }
             className="w-full flex items-center font-bold justify-center rounded-xl bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-800 disabled:text-gray-500 px-3 py-2 text-sm"
-            onClick={onAdjustMultiple}
           >
-            Adjust
+            Trade
           </button>
         </div>
       </div>
