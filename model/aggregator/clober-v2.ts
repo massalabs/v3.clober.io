@@ -153,6 +153,7 @@ export class CloberV2Aggregator implements Aggregator {
       options: {
         rpcUrl: RPC_URL[this.chain.id],
         useSubgraph: false,
+        slippage: slippageLimitPercent,
       },
     })
     return transaction
