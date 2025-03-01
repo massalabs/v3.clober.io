@@ -37,6 +37,7 @@ import { VaultProvider } from '../contexts/vault/vault-context'
 import { VaultContractProvider } from '../contexts/vault/vault-contract-context'
 import { RPC_URL } from '../constants/rpc-urls'
 import { FutureProvider } from '../contexts/future/future-context'
+import { FutureContractProvider } from '../contexts/future/future-contract-context'
 
 const PROJECT_ID = '14e09398dd595b0d1dccabf414ac4531'
 const config = getDefaultConfig({
@@ -94,7 +95,11 @@ const VaultProvidersWrapper = ({ children }: React.PropsWithChildren) => {
 }
 
 const FutureProvidersWrapper = ({ children }: React.PropsWithChildren) => {
-  return <FutureProvider>{children}</FutureProvider>
+  return (
+    <FutureProvider>
+      <FutureContractProvider>{children}</FutureContractProvider>
+    </FutureProvider>
+  )
 }
 
 const PanelWrapper = ({

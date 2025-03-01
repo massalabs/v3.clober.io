@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
+import { isAddressEqual } from 'viem'
 
 import { ASSETS } from '../../../constants/future/asset'
 import { useChainContext } from '../../../contexts/chain-context'
@@ -14,7 +15,9 @@ export default function MintFutureAssetManage() {
   const router = useRouter()
   const { selectedChain } = useChainContext()
   const asset = ASSETS[selectedChain.id]?.find(
-    (asset) => asset.id.toLowerCase() === router.query.assetKey,
+    (asset) =>
+      router.query.assetKey &&
+      isAddressEqual(asset.id, router.query.assetKey as `0x${string}`),
   )
 
   return router.query.assetKey && asset ? (

@@ -9,6 +9,7 @@ import { UserPosition } from '../../model/future/user-position'
 import { FutureAssetShortPositionCard } from '../../components/card/future-asset-short-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { FutureAssetLongPositionCard } from '../../components/card/future-asset-long-position-card'
+import { currentTimestampInSeconds } from '../../utils/date'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
@@ -74,6 +75,7 @@ export const FutureContainer = () => {
   const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
     null,
   )
+  const now = currentTimestampInSeconds()
 
   return (
     <div className="w-full flex flex-col text-white mt-8">
@@ -131,14 +133,16 @@ export const FutureContainer = () => {
             </div>
             <div className="relative flex justify-center w-full h-full lg:h-[360px]">
               <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
-                {(ASSETS[selectedChain.id] ?? []).map((asset, index) => (
-                  <FutureAssetCard
-                    chainId={selectedChain.id}
-                    key={index}
-                    asset={asset}
-                    router={router}
-                  />
-                ))}
+                {(ASSETS[selectedChain.id] ?? [])
+                  .filter((asset) => asset.expiration > now)
+                  .map((asset, index) => (
+                    <FutureAssetCard
+                      chainId={selectedChain.id}
+                      key={index}
+                      asset={asset}
+                      router={router}
+                    />
+                  ))}
               </div>
             </div>
           </div>

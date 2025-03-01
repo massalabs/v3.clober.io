@@ -10,9 +10,11 @@ import {
   calculateMaxLoanableAmount,
 } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
+import { useFutureContractContext } from '../../contexts/future/future-contract-context'
 
 export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
   const { balances, prices } = useCurrencyContext()
+  const { borrow } = useFutureContractContext()
   const [collateralValue, setCollateralValue] = useState('')
   const [borrowValue, setBorrowValue] = useState('')
 
@@ -92,7 +94,7 @@ export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
           debtAmount > maxBorrowAmount ||
           isDeptSizeLessThanMinDebtSize,
         onClick: async () => {
-          console.log('Borrow')
+          await borrow(asset, collateralAmount, debtAmount)
         },
         text:
           collateralAmount === 0n

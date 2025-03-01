@@ -6,8 +6,8 @@ import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 import { AGGREGATORS } from '../constants/aggregators'
 import { formatUnits } from '../utils/bigint'
 import { Currency } from '../model/currency'
-import { Prices } from '../model/prices'
 import { Asset } from '../model/future/asset'
+import { Prices } from '../model/prices'
 
 import { fetchQuotes } from './swap/quotes'
 

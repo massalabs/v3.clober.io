@@ -1,6 +1,7 @@
 import React from 'react'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
+import { getAddress } from 'viem'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { Asset } from '../../model/future/asset'
@@ -51,7 +52,7 @@ export const FutureAssetCard = ({
           <button
             onClick={() =>
               router.push(
-                `/trade?chain=${chainId}?inputCurrency=${asset.currency.address}&outputCurrency=${asset.collateral.address}`,
+                `/trade?chain=${chainId}&inputCurrency=${asset.currency.address}&outputCurrency=${asset.collateral.address}`,
               )
             }
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
@@ -90,7 +91,9 @@ export const FutureAssetCard = ({
           </div>
           <button
             onClick={() =>
-              router.push(`/future/mint/${asset.id}?chain=${chainId}`)
+              router.push(
+                `/future/mint/${getAddress(asset.id)}?chain=${chainId}`,
+              )
             }
             className="flex ml-auto"
             rel="noreferrer"

@@ -16,8 +16,9 @@ import { Allowances } from '../model/allowances'
 import { wagmiConfig } from '../constants/chain'
 import { deduplicateCurrencies } from '../utils/currency'
 import { monadTestnet } from '../constants/monad-testnet-chain'
-import { fetchPythPrice } from '../apis/price'
 import { ASSETS } from '../constants/future/asset'
+import { CONTRACT_ADDRESSES } from '../constants/future/contracts'
+import { fetchPythPrice } from '../apis/price'
 
 import { useChainContext } from './chain-context'
 
@@ -163,6 +164,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         ...AGGREGATORS[selectedChain.id].map(
           (aggregator) => aggregator.contract,
         ),
+        CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
       ]
       if (!userAddress || currencies.length === 0 || !selectedChain) {
         return {
