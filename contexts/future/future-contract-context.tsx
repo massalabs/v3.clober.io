@@ -9,6 +9,8 @@ import {
   encodeFunctionData,
   encodeAbiParameters,
   parseAbiParameters,
+  BaseError,
+  ContractFunctionRevertedError,
 } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js'
@@ -26,6 +28,7 @@ import { wagmiConfig } from '../../constants/chain'
 import { PYTH_ABI } from '../../abis/future/pyth-abi'
 
 type FutureContractContext = {
+  isMarketClose: (asset: Asset, debtAmount: bigint) => Promise<boolean>
   borrow: (
     asset: Asset,
     collateralAmount: bigint,
@@ -35,6 +38,7 @@ type FutureContractContext = {
 
 const Context = React.createContext<FutureContractContext>({
   borrow: () => Promise.resolve(undefined),
+  isMarketClose: () => Promise.resolve(false),
 })
 
 export const FutureContractProvider = ({
@@ -47,6 +51,76 @@ export const FutureContractProvider = ({
   const { setConfirmation } = useTransactionContext()
   const { selectedChain } = useChainContext()
   const { allowances, prices } = useCurrencyContext()
+
+  const isMarketClose = useCallback(
+    async (asset: Asset, debtAmount: bigint): Promise<boolean> => {
+      try {
+        if (!walletClient) {
+          throw new Error('Wallet not connected')
+        }
+
+        const evmPriceServiceConnection = new EvmPriceServiceConnection(
+          'https://hermes.pyth.network',
+        )
+        const priceFeedUpdateData =
+          await evmPriceServiceConnection.getPriceFeedsUpdateData([
+            asset.currency.priceFeedId,
+            asset.collateral.priceFeedId,
+          ])
+
+        const fee = await publicClient.readContract({
+          address: CONTRACT_ADDRESSES[selectedChain.id].Pyth,
+          abi: PYTH_ABI,
+          functionName: 'getUpdateFee',
+          args: [priceFeedUpdateData as any],
+        })
+
+        await publicClient.simulateContract({
+          chain: walletClient.chain,
+          address: CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
+          functionName: 'multicall',
+          abi: VAULT_MANAGER_ABI,
+          value: fee,
+          args: [
+            [
+              encodeFunctionData({
+                abi: VAULT_MANAGER_ABI,
+                functionName: 'updateOracle',
+                args: [
+                  encodeAbiParameters(parseAbiParameters('bytes[]'), [
+                    priceFeedUpdateData as any,
+                  ]),
+                ],
+              }),
+              encodeFunctionData({
+                abi: VAULT_MANAGER_ABI,
+                functionName: 'mint',
+                args: [
+                  asset.currency.address,
+                  walletClient.account.address,
+                  debtAmount,
+                ],
+              }),
+            ],
+          ],
+        })
+        return true
+      } catch (e) {
+        if (e instanceof BaseError) {
+          const revertError = e.walk(
+            (err) => err instanceof ContractFunctionRevertedError,
+          )
+          if (revertError instanceof ContractFunctionRevertedError) {
+            if (revertError.toString().includes('0x19abf40e')) {
+              return true
+            }
+          }
+        }
+        return false
+      }
+    },
+    [publicClient, selectedChain.id, walletClient],
+  )
 
   const borrow = useCallback(
     async (
@@ -199,6 +273,7 @@ export const FutureContractProvider = ({
   return (
     <Context.Provider
       value={{
+        isMarketClose,
         borrow,
       }}
     >

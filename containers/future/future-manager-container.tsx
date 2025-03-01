@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
+import Link from 'next/link'
 
 import { Asset } from '../../model/future/asset'
 import { MintFutureAssetForm } from '../../components/form/future/mint-future-asset-form'
@@ -11,10 +12,12 @@ import {
 } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
 import { useFutureContractContext } from '../../contexts/future/future-contract-context'
+import Modal from '../../components/modal/modal'
 
 export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
+  const [isClose, setIsClose] = useState(false)
   const { balances, prices } = useCurrencyContext()
-  const { borrow } = useFutureContractContext()
+  const { isMarketClose, borrow } = useFutureContractContext()
   const [collateralValue, setCollateralValue] = useState('')
   const [borrowValue, setBorrowValue] = useState('')
 
@@ -58,7 +61,24 @@ export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
     [asset.minDebt, debtAmount],
   )
 
-  return (
+  return isClose ? (
+    <Modal show onClose={() => {}} onButtonClick={() => setIsClose(false)}>
+      <h1 className="flex font-bold text-xl mb-2">Notice</h1>
+      <div className="text-sm">
+        our price feeds follow the traditional market hours of each asset
+        classes and will be available at the following hours:{' '}
+        <span>
+          <Link
+            className="text-blue-500 underline font-bold"
+            target="_blank"
+            href="https://docs.pyth.network/price-feeds/market-hours"
+          >
+            [Link]
+          </Link>
+        </span>
+      </div>
+    </Modal>
+  ) : (
     <MintFutureAssetForm
       asset={asset}
       maxBorrowAmount={maxBorrowAmount}
@@ -94,6 +114,11 @@ export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
           debtAmount > maxBorrowAmount ||
           isDeptSizeLessThanMinDebtSize,
         onClick: async () => {
+          const closed = await isMarketClose(asset, debtAmount)
+          if (closed) {
+            setIsClose(true)
+            return
+          }
           await borrow(asset, collateralAmount, debtAmount)
         },
         text:
