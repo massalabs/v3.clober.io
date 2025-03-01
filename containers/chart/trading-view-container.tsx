@@ -30,7 +30,7 @@ const TradingViewWidget = ({ symbol }: { symbol: string }) => {
         }`
       ref.current.appendChild(script)
     }
-  }, [])
+  }, [symbol])
 
   return (
     <div className="hidden lg:flex flex-col bg-transparent overflow-hidden 'rounded-2xl min-h-[280px] h-full lg:h-[600px] lg:w-[600px]">
