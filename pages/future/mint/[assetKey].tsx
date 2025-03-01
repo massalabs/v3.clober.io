@@ -4,7 +4,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { isAddressEqual } from 'viem'
 
-import { ASSETS } from '../../../constants/future/asset'
+import { ASSETS, TRADING_VIEW_SYMBOLS } from '../../../constants/future/asset'
 import { useChainContext } from '../../../contexts/chain-context'
 import { FutureManagerContainer } from '../../../containers/future/future-manager-container'
 import { CurrencyIcon } from '../../../components/icon/currency-icon'
@@ -44,7 +44,9 @@ export default function MintFutureAssetManage() {
             </div>
           </Link>
           <div className="flex flex-col lg:flex-row sm:items-center lg:items-start justify-center gap-4 mb-4 px-2 md:px-0">
-            <TradingViewContainer />
+            <TradingViewContainer
+              symbol={TRADING_VIEW_SYMBOLS[asset.currency.priceFeedId]}
+            />
             <FutureManagerContainer asset={asset} />
           </div>
         </div>

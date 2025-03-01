@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-const TradingViewWidget = () => {
+const TradingViewWidget = ({ symbol }: { symbol: string }) => {
   // @ts-ignore
   const ref = useRef<any>()
 
@@ -18,7 +18,7 @@ const TradingViewWidget = () => {
       script.innerHTML = `
         {
           "autosize": true,
-          "symbol": "NASDAQ:AAPL",
+          "symbol": "${symbol}",
           "interval": "15",
           "theme": "dark",
           "style": "1",
@@ -39,10 +39,10 @@ const TradingViewWidget = () => {
   )
 }
 
-export const TradingViewContainer = () => {
+export const TradingViewContainer = ({ symbol }: { symbol: string }) => {
   return (
     <div className="flex flex-col items-center gap-4 md:gap-[19px] self-stretch">
-      <TradingViewWidget />
+      <TradingViewWidget symbol={symbol} />
     </div>
   )
 }
