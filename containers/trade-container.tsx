@@ -244,6 +244,7 @@ export const TradeContainer = () => {
         Number(debouncedValue) === Number(inputCurrencyAmount)
       ) {
         console.log({
+          chainId: selectedChain.id,
           inputCurrency: inputCurrency.symbol,
           outputCurrency: outputCurrency.symbol,
           amountIn,

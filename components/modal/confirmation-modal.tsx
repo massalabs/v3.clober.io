@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 
 import { Confirmation } from '../../contexts/transaction-context'
 import { CurrencyIcon } from '../icon/currency-icon'
+import ChainIcon from '../icon/chain-icon'
 
 const ConfirmationModal = ({
   confirmation,
@@ -30,6 +31,17 @@ const ConfirmationModal = ({
           <div className="text-xs sm:text-sm text-gray-500">
             {confirmation.body}
           </div>
+        </div>
+        <div className="flex text-xs sm:text-sm text-gray-50 items-center justify-between">
+          Chain
+          {confirmation.chain ? (
+            <div className="flex flex-row gap-1 items-center">
+              <ChainIcon chain={confirmation.chain} />
+              {confirmation.chain.name}
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           {confirmation.fields.map((field, index) => (
