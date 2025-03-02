@@ -9,18 +9,17 @@ import {
 } from '../../utils/date'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { UserPosition } from '../../model/future/user-position'
+import { toCommaSeparated } from '../../utils/number'
 
 export const FutureAssetLongPositionCard = ({
   chainId,
   position,
   loanAssetPrice,
-  loanAssetTotalSupply,
   router,
 }: {
   chainId: number
   position: UserPosition
   loanAssetPrice: number
-  loanAssetTotalSupply: bigint
   router: NextRouter
 }) => {
   const now = currentTimestampInSeconds()
@@ -67,7 +66,7 @@ export const FutureAssetLongPositionCard = ({
             <div className="flex gap-1">
               <div className="text-sm sm:text-base">
                 {formatUnits(
-                  position.debtAmount,
+                  position?.debtAmount ?? 0n,
                   position.asset.currency.decimals,
                   loanAssetPrice,
                 )}{' '}
@@ -89,16 +88,24 @@ export const FutureAssetLongPositionCard = ({
           </div>
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              Total Supply
+              PnL
             </div>
-            <div className="text-sm sm:text-base">
-              {formatUnits(
-                loanAssetTotalSupply,
-                position.asset.currency.decimals,
-                loanAssetPrice,
-              )}{' '}
-              {position.asset.currency.symbol}
-            </div>
+            {position.pnl ? (
+              <div className="flex gap-1">
+                <div
+                  className={`text-sm sm:text-base flex gap-1 ${
+                    position.pnl >= 1 ? 'text-green-500' : 'text-red-500'
+                  }`}
+                >
+                  {position.pnl >= 1 ? '+' : '-'}$
+                  {toCommaSeparated(Math.abs(position.profit).toFixed(2))} (
+                  {position.pnl >= 1 ? '+' : ''}
+                  {((position.pnl - 1) * 100).toFixed(2)}%)
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="flex items-start gap-3 self-stretch">

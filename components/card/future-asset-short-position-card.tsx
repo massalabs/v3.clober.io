@@ -63,7 +63,7 @@ export const FutureAssetShortPositionCard = ({
             <div className="flex gap-1">
               <div className="text-sm sm:text-base">
                 {formatUnits(
-                  position.debtAmount,
+                  position.debtAmount ?? 0n,
                   position.asset.currency.decimals,
                   loanAssetPrice,
                 )}{' '}
@@ -81,15 +81,39 @@ export const FutureAssetShortPositionCard = ({
                 position.asset.collateral.decimals,
                 loanAssetPrice,
               )}{' '}
-              / ${toCommaSeparated(position.liquidationPrice.toFixed(2))}
+              / $
+              {toCommaSeparated((position?.liquidationPrice ?? 0).toFixed(2))}
             </div>
           </div>
+
+          <div className="flex items-center gap-1 self-stretch">
+            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
+              PnL
+            </div>
+            {position.pnl ? (
+              <div className="flex gap-1">
+                <div
+                  className={`text-sm sm:text-base flex gap-1 ${
+                    position.pnl >= 1 ? 'text-green-500' : 'text-red-500'
+                  }`}
+                >
+                  {position.pnl >= 1 ? '+' : '-'}$
+                  {toCommaSeparated(Math.abs(position.profit).toFixed(2))} (
+                  {position.pnl >= 1 ? '+' : ''}
+                  {((position.pnl - 1) * 100).toFixed(2)}%)
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
               Current / Liq. LTV
             </div>
             <div className="text-sm sm:text-base">
-              {position.ltv.toFixed(2)}% /{'  '}
+              {(position?.ltv ?? 0).toFixed(2)}% /{'  '}
               {(
                 (Number(position.asset.liquidationThreshold) * 100) /
                 Number(position.asset.ltvPrecision)

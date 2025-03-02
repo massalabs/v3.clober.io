@@ -13,54 +13,30 @@ import { currentTimestampInSeconds } from '../../utils/date'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
-const asset = ASSETS[10143][0]
+const asset = ASSETS[10143][1]
 const positions: UserPosition[] = [
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset: {
-      ...asset,
-      totalSupply: 1000n * 10n ** 18n,
-    },
-    collateralAmount: 1000n * 10n ** 6n,
-    debtAmount: 10n ** 18n,
-    liquidationPrice: 500,
+    asset,
+    collateralAmount: 2000n * 10n ** 6n,
+    debtAmount: 6860000000000000n,
+    liquidationPrice: 90000,
     ltv: 25,
+    pnl: 1.01,
+    profit: 100,
+    averagePrice: 89000,
     type: 'long',
   },
   {
     user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset: {
-      ...asset,
-      totalSupply: 1000n * 10n ** 18n,
-    },
-    collateralAmount: 1000n * 10n ** 6n,
-    debtAmount: 10n ** 18n,
-    liquidationPrice: 500,
+    asset,
+    collateralAmount: 2000n * 10n ** 6n,
+    debtAmount: 6860000000000000n,
+    liquidationPrice: 90000,
     ltv: 25,
-    type: 'long',
-  },
-  {
-    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset: {
-      ...asset,
-      totalSupply: 1000n * 10n ** 18n,
-    },
-    collateralAmount: 1000n * 10n ** 6n,
-    debtAmount: 10n ** 18n,
-    liquidationPrice: 500,
-    ltv: 25,
-    type: 'short',
-  },
-  {
-    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset: {
-      ...asset,
-      totalSupply: 1000n * 10n ** 18n,
-    },
-    collateralAmount: 1000n * 10n ** 6n,
-    debtAmount: 10n ** 18n,
-    liquidationPrice: 500,
-    ltv: 25,
+    pnl: 0.99,
+    profit: 100,
+    averagePrice: 89000,
     type: 'short',
   },
 ]
@@ -149,7 +125,7 @@ export const FutureContainer = () => {
         </div>
       ) : tab === 'my-position' ? (
         <div className="flex flex-1 flex-col justify-center items-center pt-6">
-          <div className="flex flex-1 flex-col w-full md:w-[640px] lg:w-[960px]">
+          <div className="flex flex-1 flex-col w-full md:w-[740px] lg:w-[1060px]">
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
               {positions.map((position, index) =>
                 position.type === 'short' ? (
@@ -171,7 +147,6 @@ export const FutureContainer = () => {
                     loanAssetPrice={
                       prices[position.asset.currency.address] ?? 0
                     }
-                    loanAssetTotalSupply={position.asset.totalSupply}
                     router={router}
                   />
                 ),

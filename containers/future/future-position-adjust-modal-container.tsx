@@ -19,10 +19,10 @@ export const FuturePositionAdjustModalContainer = ({
   const ltv = calculateLtv(
     userPosition.asset.currency,
     prices[userPosition.asset.currency.address] ?? 0,
-    userPosition.debtAmount,
+    userPosition?.debtAmount ?? 0n,
     userPosition.asset.collateral,
     prices[userPosition.asset.collateral.address] ?? 0,
-    userPosition.collateralAmount,
+    userPosition?.collateralAmount ?? 0n,
   )
   const [newLTV, setNewLTV] = useState(ltv)
   const [ltvNewBuffer, setLTVNewBuffer] = useState({
@@ -46,21 +46,21 @@ export const FuturePositionAdjustModalContainer = ({
           (prices[userPosition.asset.collateral.address] ?? 0).toFixed(18),
           18,
         ),
-        userPosition.collateralAmount,
+        userPosition?.collateralAmount ?? 0n,
         userPosition.asset.maxLTV,
         userPosition.asset.ltvPrecision,
       )
       if (newLTV !== ltv) {
         return [
           maxLoanableAmount,
-          userPosition.collateralAmount,
+          userPosition?.collateralAmount ?? 0n,
           applyPercent(maxLoanableAmount, (newLTV * 100) / maxLTV),
         ]
       }
       return [
         maxLoanableAmount,
-        userPosition.collateralAmount,
-        userPosition.debtAmount,
+        userPosition?.collateralAmount ?? 0n,
+        userPosition?.debtAmount ?? 0n,
       ]
     }, [
       ltv,
@@ -96,9 +96,9 @@ export const FuturePositionAdjustModalContainer = ({
       ltv={ltv}
       newLTV={newLTV}
       setNewLTV={setNewLTV}
-      currentCollateralAmount={userPosition.collateralAmount}
+      currentCollateralAmount={userPosition?.collateralAmount ?? 0n}
       expectedCollateralAmount={expectedCollateralAmount}
-      currentDebtAmount={userPosition.debtAmount}
+      currentDebtAmount={userPosition?.debtAmount ?? 0n}
       expectedDebtAmount={expectedDebtAmount}
       //
       loanAssetPrice={prices[userPosition.asset.currency.address] ?? 0}

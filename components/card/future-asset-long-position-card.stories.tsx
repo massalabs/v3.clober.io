@@ -20,7 +20,6 @@ export const Default: Story = {
       user: zeroAddress,
       asset: {
         id: '0x',
-        totalSupply: 100n * 10n ** 6n,
         currency: {
           address: zeroAddress,
           decimals: 18,
@@ -44,11 +43,14 @@ export const Default: Story = {
         ltvPrecision: 1000000n,
         minDebt: 10n * 10n ** 6n,
       },
+      averagePrice: 123.12,
       collateralAmount: 100n * 10n ** 6n,
       debtAmount: 10n * 10n ** 18n,
       liquidationPrice: 123.12,
       ltv: 10,
       type: 'long',
+      pnl: 98.01,
+      profit: 123.12,
     },
     loanAssetPrice: 145.12,
   },
