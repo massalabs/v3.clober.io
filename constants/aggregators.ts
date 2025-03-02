@@ -4,7 +4,6 @@ import { getAddress } from 'viem'
 import { Aggregator } from '../model/aggregator'
 import { MagpieAggregator } from '../model/aggregator/magpie'
 import { OdosAggregator } from '../model/aggregator/odos'
-import { CloberV2Aggregator } from '../model/aggregator/clober-v2'
 
 import { findSupportChain } from './chain'
 
@@ -22,8 +21,8 @@ export const AGGREGATORS: {
     ),
   ],
   [CHAIN_IDS.MONAD_TESTNET]: [
-    new CloberV2Aggregator(
-      findSupportChain(CHAIN_IDS.MONAD_TESTNET.valueOf())!,
-    ),
+    // new CloberV2Aggregator(
+    //   findSupportChain(CHAIN_IDS.MONAD_TESTNET.valueOf())!,
+    // ),
   ],
 }
