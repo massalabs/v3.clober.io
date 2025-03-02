@@ -81,6 +81,7 @@ export const VaultContractProvider = ({
         setConfirmation({
           title: `Add Liquidity`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
@@ -96,6 +97,7 @@ export const VaultContractProvider = ({
           setConfirmation({
             title: 'Approve',
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [],
           })
           await maxApprove(walletClient, currency0, spender)
@@ -110,6 +112,7 @@ export const VaultContractProvider = ({
           setConfirmation({
             title: 'Approve',
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [],
           })
           await maxApprove(walletClient, currency1, spender)
@@ -146,6 +149,7 @@ export const VaultContractProvider = ({
         setConfirmation({
           title: `Add Liquidity`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             new BigNumber(result.currencyA.amount).isZero()
               ? undefined
@@ -228,6 +232,7 @@ export const VaultContractProvider = ({
         setConfirmation({
           title: `Remove Liquidity`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
@@ -259,6 +264,7 @@ export const VaultContractProvider = ({
         setConfirmation({
           title: `Remove Liquidity`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             new BigNumber(result.currencyA.amount).isZero()
               ? undefined

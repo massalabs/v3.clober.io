@@ -76,6 +76,7 @@ export const SwapContractProvider = ({
         setConfirmation({
           title: 'Swap',
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
@@ -90,6 +91,7 @@ export const SwapContractProvider = ({
         )
 
         const spender = getAddress(swapData.transaction.to)
+        console.log('aa', spender, allowances, allowances[getAddress(spender)])
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(inputCurrency.address, zeroAddress) &&
@@ -99,6 +101,7 @@ export const SwapContractProvider = ({
           setConfirmation({
             title: 'Approve',
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [],
           })
           await maxApprove(walletClient, inputCurrency, spender)
@@ -107,6 +110,7 @@ export const SwapContractProvider = ({
         setConfirmation({
           title: 'Swap',
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             {
               currency: inputCurrency,
@@ -168,6 +172,7 @@ export const SwapContractProvider = ({
         setConfirmation({
           title: 'Swap',
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
@@ -187,6 +192,7 @@ export const SwapContractProvider = ({
           setConfirmation({
             title: 'Approve',
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [],
           })
           await maxApprove(walletClient, inputCurrency, spender)
@@ -207,6 +213,7 @@ export const SwapContractProvider = ({
         setConfirmation({
           title: 'Swap',
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             {
               currency: inputCurrency,

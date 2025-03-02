@@ -76,6 +76,7 @@ export const LimitContractProvider = ({
           setConfirmation({
             title: `Checking Book Availability`,
             body: '',
+            chain: selectedChain,
             fields: [],
           })
           const openTransaction = await openMarket({
@@ -91,6 +92,7 @@ export const LimitContractProvider = ({
             setConfirmation({
               title: `Open Book`,
               body: 'Please confirm in your wallet.',
+              chain: selectedChain,
               fields: [],
             })
             await sendTransaction(walletClient, openTransaction)
@@ -100,6 +102,7 @@ export const LimitContractProvider = ({
         setConfirmation({
           title: `Place Order`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
@@ -114,6 +117,7 @@ export const LimitContractProvider = ({
           setConfirmation({
             title: 'Approve',
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [],
           })
           await maxApprove(walletClient, inputCurrency, spender)
@@ -140,6 +144,7 @@ export const LimitContractProvider = ({
           setConfirmation({
             title: `Place Order`,
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [
               {
                 direction: result.make.direction,
@@ -156,6 +161,7 @@ export const LimitContractProvider = ({
           setConfirmation({
             title: `Place Order`,
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [
               {
                 direction: result.make.direction,
@@ -211,6 +217,7 @@ export const LimitContractProvider = ({
         setConfirmation({
           title: `Cancel Order`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
         if (!isOpenOrderApproved) {
@@ -238,6 +245,7 @@ export const LimitContractProvider = ({
         setConfirmation({
           title: `Cancel Order`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: result.map(({ currency, amount, direction }) => ({
             currency,
             label: currency.symbol,
@@ -278,6 +286,7 @@ export const LimitContractProvider = ({
         setConfirmation({
           title: `Claim Order`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
         if (!isOpenOrderApproved) {
@@ -305,6 +314,7 @@ export const LimitContractProvider = ({
         setConfirmation({
           title: `Claim Order`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: result.map(({ currency, amount, direction }) => ({
             currency,
             label: currency.symbol,

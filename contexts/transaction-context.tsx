@@ -2,10 +2,12 @@ import React, { useContext } from 'react'
 
 import ConfirmationModal from '../components/modal/confirmation-modal'
 import { Currency } from '../model/currency'
+import { Chain } from '../model/chain'
 
 export type Confirmation = {
   title: string
   body: string
+  chain: Chain
   fields: {
     direction?: 'in' | 'out'
     currency?: Currency

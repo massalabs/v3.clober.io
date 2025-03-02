@@ -142,6 +142,7 @@ export const FutureContractProvider = ({
         setConfirmation({
           title: `Short ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
@@ -156,6 +157,7 @@ export const FutureContractProvider = ({
           setConfirmation({
             title: 'Approve',
             body: 'Please confirm in your wallet.',
+            chain: selectedChain,
             fields: [],
           })
           await maxApprove(walletClient, asset.collateral, spender)
@@ -164,6 +166,7 @@ export const FutureContractProvider = ({
         setConfirmation({
           title: `Short ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             {
               currency: asset.collateral,
@@ -286,12 +289,14 @@ export const FutureContractProvider = ({
         setConfirmation({
           title: `Repay ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
         setConfirmation({
           title: `Repay ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             {
               currency: asset.currency,
@@ -385,12 +390,14 @@ export const FutureContractProvider = ({
         setConfirmation({
           title: `Close ${userPosition.asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [],
         })
 
         setConfirmation({
           title: `Close ${userPosition.asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
+          chain: selectedChain,
           fields: [
             {
               currency: userPosition.asset.currency,
