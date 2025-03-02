@@ -1,8 +1,6 @@
 import React from 'react'
-import { Meta, StoryObj } from '@storybook/react'
-
 import '../../styles/globals.css'
-
+import { Meta, StoryObj } from '@storybook/react'
 import { base } from 'viem/chains'
 
 import ConfirmationModal from './confirmation-modal'
