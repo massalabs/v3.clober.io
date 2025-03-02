@@ -26,6 +26,7 @@ import { formatUnits } from '../../utils/bigint'
 import { VAULT_MANAGER_ABI } from '../../abis/future/vault-manager.json-abi'
 import { wagmiConfig } from '../../constants/chain'
 import { PYTH_ABI } from '../../abis/future/pyth-abi'
+import { UserPosition } from '../../model/future/user-position'
 
 type FutureContractContext = {
   isMarketClose: (asset: Asset, debtAmount: bigint) => Promise<boolean>
@@ -34,11 +35,15 @@ type FutureContractContext = {
     collateralAmount: bigint,
     debtAmount: bigint,
   ) => Promise<Hash | undefined>
+  repay: (asset: Asset, debtAmount: bigint) => Promise<Hash | undefined>
+  repayAll: (position: UserPosition) => Promise<Hash | undefined>
 }
 
 const Context = React.createContext<FutureContractContext>({
   borrow: () => Promise.resolve(undefined),
   isMarketClose: () => Promise.resolve(false),
+  repay: () => Promise.resolve(undefined),
+  repayAll: () => Promise.resolve(undefined),
 })
 
 export const FutureContractProvider = ({
@@ -180,7 +185,7 @@ export const FutureContractProvider = ({
                 prices[asset.currency.address] ?? 0,
               ),
             },
-          ],
+          ].filter((field) => field.value !== '0') as any[],
         })
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
@@ -270,11 +275,208 @@ export const FutureContractProvider = ({
     ],
   )
 
+  const repay = useCallback(
+    async (asset: Asset, debtAmount: bigint): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      let hash: Hash | undefined
+      try {
+        setConfirmation({
+          title: `Repay ${asset.currency.symbol}`,
+          body: 'Please confirm in your wallet.',
+          fields: [],
+        })
+
+        setConfirmation({
+          title: `Repay ${asset.currency.symbol}`,
+          body: 'Please confirm in your wallet.',
+          fields: [
+            {
+              currency: asset.currency,
+              label: asset.currency.symbol,
+              direction: 'in',
+              value: formatUnits(
+                debtAmount,
+                asset.currency.decimals,
+                prices[asset.currency.address] ?? 0,
+              ),
+            },
+          ],
+        })
+
+        const evmPriceServiceConnection = new EvmPriceServiceConnection(
+          'https://hermes.pyth.network',
+        )
+        const priceFeedUpdateData =
+          await evmPriceServiceConnection.getPriceFeedsUpdateData([
+            asset.currency.priceFeedId,
+            asset.collateral.priceFeedId,
+          ])
+
+        if (priceFeedUpdateData.length === 0) {
+          console.error('Price feed not found')
+          return
+        }
+
+        const fee = await publicClient.readContract({
+          address: CONTRACT_ADDRESSES[selectedChain.id].Pyth,
+          abi: PYTH_ABI,
+          functionName: 'getUpdateFee',
+          args: [priceFeedUpdateData as any],
+        })
+
+        hash = await walletClient.writeContract({
+          chain: walletClient.chain,
+          address: CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
+          functionName: 'multicall',
+          abi: VAULT_MANAGER_ABI,
+          value: fee,
+          args: [
+            [
+              encodeFunctionData({
+                abi: VAULT_MANAGER_ABI,
+                functionName: 'burn',
+                args: [
+                  asset.currency.address,
+                  walletClient.account.address,
+                  debtAmount,
+                ],
+              }),
+            ],
+          ],
+        })
+        if (hash) {
+          await publicClient.waitForTransactionReceipt({
+            hash,
+          })
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['allowances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+      return hash
+    },
+    [
+      prices,
+      publicClient,
+      queryClient,
+      selectedChain.id,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
+  const repayAll = useCallback(
+    async (userPosition: UserPosition): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      let hash: Hash | undefined
+      try {
+        setConfirmation({
+          title: `Close ${userPosition.asset.currency.symbol}`,
+          body: 'Please confirm in your wallet.',
+          fields: [],
+        })
+
+        setConfirmation({
+          title: `Close ${userPosition.asset.currency.symbol}`,
+          body: 'Please confirm in your wallet.',
+          fields: [
+            {
+              currency: userPosition.asset.currency,
+              label: userPosition.asset.currency.symbol,
+              direction: 'in',
+              value: formatUnits(
+                userPosition?.debtAmount ?? 0n,
+                userPosition.asset.currency.decimals,
+                prices[userPosition.asset.currency.address] ?? 0,
+              ),
+            },
+            {
+              currency: userPosition.asset.collateral,
+              label: userPosition.asset.collateral.symbol,
+              direction: 'out',
+              value: formatUnits(
+                userPosition?.collateralAmount ?? 0n,
+                userPosition.asset.collateral.decimals,
+                prices[userPosition.asset.collateral.address] ?? 0,
+              ),
+            },
+          ],
+        })
+
+        hash = await walletClient.writeContract({
+          chain: walletClient.chain,
+          address: CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
+          functionName: 'multicall',
+          abi: VAULT_MANAGER_ABI,
+          args: [
+            [
+              encodeFunctionData({
+                abi: VAULT_MANAGER_ABI,
+                functionName: 'burn',
+                args: [
+                  userPosition.asset.currency.address,
+                  walletClient.account.address,
+                  userPosition?.debtAmount ?? 0n,
+                ],
+              }),
+              encodeFunctionData({
+                abi: VAULT_MANAGER_ABI,
+                functionName: 'withdraw',
+                args: [
+                  userPosition.asset.currency.address,
+                  walletClient.account.address,
+                  userPosition?.collateralAmount ?? 0n,
+                ],
+              }),
+            ],
+          ],
+        })
+        if (hash) {
+          await publicClient.waitForTransactionReceipt({
+            hash,
+          })
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['allowances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+      return hash
+    },
+    [
+      prices,
+      publicClient,
+      queryClient,
+      selectedChain.id,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
   return (
     <Context.Provider
       value={{
         isMarketClose,
         borrow,
+        repay,
+        repayAll,
       }}
     >
       {children}

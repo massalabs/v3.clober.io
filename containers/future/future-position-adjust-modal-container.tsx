@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
+import Link from 'next/link'
 
 import { FuturePositionAdjustModal } from '../../components/modal/future-position-adjust-modal'
 import { UserPosition } from '../../model/future/user-position'
 import { calculateLtv, calculateMaxLoanableAmount } from '../../utils/ltv'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { applyPercent, formatUnits } from '../../utils/bigint'
+import { useFutureContractContext } from '../../contexts/future/future-contract-context'
+import Modal from '../../components/modal/modal'
 
 export const FuturePositionAdjustModalContainer = ({
   userPosition,
@@ -14,7 +17,9 @@ export const FuturePositionAdjustModalContainer = ({
   userPosition: UserPosition
   onClose: () => void
 }) => {
+  const [isClose, setIsClose] = useState(false)
   const { prices } = useCurrencyContext()
+  const { isMarketClose, borrow, repay, repayAll } = useFutureContractContext()
 
   const ltv = calculateLtv(
     userPosition.asset.currency,
@@ -89,7 +94,24 @@ export const FuturePositionAdjustModalContainer = ({
     return () => clearInterval(interval)
   }, [newLTV, ltvNewBuffer.previous, ltvNewBuffer.updateAt])
 
-  return (
+  return isClose ? (
+    <Modal show onClose={() => {}} onButtonClick={() => setIsClose(false)}>
+      <h1 className="flex font-bold text-xl mb-2">Notice</h1>
+      <div className="text-sm">
+        our price feeds follow the traditional market hours of each asset
+        classes and will be available at the following hours:{' '}
+        <span>
+          <Link
+            className="text-blue-500 underline font-bold"
+            target="_blank"
+            href="https://docs.pyth.network/price-feeds/market-hours"
+          >
+            [Link]
+          </Link>
+        </span>
+      </div>
+    </Modal>
+  ) : (
     <FuturePositionAdjustModal
       asset={userPosition.asset}
       onClose={onClose}
@@ -104,9 +126,26 @@ export const FuturePositionAdjustModalContainer = ({
       loanAssetPrice={prices[userPosition.asset.currency.address] ?? 0}
       collateralPrice={prices[userPosition.asset.collateral.address] ?? 0}
       actionButtonProps={{
-        onClick: async () => {},
+        onClick: async () => {
+          if (newLTV === 0) {
+            await repayAll(userPosition)
+          } else if (ltv < newLTV) {
+            const debtAmount =
+              expectedDebtAmount - (userPosition?.debtAmount ?? 0n)
+            const closed = await isMarketClose(userPosition.asset, debtAmount)
+            if (closed) {
+              setIsClose(true)
+              return
+            }
+            await borrow(userPosition.asset, 0n, debtAmount)
+          } else if (ltv > newLTV) {
+            const debtAmount =
+              (userPosition?.debtAmount ?? 0n) - expectedDebtAmount
+            await repay(userPosition.asset, debtAmount)
+          }
+        },
         disabled:
-          ltv === newLTV ||
+          Math.abs(ltv - newLTV) < 0.5 ||
           (newLTV > ltv && expectedDebtAmount > maxLoanableAmount) ||
           (userPosition.asset.minDebt > expectedDebtAmount &&
             expectedDebtAmount > 0n),
