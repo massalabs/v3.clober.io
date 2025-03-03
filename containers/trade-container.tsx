@@ -79,9 +79,7 @@ export const TradeContainer = () => {
   } = useTradeContext()
   const { openConnectModal } = useConnectModal()
   const { balances, prices, currencies, setCurrencies } = useCurrencyContext()
-  const [showOrderBook, setShowOrderBook] = useState(
-    !testnetChainIds.includes(selectedChain.id),
-  )
+  const [showOrderBook, setShowOrderBook] = useState(false)
   const [isFetchingQuotes, setIsFetchingQuotes] = useState(false)
   const [showMobileModal, setShowMobileModal] = useState(false)
   const [marketPrice, setMarketPrice] = useState(0)
@@ -94,8 +92,10 @@ export const TradeContainer = () => {
   useEffect(() => {
     if (testnetChainIds.includes(selectedChain.id)) {
       setTab('limit')
+      setShowOrderBook(true)
     } else {
       setTab('swap')
+      setShowOrderBook(false)
     }
   }, [selectedChain.id])
 
