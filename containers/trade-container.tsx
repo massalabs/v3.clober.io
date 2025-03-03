@@ -91,6 +91,14 @@ export const TradeContainer = () => {
   const [debouncedValue, setDebouncedValue] = useState('')
   const [tab, setTab] = useState<'limit' | 'swap'>('swap')
 
+  useEffect(() => {
+    if (testnetChainIds.includes(selectedChain.id)) {
+      setTab('limit')
+    } else {
+      setTab('swap')
+    }
+  }, [selectedChain.id])
+
   const marketId = selectedMarket
     ? getMarketId(selectedChain.id, [
         selectedMarket.base.address,
@@ -402,7 +410,9 @@ export const TradeContainer = () => {
             <div className="bg-[#191d25] rounded-[22px] py-1 w-full h-10 hidden sm:flex flex-row relative text-gray-400 text-base font-bold">
               <button
                 disabled={tab === 'swap'}
-                onClick={() => setTab('swap')}
+                onClick={() =>
+                  !testnetChainIds.includes(selectedChain.id) && setTab('swap')
+                }
                 className="flex flex-1 px-6 py-2 rounded-[18px] text-gray-400 disabled:text-blue-400 disabled:bg-blue-500/25 justify-center items-center gap-1"
               >
                 Swap
