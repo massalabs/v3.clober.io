@@ -79,7 +79,9 @@ export const TradeContainer = () => {
   } = useTradeContext()
   const { openConnectModal } = useConnectModal()
   const { balances, prices, currencies, setCurrencies } = useCurrencyContext()
-  const [showOrderBook, setShowOrderBook] = useState(false)
+  const [showOrderBook, setShowOrderBook] = useState(
+    !testnetChainIds.includes(selectedChain.id),
+  )
   const [isFetchingQuotes, setIsFetchingQuotes] = useState(false)
   const [showMobileModal, setShowMobileModal] = useState(false)
   const [marketPrice, setMarketPrice] = useState(0)
