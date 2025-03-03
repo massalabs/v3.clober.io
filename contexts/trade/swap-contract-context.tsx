@@ -139,6 +139,7 @@ export const SwapContractProvider = ({
           swapData.transaction as Transaction,
         )
       } catch (e) {
+        await queryClient.invalidateQueries({ queryKey: ['quotes'] })
         console.error(e)
       } finally {
         await Promise.all([
