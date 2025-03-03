@@ -158,14 +158,21 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         .join(''),
     ],
     queryFn: async () => {
-      const spenders: `0x${string}`[] = [
+      let spenders: `0x${string}`[] = [
         getContractAddresses({ chainId: selectedChain.id }).Controller,
         getContractAddresses({ chainId: selectedChain.id }).Minter,
         ...AGGREGATORS[selectedChain.id].map(
           (aggregator) => aggregator.contract,
         ),
-        CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
       ]
+      if (
+        CONTRACT_ADDRESSES[selectedChain.id] &&
+        CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
+      ) {
+        spenders = spenders.concat(
+          CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+        )
+      }
       if (!userAddress || currencies.length === 0 || !selectedChain) {
         return {
           allowances: {},

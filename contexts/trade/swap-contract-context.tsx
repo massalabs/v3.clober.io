@@ -91,7 +91,6 @@ export const SwapContractProvider = ({
         )
 
         const spender = getAddress(swapData.transaction.to)
-        console.log('aa', spender, allowances, allowances[getAddress(spender)])
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(inputCurrency.address, zeroAddress) &&

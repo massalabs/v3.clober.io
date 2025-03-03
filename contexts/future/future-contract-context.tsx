@@ -63,6 +63,9 @@ export const FutureContractProvider = ({
         if (!walletClient) {
           throw new Error('Wallet not connected')
         }
+        if (CONTRACT_ADDRESSES[selectedChain.id] === undefined) {
+          throw new Error('Contract address not found')
+        }
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -74,7 +77,7 @@ export const FutureContractProvider = ({
           ])
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id].Pyth,
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -82,7 +85,7 @@ export const FutureContractProvider = ({
 
         await publicClient.simulateContract({
           chain: walletClient.chain,
-          address: CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,
           value: fee,
@@ -146,7 +149,7 @@ export const FutureContractProvider = ({
           fields: [],
         })
 
-        const spender = CONTRACT_ADDRESSES[selectedChain.id].VaultManager
+        const spender = CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(asset.collateral.address, zeroAddress) &&
@@ -206,7 +209,7 @@ export const FutureContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id].Pyth,
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -272,7 +275,7 @@ export const FutureContractProvider = ({
       prices,
       publicClient,
       queryClient,
-      selectedChain.id,
+      selectedChain,
       setConfirmation,
       walletClient,
     ],
@@ -326,7 +329,7 @@ export const FutureContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id].Pyth,
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -334,7 +337,7 @@ export const FutureContractProvider = ({
 
         hash = await walletClient.writeContract({
           chain: walletClient.chain,
-          address: CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,
           value: fee,
@@ -373,7 +376,7 @@ export const FutureContractProvider = ({
       prices,
       publicClient,
       queryClient,
-      selectedChain.id,
+      selectedChain,
       setConfirmation,
       walletClient,
     ],
@@ -424,7 +427,7 @@ export const FutureContractProvider = ({
 
         hash = await walletClient.writeContract({
           chain: walletClient.chain,
-          address: CONTRACT_ADDRESSES[selectedChain.id].VaultManager,
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,
           args: [
@@ -471,7 +474,7 @@ export const FutureContractProvider = ({
       prices,
       publicClient,
       queryClient,
-      selectedChain.id,
+      selectedChain,
       setConfirmation,
       walletClient,
     ],
