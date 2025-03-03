@@ -6,6 +6,7 @@ import { getMarketId, getQuoteToken } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useRouter } from 'next/router'
+import { Tooltip } from 'react-tooltip'
 
 import { LimitForm } from '../components/form/limit-form'
 import OrderBook from '../components/order-book'
@@ -33,6 +34,7 @@ import { DEFAULT_TOKEN_INFO } from '../model/token-info'
 import { WETH } from '../constants/currency'
 import { fetchPrice } from '../apis/price'
 import { fetchTokenInfoFromOrderBook } from '../apis/token'
+import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 
 import { IframeChartContainer } from './chart/iframe-chart-container'
 
@@ -409,12 +411,27 @@ export const TradeContainer = () => {
           <div className="flex flex-col items-start gap-3">
             <div className="bg-[#191d25] rounded-[22px] py-1 w-full h-10 hidden sm:flex flex-row relative text-gray-400 text-base font-bold">
               <button
+                data-tooltip-id="testnet-swap"
+                data-tooltip-place="top"
+                data-tooltip-html={'swap will be available soon'}
                 disabled={tab === 'swap'}
                 onClick={() =>
                   !testnetChainIds.includes(selectedChain.id) && setTab('swap')
                 }
                 className="flex flex-1 px-6 py-2 rounded-[18px] text-gray-400 disabled:text-blue-400 disabled:bg-blue-500/25 justify-center items-center gap-1"
               >
+                {testnetChainIds.includes(selectedChain.id) ? (
+                  <Tooltip
+                    id="testnet-swap"
+                    style={{
+                      width: '300px',
+                      opacity: 1,
+                    }}
+                    clickable
+                  />
+                ) : (
+                  <></>
+                )}
                 Swap
               </button>
               <button
