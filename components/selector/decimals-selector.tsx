@@ -37,7 +37,7 @@ export default function DecimalsSelector({
                     className={`py-2 px-3 text-right text-white ${textStyles.body4} hover:bg-gray-600 first:rounded-t-lg last:rounded-b-lg`}
                     value={value}
                   >
-                    <span>{toShortNumber(Number(value.label))}</span>
+                    <span>{value.label}</span>
                   </Listbox.Option>
                 ))}
               </Listbox.Options>
