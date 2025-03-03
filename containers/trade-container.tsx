@@ -413,7 +413,7 @@ export const TradeContainer = () => {
               <button
                 data-tooltip-id="testnet-swap"
                 data-tooltip-place="top"
-                data-tooltip-html={'swap will be available soon'}
+                data-tooltip-html={'Swap will be available soon'}
                 disabled={tab === 'swap'}
                 onClick={() =>
                   !testnetChainIds.includes(selectedChain.id) && setTab('swap')
