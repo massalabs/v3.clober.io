@@ -86,14 +86,14 @@ export default function OrderBook({
 
       {/*mobile*/}
       <div className="flex lg:hidden text-xs overflow-y-scroll">
-        <div className="flex flex-1 flex-col basis-0 overflow-auto">
+        <div className="flex flex-1 flex-col basis-0">
           <div className="flex justify-between text-gray-500 gap-4 sm:gap-12 px-2 mb-1 sm:mb-3">
             <div>Amount</div>
             <div>Price</div>
           </div>
           {bids
             .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
-            .slice(0, 20)
+            .slice(0, 100)
             .map(({ price, size }, index) => {
               return (
                 <button
@@ -121,14 +121,14 @@ export default function OrderBook({
               )
             })}
         </div>
-        <div className="flex flex-1 flex-col basis-0 overflow-auto">
+        <div className="flex flex-1 flex-col basis-0">
           <div className="flex justify-between text-gray-500 gap-4 sm:gap-12 px-2 mb-1 sm:mb-3">
             <div>Price</div>
             <div>Amount</div>
           </div>
           {asks
             .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
-            .slice(0, 20)
+            .slice(0, 100)
             .map(({ price, size }, index) => {
               return (
                 <button
@@ -197,9 +197,7 @@ export default function OrderBook({
                     <div className="flex-1 text-left text-gray-200">
                       {toPlacesString(size)}
                     </div>
-                    <div className="text-right text-green-500">
-                      {toShortNumber(Number(price))}
-                    </div>
+                    <div className="text-right text-green-500">{price}</div>
                     <div
                       className="absolute h-full right-0 bg-[#39e79f]/10"
                       style={{
@@ -227,9 +225,7 @@ export default function OrderBook({
                       setTab('limit')
                     }}
                   >
-                    <div className="text-left text-red-500">
-                      {toShortNumber(Number(price))}
-                    </div>
+                    <div className="text-left text-red-500">{price}</div>
                     <div className="flex-1 text-right text-gray-200">
                       {toPlacesString(size)}
                     </div>

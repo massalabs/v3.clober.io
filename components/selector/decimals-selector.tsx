@@ -22,7 +22,7 @@ export default function DecimalsSelector({
           <div className="relative">
             <Listbox.Button className="flex items-center gap-0.5">
               <span className={`${textStyles.body4} text-white`}>
-                {toShortNumber(Number(value.label))}
+                {value.label}
               </span>
               <span className="">
                 <TriangleDownSvg />
