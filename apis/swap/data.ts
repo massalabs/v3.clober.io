@@ -8,7 +8,7 @@ export async function fetchSwapData(
   outputCurrency: Currency,
   slippageLimitPercent: number,
   gasPrice: bigint,
-  userAddress?: `0x${string}`,
+  userAddress: `0x${string}`,
 ): Promise<{
   transaction: {
     data: `0x${string}`

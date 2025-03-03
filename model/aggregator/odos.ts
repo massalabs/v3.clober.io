@@ -124,7 +124,7 @@ export class OdosAggregator implements Aggregator {
     outputCurrency: Currency,
     slippageLimitPercent: number,
     gasPrice: bigint,
-    userAddress?: `0x${string}`,
+    userAddress: `0x${string}`,
   ): Promise<{
     data: `0x${string}`
     gas: bigint

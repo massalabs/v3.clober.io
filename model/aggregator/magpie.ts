@@ -71,8 +71,8 @@ export class MagpieAggregator implements Aggregator {
           : getAddress(outputCurrency.address),
         sellAmount: amountIn.toString(),
         slippage: slippageLimitPercent / 100,
-        fromAddress: userAddress || zeroAddress,
-        toAddress: userAddress || zeroAddress,
+        fromAddress: userAddress,
+        toAddress: userAddress,
         gasless: false,
         // affiliateAddress: '0x0000000000000000000000000000000000000000',
         // affiliateFeeInPercentage: 0.01, // 1%
@@ -99,7 +99,7 @@ export class MagpieAggregator implements Aggregator {
     outputCurrency: Currency,
     slippageLimitPercent: number,
     gasPrice: bigint,
-    userAddress?: `0x${string}`,
+    userAddress: `0x${string}`,
   ): Promise<{
     data: `0x${string}`
     gas: bigint
