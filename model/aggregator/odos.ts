@@ -196,9 +196,10 @@ export class OdosAggregator implements Aggregator {
         userAddr: userAddress,
       },
     })
+    const gas = BigInt(result.transaction.gas)
     return {
       data: result.transaction.data,
-      gas: BigInt(result.transaction.gas),
+      gas: gas === -1n ? 1_000_000n : gas,
       value: BigInt(result.transaction.value),
       to: result.transaction.to,
       nonce: result.transaction.nonce,
