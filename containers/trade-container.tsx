@@ -542,7 +542,7 @@ export const TradeContainer = () => {
                       }
                       if (
                         !testnetChainIds.includes(selectedChain.id) &&
-                        marketRateDiff < -10
+                        marketRateDiff < -2
                       ) {
                         setShowWarningModal(true)
                         return
