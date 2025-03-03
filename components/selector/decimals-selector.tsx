@@ -4,7 +4,6 @@ import { Listbox, Transition } from '@headlessui/react'
 import { textStyles } from '../../themes/text-styles'
 import { TriangleDownSvg } from '../svg/triangle-down-svg'
 import { Decimals } from '../../model/decimals'
-import { toShortNumber } from '../../utils/number'
 
 export default function DecimalsSelector({
   availableDecimalPlacesGroups,
