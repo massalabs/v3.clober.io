@@ -4,8 +4,10 @@ import { Currency } from '../model/currency'
 import { supportChains } from '../constants/chain'
 import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { RPC_URL } from '../constants/rpc-urls'
+import { Chain } from '../model/chain'
 
 export const maxApprove = async (
+  chain: Chain,
   walletClient: WalletClient,
   currency: Currency,
   spender: `0x${string}`,
@@ -23,7 +25,7 @@ export const maxApprove = async (
     functionName: 'approve',
     args: [spender, 2n ** 256n - 1n],
     account: walletClient.account!,
-    chain: walletClient.chain!,
+    chain,
   })
   await publicClient.waitForTransactionReceipt({ hash })
   return hash

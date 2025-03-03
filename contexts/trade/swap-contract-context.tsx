@@ -103,7 +103,7 @@ export const SwapContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(walletClient, inputCurrency, spender)
+          await maxApprove(selectedChain, walletClient, inputCurrency, spender)
         }
 
         setConfirmation({
@@ -133,7 +133,11 @@ export const SwapContractProvider = ({
             },
           ],
         })
-        await sendTransaction(walletClient, swapData.transaction as Transaction)
+        await sendTransaction(
+          selectedChain,
+          walletClient,
+          swapData.transaction as Transaction,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -147,7 +151,7 @@ export const SwapContractProvider = ({
     [
       walletClient,
       setConfirmation,
-      selectedChain.id,
+      selectedChain,
       allowances,
       prices,
       queryClient,
@@ -161,7 +165,6 @@ export const SwapContractProvider = ({
       outputCurrency: Currency,
       slippageLimitPercent: number,
       userAddress: `0x${string}`,
-      selectedMarket: Market,
     ) => {
       if (!walletClient) {
         return
@@ -175,10 +178,6 @@ export const SwapContractProvider = ({
           fields: [],
         })
 
-        const isBid = isAddressEqual(
-          selectedMarket.quote.address,
-          inputCurrency.address,
-        )
         const spender = getContractAddresses({
           chainId: selectedChain.id,
         }).Controller
@@ -194,7 +193,7 @@ export const SwapContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(walletClient, inputCurrency, spender)
+          await maxApprove(selectedChain, walletClient, inputCurrency, spender)
         }
 
         const { transaction, result } = await marketOrder({
@@ -232,7 +231,7 @@ export const SwapContractProvider = ({
             },
           ],
         })
-        await sendTransaction(walletClient, transaction)
+        await sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {
@@ -246,7 +245,7 @@ export const SwapContractProvider = ({
     [
       walletClient,
       setConfirmation,
-      selectedChain.id,
+      selectedChain,
       allowances,
       prices,
       queryClient,

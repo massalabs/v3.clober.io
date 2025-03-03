@@ -95,7 +95,7 @@ export const LimitContractProvider = ({
               chain: selectedChain,
               fields: [],
             })
-            await sendTransaction(walletClient, openTransaction)
+            await sendTransaction(selectedChain, walletClient, openTransaction)
           }
         }
 
@@ -120,7 +120,7 @@ export const LimitContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(walletClient, inputCurrency, spender)
+          await maxApprove(selectedChain, walletClient, inputCurrency, spender)
         }
         const args = {
           chainId: selectedChain.id,
@@ -184,7 +184,7 @@ export const LimitContractProvider = ({
             ] as Confirmation['fields'],
           })
         }
-        await sendTransaction(walletClient, transaction)
+        await sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {
@@ -253,7 +253,7 @@ export const LimitContractProvider = ({
             direction,
           })),
         })
-        await sendTransaction(walletClient, transaction)
+        await sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {
@@ -322,7 +322,7 @@ export const LimitContractProvider = ({
             direction,
           })),
         })
-        await sendTransaction(walletClient, transaction)
+        await sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {

@@ -163,7 +163,12 @@ export const FutureContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(walletClient, asset.collateral, spender)
+          await maxApprove(
+            selectedChain,
+            walletClient,
+            asset.collateral,
+            spender,
+          )
         }
 
         setConfirmation({
@@ -216,7 +221,7 @@ export const FutureContractProvider = ({
         })
 
         hash = await walletClient.writeContract({
-          chain: walletClient.chain,
+          chain: selectedChain,
           address: spender,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,
@@ -336,7 +341,7 @@ export const FutureContractProvider = ({
         })
 
         hash = await walletClient.writeContract({
-          chain: walletClient.chain,
+          chain: selectedChain,
           address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,
@@ -426,7 +431,7 @@ export const FutureContractProvider = ({
         })
 
         hash = await walletClient.writeContract({
-          chain: walletClient.chain,
+          chain: selectedChain,
           address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,

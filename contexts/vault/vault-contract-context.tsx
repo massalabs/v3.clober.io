@@ -100,7 +100,7 @@ export const VaultContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(walletClient, currency0, spender)
+          await maxApprove(selectedChain, walletClient, currency0, spender)
         }
 
         // Max approve for currency1
@@ -115,7 +115,7 @@ export const VaultContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(walletClient, currency1, spender)
+          await maxApprove(selectedChain, walletClient, currency1, spender)
         }
 
         const baseCurrency = isAddressEqual(
@@ -187,7 +187,7 @@ export const VaultContractProvider = ({
           ].filter((field) => field !== undefined) as Confirmation['fields'],
         })
         if (transaction) {
-          await sendTransaction(walletClient, transaction)
+          await sendTransaction(selectedChain, walletClient, transaction)
         }
       } catch (e) {
         console.error(e)
@@ -303,7 +303,7 @@ export const VaultContractProvider = ({
         })
 
         if (transaction) {
-          await sendTransaction(walletClient, transaction)
+          await sendTransaction(selectedChain, walletClient, transaction)
         }
       } catch (e) {
         console.error(e)

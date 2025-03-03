@@ -3,8 +3,10 @@ import { CHAIN_IDS, Transaction } from '@clober/v2-sdk'
 
 import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-urls'
+import { Chain } from '../model/chain'
 
 export async function sendTransaction(
+  chain: Chain,
   walletClient: WalletClient,
   transaction: Transaction,
 ): Promise<Hash | undefined> {
@@ -21,7 +23,7 @@ export async function sendTransaction(
     value: transaction.value,
     gas: transaction.gas,
     account: walletClient.account!,
-    chain: walletClient.chain!,
+    chain,
   })
   await publicClient.waitForTransactionReceipt({ hash })
   return hash
