@@ -40,6 +40,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (switchChain) {
         try {
           switchChain({ chainId: _chain.id })
+          window.history.replaceState({}, '', `?chain=${_chain.id}`)
         } catch (e) {
           console.error('switchChain error', e)
         }
