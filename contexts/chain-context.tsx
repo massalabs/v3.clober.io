@@ -40,7 +40,6 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (switchChain) {
         try {
           switchChain({ chainId: _chain.id })
-          window.history.replaceState({}, '', `?chain=${_chain.id}`)
         } catch (e) {
           console.error('switchChain error', e)
         }
@@ -68,12 +67,9 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
     })
     const chain = walletConnectedChain || queryParamChain || localStorageChain
     if (chain) {
-      if (switchChain) {
-        switchChain({ chainId: chain.id })
-      }
       setSelectedChain(chain)
     }
-  }, [chainId, setSelectedChain, switchChain])
+  }, [chainId, setSelectedChain])
 
   return (
     <Context.Provider value={{ selectedChain, setSelectedChain }}>
