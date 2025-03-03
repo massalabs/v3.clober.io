@@ -43,6 +43,12 @@ export const WHITELISTED_CURRENCIES: {
     MON,
     {
       address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
+      name: 'Clober USD Coin',
+      symbol: 'cUSDC',
+      decimals: 6,
+    },
+    {
+      address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
       name: 'USD Coin',
       symbol: 'USDC',
       decimals: 6,
