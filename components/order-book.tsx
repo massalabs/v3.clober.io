@@ -7,6 +7,8 @@ import { toShortNumber } from '../utils/number'
 
 import DecimalsSelector from './selector/decimals-selector'
 
+const MAX_N = 18
+
 export default function OrderBook({
   bids,
   asks,
@@ -28,8 +30,20 @@ export default function OrderBook({
   setTab: (tab: 'swap' | 'limit') => void
 } & React.HTMLAttributes<HTMLDivElement>) {
   const biggestDepth = BigNumber.max(
-    BigNumber.max(...asks.map(({ size }) => size), 0),
-    BigNumber.max(...bids.map(({ size }) => size), 0),
+    BigNumber.max(
+      ...asks
+        .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
+        .slice(0, MAX_N)
+        .map(({ size }) => size),
+      0,
+    ),
+    BigNumber.max(
+      ...bids
+        .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
+        .slice(0, MAX_N)
+        .map(({ size }) => size),
+      0,
+    ),
   )
 
   return (
@@ -183,7 +197,7 @@ export default function OrderBook({
           <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-auto">
             {bids
               .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
-              .slice(0, 18)
+              .slice(0, MAX_N)
               .map(({ price, size }, index) => {
                 return (
                   <button
@@ -214,7 +228,7 @@ export default function OrderBook({
           <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-auto">
             {asks
               .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
-              .slice(0, 18)
+              .slice(0, MAX_N)
               .map(({ price, size }, index) => {
                 return (
                   <button
