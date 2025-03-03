@@ -87,9 +87,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
   const [isPostOnly, setIsPostOnly] = useState(false)
   const [priceInput, setPriceInput] = useState('')
-  const [slippageInput, _setSlippageInput] = useState(
-    testnetChainIds.includes(selectedChain.id) ? '30' : '1',
-  )
+  const [slippageInput, _setSlippageInput] = useState('1')
 
   const setInputCurrency = useCallback(
     (currency: Currency | undefined) => {
