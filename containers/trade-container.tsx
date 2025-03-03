@@ -619,7 +619,7 @@ export const TradeContainer = () => {
                     text:
                       Number(inputCurrencyAmount) > 0 &&
                       (quotes?.amountOut ?? 0n) === 0n
-                        ? 'No route found'
+                        ? 'Fetching...'
                         : !walletClient
                           ? 'Connect wallet'
                           : !inputCurrency
@@ -959,7 +959,7 @@ export const TradeContainer = () => {
                   text:
                     Number(inputCurrencyAmount) > 0 &&
                     (quotes?.amountOut ?? 0n) === 0n
-                      ? 'No route found'
+                      ? 'Fetching...'
                       : !walletClient
                         ? 'Connect wallet'
                         : !inputCurrency
