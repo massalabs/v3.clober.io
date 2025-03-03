@@ -15,7 +15,6 @@ import {
   DEFAULT_INPUT_CURRENCY,
   DEFAULT_OUTPUT_CURRENCY,
 } from '../../constants/currency'
-import { testnetChainIds } from '../../constants/chain'
 import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
 

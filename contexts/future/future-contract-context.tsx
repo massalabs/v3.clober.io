@@ -1,18 +1,19 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  Hash,
-  getAddress,
-  isAddressEqual,
-  zeroAddress,
-  encodeFunctionData,
-  encodeAbiParameters,
-  parseAbiParameters,
   BaseError,
   ContractFunctionRevertedError,
+  createPublicClient,
+  encodeAbiParameters,
+  encodeFunctionData,
+  getAddress,
+  Hash,
+  http,
+  isAddressEqual,
+  parseAbiParameters,
+  zeroAddress,
 } from 'viem'
-import { getPublicClient } from '@wagmi/core'
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js'
 
 import { Asset } from '../../model/future/asset'
@@ -24,9 +25,12 @@ import { CONTRACT_ADDRESSES } from '../../constants/future/contracts'
 import { useChainContext } from '../chain-context'
 import { formatUnits } from '../../utils/bigint'
 import { VAULT_MANAGER_ABI } from '../../abis/future/vault-manager.json-abi'
-import { wagmiConfig } from '../../constants/chain'
+import { supportChains } from '../../constants/chain'
 import { PYTH_ABI } from '../../abis/future/pyth-abi'
 import { UserPosition } from '../../model/future/user-position'
+import { buildTransaction } from '../../utils/build-transaction'
+import { sendTransaction } from '../../utils/transaction'
+import { RPC_URL } from '../../constants/rpc-urls'
 
 type FutureContractContext = {
   isMarketClose: (asset: Asset, debtAmount: bigint) => Promise<boolean>
@@ -51,11 +55,16 @@ export const FutureContractProvider = ({
 }: React.PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
 
-  const publicClient = getPublicClient(wagmiConfig)
   const { data: walletClient } = useWalletClient()
   const { setConfirmation } = useTransactionContext()
   const { selectedChain } = useChainContext()
   const { allowances, prices } = useCurrencyContext()
+  const publicClient = useMemo(() => {
+    return createPublicClient({
+      chain: supportChains.find((chain) => chain.id === selectedChain.id),
+      transport: http(RPC_URL[selectedChain.id]),
+    })
+  }, [selectedChain.id])
 
   const isMarketClose = useCallback(
     async (asset: Asset, debtAmount: bigint): Promise<boolean> => {
@@ -220,49 +229,49 @@ export const FutureContractProvider = ({
           args: [priceFeedUpdateData as any],
         })
 
-        hash = await walletClient.writeContract({
-          chain: selectedChain,
-          address: spender,
-          functionName: 'multicall',
-          abi: VAULT_MANAGER_ABI,
-          value: fee,
-          args: [
-            [
-              encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
-                functionName: 'updateOracle',
-                args: [
-                  encodeAbiParameters(parseAbiParameters('bytes[]'), [
-                    priceFeedUpdateData as any,
-                  ]),
-                ],
-              }),
-              encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
-                functionName: 'deposit',
-                args: [
-                  asset.currency.address,
-                  walletClient.account.address,
-                  collateralAmount,
-                ],
-              }),
-              encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
-                functionName: 'mint',
-                args: [
-                  asset.currency.address,
-                  walletClient.account.address,
-                  debtAmount,
-                ],
-              }),
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: spender,
+            functionName: 'multicall',
+            abi: VAULT_MANAGER_ABI,
+            value: fee,
+            args: [
+              [
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'updateOracle',
+                  args: [
+                    encodeAbiParameters(parseAbiParameters('bytes[]'), [
+                      priceFeedUpdateData as any,
+                    ]),
+                  ],
+                }),
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'deposit',
+                  args: [
+                    asset.currency.address,
+                    walletClient.account.address,
+                    collateralAmount,
+                  ],
+                }),
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'mint',
+                  args: [
+                    asset.currency.address,
+                    walletClient.account.address,
+                    debtAmount,
+                  ],
+                }),
+              ],
             ],
-          ],
-        })
-        if (hash) {
-          await publicClient.waitForTransactionReceipt({
-            hash,
-          })
-        }
+          },
+          1_000_000n,
+        )
+        return sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {
@@ -340,31 +349,31 @@ export const FutureContractProvider = ({
           args: [priceFeedUpdateData as any],
         })
 
-        hash = await walletClient.writeContract({
-          chain: selectedChain,
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
-          functionName: 'multicall',
-          abi: VAULT_MANAGER_ABI,
-          value: fee,
-          args: [
-            [
-              encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
-                functionName: 'burn',
-                args: [
-                  asset.currency.address,
-                  walletClient.account.address,
-                  debtAmount,
-                ],
-              }),
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'multicall',
+            abi: VAULT_MANAGER_ABI,
+            value: fee,
+            args: [
+              [
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'burn',
+                  args: [
+                    asset.currency.address,
+                    walletClient.account.address,
+                    debtAmount,
+                  ],
+                }),
+              ],
             ],
-          ],
-        })
-        if (hash) {
-          await publicClient.waitForTransactionReceipt({
-            hash,
-          })
-        }
+          },
+          1_000_000n,
+        )
+        return sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {
@@ -430,7 +439,7 @@ export const FutureContractProvider = ({
           ],
         })
 
-        hash = await walletClient.writeContract({
+        const transaction = await buildTransaction(publicClient, {
           chain: selectedChain,
           address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
@@ -458,11 +467,7 @@ export const FutureContractProvider = ({
             ],
           ],
         })
-        if (hash) {
-          await publicClient.waitForTransactionReceipt({
-            hash,
-          })
-        }
+        return sendTransaction(selectedChain, walletClient, transaction)
       } catch (e) {
         console.error(e)
       } finally {
