@@ -62,7 +62,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               }}
             >
               <SwapPageSvg className="w-4 h-4" />
-              Future
+              Futures
             </PageButton>
           ) : (
             <></>

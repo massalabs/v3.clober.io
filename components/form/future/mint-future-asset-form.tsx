@@ -116,7 +116,7 @@ export const MintFutureAssetForm = ({
             </div>
             <div className="flex w-full">
               <div className="flex flex-row items-center justify-center gap-1 text-gray-400 text-sm sm:text-base">
-                Expired Date
+                Expiry Date
               </div>
               <div className="ml-auto text-sm sm:text-base">
                 {new Date(asset.expiration * 1000).toLocaleDateString('en-US', {

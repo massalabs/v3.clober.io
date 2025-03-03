@@ -92,7 +92,7 @@ const Panel = ({
                             }}
                           >
                             <SwapPageSvg className="w-4 h-4" />
-                            Future
+                            Futures
                           </PageButton>
                         ) : (
                           <></>

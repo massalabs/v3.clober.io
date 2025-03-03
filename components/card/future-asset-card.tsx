@@ -130,7 +130,7 @@ export const FutureAssetCard = ({
           </div>
           <div className="flex w-full flex-col justify-start items-center gap-2">
             <div className="self-stretch text-center text-gray-400 text-xs">
-              Expired Date
+              Expiry Date
             </div>
             <div className="self-stretch text-center text-white text-sm font-bold">
               {formatDate(new Date(asset.expiration * 1000))}
