@@ -86,7 +86,7 @@ const CurrencyAmountInput = ({
             </button>
           ) : (
             <button
-              className="h-8 flex items-center rounded-full bg-[#22D3EE] text-white font-semibold pl-3 pr-2 py-1 gap-2 text-sm"
+              className="h-8 flex items-center rounded-full bg-blue-500 text-white font-semibold pl-3 pr-2 py-1 gap-2 text-sm"
               onClick={onCurrencyClick}
             >
               Select token <TriangleDownSvg className="fill-gray-950" />
