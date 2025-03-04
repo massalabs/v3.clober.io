@@ -13,4 +13,5 @@ export type UserPosition = {
   averagePrice: number
   pnl: number
   profit: number
+  balance?: bigint
 }

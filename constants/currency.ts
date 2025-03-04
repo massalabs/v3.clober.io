@@ -60,14 +60,7 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 18,
     },
     {
-      address: '0xE62448c986499e930A95e782885a5BbAf28AD22E',
-      name: 'AAPL',
-      symbol: 'AAPL',
-      decimals: 18,
-      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-aapl-usd.inline.svg&w=1920&q=75',
-    },
-    {
-      address: '0xe679FEDA8b57d7Ba66C240d13f1Fc26A38B4E01A',
+      address: '0x7Aff20Af80321c12211583E60f40C068398a53C7',
       name: 'BTC',
       symbol: 'BTC',
       decimals: 18,

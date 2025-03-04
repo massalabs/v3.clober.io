@@ -10,41 +10,15 @@ import { FutureAssetShortPositionCard } from '../../components/card/future-asset
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { FutureAssetLongPositionCard } from '../../components/card/future-asset-long-position-card'
 import { currentTimestampInSeconds } from '../../utils/date'
+import { useFutureContext } from '../../contexts/future/future-context'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
-
-const asset = ASSETS[10143][1]
-const positions: UserPosition[] = [
-  {
-    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset,
-    collateralAmount: 2000n * 10n ** 6n,
-    debtAmount: 6860000000000000n,
-    liquidationPrice: 90000,
-    ltv: 25,
-    pnl: 1.01,
-    profit: 100,
-    averagePrice: 89000,
-    type: 'long',
-  },
-  {
-    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    asset,
-    collateralAmount: 2000n * 10n ** 6n,
-    debtAmount: 6860000000000000n,
-    liquidationPrice: 90000,
-    ltv: 25,
-    pnl: 0.99,
-    profit: 100,
-    averagePrice: 89000,
-    type: 'short',
-  },
-]
 
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
   const { prices } = useCurrencyContext()
+  const { positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-position' | 'mint'>('mint')
@@ -127,30 +101,32 @@ export const FutureContainer = () => {
         <div className="flex flex-1 flex-col justify-center items-center pt-6">
           <div className="flex flex-1 flex-col w-full md:w-[740px] lg:w-[1060px]">
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
-              {positions.map((position, index) =>
-                position.type === 'short' ? (
-                  <FutureAssetShortPositionCard
-                    key={`${position.type}-${position.asset.id}-${index}`}
-                    position={position}
-                    loanAssetPrice={
-                      prices[position.asset.currency.address] ?? 0
-                    }
-                    onAdjustMultiple={() => {
-                      setAdjustPosition(position)
-                    }}
-                  />
-                ) : (
-                  <FutureAssetLongPositionCard
-                    chainId={selectedChain.id}
-                    key={`${position.type}-${position.asset.id}-${index}`}
-                    position={position}
-                    loanAssetPrice={
-                      prices[position.asset.currency.address] ?? 0
-                    }
-                    router={router}
-                  />
-                ),
-              )}
+              {positions
+                .filter((position) => position.averagePrice > 0)
+                .map((position, index) =>
+                  position.type === 'short' ? (
+                    <FutureAssetShortPositionCard
+                      key={`${position.type}-${position.asset.id}-${index}`}
+                      position={position}
+                      loanAssetPrice={
+                        prices[position.asset.currency.address] ?? 0
+                      }
+                      onAdjustMultiple={() => {
+                        setAdjustPosition(position)
+                      }}
+                    />
+                  ) : (
+                    <FutureAssetLongPositionCard
+                      chainId={selectedChain.id}
+                      key={`${position.type}-${position.asset.id}-${index}`}
+                      position={position}
+                      loanAssetPrice={
+                        prices[position.asset.currency.address] ?? 0
+                      }
+                      router={router}
+                    />
+                  ),
+                )}
             </div>
           </div>
         </div>
@@ -160,7 +136,7 @@ export const FutureContainer = () => {
 
       {adjustPosition ? (
         <FuturePositionAdjustModalContainer
-          userPosition={positions[0]}
+          userPosition={adjustPosition}
           onClose={() => setAdjustPosition(null)}
         />
       ) : (

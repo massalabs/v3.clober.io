@@ -122,7 +122,7 @@ export const FutureContractProvider = ({
             ],
           ],
         })
-        return true
+        return false
       } catch (e) {
         if (e instanceof BaseError) {
           const revertError = e.walk(

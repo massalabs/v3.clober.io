@@ -66,7 +66,7 @@ export const FutureAssetLongPositionCard = ({
             <div className="flex gap-1">
               <div className="text-sm sm:text-base">
                 {formatUnits(
-                  position?.debtAmount ?? 0n,
+                  position?.balance ?? 0n,
                   position.asset.currency.decimals,
                   loanAssetPrice,
                 )}{' '}
