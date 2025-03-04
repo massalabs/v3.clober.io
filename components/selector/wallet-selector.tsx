@@ -4,7 +4,7 @@ import {
   useChainModal,
   useConnectModal,
 } from '@rainbow-me/rainbowkit'
-import { Connector } from 'wagmi'
+import { Connector, useAccount } from 'wagmi'
 
 import { ConnectButton } from '../button/connect-button'
 import { UserButton } from '../button/user-button'
@@ -22,16 +22,18 @@ export function WalletSelector({
   const { openChainModal } = useChainModal()
   const { openConnectModal } = useConnectModal()
   const { openAccountModal } = useAccountModal()
+  const { chainId } = useAccount()
 
   return (
     <div className="flex items-center">
       {status === 'disconnected' || status === 'connecting' ? (
         <ConnectButton openConnectModal={openConnectModal} />
-      ) : openAccountModal && address && connector ? (
+      ) : openAccountModal && address && connector && chainId ? (
         <UserButton
           address={address}
           openAccountModal={openAccountModal}
           connector={connector}
+          chainId={chainId}
         />
       ) : openChainModal ? (
         <WrongNetworkButton openChainModal={openChainModal} />
