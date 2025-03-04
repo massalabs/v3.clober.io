@@ -13,11 +13,10 @@ export const CurrencyIcon = ({
   currency: Currency
 } & React.ImgHTMLAttributes<HTMLImageElement>) => {
   const [tryCount, setTryCount] = React.useState(0)
-  const _currency = Object.values(WHITELISTED_CURRENCIES)
-    .flat()
-    .find((c) => isAddressEqual(c.address, currency.address))
-
   const chainId = Number(localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY) ?? '0')
+  const _currency = WHITELISTED_CURRENCIES[chainId].find((c) =>
+    isAddressEqual(c.address, currency.address),
+  )
   const chain = supportChains.find((chain) => chain.id === chainId)
   return (
     <img
