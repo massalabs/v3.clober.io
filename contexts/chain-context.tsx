@@ -106,18 +106,17 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
     const startTimestamp = Number(
       localStorage.getItem(WALLET_WARNING_MODAL_START_TIMESTAMP) ?? '0',
     )
-    console.log({ startTimestamp, now })
     if (now - startTimestamp < 3) {
       setConfirmation({
-        title: 'Wallet will be disconnected',
+        title: 'Connected to the wrong chain',
         body: [
-          'The current chain is different from the one connected to your wallet',
-          // eslint-disable-next-line react/jsx-key
-          <br />,
-          'The wallet will automatically disconnect in 3 seconds.',
+          'The current chain is different from the one connected to your wallet.',
           // eslint-disable-next-line react/jsx-key
           <br />,
           'If this message doesn’t disappear after 3 seconds, please refresh the page.',
+          // eslint-disable-next-line react/jsx-key
+          <br />,
+          'Should the message appear multiple times, please change the chain in your wallet.',
         ] as any,
         fields: [],
         chain: selectedChain,

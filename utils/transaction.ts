@@ -24,6 +24,7 @@ export async function sendTransaction(
       WALLET_WARNING_MODAL_START_TIMESTAMP,
       currentTimestampInSeconds().toString(),
     )
+    localStorage.removeItem('wagmi.cache')
     await disconnectAsync()
   }
   const publicClient = createPublicClient({
