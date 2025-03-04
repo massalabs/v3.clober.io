@@ -20,7 +20,7 @@ import { monadTestnet } from '../constants/monad-testnet-chain'
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
   const { selectedChain, setSelectedChain } = useChainContext()
-  const { address, status } = useAccount()
+  const { address, status, connector } = useAccount()
 
   return (
     <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
@@ -113,7 +113,11 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
         ) : (
           <></>
         )}
-        <WalletSelector address={address} status={status} />
+        <WalletSelector
+          address={address}
+          status={status}
+          connector={connector}
+        />
         <button
           className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center lg:hidden"
           onClick={onMenuClick}
