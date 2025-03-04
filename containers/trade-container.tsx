@@ -34,7 +34,6 @@ import { DEFAULT_TOKEN_INFO } from '../model/token-info'
 import { WETH } from '../constants/currency'
 import { fetchPrice } from '../apis/price'
 import { fetchTokenInfoFromOrderBook } from '../apis/token'
-import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 
 import { IframeChartContainer } from './chart/iframe-chart-container'
 
@@ -256,6 +255,7 @@ export const TradeContainer = () => {
         Number(debouncedValue) === Number(inputCurrencyAmount)
       ) {
         console.log({
+          context: 'trade',
           chainId: selectedChain.id,
           inputCurrency: inputCurrency.symbol,
           outputCurrency: outputCurrency.symbol,

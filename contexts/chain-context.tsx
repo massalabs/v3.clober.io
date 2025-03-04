@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
 import { useAccount, useSwitchChain } from 'wagmi'
-import { getChainId } from '@wagmi/core'
 
 import { Chain } from '../model/chain'
 import {
@@ -31,6 +30,30 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
   const { switchChain } = useSwitchChain({
     config: wagmiConfig,
+    mutation: {
+      onError: async (error) => {
+        if (
+          error &&
+          error.toString().includes('SwitchChainNotSupportedError') &&
+          localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY)
+        ) {
+          const provider = window.ethereum
+          if (provider) {
+            try {
+              const chainId = parseInt(
+                localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY)!,
+              )
+              await provider.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: `0x${chainId.toString(16)}` }],
+              })
+            } catch (e) {
+              console.error('wallet_switchEthereumChain error', e)
+            }
+          }
+        }
+      },
+    },
   })
 
   const setSelectedChain = useCallback(
@@ -62,6 +85,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
     const walletConnectedChain = chainId ? findSupportChain(chainId) : undefined
 
     console.log({
+      context: 'chain',
       walletConnectedChainId: walletConnectedChain?.id,
       queryParamChainId: queryParamChain?.id,
       localStorageChainId: localStorageChain?.id,
