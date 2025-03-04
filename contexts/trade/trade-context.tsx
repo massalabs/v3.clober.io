@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { getAddress, isAddressEqual } from 'viem'
 import { getQuoteToken } from '@clober/v2-sdk'
+import { useDisconnect } from 'wagmi'
 
 import { Currency } from '../../model/currency'
 import {
@@ -67,6 +68,7 @@ const Context = React.createContext<TradeContext>({
 export const TRADE_SLIPPAGE_KEY = 'trade-slippage'
 
 export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
+  const { disconnect } = useDisconnect()
   const { selectedChain } = useChainContext()
   const { whitelistCurrencies, setCurrencies } = useCurrencyContext()
 
@@ -154,6 +156,12 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
       const action = async () => {
         if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
           return
+        }
+        if (
+          getQueryParams()?.inputCurrency &&
+          getQueryParams()?.outputCurrency
+        ) {
+          disconnect()
         }
         const _inputCurrency = inputCurrencyAddress
           ? (whitelistCurrencies.find((currency) =>

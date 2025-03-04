@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
-import {
-  darkTheme,
-  getDefaultConfig,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit'
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
 import {
   QueryClient,
@@ -14,11 +10,12 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
-import { WagmiProvider } from 'wagmi'
+import { createConfig, injected, WagmiProvider } from 'wagmi'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { getSubgraphBlockNumber } from '@clober/v2-sdk'
 import { http } from 'viem'
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
 
 import HeaderContainer from '../containers/header-container'
 import { ChainProvider, useChainContext } from '../contexts/chain-context'
@@ -39,14 +36,23 @@ import { RPC_URL } from '../constants/rpc-urls'
 import { FutureProvider } from '../contexts/future/future-context'
 import { FutureContractProvider } from '../contexts/future/future-contract-context'
 
-const PROJECT_ID = '14e09398dd595b0d1dccabf414ac4531'
-const config = getDefaultConfig({
-  appName: 'Clober Dex',
-  projectId: PROJECT_ID,
+const config = createConfig({
   chains: supportChains as any,
   transports: Object.fromEntries(
     supportChains.map((chain) => [chain.id, http(RPC_URL[chain.id])]),
   ),
+  connectors: [
+    injected({
+      shimDisconnect: true,
+    }),
+    walletConnect({
+      projectId: '14e09398dd595b0d1dccabf414ac4531',
+    }),
+    coinbaseWallet({
+      appName: 'Clober Dex',
+      appLogoUrl: 'https://clober.io/favicon.png',
+    }),
+  ],
 })
 
 const CacheProvider = ({ children }: React.PropsWithChildren) => {
