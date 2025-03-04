@@ -68,7 +68,7 @@ const Context = React.createContext<TradeContext>({
 export const TRADE_SLIPPAGE_KEY = 'trade-slippage'
 
 export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const { disconnect } = useDisconnect()
+  const { disconnectAsync } = useDisconnect()
   const { selectedChain } = useChainContext()
   const { whitelistCurrencies, setCurrencies } = useCurrencyContext()
 
@@ -161,7 +161,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
           getQueryParams()?.inputCurrency &&
           getQueryParams()?.outputCurrency
         ) {
-          disconnect()
+          await disconnectAsync()
         }
         const _inputCurrency = inputCurrencyAddress
           ? (whitelistCurrencies.find((currency) =>
