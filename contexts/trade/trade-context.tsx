@@ -157,12 +157,6 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
         if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
           return
         }
-        if (
-          getQueryParams()?.inputCurrency &&
-          getQueryParams()?.outputCurrency
-        ) {
-          await disconnectAsync()
-        }
         const _inputCurrency = inputCurrencyAddress
           ? (whitelistCurrencies.find((currency) =>
               isAddressEqual(
@@ -198,6 +192,13 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
         )
         setInputCurrency(_inputCurrency)
         setOutputCurrency(_outputCurrency)
+
+        if (
+          getQueryParams()?.inputCurrency &&
+          getQueryParams()?.outputCurrency
+        ) {
+          await disconnectAsync()
+        }
 
         if (_inputCurrency && _outputCurrency) {
           const quote = getQuoteToken({
