@@ -71,14 +71,6 @@ export const FutureAssetShortPositionCard = ({
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-1 self-stretch">
-            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              Liq. Price
-            </div>
-            <div className="text-sm sm:text-base">
-              ${toCommaSeparated((position?.liquidationPrice ?? 0).toFixed(2))}
-            </div>
-          </div>
 
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
@@ -91,6 +83,15 @@ export const FutureAssetShortPositionCard = ({
                 loanAssetPrice,
               )}{' '}
               / ${toCommaSeparated((position?.averagePrice ?? 0).toFixed(2))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1 self-stretch">
+            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
+              Liq. Price
+            </div>
+            <div className="text-sm sm:text-base">
+              ${toCommaSeparated((position?.liquidationPrice ?? 0).toFixed(2))}
             </div>
           </div>
 

@@ -74,6 +74,7 @@ export const FutureAssetLongPositionCard = ({
               </div>
             </div>
           </div>
+
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
               Mark Price
@@ -86,6 +87,16 @@ export const FutureAssetLongPositionCard = ({
               )}
             </div>
           </div>
+
+          <div className="flex items-center gap-1 self-stretch">
+            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
+              Avg. Price
+            </div>
+            <div className="text-sm sm:text-base">
+              ${toCommaSeparated((position?.averagePrice ?? 0).toFixed(2))}
+            </div>
+          </div>
+
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
               PnL
