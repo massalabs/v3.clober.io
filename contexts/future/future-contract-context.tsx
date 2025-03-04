@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { useWalletClient } from 'wagmi'
+import { useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   BaseError,
@@ -54,6 +54,7 @@ export const FutureContractProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
+  const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
   const { setConfirmation } = useTransactionContext()
@@ -177,6 +178,7 @@ export const FutureContractProvider = ({
             walletClient,
             asset.collateral,
             spender,
+            disconnectAsync,
           )
         }
 
@@ -271,7 +273,12 @@ export const FutureContractProvider = ({
           },
           1_000_000n,
         )
-        return sendTransaction(selectedChain, walletClient, transaction)
+        return sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -286,6 +293,7 @@ export const FutureContractProvider = ({
     },
     [
       allowances,
+      disconnectAsync,
       prices,
       publicClient,
       queryClient,
@@ -373,7 +381,12 @@ export const FutureContractProvider = ({
           },
           1_000_000n,
         )
-        return sendTransaction(selectedChain, walletClient, transaction)
+        return sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -387,6 +400,7 @@ export const FutureContractProvider = ({
       return hash
     },
     [
+      disconnectAsync,
       prices,
       publicClient,
       queryClient,
@@ -467,7 +481,12 @@ export const FutureContractProvider = ({
             ],
           ],
         })
-        return sendTransaction(selectedChain, walletClient, transaction)
+        return sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -481,6 +500,7 @@ export const FutureContractProvider = ({
       return hash
     },
     [
+      disconnectAsync,
       prices,
       publicClient,
       queryClient,

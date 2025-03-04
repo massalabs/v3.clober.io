@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { getAddress, isAddressEqual, zeroAddress } from 'viem'
-import { useWalletClient } from 'wagmi'
+import { useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   getContractAddresses,
@@ -51,6 +51,7 @@ export const SwapContractProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
+  const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
   const { setConfirmation } = useTransactionContext()
@@ -103,7 +104,13 @@ export const SwapContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(selectedChain, walletClient, inputCurrency, spender)
+          await maxApprove(
+            selectedChain,
+            walletClient,
+            inputCurrency,
+            spender,
+            disconnectAsync,
+          )
         }
 
         setConfirmation({
@@ -137,6 +144,7 @@ export const SwapContractProvider = ({
           selectedChain,
           walletClient,
           swapData.transaction as Transaction,
+          disconnectAsync,
         )
       } catch (e) {
         await queryClient.invalidateQueries({ queryKey: ['quotes'] })
@@ -155,6 +163,7 @@ export const SwapContractProvider = ({
       selectedChain,
       allowances,
       prices,
+      disconnectAsync,
       queryClient,
     ],
   )
@@ -194,7 +203,13 @@ export const SwapContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(selectedChain, walletClient, inputCurrency, spender)
+          await maxApprove(
+            selectedChain,
+            walletClient,
+            inputCurrency,
+            spender,
+            disconnectAsync,
+          )
         }
 
         const { transaction, result } = await marketOrder({
@@ -232,7 +247,12 @@ export const SwapContractProvider = ({
             },
           ],
         })
-        await sendTransaction(selectedChain, walletClient, transaction)
+        await sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -249,6 +269,7 @@ export const SwapContractProvider = ({
       selectedChain,
       allowances,
       prices,
+      disconnectAsync,
       queryClient,
     ],
   )

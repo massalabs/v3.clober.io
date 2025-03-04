@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { useWalletClient } from 'wagmi'
+import { useDisconnect, useWalletClient } from 'wagmi'
 import {
   addLiquidity,
   getContractAddresses,
@@ -50,6 +50,7 @@ export const VaultContractProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
+  const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
   const { setConfirmation } = useTransactionContext()
@@ -100,7 +101,13 @@ export const VaultContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(selectedChain, walletClient, currency0, spender)
+          await maxApprove(
+            selectedChain,
+            walletClient,
+            currency0,
+            spender,
+            disconnectAsync,
+          )
         }
 
         // Max approve for currency1
@@ -115,7 +122,13 @@ export const VaultContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(selectedChain, walletClient, currency1, spender)
+          await maxApprove(
+            selectedChain,
+            walletClient,
+            currency1,
+            spender,
+            disconnectAsync,
+          )
         }
 
         const baseCurrency = isAddressEqual(
@@ -187,7 +200,12 @@ export const VaultContractProvider = ({
           ].filter((field) => field !== undefined) as Confirmation['fields'],
         })
         if (transaction) {
-          await sendTransaction(selectedChain, walletClient, transaction)
+          await sendTransaction(
+            selectedChain,
+            walletClient,
+            transaction,
+            disconnectAsync,
+          )
         }
       } catch (e) {
         console.error(e)
@@ -203,6 +221,7 @@ export const VaultContractProvider = ({
     },
     [
       allowances,
+      disconnectAsync,
       prices,
       queryClient,
       selectedChain,
@@ -303,7 +322,12 @@ export const VaultContractProvider = ({
         })
 
         if (transaction) {
-          await sendTransaction(selectedChain, walletClient, transaction)
+          await sendTransaction(
+            selectedChain,
+            walletClient,
+            transaction,
+            disconnectAsync,
+          )
         }
       } catch (e) {
         console.error(e)
@@ -316,7 +340,14 @@ export const VaultContractProvider = ({
         setConfirmation(undefined)
       }
     },
-    [prices, queryClient, selectedChain, setConfirmation, walletClient],
+    [
+      disconnectAsync,
+      prices,
+      queryClient,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
   )
 
   return (

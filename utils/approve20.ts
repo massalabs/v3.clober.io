@@ -14,6 +14,7 @@ export const maxApprove = async (
   walletClient: WalletClient,
   currency: Currency,
   spender: `0x${string}`,
+  disconnectAsync: () => Promise<void>,
 ): Promise<`0x${string}` | undefined> => {
   if (!walletClient) {
     return
@@ -30,5 +31,5 @@ export const maxApprove = async (
     account: walletClient.account!,
     chain,
   })
-  return sendTransaction(chain, walletClient, transaction)
+  return sendTransaction(chain, walletClient, transaction, disconnectAsync)
 }

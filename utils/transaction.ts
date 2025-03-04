@@ -5,28 +5,17 @@ import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-urls'
 import { Chain } from '../model/chain'
 
-const refreshWallet = async () => {
-  try {
-    const provider = window.ethereum
-    if (provider) {
-      await provider.request({ method: 'eth_requestAccounts' })
-      window.location.reload()
-    }
-  } catch (e) {
-    console.error('Failed to switch chain', e)
-  }
-}
-
 export async function sendTransaction(
   chain: Chain,
   walletClient: WalletClient,
   transaction: Transaction,
+  disconnectAsync: () => Promise<void>,
 ): Promise<Hash | undefined> {
   if (!walletClient) {
     return
   }
-  if (chain.id !== walletClient.chain!.id) {
-    await refreshWallet()
+  if (disconnectAsync && chain.id !== walletClient.chain!.id) {
+    await disconnectAsync()
   }
   const publicClient = createPublicClient({
     chain: supportChains.find((chain) => chain.id === walletClient.chain!.id),
@@ -45,7 +34,6 @@ export async function sendTransaction(
     return hash
   } catch (e) {
     console.error('Failed to send transaction', e)
-    await refreshWallet()
   }
 }
 

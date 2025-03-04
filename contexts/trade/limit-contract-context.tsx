@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useWalletClient } from 'wagmi'
+import { useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import { getAddress, isAddressEqual, parseUnits, zeroAddress } from 'viem'
 import {
@@ -45,6 +45,7 @@ export const LimitContractProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
+  const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
   const { setConfirmation } = useTransactionContext()
@@ -95,7 +96,12 @@ export const LimitContractProvider = ({
               chain: selectedChain,
               fields: [],
             })
-            await sendTransaction(selectedChain, walletClient, openTransaction)
+            await sendTransaction(
+              selectedChain,
+              walletClient,
+              openTransaction,
+              disconnectAsync,
+            )
           }
         }
 
@@ -120,7 +126,13 @@ export const LimitContractProvider = ({
             chain: selectedChain,
             fields: [],
           })
-          await maxApprove(selectedChain, walletClient, inputCurrency, spender)
+          await maxApprove(
+            selectedChain,
+            walletClient,
+            inputCurrency,
+            spender,
+            disconnectAsync,
+          )
         }
         const args = {
           chainId: selectedChain.id,
@@ -184,7 +196,12 @@ export const LimitContractProvider = ({
             ] as Confirmation['fields'],
           })
         }
-        await sendTransaction(selectedChain, walletClient, transaction)
+        await sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -199,6 +216,7 @@ export const LimitContractProvider = ({
     },
     [
       allowances,
+      disconnectAsync,
       prices,
       queryClient,
       selectedChain,
@@ -253,7 +271,12 @@ export const LimitContractProvider = ({
             direction,
           })),
         })
-        await sendTransaction(selectedChain, walletClient, transaction)
+        await sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -267,6 +290,7 @@ export const LimitContractProvider = ({
       }
     },
     [
+      disconnectAsync,
       isOpenOrderApproved,
       prices,
       queryClient,
@@ -322,7 +346,12 @@ export const LimitContractProvider = ({
             direction,
           })),
         })
-        await sendTransaction(selectedChain, walletClient, transaction)
+        await sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -336,6 +365,7 @@ export const LimitContractProvider = ({
       }
     },
     [
+      disconnectAsync,
       isOpenOrderApproved,
       prices,
       queryClient,
