@@ -25,6 +25,7 @@ export const ETH: Currency = {
   name: 'Ethereum',
   symbol: 'ETH',
   decimals: 18,
+  icon: 'https://assets.odos.xyz/tokens/ETH.webp',
 }
 
 const MON: Currency = {
