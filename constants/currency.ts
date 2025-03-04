@@ -38,7 +38,7 @@ const MON: Currency = {
 export const WHITELISTED_CURRENCIES: {
   [chain in number]: Currency[]
 } = {
-  [CHAIN_IDS.BASE]: [],
+  [CHAIN_IDS.BASE]: [ETH],
   [CHAIN_IDS.MONAD_TESTNET]: [
     MON,
     {
