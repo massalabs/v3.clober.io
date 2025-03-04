@@ -44,8 +44,8 @@ export const WHITELISTED_CURRENCIES: {
     MON,
     {
       address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
-      name: 'Clober USD Coin',
-      symbol: 'cUSDC',
+      name: 'Clober Test USD Coin',
+      symbol: 'MOCKB',
       decimals: 6,
     },
     {
@@ -59,6 +59,7 @@ export const WHITELISTED_CURRENCIES: {
       name: 'Wrapped Monad Token',
       symbol: 'WMON',
       decimals: 18,
+      icon: '/wmonad.svg',
     },
     {
       address: '0x7Aff20Af80321c12211583E60f40C068398a53C7',
@@ -98,7 +99,7 @@ export const DEFAULT_OUTPUT_CURRENCY: {
     decimals: 6,
   },
   [CHAIN_IDS.MONAD_TESTNET]: {
-    address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
+    address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
     name: 'USD Coin',
     symbol: 'USDC',
     decimals: 6,
