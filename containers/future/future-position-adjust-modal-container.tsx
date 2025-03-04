@@ -18,7 +18,7 @@ export const FuturePositionAdjustModalContainer = ({
   onClose: () => void
 }) => {
   const [isClose, setIsClose] = useState(false)
-  const { prices } = useCurrencyContext()
+  const { prices, balances } = useCurrencyContext()
   const { isMarketClose, borrow, repay, repayAll } = useFutureContractContext()
 
   const ltv = calculateLtv(
@@ -94,6 +94,8 @@ export const FuturePositionAdjustModalContainer = ({
     return () => clearInterval(interval)
   }, [newLTV, ltvNewBuffer.previous, ltvNewBuffer.updateAt])
 
+  const debtAmountDelta = expectedDebtAmount - (userPosition?.debtAmount ?? 0n)
+
   return isClose ? (
     <Modal show onClose={() => {}} onButtonClick={() => setIsClose(false)}>
       <h1 className="flex font-bold text-xl mb-2">Notice</h1>
@@ -130,23 +132,24 @@ export const FuturePositionAdjustModalContainer = ({
           if (newLTV === 0) {
             await repayAll(userPosition)
           } else if (ltv < newLTV) {
-            const debtAmount =
-              expectedDebtAmount - (userPosition?.debtAmount ?? 0n)
-            const closed = await isMarketClose(userPosition.asset, debtAmount)
+            const closed = await isMarketClose(
+              userPosition.asset,
+              debtAmountDelta,
+            )
             if (closed) {
               setIsClose(true)
               return
             }
-            await borrow(userPosition.asset, 0n, debtAmount)
+            await borrow(userPosition.asset, 0n, debtAmountDelta)
           } else if (ltv > newLTV) {
-            const debtAmount =
-              (userPosition?.debtAmount ?? 0n) - expectedDebtAmount
-            await repay(userPosition.asset, debtAmount)
+            await repay(userPosition.asset, -debtAmountDelta)
           }
         },
         disabled:
           Math.abs(ltv - newLTV) < 0.5 ||
           (newLTV > ltv && expectedDebtAmount > maxLoanableAmount) ||
+          (debtAmountDelta < 0n &&
+            balances[userPosition.asset.currency.address] < -debtAmountDelta) ||
           (userPosition.asset.minDebt > expectedDebtAmount &&
             expectedDebtAmount > 0n),
         text:
@@ -159,9 +162,15 @@ export const FuturePositionAdjustModalContainer = ({
                   userPosition.asset.currency.decimals,
                   prices[userPosition.asset.currency.address] ?? 0,
                 )} ${userPosition.asset.currency.symbol}`
-              : newLTV === 0
-                ? 'Close Position'
-                : 'Adjust Position',
+              : debtAmountDelta < 0n &&
+                  balances[userPosition.asset.currency.address] <
+                    -debtAmountDelta
+                ? 'Not enough future balance'
+                : newLTV === 0
+                  ? 'Close Position'
+                  : ltv < newLTV
+                    ? 'Borrow'
+                    : 'Repay',
       }}
     />
   )
