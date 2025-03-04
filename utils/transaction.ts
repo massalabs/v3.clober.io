@@ -44,6 +44,7 @@ export async function sendTransaction(
     return hash
   } catch (e) {
     console.error('Failed to send transaction', e)
+    throw e
   }
 }
 
