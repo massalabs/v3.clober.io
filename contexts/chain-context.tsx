@@ -8,6 +8,10 @@ import {
   supportChains,
   wagmiConfig,
 } from '../constants/chain'
+import { WALLET_WARNING_MODAL_START_TIMESTAMP } from '../utils/transaction'
+import { currentTimestampInSeconds } from '../utils/date'
+
+import { useTransactionContext } from './transaction-context'
 
 type ChainContext = {
   selectedChain: Chain
@@ -23,6 +27,7 @@ export const LOCAL_STORAGE_CHAIN_KEY = 'chain'
 const QUERY_PARAM_CHAIN_KEY = 'chain'
 
 export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
+  const { setConfirmation } = useTransactionContext()
   const [selectedChain, _setSelectedChain] = React.useState<Chain>(
     supportChains.find((chain) => chain.id === DEFAULT_CHAIN_ID)!,
   )
@@ -95,6 +100,32 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
       setSelectedChain(chain)
     }
   }, [chainId, setSelectedChain])
+
+  const now = currentTimestampInSeconds()
+  useEffect(() => {
+    const startTimestamp = Number(
+      localStorage.getItem(WALLET_WARNING_MODAL_START_TIMESTAMP) ?? '0',
+    )
+    console.log({ startTimestamp, now })
+    if (now - startTimestamp < 3) {
+      setConfirmation({
+        title: 'Wallet will be disconnected',
+        body: [
+          'The current chain is different from the one connected to your wallet',
+          // eslint-disable-next-line react/jsx-key
+          <br />,
+          'The wallet will automatically disconnect in 3 seconds.',
+          // eslint-disable-next-line react/jsx-key
+          <br />,
+          'If this message doesn’t disappear after 3 seconds, please refresh the page.',
+        ] as any,
+        fields: [],
+        chain: selectedChain,
+      })
+    } else {
+      setConfirmation(undefined)
+    }
+  }, [now, selectedChain, setConfirmation])
 
   return (
     <Context.Provider value={{ selectedChain, setSelectedChain }}>

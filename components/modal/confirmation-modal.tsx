@@ -33,12 +33,14 @@ const ConfirmationModal = ({
           </div>
         </div>
         <div className="flex text-xs sm:text-sm text-gray-50 items-center justify-between">
-          Chain
           {confirmation.chain ? (
-            <div className="flex flex-row gap-1 items-center">
-              <ChainIcon chain={confirmation.chain} />
-              {confirmation.chain.name}
-            </div>
+            <>
+              Chain
+              <div className="flex flex-row gap-1 items-center">
+                <ChainIcon chain={confirmation.chain} />
+                {confirmation.chain.name}
+              </div>
+            </>
           ) : (
             <></>
           )}
