@@ -167,6 +167,11 @@ function App({ Component, pageProps }: AppProps) {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [handlePopState])
 
+  const PROD =
+    window.location.href.includes('alpha.clober.io') ||
+    window.location.href.includes('app.clober.io')
+  const DEV = window.location.href.includes('localhost')
+
   return (
     <>
       <ErrorBoundary>
@@ -185,7 +190,7 @@ function App({ Component, pageProps }: AppProps) {
                   <PanelWrapper open={open} setOpen={setOpen} />
                   <HeaderContainer onMenuClick={() => setOpen(true)} />
 
-                  {router.pathname.includes('/trade') ? (
+                  {(DEV || PROD) && router.pathname.includes('/trade') ? (
                     <TradeProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0 mt-[30px] md:mt-[56px]">
@@ -193,7 +198,7 @@ function App({ Component, pageProps }: AppProps) {
                         </div>
                       </div>
                     </TradeProvidersWrapper>
-                  ) : router.pathname.includes('/earn') ? (
+                  ) : (DEV || PROD) && router.pathname.includes('/earn') ? (
                     <VaultProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0">
@@ -201,7 +206,7 @@ function App({ Component, pageProps }: AppProps) {
                         </div>
                       </div>
                     </VaultProvidersWrapper>
-                  ) : router.pathname.includes('/future') ? (
+                  ) : (DEV || !PROD) && router.pathname.includes('/future') ? (
                     <FutureProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0">
@@ -209,7 +214,7 @@ function App({ Component, pageProps }: AppProps) {
                         </div>
                       </div>
                     </FutureProvidersWrapper>
-                  ) : (
+                  ) : DEV || PROD ? (
                     <TradeProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0 mt-[30px] md:mt-[56px]">
@@ -217,6 +222,14 @@ function App({ Component, pageProps }: AppProps) {
                         </div>
                       </div>
                     </TradeProvidersWrapper>
+                  ) : (
+                    <FutureProvidersWrapper>
+                      <div className="flex flex-1 relative justify-center">
+                        <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0">
+                          <Component {...pageProps} />
+                        </div>
+                      </div>
+                    </FutureProvidersWrapper>
                   )}
 
                   <FooterWrapper />
