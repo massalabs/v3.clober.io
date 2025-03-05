@@ -304,10 +304,27 @@ export const TradeContainer = () => {
 
       <div className="bg-[#191d25] rounded-[22px] py-1 w-full h-10 flex sm:hidden flex-row relative text-gray-400 text-base font-bold">
         <button
+          data-tooltip-id="testnet-swap"
+          data-tooltip-place="top"
+          data-tooltip-html={'Swap will be available soon'}
           disabled={tab === 'swap'}
-          onClick={() => setTab('swap')}
+          onClick={() =>
+            !testnetChainIds.includes(selectedChain.id) && setTab('swap')
+          }
           className="text-sm flex flex-1 px-6 py-1.5 h-full rounded-[20px] text-gray-400 disabled:text-blue-400 disabled:bg-blue-500/25 justify-center items-center gap-1"
         >
+          {testnetChainIds.includes(selectedChain.id) ? (
+            <Tooltip
+              id="testnet-swap"
+              style={{
+                width: '300px',
+                opacity: 1,
+              }}
+              clickable
+            />
+          ) : (
+            <></>
+          )}
           Swap
         </button>
         <button
