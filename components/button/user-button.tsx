@@ -5,6 +5,7 @@ import { textStyles } from '../../themes/text-styles'
 import { formatAddress } from '../../utils/string'
 import ChainIcon from '../icon/chain-icon'
 import { supportChains } from '../../constants/chain'
+import UserIcon from '../icon/user-icon'
 
 export const UserButton = ({
   address,
@@ -24,11 +25,18 @@ export const UserButton = ({
       onClick={() => openAccountModal && openAccountModal()}
     >
       <div className="w-6 h-4 relative">
-        <img
-          src={connector.icon}
-          alt="user-icon"
-          className="w-4 h-4 absolute left-0 top-0 z-[2] rounded-full"
-        />
+        {connector.icon ? (
+          <img
+            src={connector.icon}
+            alt="user-icon"
+            className="w-4 h-4 absolute left-0 top-0 z-[2] rounded-full"
+          />
+        ) : (
+          <UserIcon
+            className="w-4 h-4 absolute left-0 top-0 z-[2] rounded-full aspect-square"
+            address={address}
+          />
+        )}
         <ChainIcon
           chain={chain}
           className="w-4 h-4 absolute left-2 top-0 z-[1] rounded-full"
