@@ -7,7 +7,6 @@ import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
 import { fetchFuturePosition } from '../../apis/future/position'
 import { UserPosition } from '../../model/future/user-position'
-import { monadTestnet } from '../../constants/monad-testnet-chain'
 
 type FutureContext = {
   positions: UserPosition[]
@@ -18,16 +17,10 @@ const Context = React.createContext<FutureContext>({
 })
 
 export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const { selectedChain, setSelectedChain } = useChainContext()
+  const { selectedChain } = useChainContext()
   const { prices } = useCurrencyContext()
   const { address: userAddress } = useAccount()
   const { setCurrencies, whitelistCurrencies } = useCurrencyContext()
-
-  useEffect(() => {
-    if (selectedChain.id !== monadTestnet.id) {
-      setSelectedChain(monadTestnet)
-    }
-  }, [selectedChain.id, setSelectedChain])
 
   const { data: positions } = useQuery({
     queryKey: ['future-positions', userAddress, selectedChain.id, prices],
