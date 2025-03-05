@@ -15,7 +15,6 @@ import { PageButton } from '../components/button/page-button'
 import { SwapPageSvg } from '../components/svg/swap-page-svg'
 import { VaultPageSvg } from '../components/svg/vault-page-svg'
 import { GithubLogoSvg } from '../components/svg/github-logo-svg'
-import { monadTestnet } from '../constants/monad-testnet-chain'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -53,20 +52,6 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <VaultPageSvg className="w-4 h-4" />
             Vault
           </PageButton>
-
-          {selectedChain.id === monadTestnet.id ? (
-            <PageButton
-              disabled={router.pathname.includes('/future')}
-              onClick={() => {
-                router.push(`/future?chain=${selectedChain.id}`)
-              }}
-            >
-              <SwapPageSvg className="w-4 h-4" />
-              Futures
-            </PageButton>
-          ) : (
-            <></>
-          )}
         </div>
       </div>
       <div className="flex gap-2 w-auto md:gap-4 ml-auto">
