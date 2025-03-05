@@ -31,7 +31,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   )
   const [connectedWrongChain, setConnectedWrongChain] =
     React.useState<boolean>(false)
-  const { chainId } = useAccount()
+  const { chainId, connector } = useAccount()
 
   const { switchChain } = useSwitchChain({
     config: wagmiConfig,
@@ -122,15 +122,26 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
     <Context.Provider value={{ selectedChain, setSelectedChain }}>
       {connectedWrongChain ? (
         <Modal show onClose={() => {}} onButtonClick={() => {}}>
-          <h1 className="flex font-bold sm:text-xl mb-4">
-            Connected to the wrong chain
-          </h1>
-          <div className="text-xs sm:text-sm text-gray-400">
-            The current chain is different from the one connected to your
-            wallet. If this message does not disappear after a while,
-            <span className="font-semibold text-gray-100">
-              please change the chain in your wallet.
-            </span>
+          <div className="flex flex-col gap-4">
+            <h1 className="font-bold sm:text-xl">
+              Connected to the wrong chain
+            </h1>
+            <div className="text-xs sm:text-sm text-gray-400">
+              The current chain is different from the one connected to your
+              wallet. If this message doesn’t disappear after a moment, please
+              switch to the,{' '}
+              <span className="font-semibold text-gray-100">
+                please switch to the {selectedChain.name} in your{' '}
+                {connector?.name ?? ''}.
+              </span>{' '}
+              If this issue occurs frequently, please use{' '}
+              <span className="font-bold text-blue-500 underline">
+                <a href="https://rabby.io" target="_blank" rel="noreferrer">
+                  rabby wallet
+                </a>
+              </span>
+              .
+            </div>
           </div>
         </Modal>
       ) : (
