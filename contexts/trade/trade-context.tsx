@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { getAddress, isAddressEqual } from 'viem'
 import { getQuoteToken } from '@clober/v2-sdk'
-import { useDisconnect } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 
 import { Currency } from '../../model/currency'
 import {
@@ -70,6 +70,7 @@ export const TRADE_SLIPPAGE_KEY = 'trade-slippage'
 export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { disconnectAsync } = useDisconnect()
   const { selectedChain } = useChainContext()
+  const { address: userAddress } = useAccount()
   const { whitelistCurrencies, setCurrencies } = useCurrencyContext()
 
   const [isBid, setIsBid] = useState(true)
@@ -154,7 +155,15 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
   useEffect(
     () => {
       const action = async () => {
-        if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
+        if (
+          getQueryParams()?.inputCurrency &&
+          getQueryParams()?.outputCurrency &&
+          userAddress
+        ) {
+          localStorage.removeItem('wagmi.cache')
+          await disconnectAsync()
+          window.location.reload()
+        } else if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
           return
         }
         const _inputCurrency = inputCurrencyAddress
@@ -192,13 +201,6 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
         )
         setInputCurrency(_inputCurrency)
         setOutputCurrency(_outputCurrency)
-
-        if (
-          getQueryParams()?.inputCurrency &&
-          getQueryParams()?.outputCurrency
-        ) {
-          await disconnectAsync()
-        }
 
         if (_inputCurrency && _outputCurrency) {
           const quote = getQuoteToken({
