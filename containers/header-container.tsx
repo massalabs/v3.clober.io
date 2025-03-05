@@ -32,27 +32,31 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
         >
           <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
         </Link>
-        <div className="hidden lg:flex py-1 justify-start items-center gap-8">
-          <PageButton
-            disabled={router.pathname.includes('/trade')}
-            onClick={() => {
-              router.push(`/trade?chain=${selectedChain.id}`)
-            }}
-          >
-            <SwapPageSvg className="w-4 h-4" />
-            Trade
-          </PageButton>
+        {!window.location.href.includes('futures.clober.io') ? (
+          <div className="hidden lg:flex py-1 justify-start items-center gap-8">
+            <PageButton
+              disabled={router.pathname.includes('/trade')}
+              onClick={() => {
+                router.push(`/trade?chain=${selectedChain.id}`)
+              }}
+            >
+              <SwapPageSvg className="w-4 h-4" />
+              Trade
+            </PageButton>
 
-          <PageButton
-            disabled={router.pathname.includes('/earn')}
-            onClick={() => {
-              router.push(`/earn?chain=${selectedChain.id}`)
-            }}
-          >
-            <VaultPageSvg className="w-4 h-4" />
-            Vault
-          </PageButton>
-        </div>
+            <PageButton
+              disabled={router.pathname.includes('/earn')}
+              onClick={() => {
+                router.push(`/earn?chain=${selectedChain.id}`)
+              }}
+            >
+              <VaultPageSvg className="w-4 h-4" />
+              Vault
+            </PageButton>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="flex gap-2 w-auto md:gap-4 ml-auto">
         <div className="hidden lg:flex items-center justify-center mr-2 gap-4">

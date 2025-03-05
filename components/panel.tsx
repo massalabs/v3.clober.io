@@ -59,29 +59,33 @@ const Panel = ({
                       </div>
                     </div>
                     <div className="flex flex-col text-white text-base font-bold relative mb-6 flex-1 pl-8 pr-16 gap-[40px]">
-                      <div className="flex flex-col gap-8 items-start">
-                        <PageButton
-                          disabled={router.pathname.includes('/trade')}
-                          onClick={() => {
-                            router.push(`/trade?chain=${chainId}`)
-                            setOpen(false)
-                          }}
-                        >
-                          <SwapPageSvg className="w-4 h-4" />
-                          Trade
-                        </PageButton>
+                      {!window.location.href.includes('futures.clober.io') ? (
+                        <div className="flex flex-col gap-8 items-start">
+                          <PageButton
+                            disabled={router.pathname.includes('/trade')}
+                            onClick={() => {
+                              router.push(`/trade?chain=${chainId}`)
+                              setOpen(false)
+                            }}
+                          >
+                            <SwapPageSvg className="w-4 h-4" />
+                            Trade
+                          </PageButton>
 
-                        <PageButton
-                          disabled={router.pathname.includes('/earn')}
-                          onClick={() => {
-                            router.push(`/earn?chain=${chainId}`)
-                            setOpen(false)
-                          }}
-                        >
-                          <VaultPageSvg className="w-4 h-4" />
-                          Vault
-                        </PageButton>
-                      </div>
+                          <PageButton
+                            disabled={router.pathname.includes('/earn')}
+                            onClick={() => {
+                              router.push(`/earn?chain=${chainId}`)
+                              setOpen(false)
+                            }}
+                          >
+                            <VaultPageSvg className="w-4 h-4" />
+                            Vault
+                          </PageButton>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
