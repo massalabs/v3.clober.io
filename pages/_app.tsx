@@ -201,8 +201,7 @@ function App({ Component, pageProps }: AppProps) {
                         </div>
                       </div>
                     </VaultProvidersWrapper>
-                  ) : window.location.href.includes('futures.clober.io') ||
-                    router.pathname.includes('/future') ? (
+                  ) : router.pathname.includes('/future') ? (
                     <FutureProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0">
