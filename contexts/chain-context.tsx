@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { useAccount, useSwitchChain } from 'wagmi'
+import { hexValue } from '@ethersproject/bytes'
+import { SwitchChainErrorType } from '@wagmi/core'
 
 import { Chain } from '../model/chain'
 import {
@@ -36,22 +38,33 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { switchChain } = useSwitchChain({
     config: wagmiConfig,
     mutation: {
-      onError: async (error) => {
-        if (
-          error &&
-          error.toString().includes('SwitchChainNotSupportedError') &&
-          localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY)
-        ) {
+      onSuccess: (data) => {
+        const chain = data && data.id ? findSupportChain(data.id) : undefined
+        if (chain) {
+          _setSelectedChain(chain)
+          localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, chain.id.toString())
+        }
+      },
+      onError: async (type: SwitchChainErrorType, data) => {
+        if (type.name === 'SwitchChainNotSupportedError') {
           const provider = window.ethereum
           if (provider) {
             try {
-              const chainId = parseInt(
-                localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY)!,
-              )
-              await provider.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: `0x${chainId.toString(16)}` }],
-              })
+              const chain =
+                data && data.chainId
+                  ? findSupportChain(data.chainId)
+                  : undefined
+              if (chain) {
+                await provider.request({
+                  method: 'wallet_switchEthereumChain',
+                  params: [{ chainId: hexValue(chain.id) }],
+                })
+                _setSelectedChain(chain)
+                localStorage.setItem(
+                  LOCAL_STORAGE_CHAIN_KEY,
+                  chain.id.toString(),
+                )
+              }
             } catch (e) {
               console.error('wallet_switchEthereumChain error', e)
             }
@@ -63,15 +76,15 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
   const setSelectedChain = useCallback(
     (_chain: Chain) => {
-      _setSelectedChain(_chain)
-      localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, _chain.id.toString())
       if (switchChain) {
         try {
           switchChain({ chainId: _chain.id })
-          window.history.replaceState({}, '', `?chain=${_chain.id}`)
         } catch (e) {
           console.error('switchChain error', e)
         }
+      } else {
+        _setSelectedChain(_chain)
+        localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, _chain.id.toString())
       }
     },
     [switchChain],
