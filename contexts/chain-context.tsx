@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { useAccount, useSwitchChain } from 'wagmi'
+import { useAccount, useDisconnect, useSwitchChain } from 'wagmi'
 import { hexValue } from '@ethersproject/bytes'
 import { SwitchChainErrorType } from '@wagmi/core'
 
@@ -29,6 +29,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [selectedChain, _setSelectedChain] = React.useState<Chain>(
     supportChains.find((chain) => chain.id === DEFAULT_CHAIN_ID)!,
   )
+  const { disconnectAsync } = useDisconnect()
   const [connectedWrongChain, setConnectedWrongChain] =
     React.useState<boolean>(false)
   const { chainId, connector } = useAccount()
@@ -124,7 +125,11 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
         <Modal
           show
           onClose={() => {}}
-          onButtonClick={() => window.location.reload()}
+          onButtonClick={async () => {
+            if (disconnectAsync) {
+              await disconnectAsync()
+            }
+          }}
         >
           <div className="flex flex-col gap-4">
             <h1 className="font-bold sm:text-xl">
