@@ -15,7 +15,6 @@ export async function sendTransaction(
     return
   }
   if (disconnectAsync && chain.id !== walletClient.chain!.id) {
-    localStorage.removeItem('wagmi.cache')
     await disconnectAsync()
   }
   const publicClient = createPublicClient({

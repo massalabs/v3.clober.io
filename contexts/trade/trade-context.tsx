@@ -158,11 +158,16 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
         if (
           getQueryParams()?.inputCurrency &&
           getQueryParams()?.outputCurrency &&
-          userAddress
+          getQueryParams()?.chain
         ) {
-          localStorage.removeItem('wagmi.cache')
-          await disconnectAsync()
-          window.location.reload()
+          if (userAddress) {
+            try {
+              await disconnectAsync()
+              window.location.reload()
+            } catch (e) {
+              console.error('disconnectAsync error', e)
+            }
+          }
         } else if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
           return
         }
@@ -199,10 +204,21 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
             ),
           ),
         )
-        setInputCurrency(_inputCurrency)
-        setOutputCurrency(_outputCurrency)
+
+        if (_inputCurrency) {
+          setInputCurrency(_inputCurrency)
+        }
+        if (_outputCurrency) {
+          setOutputCurrency(_outputCurrency)
+        }
 
         if (_inputCurrency && _outputCurrency) {
+          console.log({
+            context: 'trade',
+            inputCurrency: _inputCurrency,
+            outputCurrency: _outputCurrency,
+            url: window.location.href,
+          })
           const quote = getQuoteToken({
             chainId: selectedChain.id,
             token0: _inputCurrency.address,
@@ -213,12 +229,6 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
           } else {
             setIsBid(false)
           }
-          console.log({
-            inputCurrency: _inputCurrency?.address,
-            outputCurrency: _outputCurrency?.address,
-            isBid,
-            url: window.location.href,
-          })
           const url = new URL(window.location.href)
           // remove `inputCurrency` and `outputCurrency` query params
           window.history.pushState(
@@ -233,8 +243,10 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (window.location.href.includes('/trade')) {
         action()
       }
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
+      disconnectAsync,
       selectedChain,
       setCurrencies,
       setInputCurrency,
@@ -243,6 +255,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
       window.location.href,
       inputCurrencyAddress,
       outputCurrencyAddress,
+      userAddress,
     ],
   )
 
