@@ -2,7 +2,7 @@ import React from 'react'
 import { isAddressEqual } from 'viem'
 
 import { Currency, getLogo } from '../../model/currency'
-import { supportChains } from '../../constants/chain'
+import { DEFAULT_CHAIN_ID, supportChains } from '../../constants/chain'
 import { LOCAL_STORAGE_CHAIN_KEY } from '../../contexts/chain-context'
 import { WHITELISTED_CURRENCIES } from '../../constants/currency'
 
@@ -13,7 +13,9 @@ export const CurrencyIcon = ({
   currency: Currency
 } & React.ImgHTMLAttributes<HTMLImageElement>) => {
   const [tryCount, setTryCount] = React.useState(0)
-  const chainId = Number(localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY) ?? '0')
+  const chainId = Number(
+    localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY) ?? DEFAULT_CHAIN_ID,
+  )
   const _currency = WHITELISTED_CURRENCIES[chainId].find((c) =>
     isAddressEqual(c.address, currency.address),
   )
