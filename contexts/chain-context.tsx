@@ -121,7 +121,11 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   return (
     <Context.Provider value={{ selectedChain, setSelectedChain }}>
       {connectedWrongChain ? (
-        <Modal show onClose={() => {}} onButtonClick={() => {}}>
+        <Modal
+          show
+          onClose={() => {}}
+          onButtonClick={() => window.location.reload()}
+        >
           <div className="flex flex-col gap-4">
             <h1 className="font-bold sm:text-xl">
               Connected to the wrong chain
