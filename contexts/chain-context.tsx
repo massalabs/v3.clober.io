@@ -10,10 +10,7 @@ import {
   supportChains,
   wagmiConfig,
 } from '../constants/chain'
-import { WALLET_WARNING_MODAL_START_TIMESTAMP } from '../utils/transaction'
-import { currentTimestampInSeconds } from '../utils/date'
-
-import { useTransactionContext } from './transaction-context'
+import Modal from '../components/modal/modal'
 
 type ChainContext = {
   selectedChain: Chain
@@ -29,10 +26,11 @@ export const LOCAL_STORAGE_CHAIN_KEY = 'chain'
 const QUERY_PARAM_CHAIN_KEY = 'chain'
 
 export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const { setConfirmation } = useTransactionContext()
   const [selectedChain, _setSelectedChain] = React.useState<Chain>(
     supportChains.find((chain) => chain.id === DEFAULT_CHAIN_ID)!,
   )
+  const [connectedWrongChain, setConnectedWrongChain] =
+    React.useState<boolean>(false)
   const { chainId } = useAccount()
 
   const { switchChain } = useSwitchChain({
@@ -47,13 +45,11 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
       },
       onError: async (type: SwitchChainErrorType, data) => {
         if (type.name === 'SwitchChainNotSupportedError') {
+          const chain =
+            data && data.chainId ? findSupportChain(data.chainId) : undefined
           const provider = window.ethereum
           if (provider) {
             try {
-              const chain =
-                data && data.chainId
-                  ? findSupportChain(data.chainId)
-                  : undefined
               if (chain) {
                 await provider.request({
                   method: 'wallet_switchEthereumChain',
@@ -114,38 +110,32 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
     }
   }, [chainId, setSelectedChain])
 
-  const now = currentTimestampInSeconds()
   useEffect(() => {
-    const action = async () => {
-      const startTimestamp = Number(
-        localStorage.getItem(WALLET_WARNING_MODAL_START_TIMESTAMP) ?? '0',
-      )
-      if (now - startTimestamp < 5) {
-        setConfirmation({
-          title: 'Connected to the wrong chain',
-          body: [
-            'The current chain is different from the one connected to your wallet.',
-            // eslint-disable-next-line react/jsx-key
-            <br />,
-            'If this message doesn’t disappear after 5 seconds, please refresh the page.',
-            // eslint-disable-next-line react/jsx-key
-            <br />,
-            'Should the message appear multiple times, please change the chain in your wallet.',
-          ] as any,
-          fields: [],
-          chain: selectedChain,
-        })
-
-        await new Promise((resolve) => setTimeout(resolve, 5000))
-        window.location.reload()
-      }
+    if (chainId && chainId !== selectedChain.id) {
+      setConnectedWrongChain(true)
+    } else {
+      setConnectedWrongChain(false)
     }
-
-    action()
-  }, [now, selectedChain, setConfirmation])
+  }, [chainId, selectedChain.id])
 
   return (
     <Context.Provider value={{ selectedChain, setSelectedChain }}>
+      {connectedWrongChain ? (
+        <Modal show onClose={() => {}} onButtonClick={() => {}}>
+          <h1 className="flex font-bold sm:text-xl mb-4">
+            Connected to the wrong chain
+          </h1>
+          <div className="text-xs sm:text-sm text-gray-400">
+            The current chain is different from the one connected to your
+            wallet. If this message does not disappear after a while,
+            <span className="font-semibold text-gray-100">
+              please change the chain in your wallet.
+            </span>
+          </div>
+        </Modal>
+      ) : (
+        <></>
+      )}
       {children}
     </Context.Provider>
   )

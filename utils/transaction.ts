@@ -5,11 +5,6 @@ import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-urls'
 import { Chain } from '../model/chain'
 
-import { currentTimestampInSeconds } from './date'
-
-export const WALLET_WARNING_MODAL_START_TIMESTAMP =
-  'wallet-warning-modal-start-timestamp'
-
 export async function sendTransaction(
   chain: Chain,
   walletClient: WalletClient,
@@ -20,10 +15,6 @@ export async function sendTransaction(
     return
   }
   if (disconnectAsync && chain.id !== walletClient.chain!.id) {
-    localStorage.setItem(
-      WALLET_WARNING_MODAL_START_TIMESTAMP,
-      currentTimestampInSeconds().toString(),
-    )
     localStorage.removeItem('wagmi.cache')
     await disconnectAsync()
   }
