@@ -10,6 +10,7 @@ export default function Home() {
   const url = window.location.href
 
   if (router.pathname === '/') {
+    // TODO: remove this after the future page is ready
     if (url.includes('futures.clober.io')) {
       router.push(`/future?chain=${monadTestnet.id}`)
     } else {

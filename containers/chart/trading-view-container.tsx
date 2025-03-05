@@ -14,7 +14,6 @@ const TradingViewWidget = ({ symbol }: { symbol: string }) => {
         'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js'
       script.type = 'text/javascript'
       script.async = true
-      // todo: parse symbol
       script.innerHTML = `
         {
           "autosize": true,
