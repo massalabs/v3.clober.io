@@ -24,14 +24,25 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   return (
     <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
       <div className="flex items-center gap-2.5 md:gap-16">
-        <Link
-          className="flex gap-2 items-center"
-          target="_blank"
-          href="https://clober.io"
-          rel="noreferrer"
-        >
-          <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
-        </Link>
+        {window.location.href.includes('futures.clober.io') ? (
+          <Link
+            className="flex gap-2 items-center"
+            target="_blank"
+            href="https://clober.io"
+            rel="noreferrer"
+          >
+            <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
+          </Link>
+        ) : (
+          <Link
+            className="flex gap-2 items-center"
+            target="_blank"
+            href="https://clober.io"
+            rel="noreferrer"
+          >
+            <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
+          </Link>
+        )}
         {!window.location.href.includes('futures.clober.io') ? (
           <div className="hidden lg:flex py-1 justify-start items-center gap-8">
             <PageButton
