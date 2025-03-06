@@ -7,6 +7,7 @@ import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
 import { fetchFuturePosition } from '../../apis/future/position'
 import { UserPosition } from '../../model/future/user-position'
+import { monadTestnet } from '../../constants/monad-testnet-chain'
 
 type FutureContext = {
   positions: UserPosition[]
@@ -17,7 +18,7 @@ const Context = React.createContext<FutureContext>({
 })
 
 export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const { selectedChain } = useChainContext()
+  const { selectedChain, setSelectedChain } = useChainContext()
   const { prices } = useCurrencyContext()
   const { address: userAddress } = useAccount()
   const { setCurrencies, whitelistCurrencies } = useCurrencyContext()
@@ -34,6 +35,15 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }) as {
     data: UserPosition[]
   }
+
+  // TODO: remove this after testnet
+  useEffect(() => {
+    if (selectedChain.id !== monadTestnet.id) {
+      setSelectedChain(monadTestnet)
+      const url = new URL(window.location.href)
+      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
+    }
+  }, [selectedChain, setSelectedChain])
 
   useEffect(() => {
     const action = async () => {
