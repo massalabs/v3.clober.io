@@ -6,7 +6,7 @@ export const formatDate = (date: Date): string =>
     month: 'short',
     day: '2-digit',
   })
-    .format(date.setDate(date.getDate() - 1))
+    .format(date.setDate(date.getDate()))
     .replace(',', '')
 
 export const currentTimestampInSeconds = (): number =>
