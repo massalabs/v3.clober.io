@@ -34,33 +34,6 @@ type ShortPositionDto = {
   averagePrice: string
 }
 
-type LongPositionDto = {
-  id: string
-  user: string
-  asset: {
-    id: string
-    assetId: string
-    currency: {
-      id: string
-      name: string
-      symbol: string
-      decimals: string
-    }
-    collateral: {
-      id: string
-      name: string
-      symbol: string
-      decimals: string
-    }
-    expiration: string
-    maxLTV: string
-    liquidationThreshold: string
-    minDebt: string
-  }
-  balance: string
-  averagePrice: string
-}
-
 const DEFAULT_COLLATERAL = {
   address: getAddress('0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795'),
   name: 'USD Coin',
@@ -75,16 +48,15 @@ export const fetchFuturePosition = async (
   price: Prices,
 ): Promise<UserPosition[]> => {
   const {
-    data: { shortPositions, longPositions },
+    data: { shortPositions },
   } = await Subgraph.get<{
     data: {
       shortPositions: ShortPositionDto[]
-      longPositions: LongPositionDto[]
     }
   }>(
     'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/clober-future-subgraph-monad-testnet/v1.0.0/gn',
     'getPositions',
-    'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } longPositions { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV liquidationThreshold minDebt } averagePrice balance } }',
+    'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
     {
       userAddress: userAddress.toLowerCase(),
     },
@@ -139,37 +111,6 @@ export const fetchFuturePosition = async (
         averagePrice,
         pnl: 1 - price[debtCurrency.address] / averagePrice,
         profit: debtAmountDB * (averagePrice - price[debtCurrency.address]),
-      }
-    }),
-    ...longPositions.map((position) => {
-      const currency = {
-        address: getAddress(position.asset.currency.id),
-        name: position.asset.currency.name,
-        symbol: position.asset.currency.symbol,
-        decimals: Number(position.asset.currency.decimals),
-        priceFeedId: position.asset.assetId as `0x${string}`,
-      }
-      const averagePrice = Number(position.averagePrice)
-      const balanceDB = Number(
-        formatUnits(BigInt(position.balance), currency.decimals),
-      )
-      return {
-        user: getAddress(position.user),
-        asset: {
-          id: getAddress(position.asset.id),
-          currency: currency,
-          collateral: DEFAULT_COLLATERAL,
-          expiration: Number(position.asset.expiration),
-          maxLTV: BigInt(position.asset.maxLTV),
-          liquidationThreshold: BigInt(position.asset.liquidationThreshold),
-          ltvPrecision: 1000000n,
-          minDebt: BigInt(position.asset.minDebt),
-        },
-        type: 'long' as const,
-        averagePrice,
-        pnl: price[currency.address] / averagePrice,
-        profit: balanceDB * (price[currency.address] - averagePrice),
-        balance: BigInt(position.balance),
       }
     }),
   ].filter((position) => price[position.asset.currency.address] > 0)
