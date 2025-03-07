@@ -41,6 +41,7 @@ type FutureContractContext = {
   ) => Promise<Hash | undefined>
   repay: (asset: Asset, debtAmount: bigint) => Promise<Hash | undefined>
   repayAll: (position: UserPosition) => Promise<Hash | undefined>
+  settle: (asset: Asset) => Promise<Hash | undefined>
 }
 
 const Context = React.createContext<FutureContractContext>({
@@ -48,6 +49,7 @@ const Context = React.createContext<FutureContractContext>({
   isMarketClose: () => Promise.resolve(false),
   repay: () => Promise.resolve(undefined),
   repayAll: () => Promise.resolve(undefined),
+  settle: () => Promise.resolve(undefined),
 })
 
 export const FutureContractProvider = ({
@@ -150,7 +152,6 @@ export const FutureContractProvider = ({
         return
       }
 
-      let hash: Hash | undefined
       try {
         setConfirmation({
           title: `Short ${asset.currency.symbol}`,
@@ -284,12 +285,11 @@ export const FutureContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
-          queryClient.invalidateQueries({ queryKey: ['future-balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
           queryClient.invalidateQueries({ queryKey: ['allowances'] }),
         ])
         setConfirmation(undefined)
       }
-      return hash
     },
     [
       allowances,
@@ -309,7 +309,6 @@ export const FutureContractProvider = ({
         return
       }
 
-      let hash: Hash | undefined
       try {
         setConfirmation({
           title: `Repay ${asset.currency.symbol}`,
@@ -336,27 +335,6 @@ export const FutureContractProvider = ({
           ],
         })
 
-        const evmPriceServiceConnection = new EvmPriceServiceConnection(
-          'https://hermes.pyth.network',
-        )
-        const priceFeedUpdateData =
-          await evmPriceServiceConnection.getPriceFeedsUpdateData([
-            asset.currency.priceFeedId,
-            asset.collateral.priceFeedId,
-          ])
-
-        if (priceFeedUpdateData.length === 0) {
-          console.error('Price feed not found')
-          return
-        }
-
-        const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
-          abi: PYTH_ABI,
-          functionName: 'getUpdateFee',
-          args: [priceFeedUpdateData as any],
-        })
-
         const transaction = await buildTransaction(
           publicClient,
           {
@@ -364,7 +342,6 @@ export const FutureContractProvider = ({
             address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
             functionName: 'multicall',
             abi: VAULT_MANAGER_ABI,
-            value: fee,
             args: [
               [
                 encodeFunctionData({
@@ -392,12 +369,10 @@ export const FutureContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
-          queryClient.invalidateQueries({ queryKey: ['future-balances'] }),
-          queryClient.invalidateQueries({ queryKey: ['allowances'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
         ])
         setConfirmation(undefined)
       }
-      return hash
     },
     [
       disconnectAsync,
@@ -416,7 +391,6 @@ export const FutureContractProvider = ({
         return
       }
 
-      let hash: Hash | undefined
       try {
         setConfirmation({
           title: `Close ${userPosition.asset.currency.symbol}`,
@@ -492,16 +466,103 @@ export const FutureContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
-          queryClient.invalidateQueries({ queryKey: ['future-balances'] }),
-          queryClient.invalidateQueries({ queryKey: ['allowances'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
         ])
         setConfirmation(undefined)
       }
-      return hash
     },
     [
       disconnectAsync,
       prices,
+      publicClient,
+      queryClient,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
+  const settle = useCallback(
+    async (asset: Asset): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      try {
+        setConfirmation({
+          title: `Settle ${asset.currency.symbol}`,
+          body: 'Please confirm in your wallet.',
+          chain: selectedChain,
+          fields: [],
+        })
+
+        const evmPriceServiceConnection = new EvmPriceServiceConnection(
+          'https://hermes.pyth.network',
+        )
+        const priceFeedUpdateData =
+          await evmPriceServiceConnection.getPriceFeedsUpdateData([
+            asset.currency.priceFeedId,
+            asset.collateral.priceFeedId,
+          ])
+
+        if (priceFeedUpdateData.length === 0) {
+          console.error('Price feed not found')
+          return
+        }
+
+        const fee = await publicClient.readContract({
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          abi: PYTH_ABI,
+          functionName: 'getUpdateFee',
+          args: [priceFeedUpdateData as any],
+        })
+
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'multicall',
+            abi: VAULT_MANAGER_ABI,
+            value: fee,
+            args: [
+              [
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'updateOracle',
+                  args: [
+                    encodeAbiParameters(parseAbiParameters('bytes[]'), [
+                      priceFeedUpdateData as any,
+                    ]),
+                  ],
+                }),
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'settle',
+                  args: [asset.currency.address],
+                }),
+              ],
+            ],
+          },
+          1_000_000n,
+        )
+        return sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['future-assets'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [
+      disconnectAsync,
       publicClient,
       queryClient,
       selectedChain,
@@ -517,6 +578,7 @@ export const FutureContractProvider = ({
         borrow,
         repay,
         repayAll,
+        settle,
       }}
     >
       {children}

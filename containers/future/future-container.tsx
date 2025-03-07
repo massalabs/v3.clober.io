@@ -18,8 +18,8 @@ import { FuturePositionAdjustModalContainer } from './future-position-adjust-mod
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
-  const { prices } = useCurrencyContext()
-  const { assets, positions, futureBalances } = useFutureContext()
+  const { prices, balances } = useCurrencyContext()
+  const { assets, positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>('mint')
@@ -118,19 +118,19 @@ export const FutureContainer = () => {
                   .filter(
                     (asset) =>
                       asset.expiration < now &&
-                      futureBalances[asset.currency.address] > 0n,
+                      balances[asset.currency.address] > 0n,
                   )
                   .map((asset, index) => (
                     <FutureRedeemCard
                       key={`redeem-${asset.id}-${index}`}
                       asset={asset}
-                      balance={futureBalances[asset.currency.address] ?? 0n}
+                      balance={balances[asset.currency.address] ?? 0n}
                       prices={prices}
                       redeemableCollateral={parseUnits(
                         (
                           Number(
                             formatUnits(
-                              futureBalances[asset.currency.address] ?? 0n,
+                              balances[asset.currency.address] ?? 0n,
                               asset.currency.decimals,
                             ),
                           ) * asset.settlePrice
