@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { Asset } from '../../model/future/asset'
 import { MintFutureAssetForm } from '../../components/form/future/mint-future-asset-form'
@@ -13,8 +14,11 @@ import {
 import { formatUnits } from '../../utils/bigint'
 import { useFutureContractContext } from '../../contexts/future/future-contract-context'
 import Modal from '../../components/modal/modal'
+import { useChainContext } from '../../contexts/chain-context'
 
 export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
+  const router = useRouter()
+  const { selectedChain } = useChainContext()
   const [isClose, setIsClose] = useState(false)
   const { balances, prices } = useCurrencyContext()
   const { isMarketClose, borrow } = useFutureContractContext()
@@ -119,7 +123,10 @@ export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
             setIsClose(true)
             return
           }
-          await borrow(asset, collateralAmount, debtAmount)
+          const hash = await borrow(asset, collateralAmount, debtAmount)
+          if (hash) {
+            await router.replace(`/future?chain=${selectedChain.id}`)
+          }
         },
         text:
           collateralAmount === 0n

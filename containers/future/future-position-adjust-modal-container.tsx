@@ -140,9 +140,15 @@ export const FuturePositionAdjustModalContainer = ({
               setIsClose(true)
               return
             }
-            await borrow(userPosition.asset, 0n, debtAmountDelta)
+            const hash = await borrow(userPosition.asset, 0n, debtAmountDelta)
+            if (hash) {
+              onClose()
+            }
           } else if (ltv > newLTV) {
-            await repay(userPosition.asset, -debtAmountDelta)
+            const hash = await repay(userPosition.asset, -debtAmountDelta)
+            if (hash) {
+              onClose()
+            }
           }
         },
         disabled:
