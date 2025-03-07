@@ -38,7 +38,7 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }
 
   const { data: positions } = useQuery({
-    queryKey: ['future-positions', userAddress, selectedChain.id, prices],
+    queryKey: ['future-positions', userAddress, selectedChain.id],
     queryFn: async () => {
       if (!userAddress) {
         return []
@@ -46,6 +46,8 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
       return fetchFuturePositions(selectedChain.id, userAddress, prices)
     },
     initialData: [],
+    refetchIntervalInBackground: true,
+    refetchInterval: 2 * 1000, // checked
   }) as {
     data: UserPosition[]
   }
