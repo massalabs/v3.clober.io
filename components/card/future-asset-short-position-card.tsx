@@ -13,11 +13,11 @@ import { toCommaSeparated } from '../../utils/number'
 export const FutureAssetShortPositionCard = ({
   position,
   loanAssetPrice,
-  onAdjustMultiple,
+  onClickButton,
 }: {
   position: UserPosition
   loanAssetPrice: number
-  onAdjustMultiple: () => void
+  onClickButton: () => void
 }) => {
   const now = currentTimestampInSeconds()
 
@@ -134,9 +134,9 @@ export const FutureAssetShortPositionCard = ({
         <div className="flex items-start gap-3 self-stretch">
           <button
             className="w-full flex items-center font-bold justify-center rounded-xl bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-800 disabled:text-gray-500 px-3 py-2 text-sm"
-            onClick={onAdjustMultiple}
+            onClick={onClickButton}
           >
-            Adjust
+            {position.asset.expiration < now ? 'Close' : 'Adjust'}
           </button>
         </div>
       </div>

@@ -153,8 +153,12 @@ export const FutureContainer = () => {
                       loanAssetPrice={
                         prices[position.asset.currency.address] ?? 0
                       }
-                      onAdjustMultiple={() => {
-                        setAdjustPosition(position)
+                      onClickButton={async () => {
+                        if (position.asset.expiration < now) {
+                          alert('close')
+                        } else {
+                          setAdjustPosition(position)
+                        }
                       }}
                     />
                   ) : (
