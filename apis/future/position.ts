@@ -93,7 +93,7 @@ export const fetchFuturePositions = async (
           liquidationThreshold: BigInt(position.asset.liquidationThreshold),
           ltvPrecision: 1000000n,
           minDebt: BigInt(position.asset.minDebt),
-          settlePrice: BigInt(position.asset.settlePrice),
+          settlePrice: Number(position.asset.settlePrice),
         },
         type: 'short' as const,
         collateralAmount: BigInt(position.collateralAmount),

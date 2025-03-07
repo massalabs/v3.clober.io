@@ -64,7 +64,7 @@ export const fetchFutureAssets = async (chainId: number): Promise<Asset[]> => {
         liquidationThreshold: BigInt(asset.liquidationThreshold),
         ltvPrecision: 1000000n,
         minDebt: BigInt(asset.minDebt),
-        settlePrice: BigInt(asset.settlePrice),
+        settlePrice: Number(asset.settlePrice),
       }
     })
     .filter((asset) => asset !== undefined) as Asset[]

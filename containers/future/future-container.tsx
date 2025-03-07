@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
+import { parseUnits } from 'viem'
 
 import { FutureAssetCard } from '../../components/card/future-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
@@ -10,6 +11,7 @@ import { useCurrencyContext } from '../../contexts/currency-context'
 import { currentTimestampInSeconds } from '../../utils/date'
 import { useFutureContext } from '../../contexts/future/future-context'
 import { FutureRedeemCard } from '../../components/card/future-redeem-card'
+import { formatUnits } from '../../utils/bigint'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
@@ -124,13 +126,26 @@ export const FutureContainer = () => {
                       asset={asset}
                       balance={balances[asset.currency.address] ?? 0n}
                       prices={prices}
-                      // return uint128(uint256(amount) * config.settlePrice * collateralPrecision / _pricePrecision / 1e18);
-                      redeemableCollateral={100000n}
+                      redeemableCollateral={parseUnits(
+                        (
+                          Number(
+                            formatUnits(
+                              balances[asset.currency.address] ?? 0n,
+                              asset.currency.decimals,
+                            ),
+                          ) * asset.settlePrice
+                        ).toFixed(18),
+                        asset.collateral.decimals,
+                      )}
                       actionButtonProps={{
-                        text: 'Redeem',
+                        text: asset.settlePrice > 0 ? 'Redeem' : 'Settle',
                         disabled: false,
                         onClick: () => {
-                          alert('Redeem')
+                          if (asset.settlePrice > 0) {
+                            alert('Redeem')
+                          } else {
+                            alert('Settle')
+                          }
                         },
                       }}
                     />
@@ -155,7 +170,11 @@ export const FutureContainer = () => {
                       }
                       onClickButton={async () => {
                         if (position.asset.expiration < now) {
-                          alert('close')
+                          if (position.asset.settlePrice > 0) {
+                            alert('close')
+                          } else {
+                            alert('redeem')
+                          }
                         } else {
                           setAdjustPosition(position)
                         }

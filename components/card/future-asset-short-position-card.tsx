@@ -130,13 +130,35 @@ export const FutureAssetShortPositionCard = ({
               %
             </div>
           </div>
+
+          <div className="flex items-center gap-1 self-stretch">
+            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
+              Settle Price
+            </div>
+            <div className="text-sm sm:text-base">
+              {position.asset.settlePrice > 0n ? (
+                <>
+                  $
+                  {toCommaSeparated(
+                    (position?.asset.settlePrice ?? 0).toFixed(2),
+                  )}
+                </>
+              ) : (
+                <>-</>
+              )}
+            </div>
+          </div>
         </div>
         <div className="flex items-start gap-3 self-stretch">
           <button
             className="w-full flex items-center font-bold justify-center rounded-xl bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-800 disabled:text-gray-500 px-3 py-2 text-sm"
             onClick={onClickButton}
           >
-            {position.asset.expiration < now ? 'Close' : 'Adjust'}
+            {position.asset.expiration < now
+              ? position.asset.settlePrice === 0
+                ? 'Settle'
+                : 'Close'
+              : 'Adjust'}
           </button>
         </div>
       </div>
