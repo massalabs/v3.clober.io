@@ -19,7 +19,7 @@ import { FuturePositionAdjustModalContainer } from './future-position-adjust-mod
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
-  const { settle, close } = useFutureContractContext()
+  const { settle, close, redeem } = useFutureContractContext()
   const { prices, balances } = useCurrencyContext()
   const { assets, positions } = useFutureContext()
   const { address: userAddress } = useAccount()
@@ -157,11 +157,20 @@ export const FutureContainer = () => {
                       actionButtonProps={{
                         text: asset.settlePrice > 0 ? 'Redeem' : 'Settle',
                         disabled: false,
-                        onClick: () => {
+                        onClick: async () => {
                           if (asset.settlePrice > 0) {
-                            alert('Redeem')
+                            await redeem(
+                              asset,
+                              balances[asset.currency.address] ?? 0n,
+                              calculateSettledCollateral(
+                                balances[asset.currency.address] ?? 0n,
+                                asset.settlePrice,
+                                asset.currency.decimals,
+                                asset.collateral.decimals,
+                              ),
+                            )
                           } else {
-                            alert('Settle')
+                            await settle(asset)
                           }
                         },
                       }}

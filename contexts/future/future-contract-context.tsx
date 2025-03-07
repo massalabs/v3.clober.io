@@ -43,6 +43,11 @@ type FutureContractContext = {
   repayAll: (position: UserPosition) => Promise<Hash | undefined>
   settle: (asset: Asset) => Promise<Hash | undefined>
   close: (asset: Asset, collateralReceived: bigint) => Promise<Hash | undefined>
+  redeem: (
+    asset: Asset,
+    amount: bigint,
+    collateralReceived: bigint,
+  ) => Promise<Hash | undefined>
 }
 
 const Context = React.createContext<FutureContractContext>({
@@ -52,6 +57,7 @@ const Context = React.createContext<FutureContractContext>({
   repayAll: () => Promise.resolve(undefined),
   settle: () => Promise.resolve(undefined),
   close: () => Promise.resolve(undefined),
+  redeem: () => Promise.resolve(undefined),
 })
 
 export const FutureContractProvider = ({
@@ -583,7 +589,6 @@ export const FutureContractProvider = ({
       }
 
       try {
-        console.error('aaa', prices, [asset.collateral.address])
         setConfirmation({
           title: `Close`,
           body: 'Please confirm in your wallet.',
@@ -640,6 +645,87 @@ export const FutureContractProvider = ({
     ],
   )
 
+  const redeem = useCallback(
+    async (
+      asset: Asset,
+      amount: bigint,
+      collateralReceived: bigint,
+    ): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      try {
+        setConfirmation({
+          title: `Redeem`,
+          body: 'Please confirm in your wallet.',
+          chain: selectedChain,
+          fields: [
+            {
+              currency: asset.currency,
+              label: asset.currency.symbol,
+              direction: 'in',
+              value: formatUnits(
+                amount,
+                asset.currency.decimals,
+                prices[asset.currency.address] ?? 0,
+              ),
+            },
+            {
+              currency: asset.collateral,
+              label: asset.collateral.symbol,
+              direction: 'out',
+              value: formatUnits(
+                collateralReceived,
+                asset.collateral.decimals,
+                prices[asset.collateral.address] ?? 0,
+              ),
+            },
+          ],
+        })
+
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'redeem',
+            abi: VAULT_MANAGER_ABI,
+            args: [
+              asset.currency.address,
+              walletClient.account.address,
+              amount,
+            ],
+          },
+          1_000_000n,
+        )
+        return sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [
+      disconnectAsync,
+      prices,
+      publicClient,
+      queryClient,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
   return (
     <Context.Provider
       value={{
@@ -649,6 +735,7 @@ export const FutureContractProvider = ({
         repayAll,
         settle,
         close,
+        redeem,
       }}
     >
       {children}
