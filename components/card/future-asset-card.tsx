@@ -43,7 +43,7 @@ export const FutureAssetCard = ({
             {asset.collateral.symbol}
           </div>
         </div>
-        <div className="w-[140px] text-white text-base font-bold">
+        <div className="w-[160px] text-white text-base font-bold text-nowrap">
           {formatDate(new Date(asset.expiration * 1000))}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
@@ -114,7 +114,7 @@ export const FutureAssetCard = ({
           </button>
         </div>
         <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
-          <div className="flex flex-col justify-start items-center gap-2 w-20">
+          <div className="flex flex-col justify-start items-center gap-2 w-16">
             <div className="self-stretch text-gray-400 text-xs">Collateral</div>
             <div className="self-stretch text-white text-sm font-bold">
               {asset.collateral.symbol}
@@ -124,7 +124,7 @@ export const FutureAssetCard = ({
             <div className="self-stretch text-gray-400 text-xs">
               Expiry Date
             </div>
-            <div className="self-stretch text-white text-sm font-bold">
+            <div className="self-stretch text-white text-sm font-bold text-nowrap">
               {formatDate(new Date(asset.expiration * 1000))}
             </div>
           </div>

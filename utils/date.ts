@@ -2,9 +2,12 @@ export const SECONDS_IN_DAY = 60 * 60 * 24
 
 export const formatDate = (date: Date): string =>
   Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
+    year: '2-digit',
     month: 'short',
     day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
   })
     .format(date.setDate(date.getDate()))
     .replace(',', '')
