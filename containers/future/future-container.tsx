@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 import { parseUnits } from 'viem'
@@ -12,12 +12,14 @@ import { currentTimestampInSeconds } from '../../utils/date'
 import { useFutureContext } from '../../contexts/future/future-context'
 import { FutureRedeemCard } from '../../components/card/future-redeem-card'
 import { formatUnits } from '../../utils/bigint'
+import { useFutureContractContext } from '../../contexts/future/future-contract-context'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
+  const { settle, close } = useFutureContractContext()
   const { prices, balances } = useCurrencyContext()
   const { assets, positions } = useFutureContext()
   const { address: userAddress } = useAccount()
@@ -27,6 +29,23 @@ export const FutureContainer = () => {
     null,
   )
   const now = currentTimestampInSeconds()
+
+  const calculateSettledCollateral = useCallback(
+    (
+      balance: bigint,
+      settlePrice: number,
+      currencyDecimals: number,
+      collateralDecimals: number,
+    ) => {
+      return parseUnits(
+        (Number(formatUnits(balance, currencyDecimals)) * settlePrice).toFixed(
+          18,
+        ),
+        collateralDecimals,
+      )
+    },
+    [],
+  )
 
   return (
     <div className="w-full flex flex-col text-white mt-8">
@@ -129,15 +148,10 @@ export const FutureContainer = () => {
                       asset={asset}
                       balance={balances[asset.currency.address] ?? 0n}
                       prices={prices}
-                      redeemableCollateral={parseUnits(
-                        (
-                          Number(
-                            formatUnits(
-                              balances[asset.currency.address] ?? 0n,
-                              asset.currency.decimals,
-                            ),
-                          ) * asset.settlePrice
-                        ).toFixed(18),
+                      redeemableCollateral={calculateSettledCollateral(
+                        balances[asset.currency.address] ?? 0n,
+                        asset.settlePrice,
+                        asset.currency.decimals,
                         asset.collateral.decimals,
                       )}
                       actionButtonProps={{
@@ -174,9 +188,17 @@ export const FutureContainer = () => {
                       onClickButton={async () => {
                         if (position.asset.expiration < now) {
                           if (position.asset.settlePrice > 0) {
-                            alert('close')
+                            const collateralReceived =
+                              (position?.collateralAmount ?? 0n) -
+                              calculateSettledCollateral(
+                                balances[position.asset.currency.address] ?? 0n,
+                                position.asset.settlePrice,
+                                position.asset.currency.decimals,
+                                position.asset.collateral.decimals,
+                              )
+                            await close(position.asset, collateralReceived)
                           } else {
-                            alert('redeem')
+                            await settle(position.asset)
                           }
                         } else {
                           setAdjustPosition(position)

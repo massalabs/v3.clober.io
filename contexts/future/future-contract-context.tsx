@@ -42,6 +42,7 @@ type FutureContractContext = {
   repay: (asset: Asset, debtAmount: bigint) => Promise<Hash | undefined>
   repayAll: (position: UserPosition) => Promise<Hash | undefined>
   settle: (asset: Asset) => Promise<Hash | undefined>
+  close: (asset: Asset, collateralReceived: bigint) => Promise<Hash | undefined>
 }
 
 const Context = React.createContext<FutureContractContext>({
@@ -50,6 +51,7 @@ const Context = React.createContext<FutureContractContext>({
   repay: () => Promise.resolve(undefined),
   repayAll: () => Promise.resolve(undefined),
   settle: () => Promise.resolve(undefined),
+  close: () => Promise.resolve(undefined),
 })
 
 export const FutureContractProvider = ({
@@ -571,6 +573,73 @@ export const FutureContractProvider = ({
     ],
   )
 
+  const close = useCallback(
+    async (
+      asset: Asset,
+      collateralReceived: bigint,
+    ): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      try {
+        console.error('aaa', prices, [asset.collateral.address])
+        setConfirmation({
+          title: `Close`,
+          body: 'Please confirm in your wallet.',
+          chain: selectedChain,
+          fields: [
+            {
+              currency: asset.collateral,
+              label: asset.collateral.symbol,
+              direction: 'out',
+              value: formatUnits(
+                collateralReceived,
+                asset.collateral.decimals,
+                prices[asset.collateral.address] ?? 0,
+              ),
+            },
+          ],
+        })
+
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'close',
+            abi: VAULT_MANAGER_ABI,
+            args: [asset.currency.address, walletClient.account.address],
+          },
+          1_000_000n,
+        )
+        return sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [
+      disconnectAsync,
+      prices,
+      publicClient,
+      queryClient,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
   return (
     <Context.Provider
       value={{
@@ -579,6 +648,7 @@ export const FutureContractProvider = ({
         repay,
         repayAll,
         settle,
+        close,
       }}
     >
       {children}
