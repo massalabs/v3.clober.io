@@ -109,7 +109,7 @@ export const fetchFuturePosition = async (
           BigInt(position.collateralAmount),
         ),
         averagePrice,
-        pnl: 1 - price[debtCurrency.address] / averagePrice,
+        pnl: averagePrice / price[debtCurrency.address],
         profit: debtAmountDB * (averagePrice - price[debtCurrency.address]),
       }
     }),

@@ -109,7 +109,7 @@ export const FutureAssetShortPositionCard = ({
                   {position.pnl >= 1 ? '+' : '-'}$
                   {toCommaSeparated(Math.abs(position.profit).toFixed(2))} (
                   {position.pnl >= 1 ? '+' : ''}
-                  {(position.pnl * 100).toFixed(2)}%)
+                  {position.pnl.toFixed(2)}%)
                 </div>
               </div>
             ) : (

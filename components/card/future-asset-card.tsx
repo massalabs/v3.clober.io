@@ -114,7 +114,7 @@ export const FutureAssetCard = ({
           </button>
         </div>
         <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
-          <div className="flex w-full flex-col flex-1 justify-start items-center gap-2">
+          <div className="flex flex-col justify-start items-center gap-2 w-20">
             <div className="self-stretch text-gray-400 text-xs">Collateral</div>
             <div className="self-stretch text-white text-sm font-bold">
               {asset.collateral.symbol}
