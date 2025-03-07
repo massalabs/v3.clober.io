@@ -61,13 +61,6 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 18,
       icon: '/wmonad.svg',
     },
-    {
-      address: '0x7Aff20Af80321c12211583E60f40C068398a53C7',
-      name: 'BTC',
-      symbol: 'BTC',
-      decimals: 18,
-      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fcrypto-btc-usd.inline.svg&w=3840&q=75',
-    },
   ],
 }
 
