@@ -13,6 +13,7 @@ import { useFutureContext } from '../../contexts/future/future-context'
 import { FutureRedeemCard } from '../../components/card/future-redeem-card'
 import { formatUnits } from '../../utils/bigint'
 import { useFutureContractContext } from '../../contexts/future/future-contract-context'
+import { WHITE_LISTED_ASSETS } from '../../constants/future/asset'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
@@ -116,6 +117,9 @@ export const FutureContainer = () => {
               <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
                 {assets
                   .filter((asset) => asset.expiration > now)
+                  .filter((asset) =>
+                    WHITE_LISTED_ASSETS.includes(asset.currency.address),
+                  )
                   .sort((a, b) =>
                     a.currency.symbol.localeCompare(b.currency.symbol),
                   )
