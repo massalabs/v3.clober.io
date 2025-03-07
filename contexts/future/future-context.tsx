@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
-import { fetchFuturePosition } from '../../apis/future/position'
+import { fetchFuturePositions } from '../../apis/future/position'
 import { UserPosition } from '../../model/future/user-position'
 import { monadTestnet } from '../../constants/monad-testnet-chain'
 
@@ -29,7 +29,7 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (!userAddress) {
         return []
       }
-      return fetchFuturePosition(userAddress, prices)
+      return fetchFuturePositions(userAddress, prices)
     },
     initialData: [],
   }) as {
