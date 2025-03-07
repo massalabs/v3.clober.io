@@ -1,10 +1,12 @@
-import { getAddress } from 'viem'
+import { getAddress, isAddressEqual } from 'viem'
 
 import { Subgraph } from '../../constants/subgraph'
 import { UserPosition } from '../../model/future/user-position'
 import { Prices } from '../../model/prices'
 import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
+import { COLLATERALS } from '../../constants/future/collateral'
+import { ASSET_ICONS } from '../../constants/future/asset'
 
 type ShortPositionDto = {
   id: string
@@ -28,22 +30,15 @@ type ShortPositionDto = {
     maxLTV: string
     liquidationThreshold: string
     minDebt: string
+    settlePrice: string
   }
   collateralAmount: string
   debtAmount: string
   averagePrice: string
 }
 
-const DEFAULT_COLLATERAL = {
-  address: getAddress('0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795'),
-  name: 'USD Coin',
-  symbol: 'USDC',
-  decimals: 6,
-  priceFeedId:
-    '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a' as `0x${string}`,
-}
-
 export const fetchFuturePositions = async (
+  chainId: number,
   userAddress: `0x${string}`,
   price: Prices,
 ): Promise<UserPosition[]> => {
@@ -56,7 +51,7 @@ export const fetchFuturePositions = async (
   }>(
     'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/clober-future-subgraph-monad-testnet/v1.0.0/gn',
     'getPositions',
-    'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
+    'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV settlePrice liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
     {
       userAddress: userAddress.toLowerCase(),
     },
@@ -75,17 +70,30 @@ export const fetchFuturePositions = async (
       const debtAmountDB = Number(
         formatUnits(BigInt(position.debtAmount), debtCurrency.decimals),
       )
+      const collateral = COLLATERALS[chainId].find((collateral) =>
+        isAddressEqual(
+          collateral.address,
+          position.asset.collateral.id as `0x${string}`,
+        ),
+      )
+      if (!collateral) {
+        return undefined
+      }
       return {
         user: getAddress(position.user),
         asset: {
           id: getAddress(position.asset.id),
-          currency: debtCurrency,
-          collateral: DEFAULT_COLLATERAL,
+          currency: {
+            ...debtCurrency,
+            icon: ASSET_ICONS[position.asset.assetId],
+          },
+          collateral,
           expiration: Number(position.asset.expiration),
           maxLTV: BigInt(position.asset.maxLTV),
           liquidationThreshold: BigInt(position.asset.liquidationThreshold),
           ltvPrecision: 1000000n,
           minDebt: BigInt(position.asset.minDebt),
+          settlePrice: BigInt(position.asset.settlePrice),
         },
         type: 'short' as const,
         collateralAmount: BigInt(position.collateralAmount),
@@ -93,8 +101,8 @@ export const fetchFuturePositions = async (
         liquidationPrice: calculateLiquidationPrice(
           debtCurrency,
           price[debtCurrency.address],
-          DEFAULT_COLLATERAL,
-          price[DEFAULT_COLLATERAL.address],
+          collateral,
+          price[collateral.address],
           BigInt(position.debtAmount),
           BigInt(position.collateralAmount),
           BigInt(position.asset.liquidationThreshold),
@@ -104,8 +112,8 @@ export const fetchFuturePositions = async (
           debtCurrency,
           price[debtCurrency.address],
           BigInt(position.debtAmount),
-          DEFAULT_COLLATERAL,
-          price[DEFAULT_COLLATERAL.address],
+          collateral,
+          price[collateral.address],
           BigInt(position.collateralAmount),
         ),
         averagePrice,
@@ -113,5 +121,7 @@ export const fetchFuturePositions = async (
         profit: debtAmountDB * (averagePrice - price[debtCurrency.address]),
       }
     }),
-  ].filter((position) => price[position.asset.currency.address] > 0)
+  ].filter(
+    (position) => position && price[position.asset.currency.address] > 0,
+  ) as UserPosition[]
 }
