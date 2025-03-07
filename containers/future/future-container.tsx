@@ -21,7 +21,7 @@ export const FutureContainer = () => {
   const { positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
-  const [tab, setTab] = React.useState<'my-position' | 'mint'>('mint')
+  const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>('mint')
   const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
     null,
   )
@@ -51,13 +51,24 @@ export const FutureContainer = () => {
                   Mint
                 </div>
               </button>
+
               <button
-                onClick={() => userAddress && setTab('my-position')}
-                disabled={tab === 'my-position'}
+                onClick={() => setTab('redeem')}
+                disabled={tab === 'redeem'}
                 className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
               >
                 <div className="text-center text-sm sm:text-base font-bold">
-                  My Positions
+                  Redeem
+                </div>
+              </button>
+
+              <button
+                onClick={() => userAddress && setTab('my-cdp')}
+                disabled={tab === 'my-cdp'}
+                className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
+              >
+                <div className="text-center text-sm sm:text-base font-bold">
+                  My CDP
                 </div>
               </button>
             </div>
@@ -75,10 +86,10 @@ export const FutureContainer = () => {
                 Collateral
               </div>
               <div className="w-[140px] text-gray-400 text-sm font-semibold">
-                Max LTV
+                Expiry Date
               </div>
               <div className="w-[140px] text-gray-400 text-sm font-semibold">
-                Expiry Date
+                Max LTV
               </div>
             </div>
             <div className="relative flex justify-center w-full h-full lg:h-[360px]">
@@ -97,7 +108,40 @@ export const FutureContainer = () => {
             </div>
           </div>
         </div>
-      ) : tab === 'my-position' ? (
+      ) : tab === 'redeem' ? (
+        <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
+          <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
+            <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
+              <div className="w-36 text-gray-400 text-sm font-semibold">
+                Asset
+              </div>
+              <div className="w-36 text-gray-400 text-sm font-semibold">
+                Collateral
+              </div>
+              <div className="w-[140px] text-gray-400 text-sm font-semibold">
+                Expiry Date
+              </div>
+              <div className="w-[140px] text-gray-400 text-sm font-semibold">
+                Max LTV
+              </div>
+            </div>
+            <div className="relative flex justify-center w-full h-full lg:h-[360px]">
+              <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
+                {(ASSETS[selectedChain.id] ?? [])
+                  .filter((asset) => asset.expiration > now)
+                  .map((asset, index) => (
+                    <FutureAssetCard
+                      chainId={selectedChain.id}
+                      key={index}
+                      asset={asset}
+                      router={router}
+                    />
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : tab === 'my-cdp' ? (
         <div className="flex flex-1 flex-col justify-center items-center pt-6">
           <div className="flex flex-1 flex-col w-full md:w-[740px] lg:w-[1060px]">
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">

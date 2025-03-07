@@ -44,10 +44,10 @@ export const FutureAssetCard = ({
           </div>
         </div>
         <div className="w-[140px] text-white text-base font-bold">
-          {ltv.toFixed(2)} %
+          {formatDate(new Date(asset.expiration * 1000))}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
-          {formatDate(new Date(asset.expiration * 1000))}
+          {ltv.toFixed(2)} %
         </div>
         <div className="flex flex-row gap-2">
           <Link
@@ -114,24 +114,24 @@ export const FutureAssetCard = ({
           </button>
         </div>
         <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
-          <div className="flex w-full flex-col justify-start items-center gap-2">
+          <div className="flex w-full flex-col flex-1 justify-start items-center gap-2">
             <div className="self-stretch text-gray-400 text-xs">Collateral</div>
             <div className="self-stretch text-white text-sm font-bold">
               {asset.collateral.symbol}
             </div>
           </div>
-          <div className="flex w-full flex-col justify-start items-center gap-2">
+          <div className="flex w-full flex-col flex-1 justify-start items-center gap-2">
+            <div className="self-stretch text-gray-400 text-xs">
+              Expiry Date
+            </div>
+            <div className="self-stretch text-white text-sm font-bold">
+              {formatDate(new Date(asset.expiration * 1000))}
+            </div>
+          </div>
+          <div className="flex w-full flex-col flex-1 justify-start items-center gap-2">
             <div className="self-stretch text-gray-400 text-xs">Max LTV</div>
             <div className="self-stretch text-white text-sm font-bold">
               {ltv.toFixed(2)}%
-            </div>
-          </div>
-          <div className="flex w-full flex-col justify-start items-center gap-2">
-            <div className="self-stretch text-center text-gray-400 text-xs">
-              Expiry Date
-            </div>
-            <div className="self-stretch text-center text-white text-sm font-bold">
-              {formatDate(new Date(asset.expiration * 1000))}
             </div>
           </div>
         </div>
