@@ -41,7 +41,10 @@ export const Default: Story = {
       ltvPrecision: 1000000n,
       minDebt: 10n * 10n ** 6n,
     },
-    prices: 145.12,
+    prices: {
+      [zeroAddress]: 240.1,
+      ['0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795']: 1.0001,
+    },
     balance: 100n * 10n ** 18n,
   },
 }
