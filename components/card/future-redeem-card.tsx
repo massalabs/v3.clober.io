@@ -91,7 +91,7 @@ export const FutureRedeemCard = ({
 
           <div className="flex items-center gap-1 self-stretch">
             <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              Redeemable Collateral
+              Redeemable
             </div>
             <div className="text-sm sm:text-base">
               {formatUnits(
@@ -124,7 +124,7 @@ export const FutureRedeemCard = ({
             disabled={actionButtonProps.disabled}
             className="w-full flex items-center font-bold justify-center rounded-xl bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-800 disabled:text-gray-500 px-3 py-2 text-sm"
           >
-            Redeem
+            {actionButtonProps.text}
           </button>
         </div>
       </div>

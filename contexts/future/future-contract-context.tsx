@@ -284,7 +284,7 @@ export const FutureContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
-          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['future-balances'] }),
           queryClient.invalidateQueries({ queryKey: ['allowances'] }),
         ])
         setConfirmation(undefined)
@@ -392,7 +392,7 @@ export const FutureContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
-          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['future-balances'] }),
           queryClient.invalidateQueries({ queryKey: ['allowances'] }),
         ])
         setConfirmation(undefined)
@@ -492,7 +492,7 @@ export const FutureContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
-          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+          queryClient.invalidateQueries({ queryKey: ['future-balances'] }),
           queryClient.invalidateQueries({ queryKey: ['allowances'] }),
         ])
         setConfirmation(undefined)
