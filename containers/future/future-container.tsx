@@ -20,6 +20,7 @@ export const FutureContainer = () => {
   const router = useRouter()
   const { prices, balances } = useCurrencyContext()
   const { assets, positions } = useFutureContext()
+  console.log({ assets, positions })
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>('mint')
