@@ -40,6 +40,7 @@ export const Default: Story = {
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
       minDebt: 10n * 10n ** 6n,
+      settlePrice: 10000000n,
     },
     prices: {
       [zeroAddress]: 240.1,

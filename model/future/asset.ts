@@ -9,4 +9,5 @@ export type Asset = {
   liquidationThreshold: bigint
   ltvPrecision: bigint
   minDebt: bigint
+  settlePrice: bigint
 }
