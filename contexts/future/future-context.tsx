@@ -8,12 +8,16 @@ import { useChainContext } from '../chain-context'
 import { fetchFuturePositions } from '../../apis/future/position'
 import { UserPosition } from '../../model/future/user-position'
 import { monadTestnet } from '../../constants/monad-testnet-chain'
+import { fetchFutureAssets } from '../../apis/future/asset'
+import { Asset } from '../../model/future/asset'
 
 type FutureContext = {
+  assets: Asset[]
   positions: UserPosition[]
 }
 
 const Context = React.createContext<FutureContext>({
+  assets: [],
   positions: [],
 })
 
@@ -23,13 +27,23 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { address: userAddress } = useAccount()
   const { setCurrencies, whitelistCurrencies } = useCurrencyContext()
 
+  const { data: assets } = useQuery({
+    queryKey: ['future-assets', selectedChain.id],
+    queryFn: async () => {
+      return fetchFutureAssets(selectedChain.id)
+    },
+    initialData: [],
+  }) as {
+    data: Asset[]
+  }
+
   const { data: positions } = useQuery({
     queryKey: ['future-positions', userAddress, selectedChain.id, prices],
     queryFn: async () => {
       if (!userAddress) {
         return []
       }
-      return fetchFuturePositions(userAddress, prices)
+      return fetchFuturePositions(selectedChain.id, userAddress, prices)
     },
     initialData: [],
   }) as {
@@ -52,7 +66,11 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
     action()
   }, [setCurrencies, whitelistCurrencies])
 
-  return <Context.Provider value={{ positions }}>{children}</Context.Provider>
+  return (
+    <Context.Provider value={{ assets, positions }}>
+      {children}
+    </Context.Provider>
+  )
 }
 
 export const useFutureContext = () => React.useContext(Context) as FutureContext

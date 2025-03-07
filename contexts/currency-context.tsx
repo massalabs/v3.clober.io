@@ -16,7 +16,6 @@ import { Allowances } from '../model/allowances'
 import { wagmiConfig } from '../constants/chain'
 import { deduplicateCurrencies } from '../utils/currency'
 import { monadTestnet } from '../constants/monad-testnet-chain'
-import { ASSETS } from '../constants/future/asset'
 import { CONTRACT_ADDRESSES } from '../constants/future/contracts'
 import { fetchPythPrice } from '../apis/price'
 
@@ -139,7 +138,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
     queryKey: ['prices', selectedChain.id],
     queryFn: async () => {
       if (selectedChain.id === monadTestnet.id) {
-        return fetchPythPrice(ASSETS[monadTestnet.id])
+        return fetchPythPrice(monadTestnet.id)
       }
       return fetchPrices(AGGREGATORS[selectedChain.id])
     },

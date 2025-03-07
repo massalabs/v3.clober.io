@@ -4,17 +4,19 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { isAddressEqual } from 'viem'
 
-import { ASSETS, TRADING_VIEW_SYMBOLS } from '../../../constants/future/asset'
+import { TRADING_VIEW_SYMBOLS } from '../../../constants/future/asset'
 import { useChainContext } from '../../../contexts/chain-context'
 import { FutureManagerContainer } from '../../../containers/future/future-manager-container'
 import { CurrencyIcon } from '../../../components/icon/currency-icon'
 import BackSvg from '../../../components/svg/back-svg'
 import { TradingViewContainer } from '../../../containers/chart/trading-view-container'
+import { useFutureContext } from '../../../contexts/future/future-context'
 
 export default function MintFutureAssetManage() {
   const router = useRouter()
   const { selectedChain } = useChainContext()
-  const asset = ASSETS[selectedChain.id]?.find(
+  const { assets } = useFutureContext()
+  const asset = assets?.find(
     (asset) =>
       router.query.assetKey &&
       isAddressEqual(asset.id, router.query.assetKey as `0x${string}`),

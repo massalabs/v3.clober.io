@@ -6,10 +6,10 @@ import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 import { AGGREGATORS } from '../constants/aggregators'
 import { formatUnits } from '../utils/bigint'
 import { Currency } from '../model/currency'
-import { Asset } from '../model/future/asset'
 import { Prices } from '../model/prices'
 
 import { fetchQuotes } from './swap/quotes'
+import { fetchFutureAssets } from './future/asset'
 
 export const fetchPrice = async (
   chainId: number,
@@ -43,10 +43,11 @@ export const fetchPrice = async (
   }
 }
 
-export const fetchPythPrice = async (assets: Asset[]): Promise<Prices> => {
+export const fetchPythPrice = async (chainId: number): Promise<Prices> => {
   const pythPriceService = new EvmPriceServiceConnection(
     'https://hermes.pyth.network',
   )
+  const assets = await fetchFutureAssets(chainId)
   const keys = [
     ...assets.map((asset) => {
       return {

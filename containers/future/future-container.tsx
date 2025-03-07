@@ -4,7 +4,6 @@ import { useAccount } from 'wagmi'
 
 import { FutureAssetCard } from '../../components/card/future-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
-import { ASSETS } from '../../constants/future/asset'
 import { UserPosition } from '../../model/future/user-position'
 import { FutureAssetShortPositionCard } from '../../components/card/future-asset-short-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
@@ -18,7 +17,7 @@ export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
   const { prices, balances } = useCurrencyContext()
-  const { positions } = useFutureContext()
+  const { assets, positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>('mint')
@@ -94,7 +93,7 @@ export const FutureContainer = () => {
             </div>
             <div className="relative flex justify-center w-full h-full lg:h-[360px]">
               <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
-                {(ASSETS[selectedChain.id] ?? [])
+                {assets
                   .filter((asset) => asset.expiration > now)
                   .map((asset, index) => (
                     <FutureAssetCard
@@ -113,7 +112,7 @@ export const FutureContainer = () => {
           <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
             <div className="relative flex justify-center w-full h-full">
               <div className="w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-[18px]">
-                {(ASSETS[selectedChain.id] ?? [])
+                {assets
                   .filter(
                     (asset) =>
                       asset.expiration < now &&
