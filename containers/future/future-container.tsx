@@ -8,16 +8,16 @@ import { ASSETS } from '../../constants/future/asset'
 import { UserPosition } from '../../model/future/user-position'
 import { FutureAssetShortPositionCard } from '../../components/card/future-asset-short-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
-import { FutureAssetLongPositionCard } from '../../components/card/future-asset-long-position-card'
 import { currentTimestampInSeconds } from '../../utils/date'
 import { useFutureContext } from '../../contexts/future/future-context'
+import { FutureRedeemCard } from '../../components/card/future-redeem-card'
 
 import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
 
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
-  const { prices } = useCurrencyContext()
+  const { prices, balances } = useCurrencyContext()
   const { positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
@@ -99,7 +99,7 @@ export const FutureContainer = () => {
                   .map((asset, index) => (
                     <FutureAssetCard
                       chainId={selectedChain.id}
-                      key={index}
+                      key={`mint-${asset.id}-${index}`}
                       asset={asset}
                       router={router}
                     />
@@ -111,30 +111,29 @@ export const FutureContainer = () => {
       ) : tab === 'redeem' ? (
         <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
           <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
-            <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-              <div className="w-36 text-gray-400 text-sm font-semibold">
-                Asset
-              </div>
-              <div className="w-36 text-gray-400 text-sm font-semibold">
-                Collateral
-              </div>
-              <div className="w-[140px] text-gray-400 text-sm font-semibold">
-                Expiry Date
-              </div>
-              <div className="w-[140px] text-gray-400 text-sm font-semibold">
-                Max LTV
-              </div>
-            </div>
-            <div className="relative flex justify-center w-full h-full lg:h-[360px]">
-              <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
+            <div className="relative flex justify-center w-full h-full">
+              <div className="w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-[18px]">
                 {(ASSETS[selectedChain.id] ?? [])
-                  .filter((asset) => asset.expiration > now)
+                  .filter(
+                    (asset) =>
+                      asset.expiration < now &&
+                      balances[asset.currency.address] > 0n,
+                  )
                   .map((asset, index) => (
-                    <FutureAssetCard
-                      chainId={selectedChain.id}
-                      key={index}
+                    <FutureRedeemCard
+                      key={`redeem-${asset.id}-${index}`}
                       asset={asset}
-                      router={router}
+                      balance={balances[asset.currency.address] ?? 0n}
+                      prices={prices}
+                      // return uint128(uint256(amount) * config.settlePrice * collateralPrecision / _pricePrecision / 1e18);
+                      redeemableCollateral={100000n}
+                      actionButtonProps={{
+                        text: 'Redeem',
+                        disabled: false,
+                        onClick: () => {
+                          alert('Redeem')
+                        },
+                      }}
                     />
                   ))}
               </div>
@@ -160,15 +159,8 @@ export const FutureContainer = () => {
                       }}
                     />
                   ) : (
-                    <FutureAssetLongPositionCard
-                      chainId={selectedChain.id}
-                      key={`${position.type}-${position.asset.id}-${index}`}
-                      position={position}
-                      loanAssetPrice={
-                        prices[position.asset.currency.address] ?? 0
-                      }
-                      router={router}
-                    />
+                    // todo: long position card
+                    <></>
                   ),
                 )}
             </div>
