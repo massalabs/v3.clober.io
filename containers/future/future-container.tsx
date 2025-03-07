@@ -97,6 +97,9 @@ export const FutureContainer = () => {
               <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
                 {assets
                   .filter((asset) => asset.expiration > now)
+                  .sort((a, b) =>
+                    a.currency.symbol.localeCompare(b.currency.symbol),
+                  )
                   .map((asset, index) => (
                     <FutureAssetCard
                       chainId={selectedChain.id}
