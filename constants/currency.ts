@@ -33,7 +33,7 @@ const MON: Currency = {
   name: 'Monad Token',
   symbol: 'MON',
   decimals: 18,
-  icon: '/monad.svg',
+  icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/MON.png/public',
 }
 
 export const WHITELISTED_CURRENCIES: {
