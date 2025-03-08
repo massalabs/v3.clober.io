@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { getAddress, isAddressEqual } from 'viem'
 import { getQuoteToken } from '@clober/v2-sdk'
 import { useAccount, useDisconnect } from 'wagmi'
@@ -70,6 +70,9 @@ export const TRADE_SLIPPAGE_KEY = 'trade-slippage'
 export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { disconnectAsync } = useDisconnect()
   const { selectedChain } = useChainContext()
+  const previousChain = useRef({
+    chain: selectedChain,
+  })
   const { address: userAddress } = useAccount()
   const { whitelistCurrencies, setCurrencies } = useCurrencyContext()
 
@@ -155,6 +158,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
   useEffect(
     () => {
       const action = async () => {
+        previousChain.current.chain = selectedChain
         if (
           getQueryParams()?.inputCurrency &&
           getQueryParams()?.outputCurrency &&
@@ -195,6 +199,10 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
               getAddress(outputCurrencyAddress),
             )))
           : DEFAULT_OUTPUT_CURRENCY[selectedChain.id]
+
+        if (previousChain.current.chain.id !== selectedChain.id) {
+          return
+        }
 
         setCurrencies(
           deduplicateCurrencies(

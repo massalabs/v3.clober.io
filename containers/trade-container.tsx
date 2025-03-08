@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { isAddressEqual, parseUnits, zeroAddress } from 'viem'
 import { useAccount, useGasPrice, useWalletClient } from 'wagmi'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -88,6 +88,9 @@ export const TradeContainer = () => {
 
   const [debouncedValue, setDebouncedValue] = useState('')
   const [tab, setTab] = useState<'limit' | 'swap'>('swap')
+  const previousChain = useRef({
+    chain: selectedChain,
+  })
 
   useEffect(() => {
     if (testnetChainIds.includes(selectedChain.id)) {
@@ -185,15 +188,35 @@ export const TradeContainer = () => {
   useEffect(
     () => {
       const action = async () => {
+        setIsFetchingQuotes(true)
+        previousChain.current.chain = selectedChain
         if (inputCurrency && outputCurrency) {
-          const price = await fetchPrice(
-            selectedChain.id,
-            inputCurrency,
-            outputCurrency,
-          )
-          console.log({ price: price.toNumber() })
-          setMarketPrice(price.toNumber())
-          setPriceInput(price.toNumber().toString())
+          try {
+            const price = await fetchPrice(
+              selectedChain.id,
+              inputCurrency,
+              outputCurrency,
+            )
+            if (
+              previousChain.current.chain.id !== selectedChain.id ||
+              price.isZero()
+            ) {
+              return
+            }
+            console.log({
+              context: 'limit',
+              price: price.toNumber(),
+              chainId: selectedChain.id,
+              inputCurrency: inputCurrency.symbol,
+              outputCurrency: outputCurrency.symbol,
+            })
+            setMarketPrice(price.toNumber())
+            setPriceInput(price.toNumber().toString())
+          } catch (e) {
+            console.error(`Failed to fetch price: ${e}`)
+          } finally {
+            setIsFetchingQuotes(false)
+          }
         }
       }
 
@@ -205,6 +228,36 @@ export const TradeContainer = () => {
     }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [inputCurrency, outputCurrency, selectedChain.id],
   )
+
+  const setMarketRateAction = useCallback(async () => {
+    if (inputCurrency && outputCurrency) {
+      setIsFetchingQuotes(true)
+      const price = await fetchPrice(
+        selectedChain.id,
+        inputCurrency,
+        outputCurrency,
+      )
+      const minimumDecimalPlaces = availableDecimalPlacesGroups?.[0]?.value
+      if (
+        previousChain.current.chain.id !== selectedChain.id ||
+        price.isZero()
+      ) {
+        return
+      }
+      setPriceInput(
+        minimumDecimalPlaces
+          ? toPlacesString(price, minimumDecimalPlaces)
+          : price.toFixed(),
+      )
+      setIsFetchingQuotes(false)
+    }
+  }, [
+    availableDecimalPlacesGroups,
+    inputCurrency,
+    outputCurrency,
+    selectedChain.id,
+    setPriceInput,
+  ])
 
   const marketRateDiff = (
     isBid
@@ -470,22 +523,7 @@ export const TradeContainer = () => {
                   setMarketRateAction={{
                     isLoading: isFetchingQuotes,
                     action: async () => {
-                      if (inputCurrency && outputCurrency) {
-                        setIsFetchingQuotes(true)
-                        const price = await fetchPrice(
-                          selectedChain.id,
-                          inputCurrency,
-                          outputCurrency,
-                        )
-                        const minimumDecimalPlaces =
-                          availableDecimalPlacesGroups?.[0]?.value
-                        setPriceInput(
-                          minimumDecimalPlaces
-                            ? toPlacesString(price, minimumDecimalPlaces)
-                            : price.toFixed(),
-                        )
-                        setIsFetchingQuotes(false)
-                      }
+                      await setMarketRateAction()
                     },
                   }}
                   closeLimitFormAction={() => setShowMobileModal(false)}
@@ -818,22 +856,7 @@ export const TradeContainer = () => {
                 setMarketRateAction={{
                   isLoading: isFetchingQuotes,
                   action: async () => {
-                    if (inputCurrency && outputCurrency) {
-                      setIsFetchingQuotes(true)
-                      const price = await fetchPrice(
-                        selectedChain.id,
-                        inputCurrency,
-                        outputCurrency,
-                      )
-                      const minimumDecimalPlaces =
-                        availableDecimalPlacesGroups?.[0]?.value
-                      setPriceInput(
-                        minimumDecimalPlaces
-                          ? toPlacesString(price, minimumDecimalPlaces)
-                          : price.toFixed(),
-                      )
-                      setIsFetchingQuotes(false)
-                    }
+                    await setMarketRateAction()
                   },
                 }}
                 closeLimitFormAction={() => setShowMobileModal(false)}
@@ -858,6 +881,10 @@ export const TradeContainer = () => {
                       openConnectModal()
                     }
                     if (!inputCurrency || !outputCurrency || !selectedMarket) {
+                      return
+                    }
+                    if (marketRateDiff < -2) {
+                      setShowWarningModal(true)
                       return
                     }
                     await limit(
