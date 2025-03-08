@@ -138,7 +138,7 @@ export class MagpieAggregator implements Aggregator {
       method: 'GET',
       params: {
         quoteId: this.latestQuoteId,
-        estimateGas: false,
+        estimateGas: true,
       },
       headers: {
         accept: 'application/json',
