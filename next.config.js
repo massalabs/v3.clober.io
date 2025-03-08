@@ -19,6 +19,11 @@ const nextConfig = {
       'avatars.githubusercontent.com',
       'cryptologos.cc',
       'pyth.network',
+      'imagedelivery.net',
+      'pbs.twimg.com',
+      'www.magmastaking.xyz',
+      'kintsu-logos.s3.us-east-1.amazonaws.com',
+      'i.imghippo.com',
     ],
   },
 }
