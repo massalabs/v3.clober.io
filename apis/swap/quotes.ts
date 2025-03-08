@@ -36,20 +36,20 @@ export async function fetchQuotes(
       (
         quote,
       ): quote is {
-        amountIn: bigint
         amountOut: bigint
         gasLimit: bigint
         pathViz: PathViz | undefined
         aggregator: Aggregator
       } => quote !== undefined,
     )
-  return {
-    ...quotes.reduce((best, quote) => {
-      if (quote.amountOut > best.amountOut) {
-        return quote
-      }
-      return best
-    }),
-    amountIn,
+  if (quotes.length === 0) {
+    throw new Error('No quotes available')
   }
+  let bestQuote = quotes[0]
+  for (const quote of quotes) {
+    if (quote.amountOut > bestQuote.amountOut) {
+      bestQuote = quote
+    }
+  }
+  return { amountIn, ...bestQuote }
 }
