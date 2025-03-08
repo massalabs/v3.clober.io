@@ -63,10 +63,16 @@ export class MagpieAggregator implements Aggregator {
       timeout: this.TIMEOUT,
       params: {
         network: this.chainName,
-        fromTokenAddress: isAddressEqual(inputCurrency.address, zeroAddress)
+        fromTokenAddress: isAddressEqual(
+          inputCurrency.address,
+          this.nativeTokenAddress,
+        )
           ? this.nativeTokenAddress
           : getAddress(inputCurrency.address),
-        toTokenAddress: isAddressEqual(outputCurrency.address, zeroAddress)
+        toTokenAddress: isAddressEqual(
+          outputCurrency.address,
+          this.nativeTokenAddress,
+        )
           ? this.nativeTokenAddress
           : getAddress(outputCurrency.address),
         sellAmount: amountIn.toString(),
