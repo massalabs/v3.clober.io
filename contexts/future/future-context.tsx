@@ -62,16 +62,13 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }, [selectedChain, setSelectedChain])
 
   useEffect(() => {
-    const action = async () => {
-      setCurrencies(
-        deduplicateCurrencies([
-          ...whitelistCurrencies,
-          ...assets.map((asset) => asset.currency),
-          ...assets.map((asset) => asset.collateral),
-        ]),
-      )
-    }
-    action()
+    setCurrencies(
+      deduplicateCurrencies([
+        ...whitelistCurrencies,
+        ...assets.map((asset) => asset.currency),
+        ...assets.map((asset) => asset.collateral),
+      ]),
+    )
   }, [assets, setCurrencies, whitelistCurrencies])
 
   return (

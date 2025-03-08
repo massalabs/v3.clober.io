@@ -125,10 +125,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }
 
   useEffect(() => {
-    const action = async () => {
-      setCurrencies(deduplicateCurrencies(whitelistCurrencies))
-    }
-    action()
+    setCurrencies(deduplicateCurrencies(whitelistCurrencies))
   }, [setCurrencies, whitelistCurrencies])
 
   return (
