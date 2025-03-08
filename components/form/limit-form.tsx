@@ -14,7 +14,6 @@ import CheckIcon from '../icon/check-icon'
 import { toPlacesString } from '../../utils/bignumber'
 import { getPriceDecimals } from '../../utils/prices'
 import CloseSvg from '../svg/close-svg'
-import { testnetChainIds } from '../../constants/chain'
 
 export const LimitForm = ({
   chainId,
@@ -173,24 +172,20 @@ export const LimitForm = ({
         <div className="flex items-start gap-4 self-stretch">
           <div className="flex flex-row gap-1 items-center h-6 opacity-90 text-white text-base font-semibold">
             {isBid ? 'Buy' : 'Sell'} {selectedMarket?.base?.symbol} at rate
-            {!testnetChainIds.includes(chainId) ? (
-              marketPrice > 0 && marketRateDiff >= 10000 ? (
-                <div className="text-xs sm:text-sm font-semibold text-green-400">
-                  (&gt;10000%)
-                </div>
-              ) : !isNaN(marketRateDiff) &&
-                isFinite(marketRateDiff) &&
-                marketRateDiff.toFixed(2) !== '0.00' ? (
-                <div
-                  className={`text-gray-200 ${
-                    marketRateDiff >= 0 ? 'text-green-400' : 'text-red-400'
-                  } sm:text-sm font-semibold`}
-                >
-                  ({marketRateDiff.toFixed(2)}%)
-                </div>
-              ) : (
-                <></>
-              )
+            {marketPrice > 0 && marketRateDiff >= 10000 ? (
+              <div className="text-xs sm:text-sm font-semibold text-green-400">
+                (&gt;10000%)
+              </div>
+            ) : !isNaN(marketRateDiff) &&
+              isFinite(marketRateDiff) &&
+              marketRateDiff.toFixed(2) !== '0.00' ? (
+              <div
+                className={`text-gray-200 ${
+                  marketRateDiff >= 0 ? 'text-green-400' : 'text-red-400'
+                } sm:text-sm font-semibold`}
+              >
+                ({marketRateDiff.toFixed(2)}%)
+              </div>
             ) : (
               <></>
             )}

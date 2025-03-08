@@ -185,11 +185,7 @@ export const TradeContainer = () => {
   useEffect(
     () => {
       const action = async () => {
-        if (
-          inputCurrency &&
-          outputCurrency &&
-          !testnetChainIds.includes(selectedChain.id)
-        ) {
+        if (inputCurrency && outputCurrency) {
           const price = await fetchPrice(
             selectedChain.id,
             inputCurrency,
@@ -520,10 +516,7 @@ export const TradeContainer = () => {
                       ) {
                         return
                       }
-                      if (
-                        !testnetChainIds.includes(selectedChain.id) &&
-                        marketRateDiff < -2
-                      ) {
+                      if (marketRateDiff < -2) {
                         setShowWarningModal(true)
                         return
                       }
