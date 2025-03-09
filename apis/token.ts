@@ -1,10 +1,11 @@
-import { createPublicClient, http, zeroAddress } from 'viem'
+import { createPublicClient, http, isAddressEqual, zeroAddress } from 'viem'
 import {
   CHAIN_IDS,
   CHART_LOG_INTERVALS,
   getChartLogs,
   Market,
 } from '@clober/v2-sdk'
+import { getCurrentTimestamp } from 'hardhat/internal/hardhat-network/provider/utils/getCurrentTimestamp'
 
 import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-urls'
@@ -16,6 +17,9 @@ export async function fetchTotalSupply(
   chainId: CHAIN_IDS,
   tokenAddress: `0x${string}`,
 ): Promise<bigint> {
+  if (isAddressEqual(tokenAddress, zeroAddress)) {
+    return 120_000_000n * 10n ** 18n // DEV: 120M for ETH
+  }
   const publicClient = createPublicClient({
     chain: supportChains.find((chain) => chain.id === chainId),
     transport: http(RPC_URL[chainId]),
@@ -32,7 +36,7 @@ export async function fetchTokenInfoFromOrderBook(
   selectedMarket: Market,
   quoteValue: number,
 ): Promise<TokenInfo> {
-  const currentTimestampInSeconds = Math.floor(new Date().getTime() / 1000)
+  const currentTimestampInSeconds = getCurrentTimestamp()
   const [totalSupply, chartLog] = await Promise.all([
     fetchTotalSupply(chainId, selectedMarket.base.address),
     getChartLogs({
