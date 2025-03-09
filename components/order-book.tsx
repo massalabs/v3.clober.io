@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js'
 
 import { Decimals } from '../model/decimals'
 import { toPlacesString } from '../utils/bignumber'
-import { toShortNumber } from '../utils/number'
 
 import DecimalsSelector from './selector/decimals-selector'
 
@@ -119,7 +118,7 @@ export default function OrderBook({
                   }}
                 >
                   <div className="text-gray-200">{toPlacesString(size)}</div>
-                  <div className="text-green-500">{toShortNumber(price)}</div>
+                  <div className="text-green-500">{price}</div>
                   <div
                     className="absolute h-full right-0 bg-[#39e79f]/10"
                     style={{
@@ -151,7 +150,7 @@ export default function OrderBook({
                     setTab('limit')
                   }}
                 >
-                  <div className="text-red-500">{toShortNumber(price)}</div>
+                  <div className="text-red-500">{price}</div>
                   <div className="text-gray-200">{toPlacesString(size)}</div>
                   <div
                     className="absolute h-full left-0 bg-red-500/10"
