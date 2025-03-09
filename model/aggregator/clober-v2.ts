@@ -24,6 +24,7 @@ export class CloberV2Aggregator implements Aggregator {
   public readonly name = 'CloberV2'
   public readonly baseUrl = ''
   public readonly contract: `0x${string}` = zeroAddress
+  private readonly nativeTokenAddress = zeroAddress
   public readonly chain: Chain
   public readonly weth: `0x${string}`
 
@@ -58,10 +59,10 @@ export class CloberV2Aggregator implements Aggregator {
     aggregator: Aggregator
   }> {
     if (
-      (isAddressEqual(inputCurrency.address, zeroAddress) &&
+      (isAddressEqual(inputCurrency.address, this.nativeTokenAddress) &&
         isAddressEqual(outputCurrency.address, this.weth)) ||
       (isAddressEqual(inputCurrency.address, this.weth) &&
-        isAddressEqual(outputCurrency.address, zeroAddress))
+        isAddressEqual(outputCurrency.address, this.nativeTokenAddress))
     ) {
       return {
         amountOut: amountIn,
@@ -116,7 +117,7 @@ export class CloberV2Aggregator implements Aggregator {
     gasPrice?: bigint
   }> {
     if (
-      isAddressEqual(inputCurrency.address, zeroAddress) &&
+      isAddressEqual(inputCurrency.address, this.nativeTokenAddress) &&
       isAddressEqual(outputCurrency.address, this.weth)
     ) {
       return {
@@ -130,7 +131,7 @@ export class CloberV2Aggregator implements Aggregator {
       }
     } else if (
       isAddressEqual(inputCurrency.address, this.weth) &&
-      isAddressEqual(outputCurrency.address, zeroAddress)
+      isAddressEqual(outputCurrency.address, this.nativeTokenAddress)
     ) {
       return {
         data: encodeFunctionData({

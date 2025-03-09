@@ -5,6 +5,7 @@ import { Aggregator } from '../model/aggregator'
 import { OdosAggregator } from '../model/aggregator/odos'
 import { MagpieAggregator } from '../model/aggregator/magpie'
 import { OpenOceanAggregator } from '../model/aggregator/openocean'
+import { CloberV2Aggregator } from '../model/aggregator/clober-v2'
 
 import { findSupportChain } from './chain'
 
@@ -22,9 +23,9 @@ export const AGGREGATORS: {
     ),
   ],
   [CHAIN_IDS.MONAD_TESTNET]: [
-    // new CloberV2Aggregator(
-    //   findSupportChain(CHAIN_IDS.MONAD_TESTNET.valueOf())!,
-    // ),
+    new CloberV2Aggregator(
+      findSupportChain(CHAIN_IDS.MONAD_TESTNET.valueOf())!,
+    ),
     new OpenOceanAggregator(
       getAddress('0x6352a56caadC4F1E25CD6c75970Fa768A3304e64'),
       findSupportChain(CHAIN_IDS.MONAD_TESTNET.valueOf())!,
