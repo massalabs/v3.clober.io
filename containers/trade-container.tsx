@@ -120,6 +120,13 @@ export const TradeContainer = () => {
           queryClient.removeQueries({ queryKey: key })
         }
       }
+      if (testnetChainIds.includes(selectedChain.id)) {
+        return fetchTokenInfoFromOrderBook(
+          selectedChain.id,
+          selectedMarket,
+          prices[selectedMarket.quote.address] ?? 0,
+        )
+      }
       const tokenInfo = await fetchTokenInfo({
         chainId: selectedChain.id,
         base: selectedMarket.base.address,
