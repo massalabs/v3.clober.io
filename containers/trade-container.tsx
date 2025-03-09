@@ -35,6 +35,7 @@ import { fetchPrice } from '../apis/price'
 import { fetchTokenInfoFromOrderBook } from '../apis/token'
 
 import { IframeChartContainer } from './chart/iframe-chart-container'
+import { NativeChartContainer } from './chart/native-chart-container'
 
 export const TradeContainer = () => {
   const queryClient = useQueryClient()
@@ -421,15 +422,24 @@ export const TradeContainer = () => {
               </div>
 
               {!showOrderBook && baseCurrency ? (
-                <IframeChartContainer
-                  setShowOrderBook={setShowOrderBook}
-                  baseCurrency={
-                    isAddressEqual(zeroAddress, baseCurrency.address)
-                      ? WETH[selectedChain.id]
-                      : baseCurrency
-                  }
-                  chainName={selectedChain.name.toLowerCase()}
-                />
+                !testnetChainIds.includes(selectedChain.id) ? (
+                  <IframeChartContainer
+                    setShowOrderBook={setShowOrderBook}
+                    baseCurrency={
+                      isAddressEqual(zeroAddress, baseCurrency.address)
+                        ? WETH[selectedChain.id]
+                        : baseCurrency
+                    }
+                    chainName={selectedChain.name.toLowerCase()}
+                  />
+                ) : selectedMarket ? (
+                  <NativeChartContainer
+                    selectedMarket={selectedMarket}
+                    setShowOrderBook={setShowOrderBook}
+                  />
+                ) : (
+                  <></>
+                )
               ) : (
                 <></>
               )}
