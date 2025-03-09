@@ -14,7 +14,8 @@ export const toCommaSeparated = (number: string) => {
   return decimal ? `${formattedInteger}.${decimal}` : formattedInteger
 }
 
-export const toShortNumber = (number: number): string => {
+export const toShortNumber = (number: BigNumber.Value): string => {
+  number = new BigNumber(number).toNumber()
   const integer = new BigNumber(number).integerValue()
   if (integer.gt(0)) {
     return number.toFixed(2)

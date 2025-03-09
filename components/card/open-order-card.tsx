@@ -56,9 +56,7 @@ export const OpenOrderCard = ({
             <div className="flex flex-col align-baseline justify-between gap-3">
               <div className="flex flex-row align-baseline justify-between">
                 <label className="text-gray-500">Price</label>
-                <p className="text-white">
-                  {toShortNumber(Number(openOrder.price))}
-                </p>
+                <p className="text-white">{toShortNumber(openOrder.price)}</p>
               </div>
               <div className="flex flex-row align-baseline justify-between">
                 <label className="text-gray-500">Amount</label>
@@ -134,7 +132,7 @@ export const OpenOrderCard = ({
           </div>
 
           <div className="w-[100px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium">
-            {toShortNumber(Number(openOrder.price))}
+            {toShortNumber(openOrder.price)}
           </div>
 
           <div className="w-[150px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium">
