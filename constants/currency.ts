@@ -138,6 +138,41 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 9,
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/sol.png/public',
     },
+    {
+      address: '0x97ACCeCe4b34f143E94735F197d9f7d62C61B8Da',
+      name: 'APPL',
+      symbol: 'APPL',
+      decimals: 18,
+      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-aapl-usd.inline.svg&w=1920&q=75',
+    },
+    {
+      address: '0x87Da19f3da65fcc68CF4e8921a30E877Ecd9ea33',
+      name: 'AMZN',
+      symbol: 'AMZN',
+      decimals: 18,
+      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-amzn-usd.inline.svg&w=1920&q=75',
+    },
+    {
+      address: '0xC16a1B1C60E638650bC1CF681dfC13C4D33624EA',
+      name: 'GOOG',
+      symbol: 'GOOG',
+      decimals: 18,
+      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-goog-usd.inline.svg&w=1920&q=75',
+    },
+    {
+      address: '0x9103b71508c3449caa63E7672e0Da2F9204E5025',
+      name: 'MSFT',
+      symbol: 'MSFT',
+      decimals: 18,
+      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-msft-usd.inline.svg&w=1920&q=75',
+    },
+    {
+      address: '0x295d60dCb9fd2D38e2cfE244656b4cBC3F4de583',
+      name: 'TSLA',
+      symbol: 'TSLA',
+      decimals: 18,
+      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-tsla-usd.inline.svg&w=1920&q=75',
+    },
   ],
 }
 
