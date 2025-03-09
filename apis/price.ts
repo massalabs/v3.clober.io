@@ -1,5 +1,5 @@
 import { getQuoteToken } from '@clober/v2-sdk'
-import { isAddressEqual, parseUnits } from 'viem'
+import { getAddress, isAddressEqual, parseUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 
@@ -72,7 +72,9 @@ export const fetchPythPrice = async (chainId: number): Promise<Prices> => {
     const key = keys[index]
     return {
       ...acc,
-      [key.address]: price.getPriceAsNumberUnchecked(),
+      [key.address.toLowerCase()]: price.getPriceAsNumberUnchecked(),
+      [getAddress(key.address.toLowerCase())]:
+        price.getPriceAsNumberUnchecked(),
     }
   }, {} as Prices)
 }

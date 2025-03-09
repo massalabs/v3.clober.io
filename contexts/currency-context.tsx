@@ -138,7 +138,14 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
     queryKey: ['prices', selectedChain.id],
     queryFn: async () => {
       if (selectedChain.id === monadTestnet.id) {
-        return fetchPythPrice(monadTestnet.id)
+        const [pythPrices, prices] = await Promise.all([
+          fetchPythPrice(monadTestnet.id),
+          fetchPrices(AGGREGATORS[selectedChain.id]),
+        ])
+        return {
+          ...prices,
+          ...pythPrices,
+        } as Prices
       }
       return fetchPrices(AGGREGATORS[selectedChain.id])
     },
