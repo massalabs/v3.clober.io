@@ -14,18 +14,35 @@ export const toCommaSeparated = (number: string) => {
   return decimal ? `${formattedInteger}.${decimal}` : formattedInteger
 }
 
+export const removeZeroTail = (number: string) => {
+  // 0.001000 -> 0.001
+  const parts = number.split('.')
+  if (parts.length === 1) {
+    return number // no decimal
+  }
+  const decimal = parts[1]
+  let i = decimal.length - 1
+  while (decimal[i] === '0') {
+    i -= 1
+  }
+  if (i === -1) {
+    return parts[0]
+  }
+  return `${parts[0]}.${decimal.slice(0, i + 1)}`.replace(/\.$/, '')
+}
+
 export const toShortNumber = (number: BigNumber.Value): string => {
   number = new BigNumber(number).toNumber()
   const integer = new BigNumber(number).integerValue()
   if (integer.gt(0)) {
-    return number.toFixed(2)
+    return removeZeroTail(number.toFixed(2))
   }
   const index = findFirstNonZeroIndex(number) - 1
   if (index === -1) {
-    return number.toFixed(2)
+    return removeZeroTail(number.toFixed(2))
   }
   if (index <= 3) {
-    return number.toFixed(index + 1 + POLLY_FILL_DECIMALS)
+    return removeZeroTail(number.toFixed(index + 1 + POLLY_FILL_DECIMALS))
   }
   const list = [
     '₀',
@@ -79,11 +96,11 @@ export const toShortNumber = (number: BigNumber.Value): string => {
     '₄₈',
   ]
   const char = list[index]
-  return (
+  return removeZeroTail(
     `0.0${char}` +
-    new BigNumber(number)
-      .toFixed(100)
-      .slice(index + 2, index + 2 + POLLY_FILL_DECIMALS)
+      new BigNumber(number)
+        .toFixed(100)
+        .slice(index + 2, index + 2 + POLLY_FILL_DECIMALS),
   )
 }
 
