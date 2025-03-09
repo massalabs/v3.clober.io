@@ -155,7 +155,7 @@ export const DEFAULT_INPUT_CURRENCY: {
     name: 'Monad Token',
     symbol: 'MON',
     decimals: 18,
-    icon: '/monad.svg',
+    icon: '/monad.png',
   },
 }
 

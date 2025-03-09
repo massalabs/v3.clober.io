@@ -12,7 +12,7 @@ export const supportChains: Chain[] = [
   base,
   {
     ...monadTestnet,
-    icon: '/monad.svg',
+    icon: '/monad.png',
   },
 ]
 
