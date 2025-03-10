@@ -15,7 +15,7 @@ export const SlippageToggle = ({
     if (
       Number(slippageInput) !== 0.1 &&
       Number(slippageInput) !== 0.5 &&
-      Number(slippageInput) !== 1.0 &&
+      Number(slippageInput) !== 0.99 &&
       Number(slippageInput) !== 10000.0
     ) {
       setCustomValue(slippageInput)
@@ -46,13 +46,13 @@ export const SlippageToggle = ({
           0.5%
         </button>
         <button
-          disabled={Number(slippageInput) === 1.0}
+          disabled={Number(slippageInput) === 0.99}
           onClick={() => {
-            setSlippageInput('1.0')
+            setSlippageInput('0.99')
           }}
           className="flex flex-1 px-2 py-0 rounded-[18px] disabled:text-blue-400 disabled:bg-blue-500/25 justify-center items-center gap-1"
         >
-          1.0%
+          0.99%
         </button>
         <button
           disabled={Number(slippageInput) === 10000.0}
@@ -68,7 +68,7 @@ export const SlippageToggle = ({
           disabled={
             Number(slippageInput) === 0.1 &&
             Number(slippageInput) === 0.5 &&
-            Number(slippageInput) === 1.0 &&
+            Number(slippageInput) === 0.99 &&
             Number(slippageInput) === 10000.0
           }
           value={customValue}
