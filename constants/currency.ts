@@ -43,6 +43,13 @@ export const WHITELISTED_CURRENCIES: {
   [CHAIN_IDS.MONAD_TESTNET]: [
     MON,
     {
+      address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
+      name: 'Wormhole Wrapped ETH',
+      symbol: 'wWETH',
+      decimals: 18,
+      icon: 'https://assets.coingecko.com/coins/images/22990/standard/ETH_wh_small.png?1696522286',
+    },
+    {
       address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
       name: 'Clober Test USD Coin',
       symbol: 'MOCKB',
@@ -204,9 +211,10 @@ export const DEFAULT_OUTPUT_CURRENCY: {
     decimals: 6,
   },
   [CHAIN_IDS.MONAD_TESTNET]: {
-    address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
-    name: 'USD Coin',
-    symbol: 'USDC',
-    decimals: 6,
+    address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
+    name: 'Wormhole Wrapped ETH',
+    symbol: 'wWETH',
+    decimals: 18,
+    icon: 'https://assets.coingecko.com/coins/images/22990/standard/ETH_wh_small.png?1696522286',
   },
 }

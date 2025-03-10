@@ -24,6 +24,7 @@ const nextConfig = {
       'www.magmastaking.xyz',
       'kintsu-logos.s3.us-east-1.amazonaws.com',
       'i.imghippo.com',
+      'assets.coingecko.com',
     ],
   },
 }
