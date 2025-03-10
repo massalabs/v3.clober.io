@@ -737,7 +737,7 @@ export const TradeContainer = () => {
             <div className="flex mt-[20px] mb-4 lg:mt-12 text-white">
               <div className="border-b-blue-500 text-[13px] lg:text-base border-solid lg:border-0 flex w-1/2 lg:w-[161px] h-[37px] px-6 lg:px-0 lg:justify-start pt-1.5 pb-2.5 border-b-2 border-[#ffc32d] justify-center items-center gap-2">
                 <div className="text-white font-semibold">Open Order</div>
-                <div className="flex px-2 py-0.5 lg:h-8 lg:px-3 lg:py-1 bg-blue-500/20 rounded-[17.02px] flex-col justify-center items-center">
+                <div className="flex px-2 py-0.5 lg:h-7 lg:px-2.5 lg:py-0.5 bg-blue-500/20 rounded-[17.02px] flex-col justify-center items-center">
                   <div className="text-blue-500 text-[13px] font-semibold">
                     {openOrders.length}
                   </div>
