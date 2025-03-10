@@ -67,6 +67,7 @@ export class OdosAggregator implements Aggregator {
     gasLimit: bigint
     pathViz: PathViz | undefined
     aggregator: Aggregator
+    priceImpact: number
   }> {
     this.latestState = undefined
     console.log(
@@ -80,6 +81,7 @@ export class OdosAggregator implements Aggregator {
       pathViz: PathViz
       pathId: string
       gasEstimate: number
+      priceImpact: number
     } = await fetchApi(this.baseUrl, 'sor/quote/v2', {
       method: 'POST',
       headers: {
@@ -115,6 +117,7 @@ export class OdosAggregator implements Aggregator {
       gasLimit: BigInt(result.gasEstimate),
       pathViz: result.pathViz,
       aggregator: this,
+      priceImpact: Number(result.priceImpact),
     }
   }
 

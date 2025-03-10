@@ -320,6 +320,33 @@ export const TradeContainer = () => {
       return null
     },
   })
+  const priceImpact = useMemo(() => {
+    if (quotes && quotes.priceImpact) {
+      return quotes.priceImpact
+    }
+    if (
+      quotes &&
+      quotes.amountIn > 0n &&
+      quotes.amountOut > 0n &&
+      inputCurrency &&
+      outputCurrency &&
+      prices[inputCurrency.address] &&
+      prices[outputCurrency.address]
+    ) {
+      const amountIn = Number(
+        formatUnits(quotes.amountIn, inputCurrency.decimals),
+      )
+      const amountOut = Number(
+        formatUnits(quotes.amountOut, outputCurrency.decimals),
+      )
+      const inputValue = amountIn * prices[inputCurrency.address]
+      const outputValue = amountOut * prices[outputCurrency.address]
+      return inputValue > outputValue
+        ? ((outputValue - inputValue) / inputValue) * 100
+        : 0
+    }
+    return Number.NaN
+  }, [inputCurrency, outputCurrency, prices, quotes])
 
   return (
     <>
@@ -624,6 +651,7 @@ export const TradeContainer = () => {
                       ),
                     ) * (prices[zeroAddress] ?? 0)
                   }
+                  priceImpact={priceImpact}
                   refreshQuotesAction={() => setLatestRefreshTime(Date.now())}
                   closeSwapFormAction={() => setShowMobileModal(false)}
                   actionButtonProps={{
@@ -953,6 +981,7 @@ export const TradeContainer = () => {
                     ),
                   ) * (prices[zeroAddress] ?? 0)
                 }
+                priceImpact={priceImpact}
                 refreshQuotesAction={() => setLatestRefreshTime(Date.now())}
                 closeSwapFormAction={() => setShowMobileModal(false)}
                 actionButtonProps={{

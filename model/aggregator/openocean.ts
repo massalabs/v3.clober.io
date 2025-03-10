@@ -87,12 +87,14 @@ export class OpenOceanAggregator implements Aggregator {
     gasLimit: bigint
     pathViz: PathViz | undefined
     aggregator: Aggregator
+    priceImpact: number
   }> {
     const response = await fetchApi<{
       code: number
       data: {
         outAmount: string
         estimatedGas: string
+        price_impact: string
       }
     }>(this.baseUrl, `v4/${this.chain.id}/quote`, {
       method: 'GET',
@@ -129,6 +131,7 @@ export class OpenOceanAggregator implements Aggregator {
       gasLimit: BigInt(response.data.estimatedGas),
       pathViz: undefined, // TODO: implement pathViz
       aggregator: this,
+      priceImpact: Number(response.data.price_impact.replace('%', '')) / 100,
     }
   }
 

@@ -16,6 +16,7 @@ export async function fetchQuotes(
   gasLimit: bigint
   pathViz: PathViz | undefined
   aggregator: Aggregator
+  priceImpact?: number
 }> {
   const quotes = (
     await Promise.allSettled(
@@ -40,6 +41,7 @@ export async function fetchQuotes(
         gasLimit: bigint
         pathViz: PathViz | undefined
         aggregator: Aggregator
+        priceImpact?: number
       } => quote !== undefined,
     )
   if (quotes.length === 0) {

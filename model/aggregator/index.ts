@@ -21,6 +21,7 @@ export interface Aggregator {
     gasLimit: bigint
     pathViz: PathViz | undefined
     aggregator: Aggregator
+    priceImpact?: number
   }>
 
   buildCallData(
