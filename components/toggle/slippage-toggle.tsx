@@ -73,8 +73,9 @@ export const SlippageToggle = ({
           }
           value={customValue}
           onValueChange={(e) => {
-            setSlippageInput(e)
-            setCustomValue(e)
+            const _e = Math.min(Number(e), 50).toString()
+            setSlippageInput(_e)
+            setCustomValue(_e)
           }}
           className={`bg-gray-600 text-center ${Number(slippageInput) >= 2 ? 'text-yellow-500' : 'text-white'} w-[70px] flex flex-1 pl-2 pr-4 py-0 rounded-[18px] disabled:text-blue-400 disabled:bg-blue-500/25 justify-center items-center gap-1`}
         />
