@@ -263,7 +263,9 @@ export const SwapForm = ({
                       <div
                         className={`text-xs sm:text-sm ${priceImpact < -5 ? 'text-yellow-500' : 'text-white'} flex flex-row gap-0.5 items-center`}
                       >
-                        {priceImpact.toFixed(2)}%
+                        {Number.isNaN(priceImpact)
+                          ? 'N/A'
+                          : `${priceImpact.toFixed(4)}%`}
                         {priceImpact < -5 && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
