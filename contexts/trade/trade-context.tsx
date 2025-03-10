@@ -73,7 +73,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const previousChain = useRef({
     chain: selectedChain,
   })
-  const { address: userAddress } = useAccount()
+  const { chainId } = useAccount()
   const { whitelistCurrencies, setCurrencies } = useCurrencyContext()
 
   const [isBid, setIsBid] = useState(true)
@@ -164,7 +164,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
           getQueryParams()?.outputCurrency &&
           getQueryParams()?.chain
         ) {
-          if (userAddress) {
+          if (chainId && chainId !== selectedChain.id) {
             try {
               await disconnectAsync()
               window.location.reload()
@@ -263,7 +263,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
       window.location.href,
       inputCurrencyAddress,
       outputCurrencyAddress,
-      userAddress,
+      chainId,
     ],
   )
 
