@@ -46,7 +46,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
         queryKeys,
       })
       for (const queryKey of queryKeys) {
-        if (queryKey.includes(chainId)) {
+        if (!queryKey.includes(chainId)) {
           console.log('Delete query', queryKey)
           queryClient.removeQueries({ queryKey })
         }
