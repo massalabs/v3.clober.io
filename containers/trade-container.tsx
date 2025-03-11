@@ -347,7 +347,6 @@ export const TradeContainer = () => {
     }
     return Number.NaN
   }, [inputCurrency, outputCurrency, prices, quotes])
-  console.log('TradeContainer', priceImpact)
 
   return (
     <>
