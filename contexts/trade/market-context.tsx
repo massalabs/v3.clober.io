@@ -123,10 +123,7 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
           chainId: selectedChain.id,
           token0: getAddress(inputCurrencyAddress),
           token1: getAddress(outputCurrencyAddress),
-          options: {
-            rpcUrl: RPC_URL[selectedChain.id],
-            useSubgraph: false,
-          },
+          options: { useSubgraph: true },
         })
       } else {
         return null
