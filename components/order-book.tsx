@@ -85,7 +85,7 @@ export default function OrderBook({
         </button>
 
         {selectedDecimalPlaces && availableDecimalPlacesGroups.length > 0 ? (
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2 mr-1.5 md:mr-0">
             <DecimalsSelector
               availableDecimalPlacesGroups={availableDecimalPlacesGroups}
               value={selectedDecimalPlaces}
