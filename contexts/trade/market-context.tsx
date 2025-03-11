@@ -106,7 +106,7 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
         ]).marketId
       : ''
   const { data: market } = useQuery({
-    queryKey: ['market', selectedChain, marketId],
+    queryKey: ['market', selectedChain.id, marketId],
     queryFn: async () => {
       if (inputCurrencyAddress && outputCurrencyAddress) {
         const queryKeys = queryClient

@@ -85,7 +85,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { data: balances } = useQuery({
     queryKey: [
       'balances',
-      selectedChain,
+      selectedChain.id,
       userAddress,
       currencies
         .map((c) => c.address)

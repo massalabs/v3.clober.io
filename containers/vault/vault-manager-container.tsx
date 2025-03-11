@@ -52,7 +52,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
   const { data: receiveLpAmount } = useQuery({
     queryKey: [
       'calculate-receive-lp-amount',
-      selectedChain,
+      selectedChain.id,
       vault.key,
       currency0Amount,
       currency1Amount,
@@ -105,7 +105,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
   const { data: receiveCurrencies } = useQuery({
     queryKey: [
       'calculate-receive-currencies',
-      selectedChain,
+      selectedChain.id,
       vault,
       lpCurrencyAmount,
       slippageInput,

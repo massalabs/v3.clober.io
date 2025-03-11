@@ -102,7 +102,7 @@ export const TradeContainer = () => {
   const { data: tokenInfo } = useQuery({
     queryKey: [
       'token-info',
-      selectedChain,
+      selectedChain.id,
       marketId,
       selectedMarket ? (prices[selectedMarket.quote.address] ?? 0) : 0,
     ],
@@ -286,7 +286,7 @@ export const TradeContainer = () => {
       Number(inputCurrencyAmount),
       slippageInput,
       userAddress,
-      selectedChain,
+      selectedChain.id,
       tab,
       latestRefreshTime,
       debouncedValue,
