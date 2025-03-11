@@ -88,7 +88,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
         amount1: currency1Amount,
         options: {
           useSubgraph: false,
-          gasLimit: 1_600_000n,
+          gasLimit: 1_000_000n,
           disableSwap,
           slippage: Number(slippageInput),
           testnetPrice: prices[baseCurrency.address] ?? 0,
