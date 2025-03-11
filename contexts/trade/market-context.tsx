@@ -206,21 +206,24 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
   )
 
   // once
-  useEffect(() => {
-    if (
-      !availableDecimalPlacesGroups ||
-      availableDecimalPlacesGroups.length === 0
-    ) {
-      setSelectedDecimalPlaces(undefined)
-      return
-    }
-    setSelectedDecimalPlaces(availableDecimalPlacesGroups[0])
-  }, [
-    selectedChain.id,
-    availableDecimalPlacesGroups,
-    selectedMarket?.quote?.address,
-    selectedMarket?.base?.address,
-  ])
+  useEffect(
+    () => {
+      if (
+        !availableDecimalPlacesGroups ||
+        availableDecimalPlacesGroups.length === 0
+      ) {
+        setSelectedDecimalPlaces(undefined)
+        return
+      }
+      setSelectedDecimalPlaces(availableDecimalPlacesGroups[0])
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      selectedChain.id,
+      selectedMarket?.quote?.address,
+      selectedMarket?.base?.address,
+    ],
+  )
 
   // When depthClickedIndex is changed, reset the priceInput
   useEffect(() => {
