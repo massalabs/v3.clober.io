@@ -100,7 +100,7 @@ export const FutureContainer = () => {
         <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
           <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
             <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-              <div className="w-36 text-gray-400 text-sm font-semibold">
+              <div className="w-44 text-gray-400 text-sm font-semibold">
                 Asset
               </div>
               <div className="w-36 text-gray-400 text-sm font-semibold">
