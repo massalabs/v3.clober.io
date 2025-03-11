@@ -67,7 +67,7 @@ export function parseDepth(
             decimalPlaces.value >= 0
               ? new BigNumber(price).toFixed(
                   decimalPlaces.value,
-                  BigNumber.ROUND_CEIL,
+                  isBid ? BigNumber.ROUND_DOWN : BigNumber.ROUND_UP,
                 )
               : new BigNumber(price)
                   .minus(new BigNumber(price).mod(10 ** -decimalPlaces.value))
