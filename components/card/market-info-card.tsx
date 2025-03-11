@@ -182,7 +182,9 @@ export const MarketInfoCard = ({
                   Liquidity
                 </div>
                 <div className="text-white text-xs font-semibold text-right">
-                  ${toHumanReadableString(new BigNumber(liquidityUsd))}
+                  {liquidityUsd > 0
+                    ? `$${toHumanReadableString(new BigNumber(liquidityUsd))}`
+                    : '-'}
                 </div>
               </div>
               <div className="self-stretch justify-start items-center gap-2 flex">
@@ -190,7 +192,9 @@ export const MarketInfoCard = ({
                   24h Volume
                 </div>
                 <div className="text-white text-xs font-semibold text-right">
-                  ${toHumanReadableString(new BigNumber(dailyVolume))}
+                  {dailyVolume > 0
+                    ? `$${toHumanReadableString(new BigNumber(dailyVolume))}`
+                    : '-'}
                 </div>
               </div>
             </div>
@@ -201,7 +205,9 @@ export const MarketInfoCard = ({
                   FDV
                 </div>
                 <div className="text-white text-xs font-semibold text-right">
-                  ${toHumanReadableString(new BigNumber(fdv))}
+                  {fdv > 0
+                    ? `$${toHumanReadableString(new BigNumber(fdv))}`
+                    : '-'}
                 </div>
               </div>
               <div className="self-stretch justify-start items-center gap-2 flex">
@@ -209,7 +215,9 @@ export const MarketInfoCard = ({
                   Market Cap
                 </div>
                 <div className="text-white text-xs font-semibold text-right">
-                  ${toHumanReadableString(new BigNumber(marketCap))}
+                  {marketCap > 0
+                    ? `$${toHumanReadableString(new BigNumber(marketCap))}`
+                    : '-'}
                 </div>
               </div>
             </div>
@@ -232,7 +240,9 @@ export const MarketInfoCard = ({
                 Liquidity
               </div>
               <div className="text-white text-[13px] font-bold">
-                ${toHumanReadableString(new BigNumber(liquidityUsd))}
+                {liquidityUsd > 0
+                  ? `$${toHumanReadableString(new BigNumber(liquidityUsd))}`
+                  : '-'}
               </div>
             </div>
 
@@ -241,7 +251,9 @@ export const MarketInfoCard = ({
                 FDV
               </div>
               <div className="text-white text-[13px] font-bold">
-                ${toHumanReadableString(new BigNumber(fdv))}
+                {fdv > 0
+                  ? `$${toHumanReadableString(new BigNumber(fdv))}`
+                  : '-'}
               </div>
             </div>
 
@@ -250,7 +262,9 @@ export const MarketInfoCard = ({
                 Market Cap
               </div>
               <div className="text-white text-[13px] font-bold">
-                ${toHumanReadableString(new BigNumber(marketCap))}
+                {marketCap > 0
+                  ? `$${toHumanReadableString(new BigNumber(marketCap))}`
+                  : '-'}
               </div>
             </div>
 
@@ -259,7 +273,9 @@ export const MarketInfoCard = ({
                 24H Volume
               </div>
               <div className="text-white text-[13px] font-bold">
-                ${toHumanReadableString(new BigNumber(dailyVolume))}
+                {dailyVolume > 0
+                  ? `$${toHumanReadableString(new BigNumber(dailyVolume))}`
+                  : '-'}
               </div>
             </div>
           </div>

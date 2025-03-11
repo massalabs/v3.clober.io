@@ -2,10 +2,16 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { isAddressEqual, parseUnits, zeroAddress } from 'viem'
 import { useAccount, useGasPrice, useWalletClient } from 'wagmi'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getMarketId, getQuoteToken } from '@clober/v2-sdk'
+import {
+  CHART_LOG_INTERVALS,
+  getChartLogs,
+  getMarketId,
+  getQuoteToken,
+} from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useRouter } from 'next/router'
+import { getCurrentTimestamp } from 'hardhat/internal/hardhat-network/provider/utils/getCurrentTimestamp'
 
 import { LimitForm } from '../components/form/limit-form'
 import OrderBook from '../components/order-book'
@@ -100,16 +106,8 @@ export const TradeContainer = () => {
       ]).marketId
     : ''
   const { data: tokenInfo } = useQuery({
-    queryKey: [
-      'token-info',
-      selectedChain.id,
-      marketId,
-      selectedMarket ? (prices[selectedMarket.quote.address] ?? 0) : 0,
-    ],
+    queryKey: ['token-info', selectedChain.id, marketId],
     queryFn: async () => {
-      if (!selectedMarket) {
-        return DEFAULT_TOKEN_INFO
-      }
       const queryKeys = queryClient
         .getQueryCache()
         .getAll()
@@ -120,12 +118,28 @@ export const TradeContainer = () => {
           queryClient.removeQueries({ queryKey: key })
         }
       }
+      if (!selectedMarket) {
+        return DEFAULT_TOKEN_INFO
+      }
       if (testnetChainIds.includes(selectedChain.id)) {
-        return fetchTokenInfoFromOrderBook(
-          selectedChain.id,
-          selectedMarket,
-          prices[selectedMarket.quote.address] ?? 0,
-        )
+        const currentTimestampInSeconds = getCurrentTimestamp()
+        const chartLog = await getChartLogs({
+          chainId: selectedChain.id,
+          quote: selectedMarket.quote.address,
+          base: selectedMarket.base.address,
+          intervalType: CHART_LOG_INTERVALS.oneDay,
+          from:
+            currentTimestampInSeconds -
+            (currentTimestampInSeconds % (24 * 60 * 60)),
+          to: currentTimestampInSeconds,
+        })
+        const priceNative = Number(chartLog?.[0]?.close ?? 0)
+        const priceUsd = priceNative * prices[selectedMarket.quote.address]
+        return {
+          ...DEFAULT_TOKEN_INFO,
+          priceNative,
+          priceUsd,
+        }
       }
       const tokenInfo = await fetchTokenInfo({
         chainId: selectedChain.id,
