@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { CHAIN_IDS, Market } from '@clober/v2-sdk'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import {
   CustomTimezones,
@@ -9,6 +9,7 @@ import {
 } from '../public/static/charting_library'
 import CloberDatafeed from '../model/datafeed/clober-datafeed'
 import { SUPPORTED_INTERVALS } from '../utils/chart'
+import { Currency } from '../model/currency'
 
 function getLanguageFromURL(): LanguageCode | null {
   const regex = new RegExp('[\\?&]lang=([^&#]*)')
@@ -20,12 +21,14 @@ function getLanguageFromURL(): LanguageCode | null {
 
 export const TradingViewChartContainer = ({
   chainId,
-  market,
+  baseCurrency,
+  quoteCurrency,
   setShowOrderBook,
   totalSupply,
 }: {
   chainId: CHAIN_IDS
-  market: Market
+  baseCurrency: Currency
+  quoteCurrency: Currency
   setShowOrderBook: (showOrderBook: boolean) => void
   totalSupply?: number
 }) => {
@@ -39,8 +42,8 @@ export const TradingViewChartContainer = ({
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>
 
   const symbol = useMemo(
-    () => `${market.base.symbol}/${market.quote.symbol}`,
-    [market],
+    () => `${baseCurrency.symbol}/${quoteCurrency.symbol}`,
+    [baseCurrency.symbol, quoteCurrency.symbol],
   )
 
   useEffect(() => {
@@ -48,8 +51,8 @@ export const TradingViewChartContainer = ({
       symbol,
       datafeed: new CloberDatafeed(
         chainId,
-        market.base,
-        market.quote,
+        baseCurrency,
+        quoteCurrency,
         totalSupply && tab === 'mcap' ? totalSupply : 1,
       ),
       interval,
@@ -89,7 +92,7 @@ export const TradingViewChartContainer = ({
     return () => {
       tvWidget.remove()
     }
-  }, [symbol, interval, chainId, market.base, market.quote, totalSupply, tab])
+  }, [symbol, interval, chainId, totalSupply, tab, baseCurrency, quoteCurrency])
 
   return (
     <>

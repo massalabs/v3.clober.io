@@ -458,13 +458,12 @@ export const TradeContainer = () => {
                     }
                     chainName={selectedChain.name.toLowerCase()}
                   />
-                ) : selectedMarket ? (
+                ) : (
                   <NativeChartContainer
-                    selectedMarket={selectedMarket}
+                    baseCurrency={baseCurrency}
+                    quoteCurrency={quoteCurrency}
                     setShowOrderBook={setShowOrderBook}
                   />
-                ) : (
-                  <></>
                 )
               ) : (
                 <></>

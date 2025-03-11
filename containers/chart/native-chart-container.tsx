@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Script from 'next/script'
 import dynamic from 'next/dynamic'
-import { Market } from '@clober/v2-sdk'
 
 import { useChainContext } from '../../contexts/chain-context'
+import { Currency } from '../../model/currency'
 
 const TVChartContainer = dynamic(
   () =>
@@ -14,11 +14,13 @@ const TVChartContainer = dynamic(
 )
 
 export const NativeChartContainer = ({
-  selectedMarket,
+  baseCurrency,
+  quoteCurrency,
   setShowOrderBook,
   totalSupply,
 }: {
-  selectedMarket: Market
+  baseCurrency: Currency
+  quoteCurrency: Currency
   setShowOrderBook: (showOrderBook: boolean) => void
   totalSupply?: number
 }) => {
@@ -37,7 +39,8 @@ export const NativeChartContainer = ({
       {isScriptReady ? (
         <TVChartContainer
           chainId={selectedChain.id}
-          market={selectedMarket}
+          baseCurrency={baseCurrency}
+          quoteCurrency={quoteCurrency}
           setShowOrderBook={setShowOrderBook}
           totalSupply={totalSupply}
         />
