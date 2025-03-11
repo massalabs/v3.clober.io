@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import { useAccount, useDisconnect, useSwitchChain } from 'wagmi'
 import { hexValue } from '@ethersproject/bytes'
 import { SwitchChainErrorType } from '@wagmi/core'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { Chain } from '../model/chain'
 import {
@@ -29,10 +30,30 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [selectedChain, _setSelectedChain] = React.useState<Chain>(
     supportChains.find((chain) => chain.id === DEFAULT_CHAIN_ID)!,
   )
+  const queryClient = useQueryClient()
   const { disconnectAsync } = useDisconnect()
   const [connectedWrongChain, setConnectedWrongChain] =
     React.useState<boolean>(false)
   const { chainId, connector } = useAccount()
+
+  const removeQueryKeys = useCallback(
+    (chainId: number) => {
+      const queryKeys = queryClient
+        .getQueryCache()
+        .getAll()
+        .map((query) => query.queryKey)
+      console.log({
+        queryKeys,
+      })
+      for (const queryKey of queryKeys) {
+        if (queryKey.includes(chainId)) {
+          console.log('Delete query', queryKey)
+          queryClient.removeQueries({ queryKey })
+        }
+      }
+    },
+    [queryClient],
+  )
 
   const { switchChain } = useSwitchChain({
     config: wagmiConfig,
@@ -42,6 +63,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
         if (chain) {
           _setSelectedChain(chain)
           localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, chain.id.toString())
+          removeQueryKeys(chain.id)
         }
       },
       onError: async (type: SwitchChainErrorType, data) => {
@@ -61,6 +83,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
                   LOCAL_STORAGE_CHAIN_KEY,
                   chain.id.toString(),
                 )
+                removeQueryKeys(chain.id)
               }
             } catch (e) {
               console.error('wallet_switchEthereumChain error', e)
@@ -82,9 +105,10 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
       } else {
         _setSelectedChain(_chain)
         localStorage.setItem(LOCAL_STORAGE_CHAIN_KEY, _chain.id.toString())
+        removeQueryKeys(_chain.id)
       }
     },
-    [switchChain],
+    [removeQueryKeys, switchChain],
   )
 
   useEffect(() => {

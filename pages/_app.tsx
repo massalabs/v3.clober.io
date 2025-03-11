@@ -126,16 +126,9 @@ const PanelWrapper = ({
 
 const FooterWrapper = () => {
   const { selectedChain } = useChainContext()
-  const queryClient = useQueryClient()
   const { data: latestSubgraphBlockNumber } = useQuery({
     queryKey: ['latest-subgraph-block-number', selectedChain.id],
     queryFn: async () => {
-      console.log({
-        queryKeys: queryClient
-          .getQueryCache()
-          .getAll()
-          .map((query) => query.queryKey),
-      })
       return getSubgraphBlockNumber({ chainId: selectedChain.id })
     },
     initialData: 0,
