@@ -187,6 +187,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
       }
       const contracts = [
         ...spenders
+          .filter((spender) => !isAddressEqual(spender, zeroAddress))
           .map((spender) => {
             return currencies.map((currency) => ({
               chainId: selectedChain.id,
@@ -241,6 +242,9 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
     },
   }) as {
     data: { allowances: Allowances; isOpenOrderApproved: boolean }
+  }
+  if (Object.values(data?.allowances ?? {}).length > 0) {
+    console.log('data', data)
   }
 
   return (
