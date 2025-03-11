@@ -186,7 +186,7 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
             if (new BigNumber(minPrice).gt(label)) {
               return {
                 label,
-                value: Math.max(decimalPlaces - i, 0),
+                value: decimalPlaces - i,
               }
             }
           })

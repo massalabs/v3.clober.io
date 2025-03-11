@@ -63,10 +63,15 @@ export function parseDepth(
       .reduce(
         (prev, curr) => {
           const price = new BigNumber(curr.price)
-          const key = new BigNumber(price).toFixed(
-            decimalPlaces.value,
-            BigNumber.ROUND_CEIL,
-          )
+          const key =
+            decimalPlaces.value >= 0
+              ? new BigNumber(price).toFixed(
+                  decimalPlaces.value,
+                  BigNumber.ROUND_CEIL,
+                )
+              : new BigNumber(price)
+                  .minus(new BigNumber(price).mod(10 ** -decimalPlaces.value))
+                  .toFixed()
           prev.set(
             key,
             prev.has(key)
