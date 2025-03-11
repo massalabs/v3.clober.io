@@ -65,6 +65,8 @@ const Context = React.createContext<MarketContext>({
   asks: [],
 })
 
+const cache = new Map<string, Market>()
+
 export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { selectedChain } = useChainContext()
   const queryClient = useQueryClient()
@@ -119,15 +121,22 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
             queryClient.removeQueries({ queryKey: key })
           }
         }
-        return getMarket({
+        console.log('Fetch market...', {
+          chainId: selectedChain.id,
+          marketId,
+          useSubgraph: !cache.get(marketId),
+        })
+        const market = await getMarket({
           chainId: selectedChain.id,
           token0: getAddress(inputCurrencyAddress),
           token1: getAddress(outputCurrencyAddress),
           options: {
             rpcUrl: RPC_URL[selectedChain.id],
-            useSubgraph: true,
+            useSubgraph: !cache.get(marketId),
           },
         })
+        cache.set(marketId, market)
+        return market
       } else {
         return null
       }
