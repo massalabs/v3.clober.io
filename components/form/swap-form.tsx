@@ -265,7 +265,7 @@ export const SwapForm = ({
                       >
                         {Number.isNaN(priceImpact)
                           ? 'N/A'
-                          : `${priceImpact.toFixed(4)}%`}
+                          : `${priceImpact.toFixed(2)}%`}
                         {priceImpact < -5 && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

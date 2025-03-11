@@ -301,7 +301,7 @@ export const TradeContainer = () => {
         Number(debouncedValue) === Number(inputCurrencyAmount)
       ) {
         console.log({
-          context: 'trade',
+          context: 'quote',
           chainId: selectedChain.id,
           inputCurrency: inputCurrency.symbol,
           outputCurrency: outputCurrency.symbol,
@@ -347,6 +347,7 @@ export const TradeContainer = () => {
     }
     return Number.NaN
   }, [inputCurrency, outputCurrency, prices, quotes])
+  console.log('TradeContainer', priceImpact)
 
   return (
     <>
