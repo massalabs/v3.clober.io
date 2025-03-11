@@ -13,7 +13,40 @@ import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { DEFAULT_TOKEN_INFO, TokenInfo } from '../model/token-info'
 import { formatUnits } from '../utils/bigint'
 
+const buildTotalSupplyCacheKey = (
+  chainId: CHAIN_IDS,
+  tokenAddress: `0x${string}`,
+) => `${chainId}:${tokenAddress}`
+const totalSupplyCache = new Map<string, bigint>()
+const getTotalSupplyFromCache = (
+  chainId: CHAIN_IDS,
+  tokenAddress: `0x${string}`,
+): bigint | undefined =>
+  totalSupplyCache.get(buildTotalSupplyCacheKey(chainId, tokenAddress))
+const setTotalSupplyToCache = (
+  chainId: CHAIN_IDS,
+  tokenAddress: `0x${string}`,
+  totalSupply: bigint,
+) =>
+  totalSupplyCache.set(
+    buildTotalSupplyCacheKey(chainId, tokenAddress),
+    totalSupply,
+  )
+
 export async function fetchTotalSupply(
+  chainId: CHAIN_IDS,
+  tokenAddress: `0x${string}`,
+): Promise<bigint> {
+  const cachedTotalSupply = getTotalSupplyFromCache(chainId, tokenAddress)
+  if (cachedTotalSupply !== undefined) {
+    return cachedTotalSupply
+  }
+  const totalSupply = await fetchTotalSupplyInner(chainId, tokenAddress)
+  setTotalSupplyToCache(chainId, tokenAddress, totalSupply)
+  return totalSupply
+}
+
+async function fetchTotalSupplyInner(
   chainId: CHAIN_IDS,
   tokenAddress: `0x${string}`,
 ): Promise<bigint> {
