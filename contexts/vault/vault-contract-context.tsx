@@ -151,7 +151,6 @@ export const VaultContractProvider = ({
           amount0,
           amount1,
           options: {
-            gasLimit: 3_000_000n,
             useSubgraph: false,
             disableSwap,
             slippage,
