@@ -204,14 +204,16 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
           return
         }
 
-        setCurrencies(
-          deduplicateCurrencies(
-            [...whitelistCurrencies].concat(
-              _inputCurrency ? [_inputCurrency] : [],
-              _outputCurrency ? [_outputCurrency] : [],
+        if (whitelistCurrencies.length > 0) {
+          setCurrencies(
+            deduplicateCurrencies(
+              [...whitelistCurrencies].concat(
+                _inputCurrency ? [_inputCurrency] : [],
+                _outputCurrency ? [_outputCurrency] : [],
+              ),
             ),
-          ),
-        )
+          )
+        }
 
         if (_inputCurrency) {
           setInputCurrency(_inputCurrency)
