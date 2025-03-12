@@ -112,7 +112,8 @@ export const TradeContainer = () => {
     : ''
   const previousValue = useRef({
     chain: selectedChain,
-    marketId,
+    inputCurrencyAddress: inputCurrency?.address,
+    outputCurrencyAddress: outputCurrency?.address,
   })
 
   const { data: tokenInfo } = useQuery({
@@ -214,8 +215,9 @@ export const TradeContainer = () => {
       const action = async () => {
         setIsFetchingQuotes(true)
         previousValue.current.chain = selectedChain
-        previousValue.current.marketId = marketId
         if (inputCurrency && outputCurrency) {
+          previousValue.current.inputCurrencyAddress = inputCurrency.address
+          previousValue.current.outputCurrencyAddress = outputCurrency.address
           try {
             const price = await fetchPrice(
               selectedChain.id,
@@ -224,7 +226,14 @@ export const TradeContainer = () => {
             )
             if (
               previousValue.current.chain.id !== selectedChain.id ||
-              previousValue.current.marketId !== marketId ||
+              !isAddressEqual(
+                previousValue.current.inputCurrencyAddress,
+                inputCurrency.address,
+              ) ||
+              !isAddressEqual(
+                previousValue.current.outputCurrencyAddress,
+                outputCurrency.address,
+              ) ||
               price.isZero()
             ) {
               return
