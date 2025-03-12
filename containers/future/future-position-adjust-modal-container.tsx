@@ -94,7 +94,10 @@ export const FuturePositionAdjustModalContainer = ({
     return () => clearInterval(interval)
   }, [newLTV, ltvNewBuffer.previous, ltvNewBuffer.updateAt])
 
-  const debtAmountDelta = expectedDebtAmount - (userPosition?.debtAmount ?? 0n)
+  const debtAmountDelta = useMemo(
+    () => expectedDebtAmount - (userPosition?.debtAmount ?? 0n),
+    [expectedDebtAmount, userPosition?.debtAmount],
+  )
 
   return isClose ? (
     <Modal show onClose={() => {}} onButtonClick={() => setIsClose(false)}>

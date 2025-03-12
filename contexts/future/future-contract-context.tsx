@@ -280,7 +280,7 @@ export const FutureContractProvider = ({
               ],
             ],
           },
-          1_000_000n,
+          5_000_000n,
         )
         return sendTransaction(
           selectedChain,
@@ -364,7 +364,7 @@ export const FutureContractProvider = ({
               ],
             ],
           },
-          1_000_000n,
+          5_000_000n,
         )
         return sendTransaction(
           selectedChain,
@@ -435,34 +435,69 @@ export const FutureContractProvider = ({
           ],
         })
 
-        const transaction = await buildTransaction(publicClient, {
-          chain: selectedChain,
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
-          functionName: 'multicall',
-          abi: VAULT_MANAGER_ABI,
-          args: [
-            [
-              encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
-                functionName: 'burn',
-                args: [
-                  userPosition.asset.currency.address,
-                  walletClient.account.address,
-                  userPosition?.debtAmount ?? 0n,
-                ],
-              }),
-              encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
-                functionName: 'withdraw',
-                args: [
-                  userPosition.asset.currency.address,
-                  walletClient.account.address,
-                  userPosition?.collateralAmount ?? 0n,
-                ],
-              }),
-            ],
-          ],
+        const evmPriceServiceConnection = new EvmPriceServiceConnection(
+          'https://hermes.pyth.network',
+        )
+        const priceFeedUpdateData =
+          await evmPriceServiceConnection.getPriceFeedsUpdateData([
+            userPosition.asset.currency.priceFeedId,
+            userPosition.asset.collateral.priceFeedId,
+          ])
+
+        if (priceFeedUpdateData.length === 0) {
+          console.error('Price feed not found')
+          return
+        }
+
+        const fee = await publicClient.readContract({
+          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          abi: PYTH_ABI,
+          functionName: 'getUpdateFee',
+          args: [priceFeedUpdateData as any],
         })
+
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'multicall',
+            abi: VAULT_MANAGER_ABI,
+            value: fee,
+            args: [
+              [
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'updateOracle',
+                  args: [
+                    encodeAbiParameters(parseAbiParameters('bytes[]'), [
+                      priceFeedUpdateData as any,
+                    ]),
+                  ],
+                }),
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'burn',
+                  args: [
+                    userPosition.asset.currency.address,
+                    walletClient.account.address,
+                    userPosition?.debtAmount ?? 0n,
+                  ],
+                }),
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'withdraw',
+                  args: [
+                    userPosition.asset.currency.address,
+                    walletClient.account.address,
+                    userPosition?.collateralAmount ?? 0n,
+                  ],
+                }),
+              ],
+            ],
+          },
+          5_000_000n,
+        )
         return sendTransaction(
           selectedChain,
           walletClient,
@@ -552,7 +587,7 @@ export const FutureContractProvider = ({
               ],
             ],
           },
-          1_000_000n,
+          5_000_000n,
         )
         return sendTransaction(
           selectedChain,
@@ -616,7 +651,7 @@ export const FutureContractProvider = ({
             abi: VAULT_MANAGER_ABI,
             args: [asset.currency.address, walletClient.account.address],
           },
-          1_000_000n,
+          5_000_000n,
         )
         return sendTransaction(
           selectedChain,
