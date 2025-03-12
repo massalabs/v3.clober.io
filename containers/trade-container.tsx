@@ -99,6 +99,14 @@ export const TradeContainer = () => {
     chain: selectedChain,
   })
 
+  useEffect(() => {
+    if (testnetChainIds.includes(selectedChain.id)) {
+      setShowOrderBook(true)
+    } else {
+      setShowOrderBook(false)
+    }
+  }, [selectedChain.id])
+
   const marketId = selectedMarket
     ? getMarketId(selectedChain.id, [
         selectedMarket.base.address,
