@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { NextRouter } from 'next/router'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
+import { monadTestnet } from '../constants/monad-testnet-chain'
+
 import { TwitterLogoSvg } from './svg/twitter-logo-svg'
 import { DiscordLogoSvg } from './svg/discord-logo-svg'
 import { DocsIconSvg } from './svg/docs-icon-svg'
@@ -12,6 +14,7 @@ import { SwapPageSvg } from './svg/swap-page-svg'
 import { PageButton } from './button/page-button'
 import { VaultPageSvg } from './svg/vault-page-svg'
 import { GithubLogoSvg } from './svg/github-logo-svg'
+import { LimitPageSvg } from './svg/limit-page-svg'
 
 const Panel = ({
   chainId,
@@ -82,6 +85,22 @@ const Panel = ({
                             <VaultPageSvg className="w-4 h-4" />
                             Vault
                           </PageButton>
+
+                          {chainId === monadTestnet.id && (
+                            <Link
+                              target="_blank"
+                              href="https://futures.clober.io/"
+                              rel="noreferrer"
+                            >
+                              <PageButton
+                                disabled={router.pathname.includes('/future')}
+                                onClick={() => {}}
+                              >
+                                <LimitPageSvg className="w-4 h-4" />
+                                Future
+                              </PageButton>
+                            </Link>
+                          )}
                         </div>
                       ) : (
                         <></>

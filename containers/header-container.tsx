@@ -15,6 +15,8 @@ import { PageButton } from '../components/button/page-button'
 import { SwapPageSvg } from '../components/svg/swap-page-svg'
 import { VaultPageSvg } from '../components/svg/vault-page-svg'
 import { GithubLogoSvg } from '../components/svg/github-logo-svg'
+import { LimitPageSvg } from '../components/svg/limit-page-svg'
+import { monadTestnet } from '../constants/monad-testnet-chain'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -64,6 +66,22 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               <VaultPageSvg className="w-4 h-4" />
               Vault
             </PageButton>
+
+            {selectedChain.id === monadTestnet.id && (
+              <Link
+                target="_blank"
+                href="https://futures.clober.io/"
+                rel="noreferrer"
+              >
+                <PageButton
+                  disabled={router.pathname.includes('/future')}
+                  onClick={() => {}}
+                >
+                  <LimitPageSvg className="w-4 h-4" />
+                  Future
+                </PageButton>
+              </Link>
+            )}
           </div>
         ) : (
           <></>
