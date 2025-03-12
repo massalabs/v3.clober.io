@@ -95,9 +95,6 @@ export const TradeContainer = () => {
 
   const [debouncedValue, setDebouncedValue] = useState('')
   const [tab, setTab] = useState<'limit' | 'swap'>('swap')
-  const previousChain = useRef({
-    chain: selectedChain,
-  })
 
   useEffect(() => {
     if (testnetChainIds.includes(selectedChain.id)) {
@@ -113,6 +110,11 @@ export const TradeContainer = () => {
         selectedMarket.quote.address,
       ]).marketId
     : ''
+  const previousValue = useRef({
+    chain: selectedChain,
+    marketId,
+  })
+
   const { data: tokenInfo } = useQuery({
     queryKey: ['token-info', selectedChain.id, marketId],
     queryFn: async () => {
@@ -211,7 +213,8 @@ export const TradeContainer = () => {
     () => {
       const action = async () => {
         setIsFetchingQuotes(true)
-        previousChain.current.chain = selectedChain
+        previousValue.current.chain = selectedChain
+        previousValue.current.marketId = marketId
         if (inputCurrency && outputCurrency) {
           try {
             const price = await fetchPrice(
@@ -220,7 +223,8 @@ export const TradeContainer = () => {
               outputCurrency,
             )
             if (
-              previousChain.current.chain.id !== selectedChain.id ||
+              previousValue.current.chain.id !== selectedChain.id ||
+              previousValue.current.marketId !== marketId ||
               price.isZero()
             ) {
               return
@@ -261,7 +265,7 @@ export const TradeContainer = () => {
       )
       const minimumDecimalPlaces = availableDecimalPlacesGroups?.[0]?.value
       if (
-        previousChain.current.chain.id !== selectedChain.id ||
+        previousValue.current.chain.id !== selectedChain.id ||
         price.isZero()
       ) {
         return
