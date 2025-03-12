@@ -63,7 +63,7 @@ export const MarketInfoCard = ({
               />
             </div>
 
-            <div className="flex flex-col justify-center gap-0.5 lg:gap-1 lg:w-[177px]">
+            <div className="flex flex-col justify-center gap-0.5 lg:gap-1 lg:w-[227px]">
               <div className="flex flex-row gap-2 w-full h-full justify-start items-center">
                 <div className="text-white text-base lg:text-lg font-semibold">
                   <span>{baseCurrency.symbol} </span>
