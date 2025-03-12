@@ -15,7 +15,6 @@
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@pythnetwork/pyth-evm-js": "^1.83.0",
-    "@rainbow-me/rainbowkit": "^2.2.1",
     "@tamagui/config": "^1.112.22",
     "@tamagui/next-plugin": "^1.112.22",
     "@tanstack/react-query": "^5.62.8",
@@ -35,6 +34,7 @@
     "reactflow": "^11.9.4",
     "set-interval-async": "^3.0.3",
     "uuid": "^10.0.0",
+    "@rainbow-me/rainbowkit": "^2.2.4",
     "viem": "^2.23.9",
     "wagmi": "^2.14.13"
   },
