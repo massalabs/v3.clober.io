@@ -5,5 +5,5 @@ export const RPC_URL: {
 } = {
   [CHAIN_IDS.BASE]: 'https://mainnet.base.org',
   [CHAIN_IDS.MONAD_TESTNET]:
-    'https://side-cold-water.monad-testnet.quiknode.pro/cdca51dfe940664aca31fad3acaee682eee43c3b/',
+    'https://monad-testnet.g.alchemy.com/v2/rBna9uEs-PtanJJw4HM-g_Xg0qb5kOgL',
 }
