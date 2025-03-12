@@ -5,5 +5,5 @@ export const RPC_URL: {
 } = {
   [CHAIN_IDS.BASE]: 'https://mainnet.base.org',
   [CHAIN_IDS.MONAD_TESTNET]:
-    'https://monad-testnet.g.alchemy.com/v2/rBna9uEs-PtanJJw4HM-g_Xg0qb5kOgL',
+    'https://monad-testnet.g.alchemy.com/v2/YLpSdYvLaNm8IvQ48KISOiCfNfR163tJ',
 }
