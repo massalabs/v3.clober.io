@@ -181,6 +181,13 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 18,
       icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-msft-usd.inline.svg&w=1920&q=75',
     },
+    {
+      address: '0x48aE1080948EAa1b7F5EfEb3914b45F0c41F736d',
+      name: 'Monad Pre-TGE Futures',
+      symbol: 'MON-TGE',
+      decimals: 18,
+      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/I_t8rg_V_400x400.jpg/public',
+    },
   ],
 }
 

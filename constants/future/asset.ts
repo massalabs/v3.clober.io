@@ -15,6 +15,8 @@ export const ASSET_ICONS: {
     'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-msft-usd.inline.svg&w=1920&q=75',
   '0x16dad506d7db8da01c87581c87ca897a012a153557d4d578c3b9c9e1bc0632f1':
     'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-tsla-usd.inline.svg&w=1920&q=75',
+  '0xb44565b8b9b39ab2f4ba792f1c8f8aa8ef7d780e709b191637ef886d96fd1472':
+    'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/I_t8rg_V_400x400.jpg/public',
 }
 
 export const WHITE_LISTED_ASSETS: `0x${string}`[] = [
@@ -23,6 +25,7 @@ export const WHITE_LISTED_ASSETS: `0x${string}`[] = [
   '0xE9E6ceF9043A64b0284AFe5993Da11c1381bBc72', // BTC-USDC, Apr 01 25, 09:00
   '0x2f8fb46539BfCDEBa867Ca892bDB66e4ba46c394', // GOOG-USDC, Apr 01 25, 09:00
   '0x2E4FcD2AB14ea77dfdE67d12489c64af92DB1493', // MSFT-USDC, Apr 01 25, 09:00
+  '0x48aE1080948EAa1b7F5EfEb3914b45F0c41F736d', // MONAD-TGE
 ].map((address) => getAddress(address))
 
 export const TRADING_VIEW_SYMBOLS: {
