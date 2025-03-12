@@ -43,7 +43,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
     vaultLpBalances,
   } = useVaultContext()
   const { mint, burn } = useVaultContractContext()
-  const [showPnL, setShowPnL] = React.useState(false)
+  const [showPnL, setShowPnL] = React.useState(true)
   const previousValues = useRef({
     currency0Amount,
     currency1Amount,
@@ -184,11 +184,11 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
     [currency0Amount, currency1Amount],
   )
 
-  const latestPriceIndex = useMemo(
+  const latestValue = useMemo(
     () =>
       vault.historicalPriceIndex.length > 0
         ? vault.historicalPriceIndex[vault.historicalPriceIndex.length - 1]
-            .values[0]
+            .values[1]
         : 0,
     [vault.historicalPriceIndex],
   )
@@ -357,7 +357,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
               <div className="flex sm:hidden flex-col item-st gap-3 md:gap-4 self-stretch">
                 <div className="flex flex-row gap-2">
                   <div className="text-white text-sm md:text-base font-bold">
-                    Performance Index (PI)
+                    Relative Price Index(RPI)
                   </div>
                   <div className="flex mr-auto justify-center items-center">
                     <QuestionMarkSvg
@@ -378,7 +378,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                   </div>
                 </div>
                 <div className="text-sm font-semibold flex h-14 px-8 py-4 bg-gray-800 rounded-xl justify-center items-center gap-8 md:gap-12">
-                  {latestPriceIndex.toFixed(4)}
+                  {latestValue.toFixed(4)}
                 </div>
               </div>
               <div className="flex-col items-start gap-3 md:gap-4 self-stretch hidden sm:flex">
