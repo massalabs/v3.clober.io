@@ -485,6 +485,7 @@ export const TradeContainer = () => {
 
               {showOrderBook ? (
                 <OrderBook
+                  market={selectedMarket}
                   bids={bids}
                   asks={asks}
                   availableDecimalPlacesGroups={
