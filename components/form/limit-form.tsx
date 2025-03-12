@@ -215,7 +215,7 @@ export const LimitForm = ({
                   <div className="h-6 justify-start items-start gap-1 sm:gap-1.5 flex">
                     {setMarketRateAction ? (
                       <button
-                        disabled={setMarketRateAction.isLoading}
+                        disabled={false}
                         onClick={async () => {
                           await setMarketRateAction.action()
                         }}
