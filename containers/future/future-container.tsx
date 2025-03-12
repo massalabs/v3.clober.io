@@ -106,7 +106,7 @@ export const FutureContainer = () => {
               <div className="w-36 text-gray-400 text-sm font-semibold">
                 Collateral
               </div>
-              <div className="w-[160px] text-gray-400 text-sm font-semibold">
+              <div className="w-[140px] text-gray-400 text-sm font-semibold">
                 Expiry Date
               </div>
               <div className="w-[140px] text-gray-400 text-sm font-semibold">
