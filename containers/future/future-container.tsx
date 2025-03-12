@@ -144,7 +144,8 @@ export const FutureContainer = () => {
                   .filter(
                     (asset) =>
                       asset.expiration < now &&
-                      balances[asset.currency.address] > 0n,
+                      balances[asset.currency.address] > 0n &&
+                      WHITE_LISTED_ASSETS.includes(asset.currency.address),
                   )
                   .map((asset, index) => (
                     <FutureRedeemCard

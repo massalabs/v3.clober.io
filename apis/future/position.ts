@@ -6,7 +6,7 @@ import { Prices } from '../../model/prices'
 import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
 import { COLLATERALS } from '../../constants/future/collateral'
-import { ASSET_ICONS } from '../../constants/future/asset'
+import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/future/asset'
 
 type ShortPositionDto = {
   id: string
@@ -122,6 +122,9 @@ export const fetchFuturePositions = async (
       }
     }),
   ].filter(
-    (position) => position && price[position.asset.currency.address] > 0,
+    (position) =>
+      position &&
+      price[position.asset.currency.address] > 0 &&
+      WHITE_LISTED_ASSETS.includes(position.asset.currency.address),
   ) as UserPosition[]
 }
