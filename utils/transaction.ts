@@ -18,8 +18,11 @@ export async function sendTransaction(
     await disconnectAsync()
   }
   try {
-    // await publicClient.waitForTransactionReceipt({ hash })
-    return await walletClient.sendTransaction({
+    const publicClient = createPublicClient({
+      chain: supportChains.find((chain) => chain.id === walletClient.chain!.id),
+      transport: http(RPC_URL[walletClient.chain!.id]),
+    })
+    const hash = await walletClient.sendTransaction({
       data: transaction.data,
       to: transaction.to,
       value: transaction.value,
@@ -27,6 +30,8 @@ export async function sendTransaction(
       account: walletClient.account!,
       chain,
     })
+    await publicClient.waitForTransactionReceipt({ hash })
+    return hash
   } catch (e) {
     console.error('Failed to send transaction', e)
     throw e
