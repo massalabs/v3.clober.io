@@ -106,7 +106,7 @@ export const LimitContractProvider = ({
         }
 
         setConfirmation({
-          title: `Place Order @ ${price}`,
+          title: `Limit ${isBid ? 'Bid' : 'Ask'} @ ${price}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
           fields: [],
@@ -154,7 +154,7 @@ export const LimitContractProvider = ({
 
         if (Number(result.spent.amount) === 0) {
           setConfirmation({
-            title: `Place Order @ ${price}`,
+            title: `Limit ${isBid ? 'Bid' : 'Ask'} @ ${price}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [
@@ -171,7 +171,7 @@ export const LimitContractProvider = ({
           })
         } else {
           setConfirmation({
-            title: `Place Order @ ${price}`,
+            title: `Limit ${isBid ? 'Bid' : 'Ask'} @ ${price}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [
