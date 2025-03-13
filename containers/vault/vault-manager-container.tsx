@@ -364,7 +364,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                       data-tooltip-id="trading-view-info"
                       data-tooltip-place="bottom-end"
                       data-tooltip-html={
-                        'Performance Index (PI) shows the relative value of your portfolio over time, starting at 1. A value above 1 indicates growth, while a value below 1 indicates a decrease. PI provides a snapshot of how the assets have performed since the initial measurement.'
+                        'Relative Price Index (RPI) measures the historical performance of the Clober Liquidity Vault compared to a reference portfolio. The reference portfolio represents the value of assets if they had been held without any active management from the initial point. RPI effectively indicates how well the vault has performed relative to a passive “just hold” strategy.'
                       }
                       className="w-3 h-3"
                     />
@@ -426,7 +426,9 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                         data-tooltip-id="trading-view-info"
                         data-tooltip-place="bottom-end"
                         data-tooltip-html={
-                          'Performance Index (PI) shows the relative value of your portfolio over time, starting at 1. A value above 1 indicates growth, while a value below 1 indicates a decrease. PI provides a snapshot of how the assets have performed since the initial measurement.'
+                          showPnL
+                            ? 'Relative Price Index (RPI) measures the historical performance of the Clober Liquidity Vault compared to a reference portfolio. The reference portfolio represents the value of assets if they had been held without any active management from the initial point. RPI effectively indicates how well the vault has performed relative to a passive “just hold” strategy.'
+                            : 'Performance Index (PI) shows the relative value of your portfolio over time, starting at 1. A value above 1 indicates growth, while a value below 1 indicates a decrease. PI provides a snapshot of how the assets have performed since the initial measurement.'
                         }
                         className="w-3 h-3"
                       />
