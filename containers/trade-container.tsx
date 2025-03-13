@@ -272,6 +272,13 @@ export const TradeContainer = () => {
         inputCurrency,
         outputCurrency,
       )
+      console.log({
+        context: 'fetching price',
+        price: price.toNumber(),
+        chainId: selectedChain.id,
+        inputCurrency: inputCurrency.symbol,
+        outputCurrency: outputCurrency.symbol,
+      })
       const minimumDecimalPlaces = availableDecimalPlacesGroups?.[0]?.value
       if (
         previousValue.current.chain.id !== selectedChain.id ||
@@ -280,6 +287,7 @@ export const TradeContainer = () => {
         setIsFetchingQuotes(false)
         return
       }
+      setMarketPrice(price.toNumber())
       setPriceInput(
         minimumDecimalPlaces
           ? toPlacesString(price, minimumDecimalPlaces)

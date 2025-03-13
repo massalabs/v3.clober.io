@@ -176,6 +176,8 @@ export const LimitForm = ({
               <div className="text-xs sm:text-sm font-semibold text-green-400">
                 (&gt;10000%)
               </div>
+            ) : marketRateDiff === -100 ? (
+              <></>
             ) : !isNaN(marketRateDiff) &&
               isFinite(marketRateDiff) &&
               marketRateDiff.toFixed(2) !== '0.00' ? (

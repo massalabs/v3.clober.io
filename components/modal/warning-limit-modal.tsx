@@ -66,19 +66,23 @@ const WarningLimitModal = ({
           </div>
 
           <div className="w-full p-4 bg-[#303742] rounded-xl flex-col justify-center items-start gap-2 flex">
-            <div className="flex flex-col sm:flex-row w-full items-start gap-1 self-stretch">
+            <div className="flex flex-row w-full items-start gap-1 self-stretch">
               <div className="text-gray-300 text-xs sm:text-sm">
                 Current market price
               </div>
-              <div className="flex ml-auto">{toShortNumber(marketPrice)}</div>
+              <div className="flex ml-auto font-semibold text-xs sm:text-sm">
+                {marketPrice > 0 ? toShortNumber(marketPrice) : 'Unknown'}
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row w-full items-start gap-1 self-stretch">
+            <div className="flex flex-row w-full items-start gap-1 self-stretch">
               <div className="text-gray-300 text-xs sm:text-sm flex flex-row gap-1">
                 Your order price
                 {marketRateDiff >= 10000 ? (
                   <div className="font-semibold text-green-400">
                     (&gt;10000%)
                   </div>
+                ) : marketRateDiff === -100 ? (
+                  <></>
                 ) : !isNaN(marketRateDiff) ? (
                   <div
                     className={`text-gray-200 ${
@@ -91,7 +95,9 @@ const WarningLimitModal = ({
                   <></>
                 )}
               </div>
-              <div className="flex ml-auto">{toShortNumber(priceInput)}</div>
+              <div className="flex ml-auto text-xs sm:text-sm font-semibold">
+                {toShortNumber(priceInput)}
+              </div>
             </div>
           </div>
         </div>
