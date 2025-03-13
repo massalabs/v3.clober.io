@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Currency } from '@clober/v2-sdk'
 import Link from 'next/link'
 import BigNumber from 'bignumber.js'
+import { isAddressEqual } from 'viem'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toHumanReadableString, toShortNumber } from '../../utils/number'
@@ -9,6 +10,7 @@ import { shortAddress } from '../../utils/address'
 import { handleCopyClipBoard } from '../../utils/string'
 import { ClipboardSvg } from '../svg/clipboard-svg'
 import { Toast } from '../toast'
+import { ActionButton } from '../button/action-button'
 
 export const MarketInfoCard = ({
   baseCurrency,
@@ -70,6 +72,35 @@ export const MarketInfoCard = ({
                   <span className="text-[#8690a5]">/</span>
                   <span> {quoteCurrency.symbol}</span>
                 </div>
+                {isAddressEqual(
+                  baseCurrency.address,
+                  '0x836047a99e11f376522b447bffb6e3495dd0637c',
+                ) && (
+                  <ActionButton
+                    disabled={false}
+                    onClick={async () => {
+                      window.open(
+                        `https://testnet.orbiter.finance/en?src_chain=11155111&tgt_chain=10143&src_token=ETH`,
+                        '_blank',
+                      )
+                    }}
+                    text="Bridge"
+                    className="disabled:text-gray-400 text-white text-[13px] font-semibold px-2 py-0.5 bg-purple-500 rounded justify-center items-center flex"
+                  />
+                )}
+                {isAddressEqual(
+                  baseCurrency.address,
+                  '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
+                ) && (
+                  <ActionButton
+                    disabled={false}
+                    onClick={async () => {
+                      window.open(`https://www.monadbridge.com/`, '_blank')
+                    }}
+                    text="Bridge"
+                    className="disabled:text-gray-400 text-white text-[13px] font-semibold px-2 py-0.5 bg-purple-500 rounded justify-center items-center flex"
+                  />
+                )}
               </div>
 
               <div className="flex items-center gap-1 lg:gap-1.5">
