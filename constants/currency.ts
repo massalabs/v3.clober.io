@@ -47,6 +47,7 @@ export const WHITELISTED_CURRENCIES: {
       name: 'Orbiter Wrapped ETH',
       symbol: 'oWETH',
       decimals: 18,
+      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/weth.jpg/public',
     },
     {
       address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
@@ -129,13 +130,6 @@ export const WHITELISTED_CURRENCIES: {
       symbol: 'USDT',
       decimals: 6,
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/images.png/public',
-    },
-    {
-      address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37',
-      name: 'Wrapped ETH',
-      symbol: 'WETH',
-      decimals: 18,
-      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/weth.jpg/public',
     },
     {
       address: '0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d',
@@ -229,5 +223,6 @@ export const DEFAULT_OUTPUT_CURRENCY: {
     name: 'Orbiter Wrapped ETH',
     symbol: 'oWETH',
     decimals: 18,
+    icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/weth.jpg/public',
   },
 }
