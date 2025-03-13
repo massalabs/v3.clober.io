@@ -43,6 +43,12 @@ export const WHITELISTED_CURRENCIES: {
   [CHAIN_IDS.MONAD_TESTNET]: [
     MON,
     {
+      address: '0x836047a99e11f376522b447bffb6e3495dd0637c',
+      name: 'Orbiter Wrapped ETH',
+      symbol: 'oWETH',
+      decimals: 18,
+    },
+    {
       address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
       name: 'Wormhole Wrapped ETH',
       symbol: 'wWETH',
@@ -219,10 +225,9 @@ export const DEFAULT_OUTPUT_CURRENCY: {
     decimals: 6,
   },
   [CHAIN_IDS.MONAD_TESTNET]: {
-    address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
-    name: 'Wormhole Wrapped ETH',
-    symbol: 'wWETH',
+    address: '0x836047a99e11f376522b447bffb6e3495dd0637c',
+    name: 'Orbiter Wrapped ETH',
+    symbol: 'oWETH',
     decimals: 18,
-    icon: 'https://assets.coingecko.com/coins/images/22990/standard/ETH_wh_small.png?1696522286',
   },
 }
