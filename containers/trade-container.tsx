@@ -277,6 +277,7 @@ export const TradeContainer = () => {
         previousValue.current.chain.id !== selectedChain.id ||
         price.isZero()
       ) {
+        setIsFetchingQuotes(false)
         return
       }
       setPriceInput(
