@@ -1,4 +1,18 @@
+import { MARKET_HOURS } from '../constants/future/asset'
+
 export const SECONDS_IN_DAY = 60 * 60 * 24
+
+export const isMarketClose = (assetId: string): boolean => {
+  if (!MARKET_HOURS[assetId]) {
+    return false
+  }
+  const now = currentTimestampInSeconds()
+  const utcHours = new Date(now * 1000).getUTCHours()
+  return !(
+    MARKET_HOURS[assetId].open <= utcHours &&
+    utcHours < MARKET_HOURS[assetId].close
+  )
+}
 
 export const formatDate = (date: Date): string =>
   Intl.DateTimeFormat('en-US', {

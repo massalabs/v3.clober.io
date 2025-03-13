@@ -9,6 +9,7 @@ import { useCurrencyContext } from '../../contexts/currency-context'
 import { applyPercent, formatUnits } from '../../utils/bigint'
 import { useFutureContractContext } from '../../contexts/future/future-contract-context'
 import Modal from '../../components/modal/modal'
+import { isMarketClose } from '../../utils/date'
 
 export const FuturePositionAdjustModalContainer = ({
   userPosition,
@@ -19,7 +20,7 @@ export const FuturePositionAdjustModalContainer = ({
 }) => {
   const [isClose, setIsClose] = useState(false)
   const { prices, balances } = useCurrencyContext()
-  const { isMarketClose, borrow, repay, repayAll } = useFutureContractContext()
+  const { borrow, repay, repayAll } = useFutureContractContext()
 
   const ltv = calculateLtv(
     userPosition.asset.currency,
@@ -135,9 +136,8 @@ export const FuturePositionAdjustModalContainer = ({
           if (newLTV === 0) {
             await repayAll(userPosition)
           } else if (ltv < newLTV) {
-            const closed = await isMarketClose(
-              userPosition.asset,
-              debtAmountDelta,
+            const closed = isMarketClose(
+              userPosition.asset.currency.priceFeedId,
             )
             if (closed) {
               setIsClose(true)

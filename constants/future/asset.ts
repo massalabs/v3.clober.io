@@ -1,5 +1,33 @@
 import { getAddress } from 'viem'
 
+export const MARKET_HOURS: {
+  [assetId in string]: {
+    open: number
+    close: number
+  }
+} = {
+  '0x49f6b65cb1de6b10eaf75e7c03ca029c306d0357e91b5311b175084a5ad55688': {
+    open: 15,
+    close: 21,
+  },
+  '0xb5d0e0fa58a1f8b81498ae670ce93c872d14434b72c364885d4fa1b257cbb07a': {
+    open: 15,
+    close: 21,
+  },
+  '0xe65ff435be42630439c96396653a342829e877e2aafaeaf1a10d0ee5fd2cf3f2': {
+    open: 15,
+    close: 21,
+  },
+  '0xd0ca23c1cc005e004ccf1db5bf76aeb6a49218f43dac3d4b275e92de12ded4d1': {
+    open: 15,
+    close: 21,
+  },
+  '0x16dad506d7db8da01c87581c87ca897a012a153557d4d578c3b9c9e1bc0632f1': {
+    open: 15,
+    close: 21,
+  },
+}
+
 export const ASSET_ICONS: {
   [assetId in string]: string
 } = {
