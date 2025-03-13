@@ -126,7 +126,13 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
   useEffect(() => {
     setCurrencies(deduplicateCurrencies(whitelistCurrencies))
-  }, [setCurrencies, whitelistCurrencies])
+    const url = new URL(window.location.href)
+    window.history.pushState(
+      {},
+      '',
+      `${url.origin}${url.pathname}?chain=${selectedChain.id}`,
+    )
+  }, [selectedChain.id, setCurrencies, whitelistCurrencies])
 
   return (
     <Context.Provider
