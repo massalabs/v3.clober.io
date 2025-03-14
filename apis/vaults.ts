@@ -14,6 +14,7 @@ import { Prices } from '../model/prices'
 import { Vault } from '../model/vault'
 import { calculateApy } from '../utils/apy'
 import { StackedLineData } from '../components/chart/tvl-chart-model'
+import { RPC_URL } from '../constants/rpc-urls'
 
 export async function fetchVaults(
   chainId: CHAIN_IDS,
@@ -37,6 +38,7 @@ export async function fetchVaults(
         salt,
         options: {
           useSubgraph: false,
+          rpcUrl: RPC_URL[chainId],
         },
       })
       const vaultPerformanceData = await getPoolPerformance({

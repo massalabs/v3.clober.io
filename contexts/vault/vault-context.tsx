@@ -54,7 +54,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [slippageInput, setSlippageInput] = React.useState('1')
 
   const { data: vaults } = useQuery({
-    queryKey: ['vaults', selectedChain.id],
+    queryKey: ['vaults', selectedChain.id, Object.keys(prices).length !== 0],
     queryFn: async () => {
       return fetchVaults(selectedChain.id, prices)
     },
