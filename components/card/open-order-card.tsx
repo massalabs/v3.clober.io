@@ -115,7 +115,7 @@ export const OpenOrderCard = ({
         )}
 
         <div className="justify-start items-center gap-6 flex">
-          <div className="w-[160px] text-sm font-semibold flex flex-row items-center gap-2">
+          <div className="w-[160px] max-w-[160px] text-sm font-semibold flex flex-row items-center gap-1.5 text-nowrap">
             {openOrder.inputCurrency.symbol}{' '}
             <p className="text-sm text-gray-500">&#x2192;</p>
             {'  '}
