@@ -79,8 +79,8 @@ export class CloberV2Aggregator implements Aggregator {
         outputToken: outputCurrency.address,
         amountIn: formatUnits(amountIn, inputCurrency.decimals),
         options: {
-          rpcUrl: RPC_URL[this.chain.id],
-          useSubgraph: false,
+          // rpcUrl: RPC_URL[this.chain.id],
+          useSubgraph: true,
         },
       })
 
@@ -153,7 +153,7 @@ export class CloberV2Aggregator implements Aggregator {
       amountIn: formatUnits(amountIn, inputCurrency.decimals),
       options: {
         rpcUrl: RPC_URL[this.chain.id],
-        useSubgraph: false,
+        useSubgraph: true,
         slippage: slippageLimitPercent,
       },
     })
