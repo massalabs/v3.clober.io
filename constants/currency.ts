@@ -3,6 +3,29 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Currency } from '../model/currency'
 
+export const EXTRA_PRICE_FEED_ID_LIST = [
+  {
+    address: '0x836047a99e11f376522b447bffb6e3495dd0637c', // oWETH
+    priceFeedId:
+      '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+  },
+  {
+    address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768', // wWETH
+    priceFeedId:
+      '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+  },
+  {
+    address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37', // WETH
+    priceFeedId:
+      '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+  },
+  {
+    address: '0x88b8E2161DEDC77EF4ab7585569D2415a1C1055D', // USDT
+    priceFeedId:
+      '0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
+  },
+]
+
 export const WETH: {
   [chain in number]: Currency
 } = {

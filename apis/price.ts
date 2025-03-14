@@ -43,33 +43,50 @@ export const fetchPrice = async (
   }
 }
 
-export const fetchPythPrice = async (chainId: number): Promise<Prices> => {
+export const fetchPythPrice = async (
+  chainId: number,
+  extraPriceFeedIdList: {
+    priceFeedId: string
+    address: string
+  }[],
+): Promise<Prices> => {
   const pythPriceService = new EvmPriceServiceConnection(
     'https://hermes.pyth.network',
   )
-  const assets = await fetchFutureAssets(chainId)
-  const keys = [
-    ...assets.map((asset) => {
-      return {
-        priceFeedId: asset.currency.priceFeedId,
-        address: asset.currency.address,
-      }
-    }),
-    ...assets.map((asset) => {
-      return {
-        priceFeedId: asset.collateral.priceFeedId,
-        address: asset.collateral.address,
-      }
-    }),
-  ]
+  const priceFeedIdList = [
+    ...(await fetchFutureAssets(chainId))
+      .map((asset) => [
+        {
+          priceFeedId: asset.currency.priceFeedId,
+          address: asset.currency.address,
+        },
+        {
+          priceFeedId: asset.collateral.priceFeedId,
+          address: asset.collateral.address,
+        },
+      ])
+      .flat(),
+    ...extraPriceFeedIdList,
+  ].filter(
+    (priceFeedId, index, self) =>
+      index ===
+      self.findIndex((t) =>
+        isAddressEqual(
+          t.address as `0x${string}`,
+          priceFeedId.address as `0x${string}`,
+        ),
+      ),
+  )
   const prices: PriceFeed[] | undefined =
-    await pythPriceService.getLatestPriceFeeds(keys.map((id) => id.priceFeedId))
+    await pythPriceService.getLatestPriceFeeds(
+      priceFeedIdList.map((id) => id.priceFeedId),
+    )
   if (prices === undefined) {
     return {}
   }
   return prices.reduce((acc, priceFeed, index) => {
     const price = priceFeed.getPriceUnchecked()
-    const key = keys[index]
+    const key = priceFeedIdList[index]
     return {
       ...acc,
       [key.address.toLowerCase()]: price.getPriceAsNumberUnchecked(),

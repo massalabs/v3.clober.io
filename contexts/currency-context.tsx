@@ -18,6 +18,7 @@ import { deduplicateCurrencies } from '../utils/currency'
 import { monadTestnet } from '../constants/monad-testnet-chain'
 import { CONTRACT_ADDRESSES } from '../constants/future/contracts'
 import { fetchPythPrice } from '../apis/price'
+import { EXTRA_PRICE_FEED_ID_LIST } from '../constants/currency'
 
 import { useChainContext } from './chain-context'
 
@@ -139,7 +140,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
     queryFn: async () => {
       if (selectedChain.id === monadTestnet.id) {
         const [pythPrices, prices] = await Promise.all([
-          fetchPythPrice(monadTestnet.id),
+          fetchPythPrice(monadTestnet.id, EXTRA_PRICE_FEED_ID_LIST),
           fetchPrices(AGGREGATORS[selectedChain.id]),
         ])
         return {
