@@ -1,6 +1,7 @@
 import {
   createPublicClient,
   encodeFunctionData,
+  getAddress,
   http,
   isAddressEqual,
   parseUnits,
@@ -58,8 +59,10 @@ export class CloberV2Aggregator implements Aggregator {
         '{ chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0000000000000000000000000000000000000000/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } }',
         {},
       )
+      const price = Number(chartLogs?.[0]?.close ?? 0)
       return {
-        [zeroAddress]: Number(chartLogs?.[0]?.close ?? 0),
+        [zeroAddress]: price,
+        [getAddress('0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701')]: price,
       }
     }
     return {} as Prices
