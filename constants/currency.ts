@@ -57,6 +57,12 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://assets.coingecko.com/coins/images/22990/standard/ETH_wh_small.png?1696522286',
     },
     {
+      address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37',
+      name: 'WETH',
+      symbol: 'WETH',
+      decimals: 18,
+    },
+    {
       address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
       name: 'USD Coin',
       symbol: 'USDC',
