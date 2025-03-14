@@ -57,12 +57,6 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://assets.coingecko.com/coins/images/22990/standard/ETH_wh_small.png?1696522286',
     },
     {
-      address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
-      name: 'Clober Test USD Coin',
-      symbol: 'MOCKB',
-      decimals: 6,
-    },
-    {
       address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
       name: 'USD Coin',
       symbol: 'USDC',
@@ -130,20 +124,6 @@ export const WHITELISTED_CURRENCIES: {
       symbol: 'USDT',
       decimals: 6,
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/images.png/public',
-    },
-    {
-      address: '0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d',
-      name: 'Wrapped BTC',
-      symbol: 'WBTC',
-      decimals: 8,
-      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/wbtc.png/public',
-    },
-    {
-      address: '0x5387C85A4965769f6B0Df430638a1388493486F1',
-      name: 'Wrapped SOL',
-      symbol: 'WSOL',
-      decimals: 9,
-      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/sol.png/public',
     },
     // future assets
     {
