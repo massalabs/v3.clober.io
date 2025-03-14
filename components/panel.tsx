@@ -97,7 +97,7 @@ const Panel = ({
                                 onClick={() => {}}
                               >
                                 <LimitPageSvg className="w-4 h-4" />
-                                Future
+                                Futures
                               </PageButton>
                             </Link>
                           )}
