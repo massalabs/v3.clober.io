@@ -24,53 +24,55 @@ export class OpenOceanAggregator implements Aggregator {
   }
 
   public async currencies(): Promise<Currency[]> {
-    const response = await fetchApi<{
-      code: number
-      data: any[]
-    }>(this.baseUrl, `v3/${this.chain.id}/tokenList`, {
-      method: 'GET',
-      timeout: this.TIMEOUT,
-      headers: {
-        accept: 'application/json',
-      },
-    })
-
-    if (response.code !== 200) {
-      throw new Error(`Failed to fetch currencies: ${response.code}`)
-    }
-    return response.data.map((token: any) => ({
-      address: token.address as `0x${string}`,
-      name: token.name,
-      symbol: token.symbol,
-      decimals: token.decimals,
-      icon: token.icon || undefined,
-    }))
+    // const response = await fetchApi<{
+    //   code: number
+    //   data: any[]
+    // }>(this.baseUrl, `v3/${this.chain.id}/tokenList`, {
+    //   method: 'GET',
+    //   timeout: this.TIMEOUT,
+    //   headers: {
+    //     accept: 'application/json',
+    //   },
+    // })
+    //
+    // if (response.code !== 200) {
+    //   throw new Error(`Failed to fetch currencies: ${response.code}`)
+    // }
+    // return response.data.map((token: any) => ({
+    //   address: token.address as `0x${string}`,
+    //   name: token.name,
+    //   symbol: token.symbol,
+    //   decimals: token.decimals,
+    //   icon: token.icon || undefined,
+    // }))
+    return [] as Currency[]
   }
 
   public async prices(): Promise<Prices> {
-    const response = await fetchApi<{
-      code: number
-      data: any[]
-    }>(this.baseUrl, `v3/${this.chain.id}/tokenList`, {
-      method: 'GET',
-      timeout: this.TIMEOUT,
-      headers: {
-        accept: 'application/json',
-      },
-    })
-
-    if (response.code !== 200) {
-      throw new Error(`Failed to fetch currencies: ${response.code}`)
-    }
-    const prices: Prices = {}
-
-    response.data.forEach((token: any) => {
-      if (token.address && token.usd) {
-        prices[token.address] = parseFloat(token.usd)
-      }
-    })
-
-    return prices
+    // const response = await fetchApi<{
+    //   code: number
+    //   data: any[]
+    // }>(this.baseUrl, `v3/${this.chain.id}/tokenList`, {
+    //   method: 'GET',
+    //   timeout: this.TIMEOUT,
+    //   headers: {
+    //     accept: 'application/json',
+    //   },
+    // })
+    //
+    // if (response.code !== 200) {
+    //   throw new Error(`Failed to fetch currencies: ${response.code}`)
+    // }
+    // const prices: Prices = {}
+    //
+    // response.data.forEach((token: any) => {
+    //   if (token.address && token.usd) {
+    //     prices[token.address] = parseFloat(token.usd)
+    //   }
+    // })
+    //
+    // return prices
+    return {} as Prices
   }
 
   public async quote(

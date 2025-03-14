@@ -17,6 +17,8 @@ import { formatUnits } from '../../utils/bigint'
 import { WETH } from '../../constants/currency'
 import { WETH_ABI } from '../../abis/weth-abi'
 import { Chain } from '../chain'
+import { Subgraph } from '../../constants/subgraph'
+import { monadTestnet } from '../../constants/monad-testnet-chain'
 
 import { Aggregator } from './index'
 
@@ -45,6 +47,21 @@ export class CloberV2Aggregator implements Aggregator {
   }
 
   public async prices(): Promise<Prices> {
+    if (this.chain.id === monadTestnet.id) {
+      const {
+        data: { chartLogs },
+      } = await Subgraph.get<{
+        data: { chartLogs: { id: string; close: string }[] }
+      }>(
+        'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/v2-core-subgraph-monad-testnet/v1.0.0/gn',
+        '',
+        '{ chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0000000000000000000000000000000000000000/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } }',
+        {},
+      )
+      return {
+        [zeroAddress]: Number(chartLogs?.[0]?.close ?? 0),
+      }
+    }
     return {} as Prices
   }
 
