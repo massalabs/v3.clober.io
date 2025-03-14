@@ -1,5 +1,7 @@
 import { defineChain } from 'viem'
 
+import { RPC_URL } from './rpc-urls'
+
 export const monadTestnet = /*#__PURE__*/ defineChain({
   id: 10143,
   name: 'Monad Testnet',
@@ -11,14 +13,10 @@ export const monadTestnet = /*#__PURE__*/ defineChain({
   },
   rpcUrls: {
     default: {
-      http: [
-        'https://side-cold-water.monad-testnet.quiknode.pro/cdca51dfe940664aca31fad3acaee682eee43c3b/',
-      ],
+      http: [RPC_URL[10143]],
     },
     public: {
-      http: [
-        'https://side-cold-water.monad-testnet.quiknode.pro/cdca51dfe940664aca31fad3acaee682eee43c3b/',
-      ],
+      http: [RPC_URL[10143]],
     },
   },
   blockExplorers: {
