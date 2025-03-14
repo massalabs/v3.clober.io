@@ -17,6 +17,7 @@ import { toPlacesAmountString } from '../../utils/bignumber'
 import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form'
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
+import { testnetChainIds } from '../../constants/chain'
 
 import { VaultChartContainer } from './vault-chart-container'
 
@@ -137,6 +138,12 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
   useEffect(() => {
     setDisableSwap(vault.reserve0 + vault.reserve1 === 0)
   }, [vault.reserve0, vault.reserve1, setDisableSwap])
+
+  useEffect(() => {
+    if (testnetChainIds.includes(selectedChain.id)) {
+      setDisableSwap(true)
+    }
+  }, [selectedChain.id, setDisableSwap])
 
   useEffect(() => {
     setCurrency0Amount('')
@@ -502,6 +509,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
               <div className="p-6 bg-gray-900 rounded-2xl border flex-col justify-start items-start gap-6 md:gap-8 flex w-full">
                 {tab === 'add-liquidity' ? (
                   <AddLiquidityForm
+                    chainId={selectedChain.id}
                     vault={vault}
                     prices={prices}
                     currency0Amount={currency0Amount}
@@ -516,7 +524,10 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                     }
                     disableSwap={disableSwap}
                     setDisableSwap={setDisableSwap}
-                    disableDisableSwap={vault.reserve0 + vault.reserve1 === 0}
+                    disableDisableSwap={
+                      vault.reserve0 + vault.reserve1 === 0 ||
+                      testnetChainIds.includes(selectedChain.id)
+                    }
                     slippageInput={slippageInput}
                     setSlippageInput={setSlippageInput}
                     receiveLpCurrencyAmount={receiveLpAmount}
