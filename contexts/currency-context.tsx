@@ -189,13 +189,17 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         ...spenders
           .filter((spender) => !isAddressEqual(spender, zeroAddress))
           .map((spender) => {
-            return currencies.map((currency) => ({
-              chainId: selectedChain.id,
-              address: currency.address,
-              abi: ERC20_PERMIT_ABI,
-              functionName: 'allowance',
-              args: [userAddress, spender],
-            }))
+            return currencies
+              .filter(
+                (currency) => !isAddressEqual(currency.address, zeroAddress),
+              )
+              .map((currency) => ({
+                chainId: selectedChain.id,
+                address: currency.address,
+                abi: ERC20_PERMIT_ABI,
+                functionName: 'allowance',
+                args: [userAddress, spender],
+              }))
           }, [])
           .flat(),
         {
