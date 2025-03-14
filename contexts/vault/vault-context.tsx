@@ -6,7 +6,10 @@ import { useAccount } from 'wagmi'
 
 import { Balances } from '../../model/balances'
 import { Vault } from '../../model/vault'
-import { deduplicateCurrencies } from '../../utils/currency'
+import {
+  deduplicateCurrencies,
+  fetchCurrenciesDone,
+} from '../../utils/currency'
 import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
 import { VAULT_KEY_INFOS } from '../../constants/vault'
@@ -125,14 +128,24 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }
 
   useEffect(() => {
-    setCurrencies(deduplicateCurrencies(whitelistCurrencies))
-    const url = new URL(window.location.href)
-    window.history.pushState(
-      {},
-      '',
-      `${url.origin}${url.pathname}?chain=${selectedChain.id}`,
-    )
-  }, [selectedChain.id, setCurrencies, whitelistCurrencies])
+    const action = () => {
+      if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
+        return
+      }
+
+      setCurrencies(deduplicateCurrencies(whitelistCurrencies))
+
+      const url = new URL(window.location.href)
+      window.history.pushState(
+        {},
+        '',
+        `${url.origin}${url.pathname}?chain=${selectedChain.id}`,
+      )
+    }
+    if (window.location.href.includes('/earn')) {
+      action()
+    }
+  }, [selectedChain, setCurrencies, whitelistCurrencies])
 
   return (
     <Context.Provider
