@@ -26,7 +26,7 @@ import { Aggregator } from './index'
 export class CloberV2Aggregator implements Aggregator {
   public readonly name = 'CloberV2'
   public readonly baseUrl = ''
-  public readonly contract: `0x${string}` = zeroAddress
+  public readonly contract: `0x${string}`
   private readonly nativeTokenAddress = zeroAddress
   public readonly chain: Chain
   public readonly weth: `0x${string}`
@@ -34,7 +34,8 @@ export class CloberV2Aggregator implements Aggregator {
   private publicClient: PublicClient
   private defaultGasLimit = 500_000n
 
-  constructor(chain: Chain) {
+  constructor(contract: `0x${string}`, chain: Chain) {
+    this.contract = contract
     this.chain = chain
     this.weth = WETH[chain.id].address
     this.publicClient = createPublicClient({

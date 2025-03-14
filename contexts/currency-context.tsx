@@ -249,7 +249,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
     data: { allowances: Allowances; isOpenOrderApproved: boolean }
   }
   if (Object.values(data?.allowances ?? {}).length > 0) {
-    console.log('data', data)
+    console.log('allowances', data)
   }
 
   return (

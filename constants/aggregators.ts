@@ -1,4 +1,4 @@
-import { CHAIN_IDS } from '@clober/v2-sdk'
+import { CHAIN_IDS, getContractAddresses } from '@clober/v2-sdk'
 import { getAddress } from 'viem'
 
 import { Aggregator } from '../model/aggregator'
@@ -24,6 +24,7 @@ export const AGGREGATORS: {
   ],
   [CHAIN_IDS.MONAD_TESTNET]: [
     new CloberV2Aggregator(
+      getContractAddresses({ chainId: CHAIN_IDS.MONAD_TESTNET }).Controller,
       findSupportChain(CHAIN_IDS.MONAD_TESTNET.valueOf())!,
     ),
     new OpenOceanAggregator(
