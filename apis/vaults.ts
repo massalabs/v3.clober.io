@@ -4,6 +4,7 @@ import {
   getContractAddresses,
   getPool,
   getPoolPerformance,
+  Market,
   Pool as SdkPool,
   PoolPerformanceData,
 } from '@clober/v2-sdk'
@@ -19,6 +20,7 @@ import { RPC_URL } from '../constants/rpc-urls'
 export async function fetchVaults(
   chainId: CHAIN_IDS,
   prices: Prices,
+  market: Market | undefined,
 ): Promise<Vault[]> {
   const currentTimestampInSeconds = Math.floor(new Date().getTime() / 1000)
   const _5minNormalizedCurrentTimestampInSeconds =
@@ -37,8 +39,9 @@ export async function fetchVaults(
         token1,
         salt,
         options: {
-          useSubgraph: false,
+          useSubgraph: Object.keys(prices).length === 0,
           rpcUrl: RPC_URL[chainId],
+          market,
         },
       })
       const vaultPerformanceData = await getPoolPerformance({

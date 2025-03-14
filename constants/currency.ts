@@ -28,7 +28,7 @@ export const ETH: Currency = {
   icon: 'https://assets.odos.xyz/tokens/ETH.webp',
 }
 
-const MON: Currency = {
+export const MON: Currency = {
   address: zeroAddress,
   name: 'Monad Token',
   symbol: 'MON',

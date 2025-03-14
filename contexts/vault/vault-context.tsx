@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { readContracts } from '@wagmi/core'
 import { getContractAddresses } from '@clober/v2-sdk'
 import { useAccount } from 'wagmi'
+import { getAddress } from 'viem'
 
 import { Balances } from '../../model/balances'
 import { Vault } from '../../model/vault'
@@ -15,6 +16,8 @@ import { useCurrencyContext } from '../currency-context'
 import { VAULT_KEY_INFOS } from '../../constants/vault'
 import { wagmiConfig } from '../../constants/chain'
 import { fetchVaults } from '../../apis/vaults'
+import { monadTestnet } from '../../constants/monad-testnet-chain'
+import { MON } from '../../constants/currency'
 
 type VaultContext = {
   lpCurrencyAmount: string
@@ -59,7 +62,48 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { data: vaults } = useQuery({
     queryKey: ['vaults', selectedChain.id, Object.keys(prices).length !== 0],
     queryFn: async () => {
-      return fetchVaults(selectedChain.id, prices)
+      let market = undefined
+      if (selectedChain.id === monadTestnet.id) {
+        market = {
+          chainId: selectedChain.id,
+          quote: MON,
+          base: {
+            address: getAddress('0x836047a99e11f376522b447bffb6e3495dd0637c'),
+            name: 'Orbiter Wrapped ETH',
+            symbol: 'oWETH',
+            decimals: 18,
+          },
+          makerFee: 0,
+          takerFee: 0.01,
+          bids: [],
+          bidBook: {
+            id: '6228363335349764437667349236321623209349498723426837293689',
+            isOpened: true,
+            quote: MON,
+            base: {
+              address: getAddress('0x836047a99e11f376522b447bffb6e3495dd0637c'),
+              name: 'Orbiter Wrapped ETH',
+              symbol: 'oWETH',
+              decimals: 18,
+            },
+            unitSize: '1000000000000',
+          },
+          asks: [],
+          askBook: {
+            id: '960801279425809315392305275124527143787684040735054433721',
+            isOpened: true,
+            base: MON,
+            quote: {
+              address: getAddress('0x836047a99e11f376522b447bffb6e3495dd0637c'),
+              name: 'Orbiter Wrapped ETH',
+              symbol: 'oWETH',
+              decimals: 18,
+            },
+            unitSize: '1000000000000',
+          },
+        }
+      }
+      return fetchVaults(selectedChain.id, prices, market)
     },
     initialData: [],
     refetchInterval: 5 * 1000,
