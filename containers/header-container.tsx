@@ -26,11 +26,11 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   return (
     <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
       <div className="flex items-center gap-2.5 md:gap-16">
-        {window.location.href.includes('futures.clober.io') ? (
+        {router.pathname.includes('/future') ? (
           <Link
             className="flex gap-2 items-center"
             target="_blank"
-            href="https://futures.clober.io"
+            href="https://futures.clober.io/future?chain=10143"
             rel="noreferrer"
           >
             <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
@@ -45,47 +45,39 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
           </Link>
         )}
-        {!window.location.href.includes('futures.clober.io') ? (
-          <div className="hidden lg:flex py-1 justify-start items-center gap-8">
+        <div className="hidden lg:flex py-1 justify-start items-center gap-8">
+          <PageButton
+            disabled={router.pathname.includes('/trade')}
+            onClick={() => {
+              router.push(`/trade?chain=${selectedChain.id}`)
+            }}
+          >
+            <SwapPageSvg className="w-4 h-4" />
+            Trade
+          </PageButton>
+
+          <PageButton
+            disabled={router.pathname.includes('/earn')}
+            onClick={() => {
+              router.push(`/earn?chain=${selectedChain.id}`)
+            }}
+          >
+            <VaultPageSvg className="w-4 h-4" />
+            Vault
+          </PageButton>
+
+          {selectedChain.id === monadTestnet.id && (
             <PageButton
-              disabled={router.pathname.includes('/trade')}
+              disabled={router.pathname.includes('/future')}
               onClick={() => {
-                router.push(`/trade?chain=${selectedChain.id}`)
+                router.push(`/future?chain=${monadTestnet.id}`)
               }}
             >
-              <SwapPageSvg className="w-4 h-4" />
-              Trade
+              <LimitPageSvg className="w-4 h-4" />
+              Futures
             </PageButton>
-
-            <PageButton
-              disabled={router.pathname.includes('/earn')}
-              onClick={() => {
-                router.push(`/earn?chain=${selectedChain.id}`)
-              }}
-            >
-              <VaultPageSvg className="w-4 h-4" />
-              Vault
-            </PageButton>
-
-            {selectedChain.id === monadTestnet.id && (
-              <Link
-                target="_blank"
-                href="https://futures.clober.io/"
-                rel="noreferrer"
-              >
-                <PageButton
-                  disabled={router.pathname.includes('/future')}
-                  onClick={() => {}}
-                >
-                  <LimitPageSvg className="w-4 h-4" />
-                  Futures
-                </PageButton>
-              </Link>
-            )}
-          </div>
-        ) : (
-          <></>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex gap-2 w-auto md:gap-4 ml-auto">
         <div className="hidden lg:flex items-center justify-center mr-2 gap-4">
