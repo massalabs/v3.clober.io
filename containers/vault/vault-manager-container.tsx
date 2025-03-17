@@ -247,15 +247,18 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                 </div>
               </div>
 
-              <button
-                onClick={() => setAdvanced(!advanced)}
-                className="hidden lg:flex w-full h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
-                rel="noreferrer"
-              >
-                <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
-                  Advanced
-                </div>
-              </button>
+              {vault.key ===
+                '0xc8cbe608c82ee9c4c30f01d7c0eefd977538ac396ed34430aa3993bfe0d363ae' && (
+                <button
+                  onClick={() => setAdvanced(!advanced)}
+                  className="hidden lg:flex w-full h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
+                  rel="noreferrer"
+                >
+                  <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
+                    Advanced
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         </div>
