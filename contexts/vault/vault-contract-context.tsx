@@ -23,6 +23,7 @@ import { useCurrencyContext } from '../currency-context'
 import { maxApprove } from '../../utils/approve20'
 import { toPlacesAmountString } from '../../utils/bignumber'
 import { sendTransaction } from '../../utils/transaction'
+import { RPC_URL } from '../../constants/rpc-urls'
 
 type VaultContractContext = {
   mint: (
@@ -152,6 +153,7 @@ export const VaultContractProvider = ({
           amount1,
           options: {
             useSubgraph: false,
+            rpcUrl: RPC_URL[selectedChain.id],
             disableSwap,
             slippage,
             testnetPrice: prices[baseCurrency.address] ?? 0,
@@ -273,8 +275,9 @@ export const VaultContractProvider = ({
           salt: zeroHash,
           amount: lpCurrencyAmount,
           options: {
-            gasLimit: 800_000n,
+            gasLimit: 2_000_000n,
             useSubgraph: false,
+            rpcUrl: RPC_URL[selectedChain.id],
             slippage: Number(slippageInput),
           },
         })
