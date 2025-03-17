@@ -180,7 +180,10 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
           CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
         )
       }
-      if (!userAddress || currencies.length === 0 || !selectedChain) {
+      const _currencies = currencies.filter(
+        (currency) => !isAddressEqual(currency.address, zeroAddress),
+      )
+      if (!userAddress || _currencies.length === 0 || !selectedChain) {
         return {
           allowances: {},
           isOpenOrderApproved: false,
@@ -190,17 +193,13 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         ...spenders
           .filter((spender) => !isAddressEqual(spender, zeroAddress))
           .map((spender) => {
-            return currencies
-              .filter(
-                (currency) => !isAddressEqual(currency.address, zeroAddress),
-              )
-              .map((currency) => ({
-                chainId: selectedChain.id,
-                address: currency.address,
-                abi: ERC20_PERMIT_ABI,
-                functionName: 'allowance',
-                args: [userAddress, spender],
-              }))
+            return _currencies.map((currency) => ({
+              chainId: selectedChain.id,
+              address: currency.address,
+              abi: ERC20_PERMIT_ABI,
+              functionName: 'allowance',
+              args: [userAddress, spender],
+            }))
           }, [])
           .flat(),
         {
@@ -228,9 +227,9 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
             { result },
             i,
           ) => {
-            const currency = currencies[i % currencies.length]
+            const currency = _currencies[i % _currencies.length]
             const spender = getAddress(
-              spenders[Math.floor(i / currencies.length)],
+              spenders[Math.floor(i / _currencies.length)],
             )
             const resultValue = (result ?? 0n) as bigint
             return {
