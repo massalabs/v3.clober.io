@@ -9,6 +9,10 @@ import DecimalsSelector from './selector/decimals-selector'
 
 const MAX_N = 18
 
+function logTransform(arr: number[]) {
+  return arr.map((x) => Math.min(Math.log(x + 1) * 100), 100)
+}
+
 export default function OrderBook({
   market,
   bids,
@@ -31,22 +35,32 @@ export default function OrderBook({
   setShowOrderBook: (showOrderBook: boolean) => void
   setTab: (tab: 'swap' | 'limit') => void
 } & React.HTMLAttributes<HTMLDivElement>) {
-  const biggestDepth = BigNumber.max(
-    BigNumber.max(
-      ...asks
-        .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
-        .slice(0, MAX_N)
-        .map(({ size }) => size),
-      0,
+  const normalizedBids = logTransform(
+    bids.map(({ size }) =>
+      new BigNumber(size)
+        .times(100)
+        .div(
+          bids
+            .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
+            .slice(0, MAX_N)
+            .reduce((acc, { size }) => acc.plus(size), new BigNumber(0)),
+        )
+        .toNumber(),
     ),
-    BigNumber.max(
-      ...bids
-        .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
-        .slice(0, MAX_N)
-        .map(({ size }) => size),
-      0,
+  ).map((size, index) => ({ ...bids[index], normalizedSize: size }))
+  const normalizedAsks = logTransform(
+    asks.map(({ size }) =>
+      new BigNumber(size)
+        .times(100)
+        .div(
+          asks
+            .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
+            .slice(0, MAX_N)
+            .reduce((acc, { size }) => acc.plus(size), new BigNumber(0)),
+        )
+        .toNumber(),
     ),
-  )
+  ).map((size, index) => ({ ...asks[index], normalizedSize: size }))
 
   return (
     <div {...props}>
@@ -101,7 +115,7 @@ export default function OrderBook({
       </div>
 
       {/*mobile*/}
-      <div className="flex lg:hidden text-xs overflow-y-scroll relative h-full">
+      <div className="flex lg:hidden text-xs overflow-y-hidden relative h-full">
         {market ? (
           <>
             <div className="flex flex-1 flex-col basis-0">
@@ -109,13 +123,13 @@ export default function OrderBook({
                 <div>Amount</div>
                 <div>Price</div>
               </div>
-              {bids
+              {normalizedBids
                 .sort((a, b) =>
                   new BigNumber(b.price).minus(a.price).toNumber(),
                 )
                 .filter(({ size }) => parseInt(size).toString().length < 20)
                 .slice(0, 100)
-                .map(({ price, size }, index) => {
+                .map(({ price, size, normalizedSize }, index) => {
                   return (
                     <button
                       key={`bid-${index}`}
@@ -132,10 +146,7 @@ export default function OrderBook({
                       <div
                         className="absolute h-full right-0 bg-[#39e79f]/10"
                         style={{
-                          width: `${new BigNumber(size)
-                            .div(biggestDepth)
-                            .multipliedBy(100)
-                            .toNumber()}%`,
+                          width: `${normalizedSize}%`,
                         }}
                       />
                     </button>
@@ -147,13 +158,13 @@ export default function OrderBook({
                 <div>Price</div>
                 <div>Amount</div>
               </div>
-              {asks
+              {normalizedAsks
                 .sort((a, b) =>
                   new BigNumber(a.price).minus(b.price).toNumber(),
                 )
                 .filter(({ size }) => parseInt(size).toString().length < 20)
                 .slice(0, 100)
-                .map(({ price, size }, index) => {
+                .map(({ price, size, normalizedSize }, index) => {
                   return (
                     <button
                       key={`ask-${index}`}
@@ -170,10 +181,7 @@ export default function OrderBook({
                       <div
                         className="absolute h-full left-0 bg-red-500/10"
                         style={{
-                          width: `${new BigNumber(size)
-                            .div(biggestDepth)
-                            .multipliedBy(100)
-                            .toNumber()}%`,
+                          width: `${normalizedSize}%`,
                         }}
                       />
                     </button>
@@ -231,12 +239,12 @@ export default function OrderBook({
           {market ? (
             <>
               <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-auto">
-                {bids
+                {normalizedBids
                   .sort((a, b) =>
                     new BigNumber(b.price).minus(a.price).toNumber(),
                   )
                   .slice(0, MAX_N)
-                  .map(({ price, size }, index) => {
+                  .map(({ price, size, normalizedSize }, index) => {
                     return (
                       <button
                         key={`bid-${index}`}
@@ -253,10 +261,7 @@ export default function OrderBook({
                         <div
                           className="absolute h-full right-0 bg-[#39e79f]/10"
                           style={{
-                            width: `${new BigNumber(size)
-                              .div(biggestDepth)
-                              .multipliedBy(100)
-                              .toNumber()}%`,
+                            width: `${normalizedSize}%`,
                           }}
                         />
                       </button>
@@ -264,12 +269,12 @@ export default function OrderBook({
                   })}
               </div>
               <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-auto">
-                {asks
+                {normalizedAsks
                   .sort((a, b) =>
                     new BigNumber(a.price).minus(b.price).toNumber(),
                   )
                   .slice(0, MAX_N)
-                  .map(({ price, size }, index) => {
+                  .map(({ price, size, normalizedSize }, index) => {
                     return (
                       <button
                         key={`ask-${index}`}
@@ -286,10 +291,7 @@ export default function OrderBook({
                         <div
                           className="absolute h-full left-0 bg-red-500/10"
                           style={{
-                            width: `${new BigNumber(size)
-                              .div(biggestDepth)
-                              .multipliedBy(100)
-                              .toNumber()}%`,
+                            width: `${normalizedSize}%`,
                           }}
                         />
                       </button>
