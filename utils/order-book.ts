@@ -72,18 +72,20 @@ export function parseDepth(
               : new BigNumber(price)
                   .minus(new BigNumber(price).mod(10 ** -decimalPlaces.value))
                   .toFixed()
-          prev.set(
-            key,
-            prev.has(key)
-              ? {
-                  price: key,
-                  size: curr.size.plus(prev.get(key)?.size || 0),
-                }
-              : {
-                  price: key,
-                  size: curr.size,
-                },
-          )
+          if (!new BigNumber(key).eq(0)) {
+            prev.set(
+              key,
+              prev.has(key)
+                ? {
+                    price: key,
+                    size: curr.size.plus(prev.get(key)?.size || 0),
+                  }
+                : {
+                    price: key,
+                    size: curr.size,
+                  },
+            )
+          }
           return prev
         },
         new Map<
