@@ -77,28 +77,28 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
           takerFee: 0.01,
           bids: [],
           bidBook: {
-            id: '6228363335349764437667349236321623209349498723426837293689',
+            id: '2903842787083910905150096686205997338709207897290567260368',
             isOpened: true,
-            quote: MON,
-            base: {
-              address: getAddress('0x836047a99e11f376522b447bffb6e3495dd0637c'),
-              name: 'Orbiter Wrapped ETH',
-              symbol: 'oWETH',
-              decimals: 18,
+            quote: {
+              address: getAddress('0xf817257fed379853cDe0fa4F97AB987181B1E5Ea'),
+              name: 'USD Coin',
+              symbol: 'USDC',
+              decimals: 6,
             },
-            unitSize: '1000000000000',
+            base: MON,
+            unitSize: '1',
           },
           asks: [],
           askBook: {
-            id: '960801279425809315392305275124527143787684040735054433721',
+            id: '4641589050102509086410732305431841639520796974628841192589',
             isOpened: true,
-            base: MON,
-            quote: {
-              address: getAddress('0x836047a99e11f376522b447bffb6e3495dd0637c'),
-              name: 'Orbiter Wrapped ETH',
-              symbol: 'oWETH',
-              decimals: 18,
+            base: {
+              address: getAddress('0xf817257fed379853cDe0fa4F97AB987181B1E5Ea'),
+              name: 'USD Coin',
+              symbol: 'USDC',
+              decimals: 6,
             },
+            quote: MON,
             unitSize: '1000000000000',
           },
         }

@@ -14,7 +14,7 @@ export const START_LP_INFO: {
     lpAmount: 271.254,
   },
   [CHAIN_IDS.MONAD_TESTNET]: {
-    quoteAmount: 1,
+    quoteAmount: 16.2,
     baseAmount: 1,
     lpAmount: 1,
   },
@@ -39,9 +39,9 @@ export const VAULT_KEY_INFOS: {
   [CHAIN_IDS.MONAD_TESTNET]: [
     {
       token0: '0x0000000000000000000000000000000000000000',
-      token1: '0x836047a99e11F376522B447bffb6e3495Dd0637c',
+      token1: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
       salt: zeroHash,
-      key: '0x1a88c42e7b975cce3065267bc13573954569a9775f6939b1447a25b9d4505f69',
+      key: '0xad46920833ad7a1ba8e74cc241faf9ae4fd3dc4616ad9648b13160f8453e444f',
     },
   ],
 }
