@@ -30,7 +30,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           <Link
             className="flex gap-2 items-center"
             target="_blank"
-            href="https://futures.clober.io/future?chain=10143"
+            href="https://alpha.clober.io/future?chain=10143"
             rel="noreferrer"
           >
             <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
