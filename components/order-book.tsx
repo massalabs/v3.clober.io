@@ -115,7 +115,7 @@ export default function OrderBook({
       </div>
 
       {/*mobile*/}
-      <div className="flex lg:hidden text-xs overflow-y-hidden relative h-full">
+      <div className="flex lg:hidden text-xs overflow-hidden relative h-full">
         {market ? (
           <>
             <div className="flex flex-1 flex-col basis-0">
@@ -238,7 +238,7 @@ export default function OrderBook({
         <div className="flex flex-row h-full gap-0.5">
           {market ? (
             <>
-              <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-auto">
+              <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-hidden">
                 {normalizedBids
                   .sort((a, b) =>
                     new BigNumber(b.price).minus(a.price).toNumber(),
@@ -268,7 +268,7 @@ export default function OrderBook({
                     )
                   })}
               </div>
-              <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-auto">
+              <div className="w-full h-full flex flex-1 flex-col basis-0 overflow-hidden">
                 {normalizedAsks
                   .sort((a, b) =>
                     new BigNumber(a.price).minus(b.price).toNumber(),
