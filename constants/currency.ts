@@ -228,10 +228,9 @@ export const DEFAULT_OUTPUT_CURRENCY: {
     decimals: 6,
   },
   [CHAIN_IDS.MONAD_TESTNET]: {
-    address: '0x836047a99e11f376522b447bffb6e3495dd0637c',
-    name: 'Orbiter Wrapped ETH',
-    symbol: 'oWETH',
-    decimals: 18,
-    icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/weth.jpg/public',
+    address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
+    name: 'USD Coin',
+    symbol: 'USDC',
+    decimals: 6,
   },
 }
