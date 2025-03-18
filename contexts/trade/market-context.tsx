@@ -132,7 +132,7 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
           token1: getAddress(outputCurrencyAddress),
           options: {
             rpcUrl: RPC_URL[selectedChain.id],
-            useSubgraph: !cache.get(marketId),
+            useSubgraph: false,
           },
         })
         cache.set(marketId, market)
