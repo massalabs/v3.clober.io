@@ -35,30 +35,24 @@ export default function OrderBook({
   setShowOrderBook: (showOrderBook: boolean) => void
   setTab: (tab: 'swap' | 'limit') => void
 } & React.HTMLAttributes<HTMLDivElement>) {
+  const total = bids
+    .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
+    .slice(0, MAX_N)
+    .reduce((acc, { size }) => acc.plus(size), new BigNumber(0))
+    .plus(
+      asks
+        .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
+        .slice(0, MAX_N)
+        .reduce((acc, { size }) => acc.plus(size), new BigNumber(0)),
+    )
   const normalizedBids = logTransform(
     bids.map(({ size }) =>
-      new BigNumber(size)
-        .times(100)
-        .div(
-          bids
-            .sort((a, b) => new BigNumber(b.price).minus(a.price).toNumber())
-            .slice(0, MAX_N)
-            .reduce((acc, { size }) => acc.plus(size), new BigNumber(0)),
-        )
-        .toNumber(),
+      new BigNumber(size).times(100).div(total).toNumber(),
     ),
   ).map((size, index) => ({ ...bids[index], normalizedSize: size }))
   const normalizedAsks = logTransform(
     asks.map(({ size }) =>
-      new BigNumber(size)
-        .times(100)
-        .div(
-          asks
-            .sort((a, b) => new BigNumber(a.price).minus(b.price).toNumber())
-            .slice(0, MAX_N)
-            .reduce((acc, { size }) => acc.plus(size), new BigNumber(0)),
-        )
-        .toNumber(),
+      new BigNumber(size).times(100).div(total).toNumber(),
     ),
   ).map((size, index) => ({ ...asks[index], normalizedSize: size }))
 
