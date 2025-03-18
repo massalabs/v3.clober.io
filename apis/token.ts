@@ -76,15 +76,18 @@ export async function fetchTokenInfoFromOrderBook(
       chainId: chainId,
       quote: selectedMarket.quote.address,
       base: selectedMarket.base.address,
-      intervalType: CHART_LOG_INTERVALS.oneDay,
-      from:
-        currentTimestampInSeconds -
-        (currentTimestampInSeconds % (24 * 60 * 60)),
+      intervalType: CHART_LOG_INTERVALS.fiveMinutes,
+      from: currentTimestampInSeconds - 24 * 60 * 60,
       to: currentTimestampInSeconds,
     }),
   ])
   const price = Number(chartLog?.[0]?.close ?? 0)
-  const volume = Number(chartLog?.[0]?.volume ?? 0)
+  const volume = Number(
+    (chartLog ?? [])
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, Math.floor((24 * 60) / 5))
+      .reduce((acc, { volume }) => acc + Number(volume), 0),
+  )
   return {
     ...DEFAULT_TOKEN_INFO,
     volume: {
