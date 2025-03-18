@@ -81,7 +81,9 @@ export async function fetchTokenInfoFromOrderBook(
       to: currentTimestampInSeconds,
     }),
   ])
-  const price = Number(chartLog?.[0]?.close ?? 0)
+  const price = Number(
+    (chartLog ?? []).sort((a, b) => b.timestamp - a.timestamp)[0]?.close ?? 0,
+  )
   const volume = Number(
     (chartLog ?? [])
       .sort((a, b) => b.timestamp - a.timestamp)
