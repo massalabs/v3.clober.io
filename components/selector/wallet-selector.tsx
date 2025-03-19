@@ -34,6 +34,7 @@ export function WalletSelector({
           openAccountModal={openAccountModal}
           connector={connector}
           chainId={chainId}
+          shiny={false}
         />
       ) : openChainModal ? (
         <WrongNetworkButton openChainModal={openChainModal} />

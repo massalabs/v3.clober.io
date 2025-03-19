@@ -14,8 +14,13 @@ const config: Config = {
     extend: {
       animation: {
         shake: 'shake 1.0s infinite cubic-bezier(0.36, 0.07, 0.19, 0.97)',
+        'infinite-scroll': 'infinite-scroll 6s linear infinite',
       },
       keyframes: {
+        'infinite-scroll': {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-100%)' },
+        },
         shake: {
           '10%, 90%': {
             transform: 'translate3d(-1px, 0, 0)',

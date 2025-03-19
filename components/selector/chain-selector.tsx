@@ -29,7 +29,7 @@ export default function ChainSelector({
   )
 
   return chains.find((_chain) => _chain.id === chain.id) ? (
-    <div className="flex relative">
+    <div className="flex relative justify-center items-center">
       <button
         onClick={() => {
           setShowDropdown((prev) => !prev)
