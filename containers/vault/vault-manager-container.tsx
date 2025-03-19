@@ -327,7 +327,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                 <div className="text-white text-sm md:text-base font-bold">
                   Reserve
                 </div>
-                <div className="flex h-14 px-8 py-4 bg-gray-800 rounded-xl justify-center items-center gap-8 md:gap-12">
+                <div className="flex h-14 px-4 sm:px-8 py-4 bg-gray-800 rounded-xl justify-center items-center gap-8 md:gap-12">
                   <div className="flex justify-center gap-2 md:gap-4">
                     <div className="flex items-center gap-1 md:gap-2">
                       <CurrencyIcon
