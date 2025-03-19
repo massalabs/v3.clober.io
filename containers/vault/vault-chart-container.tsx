@@ -50,7 +50,7 @@ export const VaultChartContainer = ({
             {(crosshairData) => {
               const value = crosshairData
                 ? crosshairData.values[0]
-                : lastEntry.values[showPnL ? 1 : 0]
+                : (lastEntry?.values[showPnL ? 1 : 0] ?? 0)
               return (
                 <ChartHeader
                   value={`${value.toFixed(4)}`}

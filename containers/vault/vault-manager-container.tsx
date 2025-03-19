@@ -388,7 +388,9 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                   </div>
                 </div>
                 <div className="text-sm font-semibold flex h-14 px-8 py-4 bg-gray-800 rounded-xl justify-center items-center gap-8 md:gap-12">
-                  {latestValue.toFixed(4)}
+                  {testnetChainIds.includes(selectedChain.id)
+                    ? '-'
+                    : latestValue.toFixed(4)}
                 </div>
               </div>
               <div className="flex-col items-start gap-3 md:gap-4 self-stretch hidden sm:flex">
@@ -453,7 +455,11 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
                   </div>
                 </div>
                 <VaultChartContainer
-                  historicalPriceIndex={vault.historicalPriceIndex}
+                  historicalPriceIndex={
+                    testnetChainIds.includes(selectedChain.id)
+                      ? []
+                      : vault.historicalPriceIndex
+                  }
                   showPnL={showPnL}
                 />
               </div>
