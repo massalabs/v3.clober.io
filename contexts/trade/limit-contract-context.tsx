@@ -64,6 +64,10 @@ export const LimitContractProvider = ({
 
   useEffect(() => {
     pendingTransactions.forEach((transaction) => {
+      if (!transaction.success) {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
       const openOrder = openOrders.find(
         (order) => order.txHash === transaction.txHash,
       )

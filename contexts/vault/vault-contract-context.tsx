@@ -69,6 +69,10 @@ export const VaultContractProvider = ({
 
   useEffect(() => {
     pendingTransactions.forEach((transaction) => {
+      if (!transaction.success) {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
       if (transaction.type === 'mint' || transaction.type === 'burn') {
         dequeuePendingTransaction(transaction.txHash)
       }

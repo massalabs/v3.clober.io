@@ -66,6 +66,10 @@ export const SwapContractProvider = ({
 
   useEffect(() => {
     pendingTransactions.forEach((transaction) => {
+      if (!transaction.success) {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
       if (transaction.type === 'swap' || transaction.type === 'market') {
         dequeuePendingTransaction(transaction.txHash)
       }
