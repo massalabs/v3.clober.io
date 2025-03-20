@@ -228,10 +228,9 @@ export const TradeContainer = () => {
             })
             setMarketPrice(price.toNumber())
             setPriceInput(price.toNumber().toString())
+            setIsFetchingQuotes(false)
           } catch (e) {
             console.error(`Failed to fetch price: ${e}`)
-          } finally {
-            setIsFetchingQuotes(false)
           }
         }
       }
