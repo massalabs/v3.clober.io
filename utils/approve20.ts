@@ -1,4 +1,9 @@
-import { createPublicClient, http, WalletClient } from 'viem'
+import {
+  createPublicClient,
+  http,
+  TransactionReceipt,
+  WalletClient,
+} from 'viem'
 
 import { Currency } from '../model/currency'
 import { supportChains } from '../constants/chain'
@@ -15,7 +20,7 @@ export const maxApprove = async (
   currency: Currency,
   spender: `0x${string}`,
   disconnectAsync: () => Promise<void>,
-): Promise<`0x${string}` | undefined> => {
+): Promise<TransactionReceipt | undefined> => {
   if (!walletClient) {
     return
   }

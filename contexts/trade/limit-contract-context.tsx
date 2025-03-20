@@ -215,16 +215,17 @@ export const LimitContractProvider = ({
           }
           setConfirmation(confirmation)
 
-          const hash = await sendTransaction(
+          const transactionReceipt = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
-          if (hash) {
+          if (transactionReceipt) {
             queuePendingTransaction({
               ...confirmation,
-              txHash: hash,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
               type: 'make',
               timestamp: currentTimestampInSeconds(),
             })
@@ -259,27 +260,29 @@ export const LimitContractProvider = ({
           }
           setConfirmation(confirmation)
 
-          const hash = await sendTransaction(
+          const transactionReceipt = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
-          if (hash) {
+          if (transactionReceipt) {
             const makeRatio =
               (Number(result.make.amount) * 100) / Number(amount)
             // dev: make.amount is not exact zero
             if (makeRatio < 0.01) {
               queuePendingTransaction({
                 ...confirmation,
-                txHash: hash,
+                txHash: transactionReceipt.transactionHash,
+                success: transactionReceipt.status === 'success',
                 type: 'take',
                 timestamp: currentTimestampInSeconds(),
               })
             } else {
               queuePendingTransaction({
                 ...confirmation,
-                txHash: hash,
+                txHash: transactionReceipt.transactionHash,
+                success: transactionReceipt.status === 'success',
                 type: 'limit',
                 timestamp: currentTimestampInSeconds(),
               })
@@ -357,16 +360,17 @@ export const LimitContractProvider = ({
           })),
         }
         setConfirmation(confirmation)
-        const hash = await sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
-        if (hash) {
+        if (transactionReceipt) {
           queuePendingTransaction({
             ...confirmation,
-            txHash: hash,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
             type: 'cancel',
             timestamp: currentTimestampInSeconds(),
           })
@@ -442,16 +446,17 @@ export const LimitContractProvider = ({
           })),
         }
         setConfirmation(confirmation)
-        const hash = await sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
-        if (hash) {
+        if (transactionReceipt) {
           queuePendingTransaction({
             ...confirmation,
-            txHash: hash,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
             type: 'claim',
             timestamp: currentTimestampInSeconds(),
           })

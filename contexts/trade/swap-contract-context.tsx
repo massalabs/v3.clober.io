@@ -159,16 +159,17 @@ export const SwapContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
-        const hash = await sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           swapData.transaction as Transaction,
           disconnectAsync,
         )
-        if (hash) {
+        if (transactionReceipt) {
           queuePendingTransaction({
             ...confirmation,
-            txHash: hash,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
             type: 'swap',
             timestamp: currentTimestampInSeconds(),
           })
@@ -276,16 +277,17 @@ export const SwapContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
-        const hash = await sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
-        if (hash) {
+        if (transactionReceipt) {
           queuePendingTransaction({
             ...confirmation,
-            txHash: hash,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
             type: 'market',
             timestamp: currentTimestampInSeconds(),
           })

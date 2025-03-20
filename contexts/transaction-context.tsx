@@ -21,6 +21,7 @@ export type Transaction = Confirmation & {
   txHash: `0x${string}`
   type: string
   timestamp: number
+  success: boolean
 }
 
 type TransactionContext = {

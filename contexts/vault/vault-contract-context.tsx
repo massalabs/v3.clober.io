@@ -219,17 +219,18 @@ export const VaultContractProvider = ({
         }
         setConfirmation(confirmation)
         if (transaction) {
-          const hash = await sendTransaction(
+          const transactionReceipt = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
-          if (hash) {
+          if (transactionReceipt) {
             queuePendingTransaction({
               ...confirmation,
               type: 'mint',
-              txHash: hash,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
               timestamp: currentTimestampInSeconds(),
             })
           }
@@ -352,17 +353,18 @@ export const VaultContractProvider = ({
         setConfirmation(confirmation)
 
         if (transaction) {
-          const hash = await sendTransaction(
+          const transactionReceipt = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
-          if (hash) {
+          if (transactionReceipt) {
             queuePendingTransaction({
               ...confirmation,
               type: 'burn',
-              txHash: hash,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
               timestamp: currentTimestampInSeconds(),
             })
           }

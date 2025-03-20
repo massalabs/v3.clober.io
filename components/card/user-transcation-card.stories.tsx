@@ -29,6 +29,7 @@ export const Default: Story = {
       txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
       type: 'type',
+      success: true,
       timestamp: currentTimestampInSeconds(),
       fields: [
         {
@@ -63,6 +64,7 @@ export const DefaultWithDirection: Story = {
       txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
       type: 'type',
+      success: true,
       timestamp: currentTimestampInSeconds(),
       fields: [
         {
