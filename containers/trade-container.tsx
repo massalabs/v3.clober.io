@@ -503,7 +503,9 @@ export const TradeContainer = () => {
                   }
                   selectedDecimalPlaces={selectedDecimalPlaces}
                   setSelectedDecimalPlaces={setSelectedDecimalPlaces}
-                  setDepthClickedIndex={setDepthClickedIndex}
+                  setDepthClickedIndex={
+                    isFetchingQuotes ? () => {} : setDepthClickedIndex
+                  }
                   setShowOrderBook={setShowOrderBook}
                   setTab={setTab}
                   className="flex flex-col px-0.5 lg:px-4 pb-4 pt-2 sm:pb-6 bg-[#171b24] rounded-b-xl sm:rounded-2xl gap-[20px] h-[300px] lg:h-full w-full"
