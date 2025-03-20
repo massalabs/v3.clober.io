@@ -6,7 +6,7 @@ import { Chain } from '../model/chain'
 
 export type Confirmation = {
   title: string
-  body: string
+  body?: string
   chain?: Chain
   fields: {
     direction?: 'in' | 'out'
@@ -14,6 +14,10 @@ export type Confirmation = {
     label: string
     value: string
   }[]
+}
+
+export type Transaction = Confirmation & {
+  txHash: `0x${string}`
 }
 
 type TransactionContext = {

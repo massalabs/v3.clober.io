@@ -3,28 +3,28 @@ import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { base } from 'viem/chains'
 
-import ConfirmationModal from './confirmation-modal'
+import UserTransactionCard from './user-transaction-card'
 
 export default {
-  title: 'Modal/ConfirmationModal',
-  component: ConfirmationModal,
+  title: 'Card/UserTransactionCard',
+  component: UserTransactionCard,
   parameters: {
     layout: 'centered',
   },
   render: ({ ...args }) => (
     <div className="w-[288px]">
-      <ConfirmationModal {...args} />
+      <UserTransactionCard {...args} />
     </div>
   ),
-} as Meta<typeof ConfirmationModal>
+} as Meta<typeof UserTransactionCard>
 
-type Story = StoryObj<typeof ConfirmationModal>
+type Story = StoryObj<typeof UserTransactionCard>
 
 export const Default: Story = {
   args: {
-    confirmation: {
+    transaction: {
       title: 'Confirm',
-      body: 'Are you sure you want to do this?',
+      txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
       fields: [
         {
@@ -54,9 +54,9 @@ export const Default: Story = {
 
 export const DefaultWithDirection: Story = {
   args: {
-    confirmation: {
+    transaction: {
       title: 'Confirm',
-      body: 'Are you sure you want to do this?',
+      txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
       fields: [
         {
