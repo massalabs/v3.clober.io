@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useDisconnect, useWalletClient } from 'wagmi'
 import {
@@ -24,6 +24,9 @@ import { maxApprove } from '../../utils/approve20'
 import { toPlacesAmountString } from '../../utils/bignumber'
 import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-urls'
+import { currentTimestampInSeconds } from '../../utils/date'
+
+import { useVaultContext } from './vault-context'
 
 type VaultContractContext = {
   mint: (
@@ -54,9 +57,23 @@ export const VaultContractProvider = ({
   const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
-  const { setConfirmation } = useTransactionContext()
+  const {
+    setConfirmation,
+    pendingTransactions,
+    queuePendingTransaction,
+    dequeuePendingTransaction,
+  } = useTransactionContext()
   const { selectedChain } = useChainContext()
+  const { vaults } = useVaultContext()
   const { allowances, prices } = useCurrencyContext()
+
+  useEffect(() => {
+    pendingTransactions.forEach((transaction) => {
+      if (transaction.type === 'mint' || transaction.type === 'burn') {
+        dequeuePendingTransaction(transaction.txHash)
+      }
+    })
+  }, [dequeuePendingTransaction, pendingTransactions, vaults])
 
   const mint = useCallback(
     async (
@@ -160,7 +177,7 @@ export const VaultContractProvider = ({
           },
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Add Liquidity`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -199,14 +216,23 @@ export const VaultContractProvider = ({
                   ),
                 },
           ].filter((field) => field !== undefined) as Confirmation['fields'],
-        })
+        }
+        setConfirmation(confirmation)
         if (transaction) {
-          await sendTransaction(
+          const hash = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
+          if (hash) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'mint',
+              txHash: hash,
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
       } catch (e) {
         console.error(e)
@@ -225,6 +251,7 @@ export const VaultContractProvider = ({
       disconnectAsync,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -282,7 +309,7 @@ export const VaultContractProvider = ({
           },
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Remove Liquidity`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -321,15 +348,24 @@ export const VaultContractProvider = ({
                   ),
                 },
           ].filter((field) => field !== undefined) as Confirmation['fields'],
-        })
+        }
+        setConfirmation(confirmation)
 
         if (transaction) {
-          await sendTransaction(
+          const hash = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
+          if (hash) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'burn',
+              txHash: hash,
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
       } catch (e) {
         console.error(e)
@@ -346,6 +382,7 @@ export const VaultContractProvider = ({
       disconnectAsync,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
