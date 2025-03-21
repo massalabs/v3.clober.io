@@ -6,6 +6,7 @@ import { CHAIN_IDS, getSubgraphBlockNumber } from '@clober/v2-sdk'
 import ConfirmationModal from '../components/modal/confirmation-modal'
 import { Currency } from '../model/currency'
 import { Chain } from '../model/chain'
+import { currentTimestampInSeconds } from '../utils/date'
 
 import { useChainContext } from './chain-context'
 
@@ -143,8 +144,14 @@ export const TransactionProvider = ({
   )
 
   useEffect(() => {
+    const now = currentTimestampInSeconds()
     pendingTransactions.forEach((transaction) => {
       if (transaction.type === 'approve') {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
+      // 30 minutes
+      if (now - transaction.timestamp > 60 * 30) {
         dequeuePendingTransaction(transaction.txHash)
       }
     })
