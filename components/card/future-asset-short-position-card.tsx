@@ -14,10 +14,12 @@ export const FutureAssetShortPositionCard = ({
   position,
   loanAssetPrice,
   onClickButton,
+  isPending,
 }: {
   position: UserPosition
   loanAssetPrice: number
   onClickButton: () => void
+  isPending: boolean
 }) => {
   const now = currentTimestampInSeconds()
 
@@ -153,12 +155,15 @@ export const FutureAssetShortPositionCard = ({
           <button
             className="w-full flex items-center font-bold justify-center rounded-xl bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-800 disabled:text-gray-500 px-3 py-2 text-sm"
             onClick={onClickButton}
+            disabled={isPending}
           >
-            {position.asset.expiration < now
-              ? position.asset.settlePrice === 0
-                ? 'Settle'
-                : 'Close'
-              : 'Adjust'}
+            {isPending
+              ? 'Pending Indexer'
+              : position.asset.expiration < now
+                ? position.asset.settlePrice === 0
+                  ? 'Settle'
+                  : 'Close'
+                : 'Adjust'}
           </button>
         </div>
       </div>
