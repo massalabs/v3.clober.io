@@ -134,7 +134,10 @@ export const FuturePositionAdjustModalContainer = ({
       actionButtonProps={{
         onClick: async () => {
           if (newLTV === 0) {
-            await repayAll(userPosition)
+            const hash = await repayAll(userPosition)
+            if (hash) {
+              onClose()
+            }
           } else if (ltv < newLTV) {
             const closed = isMarketClose(
               userPosition.asset.currency.priceFeedId,
