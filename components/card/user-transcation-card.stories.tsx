@@ -3,6 +3,8 @@ import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { base } from 'viem/chains'
 
+import { currentTimestampInSeconds } from '../../utils/date'
+
 import UserTransactionCard from './user-transaction-card'
 
 export default {
@@ -26,6 +28,10 @@ export const Default: Story = {
       title: 'Confirm',
       txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
+      type: 'type',
+      success: true,
+      blockNumber: 123456,
+      timestamp: currentTimestampInSeconds(),
       fields: [
         {
           currency: {
@@ -58,6 +64,10 @@ export const DefaultWithDirection: Story = {
       title: 'Confirm',
       txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
+      type: 'type',
+      success: true,
+      blockNumber: 123456,
+      timestamp: currentTimestampInSeconds(),
       fields: [
         {
           direction: 'in',

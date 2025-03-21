@@ -54,5 +54,6 @@ export const Default: Story = {
       profit: 123.12,
     },
     loanAssetPrice: 145.12,
+    isPending: false,
   },
 }

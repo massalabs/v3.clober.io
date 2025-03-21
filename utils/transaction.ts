@@ -1,4 +1,10 @@
-import { createPublicClient, Hash, http, WalletClient } from 'viem'
+import {
+  createPublicClient,
+  Hash,
+  http,
+  TransactionReceipt,
+  WalletClient,
+} from 'viem'
 import { CHAIN_IDS, Transaction } from '@clober/v2-sdk'
 
 import { supportChains } from '../constants/chain'
@@ -10,7 +16,7 @@ export async function sendTransaction(
   walletClient: WalletClient,
   transaction: Transaction,
   disconnectAsync: () => Promise<void>,
-): Promise<Hash | undefined> {
+): Promise<TransactionReceipt | undefined> {
   if (!walletClient) {
     return
   }
@@ -30,8 +36,7 @@ export async function sendTransaction(
       account: walletClient.account!,
       chain,
     })
-    await publicClient.waitForTransactionReceipt({ hash })
-    return hash
+    return publicClient.waitForTransactionReceipt({ hash })
   } catch (e) {
     console.error('Failed to send transaction', e)
     throw e

@@ -72,7 +72,12 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }, [assets, setCurrencies, whitelistCurrencies])
 
   return (
-    <Context.Provider value={{ assets, positions }}>
+    <Context.Provider
+      value={{
+        assets,
+        positions,
+      }}
+    >
       {children}
     </Context.Provider>
   )

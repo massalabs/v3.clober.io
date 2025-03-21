@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useDisconnect, useWalletClient } from 'wagmi'
 import {
@@ -24,6 +24,9 @@ import { maxApprove } from '../../utils/approve20'
 import { toPlacesAmountString } from '../../utils/bignumber'
 import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-urls'
+import { currentTimestampInSeconds } from '../../utils/date'
+
+import { useVaultContext } from './vault-context'
 
 type VaultContractContext = {
   mint: (
@@ -54,9 +57,27 @@ export const VaultContractProvider = ({
   const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
-  const { setConfirmation } = useTransactionContext()
+  const {
+    setConfirmation,
+    pendingTransactions,
+    queuePendingTransaction,
+    dequeuePendingTransaction,
+  } = useTransactionContext()
   const { selectedChain } = useChainContext()
+  const { vaults } = useVaultContext()
   const { allowances, prices } = useCurrencyContext()
+
+  useEffect(() => {
+    pendingTransactions.forEach((transaction) => {
+      if (!transaction.success) {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
+      if (transaction.type === 'mint' || transaction.type === 'burn') {
+        dequeuePendingTransaction(transaction.txHash)
+      }
+    })
+  }, [dequeuePendingTransaction, pendingTransactions, vaults])
 
   const mint = useCallback(
     async (
@@ -96,19 +117,30 @@ export const VaultContractProvider = ({
           allowances[getAddress(spender)][getAddress(currency0.address)] <
             parseUnits(amount0, currency0.decimals)
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${currency0.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             currency0,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'approve',
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
 
         // Max approve for currency1
@@ -117,19 +149,30 @@ export const VaultContractProvider = ({
           allowances[getAddress(spender)][getAddress(currency1.address)] <
             parseUnits(amount1, currency1.decimals)
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${currency1.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             currency1,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'approve',
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
 
         const baseCurrency = isAddressEqual(
@@ -160,7 +203,7 @@ export const VaultContractProvider = ({
           },
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Add Liquidity`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -199,14 +242,25 @@ export const VaultContractProvider = ({
                   ),
                 },
           ].filter((field) => field !== undefined) as Confirmation['fields'],
-        })
+        }
+        setConfirmation(confirmation)
         if (transaction) {
-          await sendTransaction(
+          const transactionReceipt = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'mint',
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
       } catch (e) {
         console.error(e)
@@ -225,6 +279,7 @@ export const VaultContractProvider = ({
       disconnectAsync,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -282,7 +337,7 @@ export const VaultContractProvider = ({
           },
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Remove Liquidity`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -321,15 +376,26 @@ export const VaultContractProvider = ({
                   ),
                 },
           ].filter((field) => field !== undefined) as Confirmation['fields'],
-        })
+        }
+        setConfirmation(confirmation)
 
         if (transaction) {
-          await sendTransaction(
+          const transactionReceipt = await sendTransaction(
             selectedChain,
             walletClient,
             transaction,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'burn',
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
       } catch (e) {
         console.error(e)
@@ -346,6 +412,7 @@ export const VaultContractProvider = ({
       disconnectAsync,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,

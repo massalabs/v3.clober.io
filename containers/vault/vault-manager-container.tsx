@@ -143,7 +143,7 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
     if (testnetChainIds.includes(selectedChain.id)) {
       setDisableSwap(true)
     }
-  }, [selectedChain.id, setDisableSwap])
+  }, [selectedChain.id, setDisableSwap, currency0Amount, currency1Amount])
 
   useEffect(() => {
     setCurrency0Amount('')

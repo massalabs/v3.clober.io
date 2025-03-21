@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import { getAddress, isAddressEqual, parseUnits, zeroAddress } from 'viem'
@@ -21,6 +21,9 @@ import { RPC_URL } from '../../constants/rpc-urls'
 import { useCurrencyContext } from '../currency-context'
 import { maxApprove } from '../../utils/approve20'
 import { toPlacesAmountString } from '../../utils/bignumber'
+import { currentTimestampInSeconds } from '../../utils/date'
+
+import { useOpenOrderContext } from './open-order-context'
 
 type LimitContractContext = {
   limit: (
@@ -48,9 +51,54 @@ export const LimitContractProvider = ({
   const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
-  const { setConfirmation } = useTransactionContext()
+  const { openOrders } = useOpenOrderContext()
+  const {
+    setConfirmation,
+    pendingTransactions,
+    queuePendingTransaction,
+    dequeuePendingTransaction,
+    latestSubgraphBlockNumber,
+  } = useTransactionContext()
   const { selectedChain } = useChainContext()
-  const { isOpenOrderApproved, allowances, prices } = useCurrencyContext()
+  const { isOpenOrderApproved, allowances, prices, balances } =
+    useCurrencyContext()
+
+  useEffect(() => {
+    pendingTransactions.forEach((transaction) => {
+      if (latestSubgraphBlockNumber.chainId !== selectedChain.id) {
+        return
+      }
+      if (!transaction.success) {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
+      if (
+        latestSubgraphBlockNumber.blockNumber === 0 ||
+        transaction.blockNumber > latestSubgraphBlockNumber.blockNumber
+      ) {
+        if (transaction.type === 'take') {
+          dequeuePendingTransaction(transaction.txHash)
+        }
+        return
+      }
+
+      if (
+        transaction.type === 'make' ||
+        transaction.type === 'limit' ||
+        transaction.type === 'cancel' ||
+        transaction.type === 'claim'
+      ) {
+        dequeuePendingTransaction(transaction.txHash)
+      }
+    })
+  }, [
+    dequeuePendingTransaction,
+    pendingTransactions,
+    openOrders,
+    balances,
+    latestSubgraphBlockNumber,
+    selectedChain.id,
+  ])
 
   const limit = useCallback(
     async (
@@ -120,19 +168,30 @@ export const LimitContractProvider = ({
           allowances[getAddress(spender)][getAddress(inputCurrency.address)] <
             parseUnits(amount, inputCurrency.decimals)
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${inputCurrency.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             inputCurrency,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              type: 'approve',
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
         const args = {
           chainId: selectedChain.id,
@@ -152,8 +211,9 @@ export const LimitContractProvider = ({
         console.log('limitOrder request: ', args)
         console.log('limitOrder result: ', result)
 
+        // only make order
         if (Number(result.spent.amount) === 0) {
-          setConfirmation({
+          const confirmation = {
             title: `Limit ${isBid ? 'Bid' : 'Ask'} @ ${price}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
@@ -168,9 +228,29 @@ export const LimitContractProvider = ({
                 ),
               },
             ] as Confirmation['fields'],
-          })
-        } else {
-          setConfirmation({
+          }
+          setConfirmation(confirmation)
+
+          const transactionReceipt = await sendTransaction(
+            selectedChain,
+            walletClient,
+            transaction,
+            disconnectAsync,
+          )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              type: 'make',
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
+        }
+        // limit order or take order
+        else {
+          const confirmation = {
             title: `Limit ${isBid ? 'Bid' : 'Ask'} @ ${price}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
@@ -194,14 +274,40 @@ export const LimitContractProvider = ({
                 ),
               },
             ] as Confirmation['fields'],
-          })
+          }
+          setConfirmation(confirmation)
+
+          const transactionReceipt = await sendTransaction(
+            selectedChain,
+            walletClient,
+            transaction,
+            disconnectAsync,
+          )
+          if (transactionReceipt) {
+            const makeRatio =
+              (Number(result.make.amount) * 100) / Number(amount)
+            // dev: make.amount is not exact zero
+            if (makeRatio < 0.01) {
+              queuePendingTransaction({
+                ...confirmation,
+                txHash: transactionReceipt.transactionHash,
+                success: transactionReceipt.status === 'success',
+                blockNumber: Number(transactionReceipt.blockNumber),
+                type: 'take',
+                timestamp: currentTimestampInSeconds(),
+              })
+            } else {
+              queuePendingTransaction({
+                ...confirmation,
+                txHash: transactionReceipt.transactionHash,
+                success: transactionReceipt.status === 'success',
+                blockNumber: Number(transactionReceipt.blockNumber),
+                type: 'limit',
+                timestamp: currentTimestampInSeconds(),
+              })
+            }
+          }
         }
-        await sendTransaction(
-          selectedChain,
-          walletClient,
-          transaction,
-          disconnectAsync,
-        )
       } catch (e) {
         console.error(e)
       } finally {
@@ -219,6 +325,7 @@ export const LimitContractProvider = ({
       disconnectAsync,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -260,7 +367,7 @@ export const LimitContractProvider = ({
           },
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Cancel Order`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -270,13 +377,24 @@ export const LimitContractProvider = ({
             value: toPlacesAmountString(amount, prices[currency.address] ?? 0),
             direction,
           })),
-        })
-        await sendTransaction(
+        }
+        setConfirmation(confirmation)
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
+            type: 'cancel',
+            timestamp: currentTimestampInSeconds(),
+          })
+        }
       } catch (e) {
         console.error(e)
       } finally {
@@ -294,6 +412,7 @@ export const LimitContractProvider = ({
       isOpenOrderApproved,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -335,7 +454,7 @@ export const LimitContractProvider = ({
           },
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Claim Order`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -345,13 +464,24 @@ export const LimitContractProvider = ({
             value: toPlacesAmountString(amount, prices[currency.address] ?? 0),
             direction,
           })),
-        })
-        await sendTransaction(
+        }
+        setConfirmation(confirmation)
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
+            type: 'claim',
+            timestamp: currentTimestampInSeconds(),
+          })
+        }
       } catch (e) {
         console.error(e)
       } finally {
@@ -369,6 +499,7 @@ export const LimitContractProvider = ({
       isOpenOrderApproved,
       prices,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,

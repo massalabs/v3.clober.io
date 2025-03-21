@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
-import { parseUnits } from 'viem'
+import { getAddress, parseUnits } from 'viem'
 
 import { FutureAssetCard } from '../../components/card/future-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
@@ -20,12 +20,15 @@ import { FuturePositionAdjustModalContainer } from './future-position-adjust-mod
 export const FutureContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
-  const { settle, close, redeem } = useFutureContractContext()
+  const { settle, close, redeem, pendingPositionCurrencies } =
+    useFutureContractContext()
   const { prices, balances } = useCurrencyContext()
   const { assets, positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
-  const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>('mint')
+  const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>(
+    pendingPositionCurrencies.length > 0 ? 'my-cdp' : 'mint',
+  )
   const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
     null,
   )
@@ -199,6 +202,9 @@ export const FutureContainer = () => {
                       loanAssetPrice={
                         prices[position.asset.currency.address] ?? 0
                       }
+                      isPending={pendingPositionCurrencies
+                        .map((currency) => getAddress(currency.address))
+                        .includes(getAddress(position.asset.currency.address))}
                       onClickButton={async () => {
                         if (position.asset.expiration < now) {
                           if (position.asset.settlePrice > 0) {
