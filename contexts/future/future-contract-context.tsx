@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import {
@@ -18,7 +18,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js'
 
 import { Asset } from '../../model/future/asset'
 import { useCurrencyContext } from '../currency-context'
-import { useTransactionContext } from '../transaction-context'
+import { Confirmation, useTransactionContext } from '../transaction-context'
 import { WETH } from '../../constants/currency'
 import { maxApprove } from '../../utils/approve20'
 import { CONTRACT_ADDRESSES } from '../../constants/future/contracts'
@@ -31,6 +31,9 @@ import { UserPosition } from '../../model/future/user-position'
 import { buildTransaction } from '../../utils/build-transaction'
 import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-urls'
+import { currentTimestampInSeconds } from '../../utils/date'
+
+import { useFutureContext } from './future-context'
 
 type FutureContractContext = {
   isMarketClose: (asset: Asset, debtAmount: bigint) => Promise<boolean>
@@ -67,15 +70,159 @@ export const FutureContractProvider = ({
   const { disconnectAsync } = useDisconnect()
 
   const { data: walletClient } = useWalletClient()
-  const { setConfirmation } = useTransactionContext()
+  const {
+    setConfirmation,
+    pendingTransactions,
+    queuePendingTransaction,
+    dequeuePendingTransaction,
+  } = useTransactionContext()
+  const {
+    positions,
+    queuePendingPositionCurrencyAddress,
+    dequeuePendingPositionCurrencyAddress,
+  } = useFutureContext()
   const { selectedChain } = useChainContext()
-  const { allowances, prices } = useCurrencyContext()
+  const { allowances, prices, balances } = useCurrencyContext()
   const publicClient = useMemo(() => {
     return createPublicClient({
       chain: supportChains.find((chain) => chain.id === selectedChain.id),
       transport: http(RPC_URL[selectedChain.id]),
     })
   }, [selectedChain.id])
+  const previousPositions = useRef({
+    positions: [] as UserPosition[],
+  })
+
+  useEffect(() => {
+    pendingTransactions.forEach((transaction) => {
+      if (!transaction.success) {
+        dequeuePendingTransaction(transaction.txHash)
+        return
+      }
+
+      const [userDecreasedCurrency, userIncreasedCurrency] = [
+        transaction.fields.find((field) => field.direction === 'in')?.currency,
+        transaction.fields.find((field) => field.direction === 'out')?.currency,
+      ]
+
+      const now = currentTimestampInSeconds()
+      if (transaction.type === 'borrow' && userIncreasedCurrency) {
+        const debtCurrency = userIncreasedCurrency
+        const previousPosition = previousPositions.current.positions.find(
+          (position) =>
+            isAddressEqual(
+              position.asset.currency.address,
+              debtCurrency.address,
+            ),
+        )
+        const currentPosition = positions.find((position) => {
+          return isAddressEqual(
+            position.asset.currency.address,
+            debtCurrency.address,
+          )
+        })
+        if (
+          (currentPosition?.debtAmount ?? 0n) >
+          (previousPosition?.debtAmount ?? 0n)
+        ) {
+          // borrow success
+          dequeuePendingTransaction(transaction.txHash)
+          dequeuePendingPositionCurrencyAddress(
+            currentPosition?.asset.currency.address,
+          )
+        }
+      } else if (
+        (transaction.type === 'repay' || transaction.type === 'repay-all') &&
+        userDecreasedCurrency
+      ) {
+        const debtCurrency = userDecreasedCurrency
+        const previousPosition = previousPositions.current.positions.find(
+          (position) =>
+            isAddressEqual(
+              position.asset.currency.address,
+              debtCurrency.address,
+            ),
+        )
+        const currentPosition = positions.find((position) => {
+          return isAddressEqual(
+            position.asset.currency.address,
+            debtCurrency.address,
+          )
+        })
+        if (
+          (currentPosition?.debtAmount ?? 0n) <
+          (previousPosition?.debtAmount ?? 0n)
+        ) {
+          // repay success
+          dequeuePendingTransaction(transaction.txHash)
+          dequeuePendingPositionCurrencyAddress(
+            currentPosition?.asset.currency.address,
+          )
+        }
+      } else if (
+        transaction.type === 'settle' &&
+        previousPositions.current.positions
+          .map((position) => position.asset.settlePrice)
+          .sort() !==
+          positions.map((position) => position.asset.settlePrice).sort()
+      ) {
+        // settle success
+        dequeuePendingTransaction(transaction.txHash)
+
+        for (let i = 0; i < positions.length; i++) {
+          for (let j = 0; j < previousPositions.current.positions.length; j++) {
+            if (
+              isAddressEqual(
+                positions[i].asset.currency.address,
+                previousPositions.current.positions[j].asset.currency.address,
+              ) &&
+              positions[i].asset.settlePrice === 0 &&
+              previousPositions.current.positions[j].asset.settlePrice !== 0
+            ) {
+              dequeuePendingPositionCurrencyAddress(
+                positions[i].asset.currency.address,
+              )
+            }
+          }
+        }
+      } else if (
+        transaction.type === 'close' &&
+        previousPositions.current.positions.filter(
+          (position) => position.asset.expiration > now,
+        ).length ===
+          positions.filter((position) => position.asset.expiration > now)
+            .length +
+            1
+      ) {
+        // close success
+        dequeuePendingTransaction(transaction.txHash)
+        dequeuePendingPositionCurrencyAddress(
+          previousPositions.current.positions
+            .filter((position) => position.asset.expiration > now)
+            .find(
+              (position) =>
+                !positions
+                  .filter((position) => position.asset.expiration > now)
+                  .some((currentPosition) =>
+                    isAddressEqual(
+                      currentPosition.asset.currency.address,
+                      position.asset.currency.address,
+                    ),
+                  ),
+            )?.asset.currency.address,
+        )
+      } else if (transaction.type === 'redeem') {
+        // redeem success
+        dequeuePendingTransaction(transaction.txHash)
+      }
+    })
+  }, [
+    dequeuePendingTransaction,
+    pendingTransactions,
+    positions,
+    balances,
+    dequeuePendingPositionCurrencyAddress,
+  ])
 
   const isMarketClose = useCallback(
     async (asset: Asset, debtAmount: bigint): Promise<boolean> => {
@@ -191,7 +338,7 @@ export const FutureContractProvider = ({
           )
         }
 
-        setConfirmation({
+        const confirmation = {
           title: `Short ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -217,7 +364,9 @@ export const FutureContractProvider = ({
               ),
             },
           ].filter((field) => field.value !== '0') as any[],
-        })
+        }
+        setConfirmation(confirmation)
+        previousPositions.current.positions = positions
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -282,12 +431,23 @@ export const FutureContractProvider = ({
           },
           5_000_000n,
         )
-        return sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            type: 'borrow',
+            timestamp: currentTimestampInSeconds(),
+          })
+          queuePendingPositionCurrencyAddress(asset.currency.address)
+        }
+        return transactionReceipt?.transactionHash
       } catch (e) {
         console.error(e)
       } finally {
@@ -302,9 +462,12 @@ export const FutureContractProvider = ({
     [
       allowances,
       disconnectAsync,
+      positions,
       prices,
       publicClient,
       queryClient,
+      queuePendingPositionCurrencyAddress,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -325,7 +488,7 @@ export const FutureContractProvider = ({
           fields: [],
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Repay ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -340,8 +503,10 @@ export const FutureContractProvider = ({
                 prices[asset.currency.address] ?? 0,
               ),
             },
-          ],
-        })
+          ] as Confirmation['fields'],
+        }
+        setConfirmation(confirmation)
+        previousPositions.current.positions = positions
 
         const transaction = await buildTransaction(
           publicClient,
@@ -366,12 +531,23 @@ export const FutureContractProvider = ({
           },
           5_000_000n,
         )
-        return sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            type: 'repay',
+            timestamp: currentTimestampInSeconds(),
+          })
+          queuePendingPositionCurrencyAddress(asset.currency.address)
+        }
+        return transactionReceipt?.transactionHash
       } catch (e) {
         console.error(e)
       } finally {
@@ -384,9 +560,12 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
+      positions,
       prices,
       publicClient,
       queryClient,
+      queuePendingPositionCurrencyAddress,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -407,7 +586,7 @@ export const FutureContractProvider = ({
           fields: [],
         })
 
-        setConfirmation({
+        const confirmation = {
           title: `Close ${userPosition.asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -432,8 +611,10 @@ export const FutureContractProvider = ({
                 prices[userPosition.asset.collateral.address] ?? 0,
               ),
             },
-          ],
-        })
+          ] as Confirmation['fields'],
+        }
+        setConfirmation(confirmation)
+        previousPositions.current.positions = positions
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -498,12 +679,25 @@ export const FutureContractProvider = ({
           },
           5_000_000n,
         )
-        return sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            type: 'repay-all',
+            timestamp: currentTimestampInSeconds(),
+          })
+          queuePendingPositionCurrencyAddress(
+            userPosition.asset.currency.address,
+          )
+        }
+        return transactionReceipt?.transactionHash
       } catch (e) {
         console.error(e)
       } finally {
@@ -516,9 +710,12 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
+      positions,
       prices,
       publicClient,
       queryClient,
+      queuePendingPositionCurrencyAddress,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -532,12 +729,14 @@ export const FutureContractProvider = ({
       }
 
       try {
-        setConfirmation({
+        const confirmation = {
           title: `Settle ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
           fields: [],
-        })
+        }
+        setConfirmation(confirmation)
+        previousPositions.current.positions = positions
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -589,12 +788,23 @@ export const FutureContractProvider = ({
           },
           5_000_000n,
         )
-        return sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            type: 'settle',
+            timestamp: currentTimestampInSeconds(),
+          })
+          queuePendingPositionCurrencyAddress(asset.currency.address)
+        }
+        return transactionReceipt?.transactionHash
       } catch (e) {
         console.error(e)
       } finally {
@@ -606,8 +816,11 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
+      positions,
       publicClient,
       queryClient,
+      queuePendingPositionCurrencyAddress,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -624,7 +837,7 @@ export const FutureContractProvider = ({
       }
 
       try {
-        setConfirmation({
+        const confirmation = {
           title: `Close`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -639,8 +852,10 @@ export const FutureContractProvider = ({
                 prices[asset.collateral.address] ?? 0,
               ),
             },
-          ],
-        })
+          ] as Confirmation['fields'],
+        }
+        setConfirmation(confirmation)
+        previousPositions.current.positions = positions
 
         const transaction = await buildTransaction(
           publicClient,
@@ -653,12 +868,23 @@ export const FutureContractProvider = ({
           },
           5_000_000n,
         )
-        return sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            type: 'close',
+            timestamp: currentTimestampInSeconds(),
+          })
+          queuePendingPositionCurrencyAddress(asset.currency.address)
+        }
+        return transactionReceipt?.transactionHash
       } catch (e) {
         console.error(e)
       } finally {
@@ -671,9 +897,12 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
+      positions,
       prices,
       publicClient,
       queryClient,
+      queuePendingPositionCurrencyAddress,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
@@ -691,7 +920,7 @@ export const FutureContractProvider = ({
       }
 
       try {
-        setConfirmation({
+        const confirmation = {
           title: `Redeem`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
@@ -716,8 +945,10 @@ export const FutureContractProvider = ({
                 prices[asset.collateral.address] ?? 0,
               ),
             },
-          ],
-        })
+          ] as Confirmation['fields'],
+        }
+        setConfirmation(confirmation)
+        previousPositions.current.positions = positions
 
         const transaction = await buildTransaction(
           publicClient,
@@ -734,12 +965,22 @@ export const FutureContractProvider = ({
           },
           1_000_000n,
         )
-        return sendTransaction(
+        const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
           transaction,
           disconnectAsync,
         )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            type: 'redeem',
+            timestamp: currentTimestampInSeconds(),
+          })
+        }
+        return transactionReceipt?.transactionHash
       } catch (e) {
         console.error(e)
       } finally {
@@ -752,9 +993,11 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
+      positions,
       prices,
       publicClient,
       queryClient,
+      queuePendingTransaction,
       selectedChain,
       setConfirmation,
       walletClient,
