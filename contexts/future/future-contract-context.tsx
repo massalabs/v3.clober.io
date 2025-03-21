@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDisconnect, useWalletClient } from 'wagmi'
+import React, { useCallback, useEffect, useMemo } from 'react'
+import { useAccount, useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   BaseError,
@@ -32,6 +32,8 @@ import { buildTransaction } from '../../utils/build-transaction'
 import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-urls'
 import { currentTimestampInSeconds } from '../../utils/date'
+import { Currency } from '../../model/currency'
+import { deduplicateCurrencies } from '../../utils/currency'
 
 import { useFutureContext } from './future-context'
 
@@ -51,6 +53,7 @@ type FutureContractContext = {
     amount: bigint,
     collateralReceived: bigint,
   ) => Promise<Hash | undefined>
+  pendingPositionCurrencies: Currency[]
 }
 
 const Context = React.createContext<FutureContractContext>({
@@ -61,7 +64,11 @@ const Context = React.createContext<FutureContractContext>({
   settle: () => Promise.resolve(undefined),
   close: () => Promise.resolve(undefined),
   redeem: () => Promise.resolve(undefined),
+  pendingPositionCurrencies: [],
 })
+
+export const LOCAL_STORAGE_PENDING_POSITIONS_KEY = (address: `0x${string}`) =>
+  `pending-positions-currencies-for-${address}`
 
 export const FutureContractProvider = ({
   children,
@@ -75,13 +82,11 @@ export const FutureContractProvider = ({
     pendingTransactions,
     queuePendingTransaction,
     dequeuePendingTransaction,
+    latestSubgraphBlockNumber,
   } = useTransactionContext()
-  const {
-    positions,
-    queuePendingPositionCurrencyAddress,
-    dequeuePendingPositionCurrencyAddress,
-  } = useFutureContext()
+  const { positions } = useFutureContext()
   const { selectedChain } = useChainContext()
+  const { address: userAddress } = useAccount()
   const { allowances, prices, balances } = useCurrencyContext()
   const publicClient = useMemo(() => {
     return createPublicClient({
@@ -89,14 +94,66 @@ export const FutureContractProvider = ({
       transport: http(RPC_URL[selectedChain.id]),
     })
   }, [selectedChain.id])
-  const previousPositions = useRef({
-    positions: [] as UserPosition[],
-  })
+
+  const [pendingPositionCurrencies, setPendingPositionCurrencies] =
+    React.useState<Currency[]>([])
+
+  const queuePendingPositionCurrency = useCallback(
+    (currency: Currency) => {
+      if (userAddress) {
+        setPendingPositionCurrencies((prev) => {
+          const newCurrencies = deduplicateCurrencies([...prev, currency])
+          localStorage.setItem(
+            LOCAL_STORAGE_PENDING_POSITIONS_KEY(userAddress),
+            JSON.stringify(newCurrencies),
+          )
+          return newCurrencies
+        })
+      }
+    },
+    [userAddress],
+  )
+
+  const dequeuePendingPositionCurrency = useCallback(
+    (currency: Currency) => {
+      if (userAddress) {
+        setPendingPositionCurrencies((prev) => {
+          const newCurrencies = prev.filter(
+            (c) => !isAddressEqual(c.address, currency.address),
+          )
+          localStorage.setItem(
+            LOCAL_STORAGE_PENDING_POSITIONS_KEY(userAddress),
+            JSON.stringify(newCurrencies),
+          )
+          return newCurrencies
+        })
+      }
+    },
+    [userAddress],
+  )
+
+  useEffect(() => {
+    setPendingPositionCurrencies(
+      userAddress
+        ? JSON.parse(
+            localStorage.getItem(
+              LOCAL_STORAGE_PENDING_POSITIONS_KEY(userAddress),
+            ) ?? '[]',
+          )
+        : [],
+    )
+  }, [userAddress])
 
   useEffect(() => {
     pendingTransactions.forEach((transaction) => {
       if (!transaction.success) {
         dequeuePendingTransaction(transaction.txHash)
+        return
+      }
+      if (
+        latestSubgraphBlockNumber === 0 ||
+        transaction.blockNumber > latestSubgraphBlockNumber
+      ) {
         return
       }
 
@@ -105,113 +162,20 @@ export const FutureContractProvider = ({
         transaction.fields.find((field) => field.direction === 'out')?.currency,
       ]
 
-      const now = currentTimestampInSeconds()
       if (transaction.type === 'borrow' && userIncreasedCurrency) {
-        const debtCurrency = userIncreasedCurrency
-        const previousPosition = previousPositions.current.positions.find(
-          (position) =>
-            isAddressEqual(
-              position.asset.currency.address,
-              debtCurrency.address,
-            ),
-        )
-        const currentPosition = positions.find((position) => {
-          return isAddressEqual(
-            position.asset.currency.address,
-            debtCurrency.address,
-          )
-        })
-        if (
-          (currentPosition?.debtAmount ?? 0n) >
-          (previousPosition?.debtAmount ?? 0n)
-        ) {
-          // borrow success
-          dequeuePendingTransaction(transaction.txHash)
-          dequeuePendingPositionCurrencyAddress(
-            currentPosition?.asset.currency.address,
-          )
-        }
+        dequeuePendingTransaction(transaction.txHash)
+        dequeuePendingPositionCurrency(userIncreasedCurrency)
       } else if (
         (transaction.type === 'repay' || transaction.type === 'repay-all') &&
         userDecreasedCurrency
       ) {
-        const debtCurrency = userDecreasedCurrency
-        const previousPosition = previousPositions.current.positions.find(
-          (position) =>
-            isAddressEqual(
-              position.asset.currency.address,
-              debtCurrency.address,
-            ),
-        )
-        const currentPosition = positions.find((position) => {
-          return isAddressEqual(
-            position.asset.currency.address,
-            debtCurrency.address,
-          )
-        })
-        if (
-          (currentPosition?.debtAmount ?? 0n) <
-          (previousPosition?.debtAmount ?? 0n)
-        ) {
-          // repay success
-          dequeuePendingTransaction(transaction.txHash)
-          dequeuePendingPositionCurrencyAddress(
-            currentPosition?.asset.currency.address,
-          )
-        }
-      } else if (
-        transaction.type === 'settle' &&
-        previousPositions.current.positions
-          .map((position) => position.asset.settlePrice)
-          .sort() !==
-          positions.map((position) => position.asset.settlePrice).sort()
-      ) {
-        // settle success
         dequeuePendingTransaction(transaction.txHash)
-
-        for (let i = 0; i < positions.length; i++) {
-          for (let j = 0; j < previousPositions.current.positions.length; j++) {
-            if (
-              isAddressEqual(
-                positions[i].asset.currency.address,
-                previousPositions.current.positions[j].asset.currency.address,
-              ) &&
-              positions[i].asset.settlePrice === 0 &&
-              previousPositions.current.positions[j].asset.settlePrice !== 0
-            ) {
-              dequeuePendingPositionCurrencyAddress(
-                positions[i].asset.currency.address,
-              )
-            }
-          }
-        }
+        dequeuePendingPositionCurrency(userDecreasedCurrency)
       } else if (
-        transaction.type === 'close' &&
-        previousPositions.current.positions.filter(
-          (position) => position.asset.expiration > now,
-        ).length ===
-          positions.filter((position) => position.asset.expiration > now)
-            .length +
-            1
+        transaction.type === 'close' ||
+        transaction.type === 'settle' ||
+        transaction.type === 'redeem'
       ) {
-        // close success
-        dequeuePendingTransaction(transaction.txHash)
-        dequeuePendingPositionCurrencyAddress(
-          previousPositions.current.positions
-            .filter((position) => position.asset.expiration > now)
-            .find(
-              (position) =>
-                !positions
-                  .filter((position) => position.asset.expiration > now)
-                  .some((currentPosition) =>
-                    isAddressEqual(
-                      currentPosition.asset.currency.address,
-                      position.asset.currency.address,
-                    ),
-                  ),
-            )?.asset.currency.address,
-        )
-      } else if (transaction.type === 'redeem') {
         // redeem success
         dequeuePendingTransaction(transaction.txHash)
       }
@@ -220,8 +184,9 @@ export const FutureContractProvider = ({
     dequeuePendingTransaction,
     pendingTransactions,
     positions,
+    latestSubgraphBlockNumber,
     balances,
-    dequeuePendingPositionCurrencyAddress,
+    dequeuePendingPositionCurrency,
   ])
 
   const isMarketClose = useCallback(
@@ -366,7 +331,6 @@ export const FutureContractProvider = ({
           ].filter((field) => field.value !== '0') as any[],
         }
         setConfirmation(confirmation)
-        previousPositions.current.positions = positions
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -442,10 +406,13 @@ export const FutureContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'borrow',
             timestamp: currentTimestampInSeconds(),
           })
-          queuePendingPositionCurrencyAddress(asset.currency.address)
+          if (transactionReceipt.status === 'success') {
+            queuePendingPositionCurrency(asset.currency)
+          }
         }
         return transactionReceipt?.transactionHash
       } catch (e) {
@@ -462,11 +429,10 @@ export const FutureContractProvider = ({
     [
       allowances,
       disconnectAsync,
-      positions,
       prices,
       publicClient,
       queryClient,
-      queuePendingPositionCurrencyAddress,
+      queuePendingPositionCurrency,
       queuePendingTransaction,
       selectedChain,
       setConfirmation,
@@ -506,7 +472,6 @@ export const FutureContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
-        previousPositions.current.positions = positions
 
         const transaction = await buildTransaction(
           publicClient,
@@ -542,10 +507,13 @@ export const FutureContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'repay',
             timestamp: currentTimestampInSeconds(),
           })
-          queuePendingPositionCurrencyAddress(asset.currency.address)
+          if (transactionReceipt.status === 'success') {
+            queuePendingPositionCurrency(asset.currency)
+          }
         }
         return transactionReceipt?.transactionHash
       } catch (e) {
@@ -560,11 +528,10 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
-      positions,
       prices,
       publicClient,
       queryClient,
-      queuePendingPositionCurrencyAddress,
+      queuePendingPositionCurrency,
       queuePendingTransaction,
       selectedChain,
       setConfirmation,
@@ -614,7 +581,6 @@ export const FutureContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
-        previousPositions.current.positions = positions
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -690,12 +656,13 @@ export const FutureContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'repay-all',
             timestamp: currentTimestampInSeconds(),
           })
-          queuePendingPositionCurrencyAddress(
-            userPosition.asset.currency.address,
-          )
+          if (transactionReceipt.status === 'success') {
+            queuePendingPositionCurrency(userPosition.asset.currency)
+          }
         }
         return transactionReceipt?.transactionHash
       } catch (e) {
@@ -710,11 +677,10 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
-      positions,
       prices,
       publicClient,
       queryClient,
-      queuePendingPositionCurrencyAddress,
+      queuePendingPositionCurrency,
       queuePendingTransaction,
       selectedChain,
       setConfirmation,
@@ -736,7 +702,6 @@ export const FutureContractProvider = ({
           fields: [],
         }
         setConfirmation(confirmation)
-        previousPositions.current.positions = positions
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
           'https://hermes.pyth.network',
@@ -799,10 +764,10 @@ export const FutureContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'settle',
             timestamp: currentTimestampInSeconds(),
           })
-          queuePendingPositionCurrencyAddress(asset.currency.address)
         }
         return transactionReceipt?.transactionHash
       } catch (e) {
@@ -816,10 +781,8 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
-      positions,
       publicClient,
       queryClient,
-      queuePendingPositionCurrencyAddress,
       queuePendingTransaction,
       selectedChain,
       setConfirmation,
@@ -855,7 +818,6 @@ export const FutureContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
-        previousPositions.current.positions = positions
 
         const transaction = await buildTransaction(
           publicClient,
@@ -879,10 +841,10 @@ export const FutureContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'close',
             timestamp: currentTimestampInSeconds(),
           })
-          queuePendingPositionCurrencyAddress(asset.currency.address)
         }
         return transactionReceipt?.transactionHash
       } catch (e) {
@@ -897,11 +859,9 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
-      positions,
       prices,
       publicClient,
       queryClient,
-      queuePendingPositionCurrencyAddress,
       queuePendingTransaction,
       selectedChain,
       setConfirmation,
@@ -948,7 +908,6 @@ export const FutureContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
-        previousPositions.current.positions = positions
 
         const transaction = await buildTransaction(
           publicClient,
@@ -976,6 +935,7 @@ export const FutureContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'redeem',
             timestamp: currentTimestampInSeconds(),
           })
@@ -993,7 +953,6 @@ export const FutureContractProvider = ({
     },
     [
       disconnectAsync,
-      positions,
       prices,
       publicClient,
       queryClient,
@@ -1014,6 +973,7 @@ export const FutureContractProvider = ({
         settle,
         close,
         redeem,
+        pendingPositionCurrencies,
       }}
     >
       {children}

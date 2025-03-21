@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
-import { isAddress, isAddressEqual } from 'viem'
 
 import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
@@ -15,25 +14,12 @@ import { Asset } from '../../model/future/asset'
 type FutureContext = {
   assets: Asset[]
   positions: UserPosition[]
-  queuePendingPositionCurrencyAddress: (
-    positionCurrencyAddress: `0x${string}` | undefined,
-  ) => void
-  dequeuePendingPositionCurrencyAddress: (
-    positionCurrencyAddress: `0x${string}` | undefined,
-  ) => void
-  pendingPositionCurrencyAddresses: `0x${string}`[]
 }
 
 const Context = React.createContext<FutureContext>({
   assets: [],
   positions: [],
-  queuePendingPositionCurrencyAddress: () => {},
-  dequeuePendingPositionCurrencyAddress: () => {},
-  pendingPositionCurrencyAddresses: [],
 })
-
-export const LOCAL_STORAGE_PENDING_POSITIONS_KEY = (address: `0x${string}`) =>
-  `pending-positions-${address}`
 
 export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { selectedChain, setSelectedChain } = useChainContext()
@@ -65,22 +51,6 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }) as {
     data: UserPosition[]
   }
-  const [
-    pendingPositionCurrencyAddresses,
-    setPendingPositionCurrencyAddresses,
-  ] = React.useState<`0x${string}`[]>([])
-
-  useEffect(() => {
-    if (userAddress) {
-      setPendingPositionCurrencyAddresses(
-        JSON.parse(
-          localStorage.getItem(
-            LOCAL_STORAGE_PENDING_POSITIONS_KEY(userAddress),
-          ) ?? '[]',
-        ) as `0x${string}`[],
-      )
-    }
-  }, [userAddress])
 
   // TODO: remove this after testnet
   useEffect(() => {
@@ -101,58 +71,11 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
     )
   }, [assets, setCurrencies, whitelistCurrencies])
 
-  const queuePendingPositionCurrencyAddress = React.useCallback(
-    (positionCurrencyAddress: `0x${string}` | undefined) => {
-      if (
-        userAddress &&
-        positionCurrencyAddress &&
-        isAddress(positionCurrencyAddress)
-      ) {
-        setPendingPositionCurrencyAddresses((previous) => {
-          const updatedPositions = [...previous, positionCurrencyAddress]
-          localStorage.setItem(
-            LOCAL_STORAGE_PENDING_POSITIONS_KEY(userAddress),
-            JSON.stringify(updatedPositions),
-          )
-          return updatedPositions
-        })
-      }
-    },
-    [userAddress],
-  )
-
-  const dequeuePendingPositionCurrencyAddress = React.useCallback(
-    (positionCurrencyAddress: `0x${string}` | undefined) => {
-      if (
-        userAddress &&
-        positionCurrencyAddress &&
-        isAddress(positionCurrencyAddress)
-      ) {
-        setPendingPositionCurrencyAddresses((previous) => {
-          const updatedPositionCurrencyAddresses = previous.filter(
-            (address) => !isAddressEqual(address, positionCurrencyAddress),
-          )
-          localStorage.setItem(
-            LOCAL_STORAGE_PENDING_POSITIONS_KEY(userAddress),
-            JSON.stringify(updatedPositionCurrencyAddresses),
-          )
-          return updatedPositionCurrencyAddresses
-        })
-      }
-    },
-    [userAddress],
-  )
-
-  console.log({ pendingPositionCurrencyAddresses })
-
   return (
     <Context.Provider
       value={{
         assets,
         positions,
-        queuePendingPositionCurrencyAddress,
-        dequeuePendingPositionCurrencyAddress,
-        pendingPositionCurrencyAddresses,
       }}
     >
       {children}
