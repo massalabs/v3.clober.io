@@ -30,6 +30,7 @@ export const Default: Story = {
       chain: base,
       type: 'type',
       success: true,
+      blockNumber: 123456,
       timestamp: currentTimestampInSeconds(),
       fields: [
         {
@@ -65,6 +66,7 @@ export const DefaultWithDirection: Story = {
       chain: base,
       type: 'type',
       success: true,
+      blockNumber: 123456,
       timestamp: currentTimestampInSeconds(),
       fields: [
         {
