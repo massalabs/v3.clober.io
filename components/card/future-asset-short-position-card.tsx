@@ -158,7 +158,7 @@ export const FutureAssetShortPositionCard = ({
             disabled={isPending}
           >
             {isPending
-              ? 'Pending Indexer'
+              ? 'Pending Indexing'
               : position.asset.expiration < now
                 ? position.asset.settlePrice === 0
                   ? 'Settle'

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 import { getAddress, parseUnits } from 'viem'
@@ -29,6 +29,13 @@ export const FutureContainer = () => {
   const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>(
     pendingPositionCurrencies.length > 0 ? 'my-cdp' : 'mint',
   )
+
+  useEffect(() => {
+    if (pendingPositionCurrencies.length > 0) {
+      setTab('my-cdp')
+    }
+  }, [pendingPositionCurrencies.length])
+
   const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
     null,
   )
