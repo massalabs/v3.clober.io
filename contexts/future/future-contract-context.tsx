@@ -292,19 +292,30 @@ export const FutureContractProvider = ({
             getAddress(asset.collateral.address)
           ] < collateralAmount
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${asset.collateral.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             asset.collateral,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              type: 'approve',
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
 
         const confirmation = {

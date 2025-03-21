@@ -117,19 +117,30 @@ export const VaultContractProvider = ({
           allowances[getAddress(spender)][getAddress(currency0.address)] <
             parseUnits(amount0, currency0.decimals)
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${currency0.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             currency0,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'approve',
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
 
         // Max approve for currency1
@@ -138,19 +149,30 @@ export const VaultContractProvider = ({
           allowances[getAddress(spender)][getAddress(currency1.address)] <
             parseUnits(amount1, currency1.decimals)
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${currency1.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             currency1,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              type: 'approve',
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
 
         const baseCurrency = isAddressEqual(

@@ -168,19 +168,30 @@ export const LimitContractProvider = ({
           allowances[getAddress(spender)][getAddress(inputCurrency.address)] <
             parseUnits(amount, inputCurrency.decimals)
         ) {
-          setConfirmation({
-            title: 'Approve',
+          const confirmation = {
+            title: `Max Approve ${inputCurrency.symbol}`,
             body: 'Please confirm in your wallet.',
             chain: selectedChain,
             fields: [],
-          })
-          await maxApprove(
+          }
+          setConfirmation(confirmation)
+          const transactionReceipt = await maxApprove(
             selectedChain,
             walletClient,
             inputCurrency,
             spender,
             disconnectAsync,
           )
+          if (transactionReceipt) {
+            queuePendingTransaction({
+              ...confirmation,
+              txHash: transactionReceipt.transactionHash,
+              success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
+              type: 'approve',
+              timestamp: currentTimestampInSeconds(),
+            })
+          }
         }
         const args = {
           chainId: selectedChain.id,

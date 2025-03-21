@@ -142,6 +142,14 @@ export const TransactionProvider = ({
     [pendingTransactions, userAddress],
   )
 
+  useEffect(() => {
+    pendingTransactions.forEach((transaction) => {
+      if (transaction.type === 'approve') {
+        dequeuePendingTransaction(transaction.txHash)
+      }
+    })
+  }, [dequeuePendingTransaction, pendingTransactions])
+
   const { data: latestSubgraphBlockNumber } = useQuery({
     queryKey: ['latest-subgraph-block-number', selectedChain.id],
     queryFn: async () => {
