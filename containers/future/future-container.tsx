@@ -26,7 +26,9 @@ export const FutureContainer = () => {
   const { assets, positions } = useFutureContext()
   const { address: userAddress } = useAccount()
 
-  const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>('mint')
+  const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>(
+    pendingPositionCurrencies.length > 0 ? 'my-cdp' : 'mint',
+  )
   const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
     null,
   )
