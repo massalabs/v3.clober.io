@@ -68,7 +68,7 @@ const Context = React.createContext<FutureContractContext>({
 })
 
 export const LOCAL_STORAGE_PENDING_POSITIONS_KEY = (address: `0x${string}`) =>
-  `pending-positions-currencies-for-${address}`
+  `pending-futures-positions-currencies-for-${address}`
 
 export const FutureContractProvider = ({
   children,
