@@ -57,6 +57,7 @@ export const LimitContractProvider = ({
     pendingTransactions,
     queuePendingTransaction,
     dequeuePendingTransaction,
+    latestSubgraphBlockNumber,
   } = useTransactionContext()
   const { selectedChain } = useChainContext()
   const { isOpenOrderApproved, allowances, prices, balances } =
@@ -64,31 +65,29 @@ export const LimitContractProvider = ({
 
   useEffect(() => {
     pendingTransactions.forEach((transaction) => {
+      if (latestSubgraphBlockNumber.chainId !== selectedChain.id) {
+        return
+      }
       if (!transaction.success) {
         dequeuePendingTransaction(transaction.txHash)
         return
       }
-      const openOrder = openOrders.find(
-        (order) => order.txHash === transaction.txHash,
-      )
       if (
-        (transaction.type === 'make' || transaction.type === 'limit') &&
-        openOrder
+        latestSubgraphBlockNumber.blockNumber === 0 ||
+        transaction.blockNumber > latestSubgraphBlockNumber.blockNumber
       ) {
-        dequeuePendingTransaction(transaction.txHash)
-      } else if (
-        transaction.type === 'cancel' &&
-        (!openOrder || // fulfilled
-          (openOrder && Number(openOrder.cancelable) === 0)) // partially filled
+        if (transaction.type === 'take') {
+          dequeuePendingTransaction(transaction.txHash)
+        }
+        return
+      }
+
+      if (
+        transaction.type === 'make' ||
+        transaction.type === 'limit' ||
+        transaction.type === 'cancel' ||
+        transaction.type === 'claim'
       ) {
-        dequeuePendingTransaction(transaction.txHash)
-      } else if (
-        transaction.type === 'claim' &&
-        (!openOrder || // fulfilled
-          (openOrder && Number(openOrder.claimable) === 0)) // partially filled
-      ) {
-        dequeuePendingTransaction(transaction.txHash)
-      } else if (transaction.type === 'take') {
         dequeuePendingTransaction(transaction.txHash)
       }
     })
@@ -96,7 +95,9 @@ export const LimitContractProvider = ({
     dequeuePendingTransaction,
     pendingTransactions,
     openOrders,
-    balances, // for 'take' transaction
+    balances,
+    latestSubgraphBlockNumber,
+    selectedChain.id,
   ])
 
   const limit = useCallback(

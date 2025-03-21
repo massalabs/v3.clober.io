@@ -146,14 +146,24 @@ export const FutureContractProvider = ({
 
   useEffect(() => {
     pendingTransactions.forEach((transaction) => {
+      if (latestSubgraphBlockNumber.chainId !== selectedChain.id) {
+        return
+      }
       if (!transaction.success) {
         dequeuePendingTransaction(transaction.txHash)
         return
       }
       if (
-        latestSubgraphBlockNumber === 0 ||
-        transaction.blockNumber > latestSubgraphBlockNumber
+        latestSubgraphBlockNumber.blockNumber === 0 ||
+        transaction.blockNumber > latestSubgraphBlockNumber.blockNumber
       ) {
+        if (
+          transaction.type === 'close' ||
+          transaction.type === 'settle' ||
+          transaction.type === 'redeem'
+        ) {
+          dequeuePendingTransaction(transaction.txHash)
+        }
         return
       }
 
@@ -171,22 +181,16 @@ export const FutureContractProvider = ({
       ) {
         dequeuePendingTransaction(transaction.txHash)
         dequeuePendingPositionCurrency(userDecreasedCurrency)
-      } else if (
-        transaction.type === 'close' ||
-        transaction.type === 'settle' ||
-        transaction.type === 'redeem'
-      ) {
-        // redeem success
-        dequeuePendingTransaction(transaction.txHash)
       }
     })
   }, [
     dequeuePendingTransaction,
     pendingTransactions,
     positions,
-    latestSubgraphBlockNumber,
     balances,
+    latestSubgraphBlockNumber,
     dequeuePendingPositionCurrency,
+    selectedChain.id,
   ])
 
   const isMarketClose = useCallback(

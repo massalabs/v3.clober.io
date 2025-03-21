@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
-import { getSubgraphBlockNumber } from '@clober/v2-sdk'
+import { CHAIN_IDS, getSubgraphBlockNumber } from '@clober/v2-sdk'
 
 import ConfirmationModal from '../components/modal/confirmation-modal'
 import { Currency } from '../model/currency'
@@ -36,7 +36,10 @@ type TransactionContext = {
   transactionHistory: Transaction[]
   queuePendingTransaction: (transaction: Transaction) => void
   dequeuePendingTransaction: (txHash: `0x${string}`) => void
-  latestSubgraphBlockNumber: number
+  latestSubgraphBlockNumber: {
+    blockNumber: number
+    chainId: CHAIN_IDS
+  }
 }
 
 const Context = React.createContext<TransactionContext>({
@@ -45,7 +48,10 @@ const Context = React.createContext<TransactionContext>({
   transactionHistory: [],
   queuePendingTransaction: () => {},
   dequeuePendingTransaction: () => {},
-  latestSubgraphBlockNumber: 0,
+  latestSubgraphBlockNumber: {
+    blockNumber: 0,
+    chainId: CHAIN_IDS.BASE,
+  },
 })
 
 export const LOCAL_STORAGE_TRANSACTIONS_KEY = (
@@ -139,9 +145,15 @@ export const TransactionProvider = ({
   const { data: latestSubgraphBlockNumber } = useQuery({
     queryKey: ['latest-subgraph-block-number', selectedChain.id],
     queryFn: async () => {
-      return getSubgraphBlockNumber({ chainId: selectedChain.id })
+      const latestSubgraphBlockNumber = await getSubgraphBlockNumber({
+        chainId: selectedChain.id,
+      })
+      return {
+        blockNumber: latestSubgraphBlockNumber,
+        chainId: selectedChain.id,
+      }
     },
-    initialData: 0,
+    initialData: { blockNumber: 0, chainId: selectedChain.id },
     refetchInterval: 2 * 1000, // checked
     refetchIntervalInBackground: true,
   })
