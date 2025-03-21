@@ -10,21 +10,22 @@ import Head from 'next/head'
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
 import { WagmiProvider } from 'wagmi'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { getSubgraphBlockNumber } from '@clober/v2-sdk'
 import { http } from 'viem'
 
 import HeaderContainer from '../containers/header-container'
 import { ChainProvider, useChainContext } from '../contexts/chain-context'
 import { MarketProvider } from '../contexts/trade/market-context'
 import { supportChains } from '../constants/chain'
-import { TransactionProvider } from '../contexts/transaction-context'
+import {
+  TransactionProvider,
+  useTransactionContext,
+} from '../contexts/transaction-context'
 import { OpenOrderProvider } from '../contexts/trade/open-order-context'
 import { LimitContractProvider } from '../contexts/trade/limit-contract-context'
 import Panel from '../components/panel'
@@ -125,17 +126,7 @@ const PanelWrapper = ({
 }
 
 const FooterWrapper = () => {
-  const { selectedChain } = useChainContext()
-  const { data: latestSubgraphBlockNumber } = useQuery({
-    queryKey: ['latest-subgraph-block-number', selectedChain.id],
-    queryFn: async () => {
-      return getSubgraphBlockNumber({ chainId: selectedChain.id })
-    },
-    initialData: 0,
-    refetchInterval: 4 * 1000, // checked
-    refetchIntervalInBackground: true,
-  })
-
+  const { latestSubgraphBlockNumber } = useTransactionContext()
   return <Footer latestSubgraphBlockNumber={latestSubgraphBlockNumber} />
 }
 
@@ -169,8 +160,8 @@ function App({ Component, pageProps }: AppProps) {
           <link rel="icon" type="image/png" href="/favicon.png" />
         </Head>
         <WalletProvider>
-          <TransactionProvider>
-            <ChainProvider>
+          <ChainProvider>
+            <TransactionProvider>
               <CurrencyProvider>
                 <div
                   className={`flex flex-col w-[100vw] min-h-[100vh] bg-[#0F1013] text-white bg-right`}
@@ -215,8 +206,8 @@ function App({ Component, pageProps }: AppProps) {
                   <FooterWrapper />
                 </div>
               </CurrencyProvider>
-            </ChainProvider>
-          </TransactionProvider>
+            </TransactionProvider>
+          </ChainProvider>
         </WalletProvider>
       </ErrorBoundary>
     </>

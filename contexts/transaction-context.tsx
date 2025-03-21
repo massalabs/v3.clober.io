@@ -1,9 +1,13 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { useAccount } from 'wagmi'
+import { useQuery } from '@tanstack/react-query'
+import { getSubgraphBlockNumber } from '@clober/v2-sdk'
 
 import ConfirmationModal from '../components/modal/confirmation-modal'
 import { Currency } from '../model/currency'
 import { Chain } from '../model/chain'
+
+import { useChainContext } from './chain-context'
 
 export type Confirmation = {
   title: string
@@ -21,6 +25,7 @@ export type Transaction = Confirmation & {
   txHash: `0x${string}`
   type: string
   timestamp: number
+  blockNumber: number
   success: boolean
 }
 
@@ -31,6 +36,7 @@ type TransactionContext = {
   transactionHistory: Transaction[]
   queuePendingTransaction: (transaction: Transaction) => void
   dequeuePendingTransaction: (txHash: `0x${string}`) => void
+  latestSubgraphBlockNumber: number
 }
 
 const Context = React.createContext<TransactionContext>({
@@ -39,6 +45,7 @@ const Context = React.createContext<TransactionContext>({
   transactionHistory: [],
   queuePendingTransaction: () => {},
   dequeuePendingTransaction: () => {},
+  latestSubgraphBlockNumber: 0,
 })
 
 export const LOCAL_STORAGE_TRANSACTIONS_KEY = (
@@ -49,6 +56,7 @@ export const LOCAL_STORAGE_TRANSACTIONS_KEY = (
 export const TransactionProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
+  const { selectedChain } = useChainContext()
   const { address: userAddress } = useAccount()
   const [confirmation, setConfirmation] = React.useState<Confirmation>()
   const [pendingTransactions, setPendingTransactions] = React.useState<
@@ -128,6 +136,16 @@ export const TransactionProvider = ({
     [pendingTransactions, userAddress],
   )
 
+  const { data: latestSubgraphBlockNumber } = useQuery({
+    queryKey: ['latest-subgraph-block-number', selectedChain.id],
+    queryFn: async () => {
+      return getSubgraphBlockNumber({ chainId: selectedChain.id })
+    },
+    initialData: 0,
+    refetchInterval: 2 * 1000, // checked
+    refetchIntervalInBackground: true,
+  })
+
   return (
     <Context.Provider
       value={{
@@ -137,6 +155,7 @@ export const TransactionProvider = ({
         transactionHistory,
         queuePendingTransaction,
         dequeuePendingTransaction,
+        latestSubgraphBlockNumber,
       }}
     >
       {children}

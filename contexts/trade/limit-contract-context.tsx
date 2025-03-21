@@ -230,6 +230,7 @@ export const LimitContractProvider = ({
               ...confirmation,
               txHash: transactionReceipt.transactionHash,
               success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
               type: 'make',
               timestamp: currentTimestampInSeconds(),
             })
@@ -279,6 +280,7 @@ export const LimitContractProvider = ({
                 ...confirmation,
                 txHash: transactionReceipt.transactionHash,
                 success: transactionReceipt.status === 'success',
+                blockNumber: Number(transactionReceipt.blockNumber),
                 type: 'take',
                 timestamp: currentTimestampInSeconds(),
               })
@@ -287,6 +289,7 @@ export const LimitContractProvider = ({
                 ...confirmation,
                 txHash: transactionReceipt.transactionHash,
                 success: transactionReceipt.status === 'success',
+                blockNumber: Number(transactionReceipt.blockNumber),
                 type: 'limit',
                 timestamp: currentTimestampInSeconds(),
               })
@@ -375,6 +378,7 @@ export const LimitContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'cancel',
             timestamp: currentTimestampInSeconds(),
           })
@@ -461,6 +465,7 @@ export const LimitContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'claim',
             timestamp: currentTimestampInSeconds(),
           })

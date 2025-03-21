@@ -235,6 +235,7 @@ export const VaultContractProvider = ({
               type: 'mint',
               txHash: transactionReceipt.transactionHash,
               success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
               timestamp: currentTimestampInSeconds(),
             })
           }
@@ -369,6 +370,7 @@ export const VaultContractProvider = ({
               type: 'burn',
               txHash: transactionReceipt.transactionHash,
               success: transactionReceipt.status === 'success',
+              blockNumber: Number(transactionReceipt.blockNumber),
               timestamp: currentTimestampInSeconds(),
             })
           }

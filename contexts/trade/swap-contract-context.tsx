@@ -174,6 +174,7 @@ export const SwapContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'swap',
             timestamp: currentTimestampInSeconds(),
           })
@@ -292,6 +293,7 @@ export const SwapContractProvider = ({
             ...confirmation,
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
             type: 'market',
             timestamp: currentTimestampInSeconds(),
           })
