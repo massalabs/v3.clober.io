@@ -52,8 +52,6 @@ export const UserTransactionsModal = ({
   const [isCopyToast, setIsCopyToast] = useState(false)
   const [tab, setTab] = React.useState<'pending' | 'history'>('history')
 
-  const explorerUrl = `${EXPLORER_URL[chain.id] ?? EXPLORER_URL[0]}`
-
   useEffect(() => {
     if (pendingTransactions.length > 0) {
       setTab('pending')
@@ -137,7 +135,10 @@ export const UserTransactionsModal = ({
               </button>
               <button
                 onClick={() =>
-                  window.open(`${explorerUrl}address/${userAddress}`, '_blank')
+                  window.open(
+                    `${EXPLORER_URL[chain.id]}/address/${userAddress}`,
+                    '_blank',
+                  )
                 }
                 className="p-1 sm:p-2 bg-gray-700 rounded-lg flex flex-col items-center justify-center w-6 sm:w-8 h-6 sm:h-8"
               >
@@ -248,7 +249,6 @@ export const UserTransactionsModal = ({
                   transaction={transaction}
                   key={transaction.txHash}
                   isPending={tab === 'pending'}
-                  explorerUrl={explorerUrl}
                 />
               </div>
             ),

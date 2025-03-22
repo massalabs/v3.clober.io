@@ -3,21 +3,24 @@ import React from 'react'
 import { Transaction } from '../../contexts/transaction-context'
 import { CurrencyIcon } from '../icon/currency-icon'
 import ChainIcon from '../icon/chain-icon'
+import { EXPLORER_URL } from '../../constants/explorer-urls'
 
 const UserTransactionCard = ({
   transaction,
   isPending,
-  explorerUrl,
 }: {
   transaction: Transaction
   isPending: boolean
-  explorerUrl: string
 }) => {
+  const explorerUrl = transaction.chain
+    ? EXPLORER_URL[transaction.chain.id]
+    : undefined
   return (
     <button
       className="self-stretch pt-2 pb-4 flex flex-col w-full justify-start items-start gap-3 cursor-pointer"
       onClick={() =>
-        window.open(`${explorerUrl}tx/${transaction.txHash}`, '_blank')
+        explorerUrl &&
+        window.open(`${explorerUrl}/tx/${transaction.txHash}`, '_blank')
       }
     >
       <div className="self-stretch flex justify-between items-center">
