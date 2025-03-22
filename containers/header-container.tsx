@@ -2,10 +2,14 @@ import React from 'react'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
+import {
+  useAccountModal,
+  useChainModal,
+  useConnectModal,
+} from '@rainbow-me/rainbowkit'
 
 import { useChainContext } from '../contexts/chain-context'
 import ChainSelector from '../components/selector/chain-selector'
-import { WalletSelector } from '../components/selector/wallet-selector'
 import { supportChains } from '../constants/chain'
 import MenuSvg from '../components/svg/menu-svg'
 import { DocsIconSvg } from '../components/svg/docs-icon-svg'
@@ -17,11 +21,17 @@ import { VaultPageSvg } from '../components/svg/vault-page-svg'
 import { GithubLogoSvg } from '../components/svg/github-logo-svg'
 import { LimitPageSvg } from '../components/svg/limit-page-svg'
 import { monadTestnet } from '../constants/monad-testnet-chain'
+import { ConnectButton } from '../components/button/connect-button'
+import { UserButton } from '../components/button/user-button'
+import { WrongNetworkButton } from '../components/button/wrong-network-button'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
   const { selectedChain, setSelectedChain } = useChainContext()
-  const { address, status, connector } = useAccount()
+  const { chainId, address, status, connector } = useAccount()
+  const { openChainModal } = useChainModal()
+  const { openConnectModal } = useConnectModal()
+  const { openAccountModal } = useAccountModal()
 
   return (
     <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
@@ -123,11 +133,28 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
         ) : (
           <></>
         )}
-        <WalletSelector
-          address={address}
-          status={status}
-          connector={connector}
-        />
+        <div className="flex items-center">
+          {status === 'disconnected' || status === 'connecting' ? (
+            <ConnectButton openConnectModal={openConnectModal} />
+          ) : openAccountModal && address && connector && chainId ? (
+            <UserButton
+              address={address}
+              openTransactionHistoryModal={openAccountModal}
+              connector={connector}
+              chainId={chainId}
+              shiny={false}
+            />
+          ) : openChainModal ? (
+            <WrongNetworkButton openChainModal={openChainModal} />
+          ) : (
+            <button
+              disabled={true}
+              className="flex items-center h-8 py-0 px-3 md:px-4 rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-800 text-white disabled:text-green-500 text-xs sm:text-sm"
+            >
+              {status}
+            </button>
+          )}
+        </div>
         <button
           className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center lg:hidden"
           onClick={onMenuClick}
