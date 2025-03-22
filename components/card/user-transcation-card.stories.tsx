@@ -14,7 +14,7 @@ export default {
     layout: 'centered',
   },
   render: ({ ...args }) => (
-    <div className="w-[288px]">
+    <div className="w-[460px] bg-gradient-to-b from-gray-950/0 to-gray-950/70 border border-white border-solid">
       <UserTransactionCard {...args} />
     </div>
   ),
@@ -34,42 +34,6 @@ export const Default: Story = {
       timestamp: currentTimestampInSeconds(),
       fields: [
         {
-          currency: {
-            address: '0x0000000000000000000000000000000000000003',
-            name: 'ETH',
-            symbol: 'ETH',
-            decimals: 18,
-          },
-          label: 'Field 1',
-          value: 'Value 1',
-        },
-        {
-          currency: {
-            address: '0x0000000000000000000000000000000000000003',
-            name: 'ETH',
-            symbol: 'ETH',
-            decimals: 18,
-          },
-          label: 'Field 1',
-          value: 'Value 1',
-        },
-      ],
-    },
-  },
-}
-
-export const DefaultWithDirection: Story = {
-  args: {
-    transaction: {
-      title: 'Confirm',
-      txHash: `0x${BigInt(1234567890).toString(16)}`,
-      chain: base,
-      type: 'type',
-      success: true,
-      blockNumber: 123456,
-      timestamp: currentTimestampInSeconds(),
-      fields: [
-        {
           direction: 'in',
           currency: {
             address: '0x0000000000000000000000000000000000000003',
@@ -77,8 +41,8 @@ export const DefaultWithDirection: Story = {
             symbol: 'ETH',
             decimals: 18,
           },
-          label: 'Field 1',
-          value: 'Value 1',
+          label: 'ETH ASDFASDF',
+          value: '0.000000000000012',
         },
         {
           direction: 'out',
@@ -88,8 +52,8 @@ export const DefaultWithDirection: Story = {
             symbol: 'ETH',
             decimals: 18,
           },
-          label: 'Field 1',
-          value: 'Value 1',
+          label: 'ETH',
+          value: '0.0004',
         },
         {
           direction: 'out',
@@ -99,11 +63,13 @@ export const DefaultWithDirection: Story = {
             symbol: 'ETH',
             decimals: 18,
           },
-          label: 'Field 1',
-          value: 'Value 1',
+          label: 'ETH',
+          value: '2.001',
         },
       ],
     },
+    isPending: false,
+    explorerUrl: 'https://explorer.com',
   },
 }
 

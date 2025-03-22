@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 
 import { Chain } from '../../model/chain'
 
@@ -12,11 +11,10 @@ export default function ChainIcon({
   const name = chain.name.toLowerCase().split(' ')[0]
   return (
     <div {...props}>
-      <Image
+      <img
         src={chain.icon || `https://assets.odos.xyz/chains/${name}.png`}
         alt="ChainIcon"
-        width={16}
-        height={16}
+        className="w-full h-full object-contain"
       />
     </div>
   )

@@ -39,7 +39,7 @@ const ConfirmationModal = ({
             <>
               Chain
               <div className="flex flex-row gap-1 items-center">
-                <ChainIcon chain={confirmation.chain} />
+                <ChainIcon chain={confirmation.chain} className="w-4 h-4" />
                 {confirmation.chain.name}
               </div>
             </>
