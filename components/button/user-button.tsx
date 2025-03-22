@@ -11,20 +11,22 @@ export const UserButton = ({
   address,
   connector,
   chainId,
-  openAccountModal,
+  openTransactionHistoryModal,
   shiny,
 }: {
   address: `0x${string}`
   connector: Connector
   chainId: number
-  openAccountModal: () => void
+  openTransactionHistoryModal: () => void
   shiny?: boolean
 }) => {
   const chain = supportChains.find((chain) => chain.id === chainId)!
   return (
     <button
       className="group"
-      onClick={() => openAccountModal && openAccountModal()}
+      onClick={() =>
+        openTransactionHistoryModal && openTransactionHistoryModal()
+      }
     >
       <span
         className={`relative p-0.5 rounded transition duration-300 overflow-hidden flex items-center justify-center ${shiny ? 'before:opacity-100' : 'before:opacity-0'} before:absolute before:w-1/2 before:pb-[120%] sm:before:pb-[110%] before:bg-[linear-gradient(90deg,_theme(colors.blue.500/0)_0%,_theme(colors.blue.500)_35%,_theme(colors.blue.500)_50%,_theme(colors.blue.500)_65%,_theme(colors.blue.500/0)_100%)] before:animate-[spin_3s_linear_infinite]`}

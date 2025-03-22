@@ -69,6 +69,7 @@ export const Default: Story = {
       ],
     },
     isPending: false,
+    explorerUrl: 'https://explorer.com',
   },
 }
 

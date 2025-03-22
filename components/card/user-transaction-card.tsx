@@ -7,14 +7,18 @@ import ChainIcon from '../icon/chain-icon'
 const UserTransactionCard = ({
   transaction,
   isPending,
+  explorerUrl,
 }: {
   transaction: Transaction
   isPending: boolean
+  explorerUrl: string
 }) => {
   return (
     <button
-      className="self-stretch px-6 pt-2 pb-3 flex flex-col w-full justify-start items-start gap-3 bg-gray-900"
-      onClick={(e) => e.stopPropagation()}
+      className="self-stretch pt-2 pb-3 flex flex-col w-full justify-start items-start gap-3 cursor-pointer"
+      onClick={() =>
+        window.open(`${explorerUrl}tx/${transaction.txHash}`, '_blank')
+      }
     >
       <div className="self-stretch flex justify-between items-center">
         <div className="justify-center text-white text-sm font-semibold">
@@ -23,7 +27,7 @@ const UserTransactionCard = ({
         <div className="flex justify-start items-center gap-2">
           {transaction.chain ? (
             <div className="flex justify-start items-center gap-1.5">
-              <ChainIcon chain={transaction.chain} />
+              <ChainIcon chain={transaction.chain} className="w-4 h-4" />
               <div className="justify-center text-white text-sm font-semibold">
                 {transaction.chain.name}
               </div>
@@ -63,71 +67,33 @@ const UserTransactionCard = ({
               </svg>
             ) : (
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="8"
-                height="8"
-                viewBox="0 0 8 8"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
                 fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M1 1L7 7" stroke="#F94E5C" strokeWidth="1.5" />
-                <path d="M7 1L1 7" stroke="#F94E5C" strokeWidth="1.5" />
+                <rect
+                  x="0.75"
+                  y="0.75"
+                  width="14.5"
+                  height="14.5"
+                  rx="7.25"
+                  stroke="#F94E5C"
+                  strokeWidth="1.5"
+                />
+                <path d="M5 5L11 11" stroke="#F94E5C" strokeWidth="1.5" />
+                <path d="M11 5L5 11" stroke="#F94E5C" strokeWidth="1.5" />
               </svg>
             )}
           </div>
         </div>
       </div>
 
-      <div className="self-stretch flex justify-start items-start gap-3 text-white">
+      <div className="self-stretch flex flex-col sm:flex-row justify-start items-start gap-3 text-white">
         <div className="flex flex-1 w-full self-stretch justify-start items-start gap-1">
-          {transaction.fields.filter((field) => field.direction === 'out') && (
-            <div className="flex text-sm w-9 items-center justify-center bg-green-500 bg-opacity-10 font-bold text-green-500 rounded-lg h-7">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="stroke-green-500 w-3 h-3"
-              >
-                <path
-                  d="M8.00001 3.33331V12.6666M3.33334 7.99998H12.6667"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          )}
-
-          <div className="flex flex-col justify-center items-start gap-1 w-full">
-            {transaction.fields
-              .filter((field) => field.direction === 'out')
-              .map((field, index) => (
-                <div
-                  key={`transaction-${transaction.txHash}-out-${index}`}
-                  className="flex w-full items-center justify-between bg-gray-800 px-2 py-1.5 text-xs rounded-lg"
-                >
-                  <div className="flex items-center gap-1.5 truncate">
-                    {field.currency ? (
-                      <CurrencyIcon
-                        currency={field.currency}
-                        className="w-4 h-4 rounded-full"
-                      />
-                    ) : (
-                      <></>
-                    )}
-                    <div className="flex max-w-6 overflow-hidden">
-                      {field.label}
-                    </div>
-                  </div>
-                  <div className="flex max-w-[100px] overflow-hidden">
-                    {field.value}
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
-
-        <div className="flex flex-1 w-full self-stretch justify-start items-start gap-1">
-          {transaction.fields.filter((field) => field.direction === 'in') && (
+          {transaction.fields.filter((field) => field.direction === 'in')
+            .length > 0 && (
             <div className="flex text-sm w-9 items-center justify-center bg-red-500 bg-opacity-10 font-bold text-red-500 rounded-lg h-7">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -162,11 +128,60 @@ const UserTransactionCard = ({
                     ) : (
                       <></>
                     )}
-                    <div className="flex max-w-6 overflow-hidden">
+                    <div className="flex sm:max-w-10 overflow-hidden">
                       {field.label}
                     </div>
                   </div>
-                  <div className="flex max-w-[100px] overflow-hidden">
+                  <div className="flex sm:max-w-[100px] overflow-hidden">
+                    {field.value}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div className="flex flex-1 w-full self-stretch justify-start items-start gap-1">
+          {transaction.fields.filter((field) => field.direction === 'out')
+            .length > 0 && (
+            <div className="flex text-sm w-9 items-center justify-center bg-green-500 bg-opacity-10 font-bold text-green-500 rounded-lg h-7">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="stroke-green-500 w-3 h-3"
+              >
+                <path
+                  d="M8.00001 3.33331V12.6666M3.33334 7.99998H12.6667"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          )}
+
+          <div className="flex flex-col justify-center items-start gap-1 w-full">
+            {transaction.fields
+              .filter((field) => field.direction === 'out')
+              .map((field, index) => (
+                <div
+                  key={`transaction-${transaction.txHash}-out-${index}`}
+                  className="flex w-full items-center justify-between bg-gray-800 px-2 py-1.5 text-xs rounded-lg"
+                >
+                  <div className="flex items-center gap-1.5 truncate">
+                    {field.currency ? (
+                      <CurrencyIcon
+                        currency={field.currency}
+                        className="w-4 h-4 rounded-full"
+                      />
+                    ) : (
+                      <></>
+                    )}
+                    <div className="flex sm:max-w-10 overflow-hidden">
+                      {field.label}
+                    </div>
+                  </div>
+                  <div className="flex sm:max-w-[100px] overflow-hidden">
                     {field.value}
                   </div>
                 </div>

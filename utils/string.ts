@@ -1,5 +1,5 @@
-export function formatAddress(address: string) {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`
+export function formatAddress(address: string, length = 6) {
+  return `${address.slice(0, length)}...${address.slice(-length + 2)}`
 }
 
 export const handleCopyClipBoard = async (text: string) => {
