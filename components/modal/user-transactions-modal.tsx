@@ -14,13 +14,21 @@ import { Chain } from '../../model/chain'
 
 import Modal from './modal'
 
-const getTimeAgo = (timestamp: number) => {
+const getTimeAgo = (timestamp: number, cache: Map<string, boolean>) => {
   timestamp = timestamp * 1000
   const todayStartTimestamp = new Date().setHours(0, 0, 0, 0)
   const dayStartTimestamp = new Date(timestamp).setHours(0, 0, 0, 0)
-  return convertTimeAgo(
+  const result = convertTimeAgo(
     todayStartTimestamp < timestamp ? timestamp : dayStartTimestamp,
   )
+  if (cache.has(result)) {
+    return ''
+  } else {
+    if (result.includes('days ago')) {
+      cache.set(result, true)
+    }
+    return result
+  }
 }
 
 export const UserTransactionsModal = ({
@@ -40,6 +48,7 @@ export const UserTransactionsModal = ({
   disconnectAsync: () => Promise<void>
   onClose: () => void
 }) => {
+  const cache = new Map<string, boolean>()
   const [isCopyToast, setIsCopyToast] = useState(false)
   const [tab, setTab] = React.useState<'pending' | 'history'>('history')
 
@@ -233,7 +242,7 @@ export const UserTransactionsModal = ({
             (transaction) => (
               <div className="flex flex-col w-full" key={transaction.txHash}>
                 <div className="flex justify-start text-gray-500 text-sm font-bold">
-                  {getTimeAgo(transaction.timestamp)}
+                  {getTimeAgo(transaction.timestamp, cache)}
                 </div>
                 <UserTransactionCard
                   transaction={transaction}

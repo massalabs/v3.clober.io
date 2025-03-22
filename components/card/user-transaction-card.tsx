@@ -15,7 +15,7 @@ const UserTransactionCard = ({
 }) => {
   return (
     <button
-      className="self-stretch pt-2 pb-3 flex flex-col w-full justify-start items-start gap-3 cursor-pointer"
+      className="self-stretch pt-2 pb-4 flex flex-col w-full justify-start items-start gap-3 cursor-pointer"
       onClick={() =>
         window.open(`${explorerUrl}tx/${transaction.txHash}`, '_blank')
       }
@@ -90,7 +90,7 @@ const UserTransactionCard = ({
         </div>
       </div>
 
-      <div className="self-stretch flex flex-col sm:flex-row justify-start items-start gap-3 text-white">
+      <div className="self-stretch flex flex-col justify-start items-start gap-1 text-white">
         <div className="flex flex-1 w-full self-stretch justify-start items-start gap-1">
           {transaction.fields.filter((field) => field.direction === 'in')
             .length > 0 && (
@@ -128,13 +128,9 @@ const UserTransactionCard = ({
                     ) : (
                       <></>
                     )}
-                    <div className="flex sm:max-w-10 overflow-hidden">
-                      {field.label}
-                    </div>
+                    <div className="flex overflow-hidden">{field.label}</div>
                   </div>
-                  <div className="flex sm:max-w-[100px] overflow-hidden">
-                    {field.value}
-                  </div>
+                  <div className="flex overflow-hidden">{field.value}</div>
                 </div>
               ))}
           </div>
@@ -177,13 +173,9 @@ const UserTransactionCard = ({
                     ) : (
                       <></>
                     )}
-                    <div className="flex sm:max-w-10 overflow-hidden">
-                      {field.label}
-                    </div>
+                    <div className="flex overflow-hidden">{field.label}</div>
                   </div>
-                  <div className="flex sm:max-w-[100px] overflow-hidden">
-                    {field.value}
-                  </div>
+                  <div className="flex overflow-hidden">{field.value}</div>
                 </div>
               ))}
           </div>
