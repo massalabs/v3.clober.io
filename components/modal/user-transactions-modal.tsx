@@ -239,8 +239,9 @@ export const UserTransactionsModal = ({
           </div>
         </div>
         <div className="pt-3 border-t border-[#2f313d] border-solid flex flex-col w-full overflow-y-scroll">
-          {(tab === 'history' ? transactionHistory : pendingTransactions).map(
-            (transaction) => (
+          {(tab === 'history' ? transactionHistory : pendingTransactions)
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .map((transaction) => (
               <div className="flex flex-col w-full" key={transaction.txHash}>
                 <div className="flex justify-start text-gray-500 text-sm font-bold">
                   {getTimeAgo(transaction.timestamp, cache)}
@@ -251,8 +252,7 @@ export const UserTransactionsModal = ({
                   isPending={tab === 'pending'}
                 />
               </div>
-            ),
-          )}
+            ))}
         </div>
       </div>
     </Modal>
