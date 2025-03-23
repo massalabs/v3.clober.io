@@ -73,6 +73,12 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/weth.jpg/public',
     },
     {
+      address: '0x0EfeD4D9fB7863ccC7bb392847C08dCd00FE9bE2',
+      name: 'muBOND',
+      symbol: 'muBOND',
+      decimals: 18,
+    },
+    {
       address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
       name: 'Wormhole Wrapped ETH',
       symbol: 'wWETH',
