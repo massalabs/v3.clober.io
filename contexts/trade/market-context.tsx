@@ -270,12 +270,32 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
   })
 
   useEffect(() => {
+    if (!outputCurrency?.decimals || !inputCurrency?.decimals) {
+      return
+    }
+
+    // when setting `outputCurrencyAmount` first time
     if (
-      new BigNumber(inputCurrencyAmount).isNaN() ||
-      new BigNumber(inputCurrencyAmount).isZero() ||
-      !outputCurrency?.decimals ||
-      !inputCurrency?.decimals
+      (new BigNumber(inputCurrencyAmount).isNaN() ||
+        new BigNumber(inputCurrencyAmount).isZero()) &&
+      !new BigNumber(priceInput).isNaN() &&
+      !new BigNumber(priceInput).isZero() &&
+      !new BigNumber(outputCurrencyAmount).isNaN() &&
+      !new BigNumber(outputCurrencyAmount).isZero() &&
+      previousValues.current.outputCurrencyAmount !== outputCurrencyAmount
     ) {
+      const inputCurrencyAmount = calculateInputCurrencyAmountString(
+        isBid,
+        outputCurrencyAmount,
+        priceInput,
+        inputCurrency.decimals,
+      )
+      setInputCurrencyAmount(inputCurrencyAmount)
+      previousValues.current = {
+        priceInput,
+        outputCurrencyAmount,
+        inputCurrencyAmount,
+      }
       return
     }
 
