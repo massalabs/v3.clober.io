@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-import { VaultManagerContainer } from '../../containers/vault/vault-manager-container'
-import { useVaultContext } from '../../contexts/vault/vault-context'
-import { VAULT_KEY_INFOS } from '../../constants/vault'
-import { useChainContext } from '../../contexts/chain-context'
+import { VaultManagerContainer } from '../../../containers/vault/vault-manager-container'
+import { useVaultContext } from '../../../contexts/vault/vault-context'
+import { VAULT_KEY_INFOS } from '../../../constants/vault'
+import { useChainContext } from '../../../contexts/chain-context'
 
 export default function PoolManage() {
   const router = useRouter()
@@ -29,6 +29,7 @@ export default function PoolManage() {
           (vault) => vault.key.toLowerCase() === router.query.poolKey,
         )!
       }
+      showDashboard={true}
     />
   ) : (
     <></>

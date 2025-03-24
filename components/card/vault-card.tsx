@@ -1,10 +1,12 @@
 import React from 'react'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
+import { base } from 'viem/chains'
 
 import { Vault } from '../../model/vault'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toCommaSeparated } from '../../utils/number'
+import { VAULT_KEY_INFOS } from '../../constants/vault'
 
 export const VaultCard = ({
   chainId,
@@ -15,9 +17,14 @@ export const VaultCard = ({
   vault: Vault
   router: NextRouter
 }) => {
+  const hasDashboard =
+    VAULT_KEY_INFOS[chainId].find((info) => info.key === vault.key)
+      ?.hasDashboard ?? false
   return (
     <>
-      <div className="hidden lg:flex w-[960px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
+      <div
+        className={`hidden lg:flex w-[${chainId === base.id ? '1040px' : '960px'}] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4`}
+      >
         <div className="flex w-60 items-center gap-2">
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
@@ -44,15 +51,30 @@ export const VaultCard = ({
         <div className="w-[140px] text-white text-base font-bold">
           ${toCommaSeparated(vault.volume24h.toFixed(0))}
         </div>
-        <button
-          onClick={() => router.push(`/earn/${vault.key}?chain=${chainId}`)}
-          className="flex w-[196px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
-          rel="noreferrer"
-        >
-          <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
-            Add Liquidity
-          </div>
-        </button>
+        <div className="flex gap-2">
+          {hasDashboard && (
+            <button
+              onClick={() =>
+                router.push(`/earn/${vault.key}/dashboard?chain=${chainId}`)
+              }
+              className="flex w-[130px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
+              rel="noreferrer"
+            >
+              <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
+                Dashboard
+              </div>
+            </button>
+          )}
+          <button
+            onClick={() => router.push(`/earn/${vault.key}?chain=${chainId}`)}
+            className={`flex w-[${hasDashboard ? '160px' : '180px'}] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1`}
+            rel="noreferrer"
+          >
+            <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
+              Add Liquidity
+            </div>
+          </button>
+        </div>
       </div>
       <div className="flex lg:hidden w-full h-[116px] p-4 bg-gray-800 rounded-xl flex-col justify-center items-start gap-4">
         <div className="flex items-center gap-2 self-stretch">

@@ -2,6 +2,7 @@ import React from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import { Tooltip } from 'react-tooltip'
+import { base } from 'viem/chains'
 
 import { useVaultContext } from '../../contexts/vault/vault-context'
 import { useChainContext } from '../../contexts/chain-context'
@@ -114,7 +115,9 @@ export const VaultContainer = () => {
         </div>
       </div>
       <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
-        <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
+        <div
+          className={`flex flex-col w-full lg:w-[${selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
+        >
           {tab === 'vault' ? (
             <>
               <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
