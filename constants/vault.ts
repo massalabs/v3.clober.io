@@ -26,6 +26,7 @@ export const VAULT_KEY_INFOS: {
     token1: `0x${string}`
     salt: `0x${string}`
     key: `0x${string}`
+    hasDashboard: boolean
   }[]
 } = {
   [CHAIN_IDS.BASE]: [
@@ -34,6 +35,7 @@ export const VAULT_KEY_INFOS: {
       token1: '0x4200000000000000000000000000000000000006',
       salt: zeroHash,
       key: '0xc8cbe608c82ee9c4c30f01d7c0eefd977538ac396ed34430aa3993bfe0d363ae',
+      hasDashboard: true,
     },
   ],
   [CHAIN_IDS.MONAD_TESTNET]: [
@@ -42,6 +44,7 @@ export const VAULT_KEY_INFOS: {
       token1: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
       salt: zeroHash,
       key: '0xad46920833ad7a1ba8e74cc241faf9ae4fd3dc4616ad9648b13160f8453e444f',
+      hasDashboard: false,
     },
   ],
 }
