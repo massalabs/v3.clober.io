@@ -18,6 +18,7 @@ import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form'
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
 import { testnetChainIds } from '../../constants/chain'
+import { currentTimestampInSeconds } from '../../utils/date'
 
 import { VaultChartContainer } from './vault-chart-container'
 
@@ -43,6 +44,10 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
     setLpCurrencyAmount,
     vaultLpBalances,
   } = useVaultContext()
+  const [now, hourAgo, sixHourAgo] = useMemo(() => {
+    const now = currentTimestampInSeconds() * 1000
+    return [now, now - 60 * 60 * 1000, now - 6 * 60 * 60 * 1000]
+  }, [])
   const { mint, burn } = useVaultContractContext()
   const [showPnL, setShowPnL] = React.useState(true)
   const previousValues = useRef({
@@ -266,8 +271,8 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
         {advanced ? (
           <div className="flex flex-col gap-2 w-full">
             <iframe
-              src="https://mm.clober.io/d-solo/dduzjbo4k05j4b/clober-market-making?orgId=1&from=1740439318018&to=1740442918018&panelId=3"
-              width="1000"
+              src={`https://mm.clober.io/d-solo/dduzjbo4k05j4b/clober-market-making?orgId=1&panelId=3&from=${hourAgo}&to=${now}&theme=dark`}
+              width="1115"
               height="400"
               frameBorder="0"
             />
@@ -275,13 +280,13 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
             <div className="flex flex-row gap-2 w-[1200px]">
               <div className="flex flex-col gap-2">
                 <iframe
-                  src="https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&refresh=30m&from=1740342561050&to=1740432561050&theme=dark&panelId=10"
+                  src={`https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&panelId=10&from=${sixHourAgo}&to=${now}&theme=dark`}
                   frameBorder="0"
                   width="500"
                   height="250"
                 />
                 <iframe
-                  src="https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?from=1740357172575&to=1740447172575&orgId=1&panelId=12"
+                  src={`https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&panelId=12&from=${sixHourAgo}&to=${now}&theme=dark`}
                   width="500"
                   height="400"
                   frameBorder="0"
@@ -290,13 +295,13 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
               <div className="flex flex-col">
                 <div className="flex flex-row gap-2 flex-1">
                   <iframe
-                    src="https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?from=1740356747151&to=1740446747151&orgId=1&panelId=14"
+                    src={`https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&panelId=14&from=${sixHourAgo}&to=${now}&theme=dark`}
                     frameBorder="0"
                     width="300"
                     height="320"
                   />
                   <iframe
-                    src="https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?from=1740356797430&to=1740446797430&orgId=1&panelId=15"
+                    src={`https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&panelId=15&from=${sixHourAgo}&to=${now}&theme=dark`}
                     frameBorder="0"
                     width="300"
                     height="320"
@@ -305,13 +310,13 @@ export const VaultManagerContainer = ({ vault }: { vault: Vault }) => {
 
                 <div className="flex flex-row gap-2 flex-1">
                   <iframe
-                    src="https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?from=1740357765192&to=1740447765192&orgId=1&panelId=2"
+                    src={`https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&panelId=2&from=${sixHourAgo}&to=${now}&theme=dark`}
                     frameBorder="0"
                     width="300"
                     height="320"
                   />
                   <iframe
-                    src="https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?from=1740357790736&to=1740447790737&orgId=1&panelId=3"
+                    src={`https://mm.clober.io/d-solo/decq277ym7apse/8459b0b4-5466-5cf1-bb28-2568c6603344?orgId=1&panelId=3&from=${sixHourAgo}&to=${now}&theme=dark`}
                     frameBorder="0"
                     width="300"
                     height="320"
