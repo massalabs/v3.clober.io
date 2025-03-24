@@ -145,6 +145,15 @@ export const FutureContractProvider = ({
   }, [userAddress])
 
   useEffect(() => {
+    if (
+      pendingTransactions.length === 0 &&
+      pendingPositionCurrencies.length > 0
+    ) {
+      pendingPositionCurrencies.forEach((currency) => {
+        dequeuePendingPositionCurrency(currency)
+      })
+    }
+
     pendingTransactions.forEach((transaction) => {
       if (latestSubgraphBlockNumber.chainId !== selectedChain.id) {
         return
@@ -191,6 +200,7 @@ export const FutureContractProvider = ({
     latestSubgraphBlockNumber,
     dequeuePendingPositionCurrency,
     selectedChain.id,
+    pendingPositionCurrencies,
   ])
 
   const isMarketClose = useCallback(
