@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import { Tooltip } from 'react-tooltip'
@@ -19,6 +19,15 @@ export const VaultContainer = () => {
   const { selectedChain } = useChainContext()
 
   const [tab, setTab] = React.useState<'my-liquidity' | 'vault'>('vault')
+
+  useEffect(() => {
+    if (
+      Object.entries(vaultLpBalances).filter(([, amount]) => amount > 0n)
+        .length > 0
+    ) {
+      setTab('my-liquidity')
+    }
+  }, [vaultLpBalances])
 
   return (
     <div className="w-full flex flex-col text-white mb-4">
@@ -86,7 +95,13 @@ export const VaultContainer = () => {
                 </div>
               </button>
               <button
-                onClick={() => userAddress && setTab('my-liquidity')}
+                onClick={() =>
+                  userAddress &&
+                  Object.entries(vaultLpBalances).filter(
+                    ([, amount]) => amount > 0n,
+                  ).length > 0 &&
+                  setTab('my-liquidity')
+                }
                 disabled={tab === 'my-liquidity'}
                 className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
               >
@@ -167,26 +182,30 @@ export const VaultContainer = () => {
             </>
           ) : (
             <div className="w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-[18px]">
-              {Object.entries(vaultLpBalances).map(([vaultKey, amount]) => {
-                const vault = vaults.find((vault) => vault.key === vaultKey)
-                if (!vault) {
-                  return <></>
-                }
-                return (
-                  <VaultPositionCard
-                    key={vault.key}
-                    chainId={selectedChain.id}
-                    vaultPosition={{
-                      vault,
-                      amount,
-                      value:
-                        vault.lpUsdValue *
-                        Number(formatUnits(amount, vault.lpCurrency.decimals)),
-                    }}
-                    router={router}
-                  />
-                )
-              })}
+              {Object.entries(vaultLpBalances)
+                .filter(([, amount]) => amount > 0n)
+                .map(([vaultKey, amount]) => {
+                  const vault = vaults.find((vault) => vault.key === vaultKey)
+                  if (!vault) {
+                    return <></>
+                  }
+                  return (
+                    <VaultPositionCard
+                      key={vault.key}
+                      chainId={selectedChain.id}
+                      vaultPosition={{
+                        vault,
+                        amount,
+                        value:
+                          vault.lpUsdValue *
+                          Number(
+                            formatUnits(amount, vault.lpCurrency.decimals),
+                          ),
+                      }}
+                      router={router}
+                    />
+                  )
+                })}
             </div>
           )}
         </div>
