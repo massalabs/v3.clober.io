@@ -98,6 +98,12 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 6,
     },
     {
+      address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
+      name: 'MockB',
+      symbol: 'MOCKB',
+      decimals: 6,
+    },
+    {
       address: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701',
       name: 'Wrapped Monad Token',
       symbol: 'WMON',

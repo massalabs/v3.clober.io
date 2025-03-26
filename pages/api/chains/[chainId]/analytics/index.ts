@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
 import { CHAIN_IDS } from '@clober/v2-sdk'
-import { isAddressEqual, zeroAddress } from 'viem'
+import { getAddress, isAddressEqual, zeroAddress } from 'viem'
 
 import { Subgraph } from '../../../../../constants/subgraph'
 import { formatUnits } from '../../../../../utils/bigint'
@@ -131,6 +131,7 @@ const getOnChainSnapshot = async ({
                 Number(volumeSnapshot.token.decimals),
               ),
             ),
+            address: getAddress(volumeSnapshot.token.id as `0x${string}`),
           })),
         }))
         .filter((snapshot) => snapshot.volumeSnapshots.length > 0)

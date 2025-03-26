@@ -24,14 +24,6 @@ import {
   positionsBox,
 } from './utils'
 
-export enum PriceSource {
-  SubgraphV2 = 'SUBGRAPH_V2',
-  SubgraphV3 = 'SUBGRAPH_V3',
-  SubgraphV4 = 'SUBGRAPH_V4',
-}
-
-export type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
-
 // Modification: custom implementations of lw-chart's histogram data types
 export interface SingleHistogramData extends CustomData {
   value: number
@@ -39,7 +31,7 @@ export interface SingleHistogramData extends CustomData {
 }
 
 export interface StackedHistogramData extends CustomData {
-  values: Record<PriceSource, number | undefined>
+  values: Record<string, number | undefined>
   time: UTCTimestamp
 }
 

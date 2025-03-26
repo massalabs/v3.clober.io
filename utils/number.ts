@@ -109,8 +109,9 @@ const MILLION = '1000000'
 const BILLION = '1000000000'
 const TRILLION = '1000000000000'
 
-export const toHumanReadableString = (value: BigNumber): string => {
-  let abbreviatedDollarValue = value
+export const toHumanReadableString = (value: BigNumber.Value): string => {
+  value = new BigNumber(value)
+  let abbreviatedDollarValue = new BigNumber(value)
   let suffix = ''
   if (value.gte(TRILLION)) {
     abbreviatedDollarValue = value.div(TRILLION)

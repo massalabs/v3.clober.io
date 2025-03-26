@@ -1,0 +1,185 @@
+import React, { useEffect, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { UTCTimestamp } from 'lightweight-charts'
+import { getAddress, isAddressEqual } from 'viem'
+
+import { HistogramChart } from '../components/chart/histogram-chart'
+import { useChainContext } from '../contexts/chain-context'
+import { monadTestnet } from '../constants/monad-testnet-chain'
+import { useCurrencyContext } from '../contexts/currency-context'
+
+export default function Analytics() {
+  const { prices, whitelistCurrencies } = useCurrencyContext()
+  const { selectedChain, setSelectedChain } = useChainContext()
+
+  useEffect(() => {
+    if (selectedChain.id !== monadTestnet.id) {
+      setSelectedChain(monadTestnet)
+      const url = new URL(window.location.href)
+      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
+    }
+  }, [selectedChain, setSelectedChain])
+
+  const { data: analytics } = useQuery({
+    queryKey: ['analytics', selectedChain.id],
+    queryFn: async () => {
+      try {
+        if (selectedChain.id === monadTestnet.id) {
+          const {
+            data: { snapshots },
+          } = await axios.get<{
+            snapshots: {
+              timestamp: number
+              googleAnalyticsActiveUsers: number
+              walletCount: number
+              transactionCount: number
+              volumeSnapshots: {
+                symbol: string
+                amount: number
+                address: `0x${string}`
+              }[]
+            }[]
+          }>(`/api/chains/${selectedChain.id}/analytics`)
+          return snapshots.sort((a, b) => a.timestamp - b.timestamp)
+        }
+        return []
+      } catch {
+        return []
+      }
+    },
+    initialData: [],
+  })
+
+  const tokenColorMap = useMemo(() => {
+    return Object.fromEntries(
+      [
+        ...new Set(
+          analytics
+            .map((item) =>
+              item.volumeSnapshots.map(({ address }) => getAddress(address)),
+            )
+            .flat(),
+        ),
+      ]
+        .sort()
+        .map((address, index) => [
+          address,
+          `hsl(${(index * 137.508) % 360}, 100%, 50%)`,
+        ]),
+    )
+  }, [analytics])
+
+  return (
+    analytics.length > 0 && (
+      <div className="flex flex-col w-full h-full items-center justify-center gap-8 px-16 pb-16">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col flex-1">
+            <div className="text-white text-sm md:text-base font-bold">
+              Daily Active Users
+            </div>
+
+            <div className="flex w-[350px] sm:w-[500px]">
+              <HistogramChart
+                data={analytics.map((item) => ({
+                  time: item.timestamp as UTCTimestamp,
+                  values: { User: item.googleAnalyticsActiveUsers },
+                }))}
+                totalKey={'User'}
+                colors={['#4C82FB']}
+                detailData={[{ label: 'User', color: '#4C82FB' }]}
+                height={312}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col flex-1">
+            <div className="text-white text-sm md:text-base font-bold">
+              Daily Volume
+            </div>
+
+            <div className="flex w-[350px] sm:w-[500px]">
+              <HistogramChart
+                data={analytics.map((item) => ({
+                  time: item.timestamp as UTCTimestamp,
+                  values: {
+                    ...Object.fromEntries(
+                      item.volumeSnapshots.map(({ symbol, amount }) => [
+                        symbol,
+                        amount,
+                      ]),
+                    ),
+                    TotalUSD: item.volumeSnapshots.reduce(
+                      (sum, { amount, address }) =>
+                        sum + prices[address] * amount,
+                      0,
+                    ),
+                  },
+                }))}
+                totalKey={'TotalUSD'}
+                colors={[...Object.values(tokenColorMap), '#4C82FB'].sort()}
+                detailData={
+                  Object.entries(tokenColorMap)
+                    .map(([address, color]) => ({
+                      label: whitelistCurrencies.find((currency) =>
+                        isAddressEqual(
+                          currency.address,
+                          address as `0x${string}`,
+                        ),
+                      )?.symbol,
+                      color,
+                    }))
+                    .filter(({ label }) => label) as {
+                    label: string
+                    color: string
+                  }[]
+                }
+                height={312}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col flex-1">
+            <div className="text-white text-sm md:text-base font-bold">
+              Daily Active Wallets
+            </div>
+
+            <div className="flex w-[350px] sm:w-[500px]">
+              <HistogramChart
+                data={analytics.map((item) => ({
+                  time: item.timestamp as UTCTimestamp,
+                  values: { Wallet: item.walletCount },
+                }))}
+                totalKey={'Wallet'}
+                colors={['#A457FF']}
+                detailData={[{ label: 'Wallet', color: '#A457FF' }]}
+                height={312}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col flex-1">
+            <div className="text-white text-sm md:text-base font-bold">
+              Daily Transactions
+            </div>
+
+            <div className="flex w-[350px] sm:w-[500px]">
+              <HistogramChart
+                data={analytics.map((item) => ({
+                  time: item.timestamp as UTCTimestamp,
+                  values: { Transaction: item.transactionCount },
+                }))}
+                totalKey={'Transaction'}
+                colors={['#FC72FF']}
+                detailData={[{ label: 'Transaction', color: '#FC72FF' }]}
+                height={312}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  )
+}

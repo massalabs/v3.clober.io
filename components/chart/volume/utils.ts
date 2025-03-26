@@ -1,9 +1,4 @@
-import {
-  ChartHeaderProtocolInfo,
-  CustomHistogramData,
-  PriceSource,
-  StackedHistogramData,
-} from './renderer'
+import { CustomHistogramData, StackedHistogramData } from './renderer'
 
 export function isStackedHistogramData(
   data: CustomHistogramData,
@@ -25,17 +20,6 @@ export function getCumulativeSum(data: CustomHistogramData): number {
 // Get summed value of all bars of data
 export function getCumulativeVolume(data: CustomHistogramData[]) {
   return data.reduce((sum, curr) => (sum += getCumulativeSum(curr)), 0)
-}
-
-export function getVolumeProtocolInfo(
-  data: StackedHistogramData | undefined,
-  sources: PriceSource[],
-): ChartHeaderProtocolInfo[] {
-  const info = new Array<ChartHeaderProtocolInfo>()
-  for (const source of sources) {
-    info.push({ protocol: source, value: data?.values[source] })
-  }
-  return info
 }
 
 /* Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/helpers/ */
