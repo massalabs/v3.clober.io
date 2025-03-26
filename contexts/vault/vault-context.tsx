@@ -62,48 +62,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { data: vaults } = useQuery({
     queryKey: ['vaults', selectedChain.id, Object.keys(prices).length !== 0],
     queryFn: async () => {
-      let market = undefined
-      if (selectedChain.id === monadTestnet.id) {
-        market = {
-          chainId: selectedChain.id,
-          quote: MON,
-          base: {
-            address: getAddress('0x836047a99e11f376522b447bffb6e3495dd0637c'),
-            name: 'Orbiter Wrapped ETH',
-            symbol: 'oWETH',
-            decimals: 18,
-          },
-          makerFee: 0,
-          takerFee: 0.01,
-          bids: [],
-          bidBook: {
-            id: '2903842787083910905150096686205997338709207897290567260368',
-            isOpened: true,
-            quote: {
-              address: getAddress('0xf817257fed379853cDe0fa4F97AB987181B1E5Ea'),
-              name: 'USD Coin',
-              symbol: 'USDC',
-              decimals: 6,
-            },
-            base: MON,
-            unitSize: '1',
-          },
-          asks: [],
-          askBook: {
-            id: '4641589050102509086410732305431841639520796974628841192589',
-            isOpened: true,
-            base: {
-              address: getAddress('0xf817257fed379853cDe0fa4F97AB987181B1E5Ea'),
-              name: 'USD Coin',
-              symbol: 'USDC',
-              decimals: 6,
-            },
-            quote: MON,
-            unitSize: '1000000000000',
-          },
-        }
-      }
-      return fetchVaults(selectedChain.id, prices, market)
+      return fetchVaults(selectedChain.id, prices)
     },
     initialData: [],
     refetchInterval: 5 * 1000,

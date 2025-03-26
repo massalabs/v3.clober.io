@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import { Tooltip } from 'react-tooltip'
@@ -19,15 +19,6 @@ export const VaultContainer = () => {
   const { selectedChain } = useChainContext()
 
   const [tab, setTab] = React.useState<'my-liquidity' | 'vault'>('vault')
-
-  useEffect(() => {
-    if (
-      Object.entries(vaultLpBalances).filter(([, amount]) => amount > 0n)
-        .length > 0
-    ) {
-      setTab('my-liquidity')
-    }
-  }, [vaultLpBalances])
 
   return (
     <div className="w-full flex flex-col text-white mb-4">
