@@ -1,8 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
-import { CHAIN_IDS, getSubgraphEndpoint } from '@clober/v2-sdk'
+import { CHAIN_IDS } from '@clober/v2-sdk'
+import { isAddressEqual, zeroAddress } from 'viem'
 
 import { Subgraph } from '../../../../../constants/subgraph'
+import { formatUnits } from '../../../../../utils/bigint'
+import { WHITELISTED_CURRENCIES } from '../../../../../constants/currency'
 
 const getGoogleAnalyticsActiveUsersSnapshot = async (): Promise<
   { timestamp: number; activeUsers: number }[]
@@ -67,7 +70,11 @@ const getGoogleAnalyticsActiveUsersSnapshot = async (): Promise<
     .filter((row): row is { timestamp: number; activeUsers: number } => !!row)
 }
 
-const getOnChainSnapshot = async (): Promise<
+const getOnChainSnapshot = async ({
+  chainId,
+}: {
+  chainId: CHAIN_IDS
+}): Promise<
   {
     timestamp: number
     transactionCount: number
@@ -75,7 +82,8 @@ const getOnChainSnapshot = async (): Promise<
     volumeSnapshots: { symbol: string; amount: number }[]
   }[]
 > => {
-  const endpoint = getSubgraphEndpoint({ chainId: CHAIN_IDS.MONAD_TESTNET })
+  // TODO: Use getSubgraphEndpoint
+  // const endpoint = getSubgraphEndpoint({ chainId: CHAIN_IDS.MONAD_TESTNET })
   const {
     data: { snapshots },
   } = await Subgraph.get<{
@@ -84,30 +92,49 @@ const getOnChainSnapshot = async (): Promise<
         id: string
         transactionCount: string
         walletCount: string
+        volumeSnapshots: {
+          token: {
+            id: string
+            name: string
+            symbol: string
+            decimals: string
+          }
+          amount: string
+        }[]
       }[]
     }
   }>(
-    endpoint,
+    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/v2-core-subgraph-monad-testnet/v1.0.4/gn',
     'getOnChainSnapshot',
-    'query getOnChainSnapshot { snapshots { id transactionCount walletCount } }',
+    '{ snapshots { id transactionCount walletCount volumeSnapshots { token { id name symbol decimals } amount } } }',
     {},
   )
-  return snapshots.map((snapshot) => ({
-    timestamp: Number(snapshot.id),
-    transactionCount: Number(snapshot.transactionCount),
-    walletCount: Number(snapshot.walletCount),
-    // TODO: filter whitelist currencies
-    volumeSnapshots: [
-      {
-        symbol: 'MON',
-        amount: 12351234.323,
-      },
-      {
-        symbol: 'USDC',
-        amount: 1345.6765,
-      },
-    ],
-  }))
+  const nativeCurrency = WHITELISTED_CURRENCIES[chainId].find((currency) =>
+    isAddressEqual(currency.address, zeroAddress),
+  )
+  return nativeCurrency
+    ? snapshots
+        .map((snapshot) => ({
+          timestamp: Number(snapshot.id),
+          transactionCount: Number(snapshot.transactionCount),
+          walletCount: Number(snapshot.walletCount),
+          volumeSnapshots: snapshot.volumeSnapshots.map((volumeSnapshot) => ({
+            symbol: isAddressEqual(
+              volumeSnapshot.token.id as `0x${string}`,
+              zeroAddress,
+            )
+              ? nativeCurrency.symbol
+              : volumeSnapshot.token.symbol,
+            amount: Number(
+              formatUnits(
+                BigInt(volumeSnapshot.amount),
+                Number(volumeSnapshot.token.decimals),
+              ),
+            ),
+          })),
+        }))
+        .filter((snapshot) => snapshot.volumeSnapshots.length > 0)
+    : []
 }
 
 export default async function handler(
@@ -115,10 +142,20 @@ export default async function handler(
   res: NextApiResponse<any>,
 ) {
   try {
+    const query = req.query
+    const { chainId } = query
+    if (!chainId || typeof chainId !== 'string') {
+      res.json({
+        status: 'error',
+        message: 'URL should be /api/chains/[chainId]/analytics',
+      })
+      return
+    }
+
     const [googleAnalyticsActiveUsersSnapshot, onChainSnapshot] =
       await Promise.all([
         getGoogleAnalyticsActiveUsersSnapshot(),
-        getOnChainSnapshot(),
+        getOnChainSnapshot({ chainId: chainId as unknown as CHAIN_IDS }),
       ])
     const keys = new Set([
       ...googleAnalyticsActiveUsersSnapshot.map((row) => row.timestamp),
