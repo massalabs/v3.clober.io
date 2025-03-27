@@ -77,6 +77,7 @@ export const WHITELISTED_CURRENCIES: {
       name: 'muBOND',
       symbol: 'muBOND',
       decimals: 18,
+      icon: '/mubond.svg',
     },
     {
       address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768',
