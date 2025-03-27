@@ -8,7 +8,11 @@ import {
   PublicClient,
   zeroAddress,
 } from 'viem'
-import { getExpectedOutput, marketOrder } from '@clober/v2-sdk'
+import {
+  getExpectedOutput,
+  getSubgraphEndpoint,
+  marketOrder,
+} from '@clober/v2-sdk'
 
 import { Currency } from '../currency'
 import { Prices } from '../prices'
@@ -51,19 +55,24 @@ export class CloberV2Aggregator implements Aggregator {
   public async prices(): Promise<Prices> {
     if (this.chain.id === monadTestnet.id) {
       const {
-        data: { chartLogs },
+        data: { monChartLogs, muBondChartLogs },
       } = await Subgraph.get<{
-        data: { chartLogs: { id: string; close: string }[] }
+        data: {
+          monChartLogs: { id: string; close: string }[]
+          muBondChartLogs: { id: string; close: string }[]
+        }
       }>(
-        'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/v2-core-subgraph-monad-testnet/v1.0.0/gn',
+        getSubgraphEndpoint({ chainId: this.chain.id }),
         '',
-        '{ chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0000000000000000000000000000000000000000/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } }',
+        '{ monChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode_in: ["0x0000000000000000000000000000000000000000/0xf817257fed379853cde0fa4f97ab987181b1e5ea", "0x0efed4d9fb7863ccc7bb392847c08dcd00fe9be2/0xf817257fed379853cde0fa4f97ab987181b1e5ea"]} ) { id close }, muBondChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode_in: ["0x0efed4d9fb7863ccc7bb392847c08dcd00fe9be2/0xf817257fed379853cde0fa4f97ab987181b1e5ea", "0x0efed4d9fb7863ccc7bb392847c08dcd00fe9be2/0xf817257fed379853cde0fa4f97ab987181b1e5ea"]} ) { id close } }',
         {},
       )
-      const price = Number(chartLogs?.[0]?.close ?? 0)
+      const monPrice = Number(monChartLogs?.[0]?.close ?? 0)
+      const muBondPrice = Number(muBondChartLogs?.[0]?.close ?? 0)
       return {
-        [zeroAddress]: price,
-        [getAddress('0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701')]: price,
+        [zeroAddress]: monPrice,
+        [getAddress('0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701')]: monPrice,
+        [getAddress('0x0EfeD4D9fB7863ccC7bb392847C08dCd00FE9bE2')]: muBondPrice,
       }
     }
     return {} as Prices
