@@ -43,7 +43,7 @@ export const VaultCard = ({
           </div>
         </div>
         <div className="w-[140px] text-white text-base font-bold">
-          {(vault.apy ?? 0).toFixed(2)}%
+          {`${vault.apy > 0 ? `${vault.apy.toFixed(2)}%` : '-'}`}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
           ${toCommaSeparated(vault.tvl.toFixed(0))}
@@ -123,7 +123,7 @@ export const VaultCard = ({
           <div className="flex w-full flex-col justify-start items-center gap-2">
             <div className="self-stretch text-gray-400 text-xs">APY</div>
             <div className="self-stretch text-white text-sm font-bold">
-              {(vault.apy ?? 0).toFixed(2)}%
+              {`${vault.apy > 0 ? `${vault.apy.toFixed(2)}%` : '-'}`}
             </div>
           </div>
           <div className="flex w-full flex-col justify-start items-center gap-2">
