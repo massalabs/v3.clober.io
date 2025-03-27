@@ -162,7 +162,7 @@ export const VaultContainer = () => {
               {vaults.length === 0 && (
                 <div
                   role="status"
-                  className="flex justify-center items-center mt-16 sm:mt-0 w-full h-full"
+                  className="flex justify-center items-center mt-16 sm:mt-8 w-full h-full"
                 >
                   <svg
                     aria-hidden="true"
