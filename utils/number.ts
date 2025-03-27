@@ -32,15 +32,15 @@ export const removeZeroTail = (number: string) => {
 }
 
 export const toShortNumber = (number: BigNumber.Value): string => {
-  number = new BigNumber(number).toNumber()
-  const integer = new BigNumber(number).integerValue()
+  number = new BigNumber(number)
+  const integer = number.integerValue()
   if (integer.gt(0)) {
     // minimum tick is 1bp
     const fractionDigits = Math.max(
       Math.min(Math.ceil(-Math.log10(integer.toNumber() / 10000)), 100),
       0,
     )
-    return removeZeroTail(number.toFixed(fractionDigits))
+    return removeZeroTail(number.toFixed(fractionDigits, BigNumber.ROUND_FLOOR))
   }
   const index = findFirstNonZeroIndex(number) - 1
   if (index === -1) {
@@ -52,10 +52,12 @@ export const toShortNumber = (number: BigNumber.Value): string => {
       Math.min(Math.ceil(-Math.log10(integer.toNumber() / 10000)), 100),
       0,
     )
-    return removeZeroTail(number.toFixed(fractionDigits))
+    return removeZeroTail(number.toFixed(fractionDigits, BigNumber.ROUND_FLOOR))
   }
   if (index <= 3) {
-    return removeZeroTail(number.toFixed(index + 1 + POLLY_FILL_DECIMALS))
+    return removeZeroTail(
+      number.toFixed(index + 1 + POLLY_FILL_DECIMALS, BigNumber.ROUND_FLOOR),
+    )
   }
   const list = [
     '₀',
@@ -112,7 +114,7 @@ export const toShortNumber = (number: BigNumber.Value): string => {
   return removeZeroTail(
     `0.0${char}` +
       new BigNumber(number)
-        .toFixed(100)
+        .toFixed(100, BigNumber.ROUND_FLOOR)
         .slice(index + 2, index + 2 + POLLY_FILL_DECIMALS),
   )
 }
