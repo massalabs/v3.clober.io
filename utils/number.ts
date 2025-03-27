@@ -35,11 +35,24 @@ export const toShortNumber = (number: BigNumber.Value): string => {
   number = new BigNumber(number).toNumber()
   const integer = new BigNumber(number).integerValue()
   if (integer.gt(0)) {
-    return removeZeroTail(number.toFixed(2))
+    // minimum tick is 1bp
+    const fractionDigits = Math.max(
+      Math.min(Math.ceil(-Math.log10(integer.toNumber() / 10000)), 100),
+      0,
+    )
+    return removeZeroTail(number.toFixed(fractionDigits))
   }
   const index = findFirstNonZeroIndex(number) - 1
   if (index === -1) {
-    return removeZeroTail(number.toFixed(2))
+    if (integer.eq(0)) {
+      return '0'
+    }
+    // minimum tick is 1bp
+    const fractionDigits = Math.max(
+      Math.min(Math.ceil(-Math.log10(integer.toNumber() / 10000)), 100),
+      0,
+    )
+    return removeZeroTail(number.toFixed(fractionDigits))
   }
   if (index <= 3) {
     return removeZeroTail(number.toFixed(index + 1 + POLLY_FILL_DECIMALS))
