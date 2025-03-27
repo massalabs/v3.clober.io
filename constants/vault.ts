@@ -49,9 +49,9 @@ export const VAULT_KEY_INFOS: {
       key: '0xf3c347e880b6a775f4f69f6db22860636351a70f18857fab2c56dc32835a1627',
       hasDashboard: false,
       startLPInfo: {
-        quoteAmount: 1,
-        baseAmount: 1,
-        lpAmount: 1,
+        quoteAmount: 10031,
+        baseAmount: 10000,
+        lpAmount: 10031,
       },
     },
   ],
