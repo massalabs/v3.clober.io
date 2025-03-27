@@ -243,6 +243,7 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
             minimumDecimalPlaces,
           ),
         )
+        setDepthClickedIndex(undefined)
       } else if (!depthClickedIndex.isBid && asks[depthClickedIndex.index]) {
         setPriceInput(
           toPlacesString(
@@ -250,6 +251,7 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
             minimumDecimalPlaces,
           ),
         )
+        setDepthClickedIndex(undefined)
       }
     }
   }, [
