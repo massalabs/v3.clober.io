@@ -9,7 +9,7 @@ import {
 } from '@clober/v2-sdk'
 import { isAddressEqual } from 'viem'
 
-import { START_LP_INFO, VAULT_KEY_INFOS } from '../constants/vault'
+import { VAULT_KEY_INFOS } from '../constants/vault'
 import { Prices } from '../model/prices'
 import { Vault } from '../model/vault'
 import { calculateApy } from '../utils/apy'
@@ -73,13 +73,18 @@ export async function fetchVaults(
     const spreadProfits = vaultPerformanceData.poolSpreadProfits.sort(
       (a, b) => a.timestamp - b.timestamp,
     )
+    const startLPInfo = VAULT_KEY_INFOS[chainId].find(
+      ({ key }) => key.toLowerCase() === vault.key.toLowerCase(),
+    )?.startLPInfo
+    if (!startLPInfo) {
+      throw new Error('startLPInfo not found')
+    }
     const historicalLpPrices = vaultPerformanceData.poolSnapshots
       .map(({ price, liquidityA, liquidityB, totalSupply, timestamp }) => {
         const _price = Number(price)
         const onHoldValuePerLp =
-          (START_LP_INFO[chainId]!.quoteAmount +
-            START_LP_INFO[chainId]!.baseAmount * _price) /
-          START_LP_INFO[chainId]!.lpAmount
+          (startLPInfo.quoteAmount + startLPInfo.baseAmount * _price) /
+          startLPInfo.lpAmount
         const usdValue = isAddressEqual(
           base.address,
           liquidityA.currency.address,
