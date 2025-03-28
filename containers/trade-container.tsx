@@ -778,9 +778,9 @@ export const TradeContainer = () => {
                   <div className="flex text-gray-500 text-xs font-semibold">
                     <div className="flex w-[180px] ml-5">Market</div>
                     <div className="flex w-[130px]">Price</div>
-                    <div className="flex w-[170px]">Amount</div>
-                    <div className="flex w-[175px]">Filled</div>
-                    <div className="flex w-[150px]">Claimable</div>
+                    <div className="flex w-[200px]">Amount</div>
+                    <div className="flex w-[110px]">Filled</div>
+                    <div className="flex w-[200px]">Claimable</div>
                   </div>
                   <div className="h-full ml-auto justify-center items-center gap-3 flex">
                     <ActionButton

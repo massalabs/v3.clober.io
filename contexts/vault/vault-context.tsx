@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query'
 import { readContracts } from '@wagmi/core'
 import { getContractAddresses } from '@clober/v2-sdk'
 import { useAccount } from 'wagmi'
-import { getAddress } from 'viem'
 
 import { Balances } from '../../model/balances'
 import { Vault } from '../../model/vault'
@@ -16,8 +15,6 @@ import { useCurrencyContext } from '../currency-context'
 import { VAULT_KEY_INFOS } from '../../constants/vault'
 import { wagmiConfig } from '../../constants/chain'
 import { fetchVaults } from '../../apis/vaults'
-import { monadTestnet } from '../../constants/monad-testnet-chain'
-import { MON } from '../../constants/currency'
 
 type VaultContext = {
   lpCurrencyAmount: string

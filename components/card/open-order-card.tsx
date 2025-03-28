@@ -135,7 +135,7 @@ export const OpenOrderCard = ({
             {toShortNumber(openOrder.price)}
           </div>
 
-          <div className="w-[150px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium">
+          <div className="w-[180px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium">
             <p className="flex gap-1 text-white">
               {toPlacesString(openOrder.amount.value)}{' '}
               <span className="text-[#8690a5]">
@@ -144,11 +144,11 @@ export const OpenOrderCard = ({
             </p>
           </div>
 
-          <div className="w-[150px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium flex-row gap-1">
+          <div className="w-[80px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium flex-row gap-1">
             <p className="text-white">{filledRatio.toFixed(2)}%</p>
           </div>
 
-          <div className="w-[150px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium">
+          <div className="w-[200px] h-full justify-start items-center flex text-[#e6e7eb] text-sm font-medium">
             <p className="flex gap-1 text-white">
               {toPlacesString(openOrder.claimable.value)}{' '}
               <span className="text-[#8690a5]">
