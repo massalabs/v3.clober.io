@@ -15,7 +15,6 @@ import { Vault } from '../model/vault'
 import { calculateApy } from '../utils/apy'
 import { StackedLineData } from '../components/chart/tvl-chart-model'
 import { RPC_URL } from '../constants/rpc-urls'
-import { testnetChainIds } from '../constants/chain'
 
 export async function fetchVaults(
   chainId: CHAIN_IDS,
@@ -141,9 +140,7 @@ export async function fetchVaults(
       reserve0: Number(vault.liquidityA.total.value),
       reserve1: Number(vault.liquidityB.total.value),
       tvl,
-      apy: testnetChainIds.includes(chainId)
-        ? 0
-        : calculateApy(1 + totalSpreadProfit / tvl, 60 * 60 * 24),
+      apy: calculateApy(1 + totalSpreadProfit / tvl, 60 * 60 * 24),
       volume24h: vaultPerformanceData.poolVolumes.reduce(
         (acc, { currencyAVolume, currencyBVolume }) =>
           acc +
