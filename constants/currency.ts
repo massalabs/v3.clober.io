@@ -61,6 +61,16 @@ export const PRICE_FEED_ID_LIST: {
       priceFeedId:
         '0xb44565b8b9b39ab2f4ba792f1c8f8aa8ef7d780e709b191637ef886d96fd1472',
     },
+    {
+      address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // USDC
+      priceFeedId:
+        '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+    },
+    {
+      address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795', // MOCKB
+      priceFeedId:
+        '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+    },
   ],
 }
 
