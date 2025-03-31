@@ -55,14 +55,25 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
       <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
         <div className="flex items-center gap-2.5 md:gap-12">
-          <Link
-            className="flex gap-2 items-center"
-            target="_blank"
-            href="https://clober.io"
-            rel="noreferrer"
-          >
-            <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
-          </Link>
+          {router.pathname.includes('/future') ? (
+            <Link
+              className="flex gap-2 items-center"
+              target="_blank"
+              href="https://alpha.clober.io/future?chain=10143"
+              rel="noreferrer"
+            >
+              <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
+            </Link>
+          ) : (
+            <Link
+              className="flex gap-2 items-center"
+              target="_blank"
+              href="https://clober.io"
+              rel="noreferrer"
+            >
+              <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
+            </Link>
+          )}
           <div className="hidden lg:flex py-1 justify-start items-center gap-8">
             <PageButton
               disabled={router.pathname.includes('/trade')}
