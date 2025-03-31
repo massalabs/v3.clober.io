@@ -9,15 +9,18 @@ import {
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { UserPosition } from '../../model/future/user-position'
 import { toCommaSeparated } from '../../utils/number'
+import { EditSvg } from '../svg/edit-svg'
 
 export const FutureAssetShortPositionCard = ({
   position,
   loanAssetPrice,
+  onEditCollateral,
   onClickButton,
   isPending,
 }: {
   position: UserPosition
   loanAssetPrice: number
+  onEditCollateral: () => void
   onClickButton: () => void
   isPending: boolean
 }) => {
@@ -71,6 +74,9 @@ export const FutureAssetShortPositionCard = ({
                 )}{' '}
                 {position.asset.currency.symbol}
               </div>
+              <button>
+                {!isPending && <EditSvg onClick={onEditCollateral} />}
+              </button>
             </div>
           </div>
 

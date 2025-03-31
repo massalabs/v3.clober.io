@@ -39,6 +39,8 @@ export const FutureContainer = () => {
   const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
     null,
   )
+  const [editCollateralPosition, setEditCollateralPosition] =
+    useState<UserPosition | null>(null)
   const now = currentTimestampInSeconds()
 
   const calculateSettledCollateral = useCallback(
@@ -212,6 +214,9 @@ export const FutureContainer = () => {
                       isPending={pendingPositionCurrencies
                         .map((currency) => getAddress(currency.address))
                         .includes(getAddress(position.asset.currency.address))}
+                      onEditCollateral={() =>
+                        setEditCollateralPosition(position)
+                      }
                       onClickButton={async () => {
                         if (position.asset.expiration < now) {
                           if (position.asset.settlePrice > 0) {
@@ -252,6 +257,8 @@ export const FutureContainer = () => {
       ) : (
         <></>
       )}
+
+      {editCollateralPosition ? <div>TBD</div> : <></>}
     </div>
   )
 }
