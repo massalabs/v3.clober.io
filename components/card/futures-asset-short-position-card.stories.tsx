@@ -1,3 +1,4 @@
+import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
@@ -5,11 +6,16 @@ import { zeroAddress } from 'viem'
 import { FuturesAssetShortPositionCard } from './futures-asset-short-position-card'
 
 export default {
-  title: 'FuturesAssetShortPositionCard',
+  title: 'Card/FuturesAssetShortPositionCard',
   component: FuturesAssetShortPositionCard,
   parameters: {
     layout: 'centered',
   },
+  render: ({ ...args }) => (
+    <div className="w-96 text-white">
+      <FuturesAssetShortPositionCard {...args} />
+    </div>
+  ),
 } as Meta<typeof FuturesAssetShortPositionCard>
 
 type Story = StoryObj<typeof FuturesAssetShortPositionCard>
@@ -41,12 +47,12 @@ export const Default: Story = {
         maxLTV: 700000n,
         liquidationThreshold: 800000n,
         ltvPrecision: 1000000n,
-        minDebt: 10n * 10n ** 6n,
+        minDebt: 10000000n,
         settlePrice: 31441,
       },
       averagePrice: 123.12,
-      collateralAmount: 100n * 10n ** 6n,
-      debtAmount: 10n * 10n ** 18n,
+      collateralAmount: 100000000n,
+      debtAmount: 10000000000000000000n,
       liquidationPrice: 123.12,
       ltv: 10,
       type: 'short',
@@ -56,4 +62,9 @@ export const Default: Story = {
     loanAssetPrice: 145.12,
     isPending: false,
   },
+}
+
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString()
 }

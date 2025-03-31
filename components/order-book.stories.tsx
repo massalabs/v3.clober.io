@@ -1,20 +1,28 @@
+import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 
 import '../styles/globals.css'
 
 import OrderBook from './order-book'
 export default {
-  title: 'OrderBook',
+  title: 'Common/OrderBook',
   component: OrderBook,
   parameters: {
     layout: 'centered',
   },
+  render: ({ ...args }) => (
+    <div className="w-[740px] h-[570px]">
+      <OrderBook {...args} />
+    </div>
+  ),
 } as Meta<typeof OrderBook>
 
 type Story = StoryObj<typeof OrderBook>
 
 export const Default: Story = {
   args: {
+    // @ts-ignore
+    market: {},
     bids: [
       { price: '0.000001', size: '12' },
       { price: '0.000002', size: '12' },

@@ -6,15 +6,15 @@ import { zeroAddress } from 'viem'
 import { MarketInfoCard } from './market-info-card'
 
 export default {
-  title: 'MarketInfoCard',
+  title: 'Card/MarketInfoCard',
   component: MarketInfoCard,
   parameters: {
     layout: 'centered',
   },
   render: ({ ...args }) => (
-    <>
+    <div className="flex w-[740px]">
       <MarketInfoCard {...args} />
-    </>
+    </div>
   ),
 } as Meta<typeof MarketInfoCard>
 

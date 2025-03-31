@@ -6,7 +6,7 @@ import { Toast } from './toast'
 import { ClipboardSvg } from './svg/clipboard-svg'
 
 export default {
-  title: 'Toast',
+  title: 'Common/Toast',
   component: Toast,
   parameters: {
     layout: 'centered',

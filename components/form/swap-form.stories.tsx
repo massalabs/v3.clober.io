@@ -8,13 +8,13 @@ import { dummyPrices } from '../../.storybook/dummy-data/prices'
 import { SwapForm } from './swap-form'
 
 export default {
-  title: 'SwapForm',
+  title: 'Form/SwapForm',
   component: SwapForm,
   parameters: {
     layout: 'centered',
   },
   render: ({ ...args }) => (
-    <div className="flex flex-col rounded-2xl bg-gray-900 p-6 w-full sm:w-[480px] lg:h-[480px]">
+    <div className="flex flex-col rounded-2xl bg-gray-900 p-6 w-full sm:w-[480px] h-[616px]">
       <SwapForm {...args} />
     </div>
   ),
@@ -44,6 +44,7 @@ export const Default: Story = {
     aggregatorName: 'Uniswap',
     refreshQuotesAction: () => {},
     closeSwapFormAction: () => {},
+    priceImpact: 0.01,
     actionButtonProps: {
       disabled: false,
       onClick: () => {},
@@ -75,6 +76,7 @@ export const Selected: Story = {
     gasEstimateValue: 1.12,
     refreshQuotesAction: () => {},
     closeSwapFormAction: () => {},
+    priceImpact: 0.01,
     actionButtonProps: {
       disabled: false,
       onClick: () => {},

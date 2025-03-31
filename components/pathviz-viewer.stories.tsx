@@ -239,7 +239,7 @@ const dummyPathviz = {
 } as PathViz
 
 export default {
-  title: 'PathViz',
+  title: 'Common/PathViz',
   component: OdosPathvizViewer,
   parameters: {
     layout: 'centered',

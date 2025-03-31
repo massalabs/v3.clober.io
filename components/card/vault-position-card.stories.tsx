@@ -1,3 +1,4 @@
+import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { base } from 'viem/chains'
@@ -5,11 +6,16 @@ import { base } from 'viem/chains'
 import { VaultPositionCard } from './vault-position-card'
 
 export default {
-  title: 'VaultPositionCard',
+  title: 'Card/VaultPositionCard',
   component: VaultPositionCard,
   parameters: {
     layout: 'centered',
   },
+  render: ({ ...args }) => (
+    <div className="flex w-[300px]">
+      <VaultPositionCard {...args} />
+    </div>
+  ),
 } as Meta<typeof VaultPositionCard>
 
 type Story = StoryObj<typeof VaultPositionCard>
@@ -46,7 +52,7 @@ export const Default: Story = {
         reserve0: 123123.123411,
         reserve1: 123123.123411,
       },
-      amount: BigInt(123123123123),
+      amount: BigInt('1231231231230000000000'),
       value: 123,
     },
   },

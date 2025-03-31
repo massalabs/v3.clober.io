@@ -14,7 +14,7 @@ import ChainSelector from './chain-selector'
 import '../../styles/globals.css'
 
 export default {
-  title: 'ChainSelector',
+  title: 'Selector/ChainSelector',
   component: ChainSelector,
   parameters: {
     layout: 'centered',

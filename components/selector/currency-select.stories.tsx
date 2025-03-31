@@ -1,3 +1,4 @@
+import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 
 import '../../styles/globals.css'
@@ -7,11 +8,16 @@ import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
 import CurrencySelect from './currency-select'
 
 export default {
-  title: 'CurrencySelector',
+  title: 'Selector/CurrencySelector',
   component: CurrencySelect,
   parameters: {
     layout: 'centered',
   },
+  render: ({ ...args }) => (
+    <div className="w-full sm:w-[480px]">
+      <CurrencySelect {...args} />
+    </div>
+  ),
 } as Meta<typeof CurrencySelect>
 
 type Story = StoryObj<typeof CurrencySelect>

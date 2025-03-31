@@ -14,7 +14,7 @@ export default {
     layout: 'centered',
   },
   render: ({ ...args }) => (
-    <div className="w-[460px] bg-gradient-to-b from-gray-950/0 to-gray-950/70 border border-white border-solid">
+    <div className="w-[460px] bg-gradient-to-b from-gray-950/0 to-gray-950/70">
       <UserTransactionCard {...args} />
     </div>
   ),

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import '../../../styles/globals.css'
 import { zeroAddress } from 'viem'
@@ -10,6 +11,11 @@ export default {
   parameters: {
     layout: 'centered',
   },
+  render: ({ ...args }) => (
+    <div className="text-white">
+      <MintFuturesAssetForm {...args} />
+    </div>
+  ),
 } as Meta<typeof MintFuturesAssetForm>
 
 type Story = StoryObj<typeof MintFuturesAssetForm>
@@ -38,9 +44,24 @@ export const Default: Story = {
       maxLTV: 700000n,
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
-      minDebt: 10n * 10n ** 6n,
+      minDebt: 10000000n,
       settlePrice: 315234,
     },
+    maxBorrowAmount: 100000000000n,
+    borrowLTV: 12,
+    collateralValue: '1.2',
+    setCollateralValue: () => {},
+    borrowValue: '1.2',
+    setBorrowValue: () => {},
+    balances: {
+      [zeroAddress]: 1000000000000000000n,
+      '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795': 100000000n,
+    },
+    prices: {
+      [zeroAddress]: 210,
+      '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795': 1.0001,
+    },
+    liquidationPrice: 25400,
     actionButtonProps: {
       disabled: false,
       onClick: () => {},

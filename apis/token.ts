@@ -51,7 +51,7 @@ async function fetchTotalSupplyInner(
   tokenAddress: `0x${string}`,
 ): Promise<bigint> {
   if (isAddressEqual(tokenAddress, zeroAddress)) {
-    return 120_000_000n * 10n ** 18n // DEV: 120M for ETH
+    return 120_000_000n * 1000000000000000000n // DEV: 120M for ETH
   }
   const publicClient = createPublicClient({
     chain: supportChains.find((chain) => chain.id === chainId),

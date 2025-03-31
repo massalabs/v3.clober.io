@@ -4,7 +4,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import '../styles/globals.css'
 import Footer from './footer'
 export default {
-  title: 'Footer',
+  title: 'Common/Footer',
   component: Footer,
   parameters: {
     layout: 'centered',

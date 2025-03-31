@@ -23,6 +23,7 @@ export const Default: Story = {
       query: {
         mode: 'borrow',
       },
+      pathname: '/dashboard',
     },
     selectedMode: 'deposit',
   },

@@ -4,7 +4,7 @@ import '../../styles/globals.css'
 import CheckIcon from './check-icon'
 
 export default {
-  title: 'CheckIcon',
+  title: 'Icon/CheckIcon',
   component: CheckIcon,
   parameters: {
     layout: 'centered',

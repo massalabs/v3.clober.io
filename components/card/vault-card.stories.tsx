@@ -5,7 +5,7 @@ import { base } from 'viem/chains'
 import { VaultCard } from './vault-card'
 
 export default {
-  title: 'VaultCard',
+  title: 'Card/VaultCard',
   component: VaultCard,
   parameters: {
     layout: 'centered',

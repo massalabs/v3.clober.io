@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import '../../styles/globals.css'
 import { SlippageToggle } from './slippage-toggle'
 export default {
-  title: 'SlippageToggle',
+  title: 'Toggle/SlippageToggle',
   component: SlippageToggle,
   parameters: {
     layout: 'centered',

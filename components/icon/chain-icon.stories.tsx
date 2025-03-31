@@ -7,7 +7,7 @@ import ChainIcon from './chain-icon'
 import '../../styles/globals.css'
 
 export default {
-  title: 'ChainIcon',
+  title: 'Icon/ChainIcon',
   component: ChainIcon,
   parameters: {
     layout: 'centered',

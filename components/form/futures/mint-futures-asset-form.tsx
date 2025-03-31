@@ -77,7 +77,7 @@ export const MintFuturesAssetForm = ({
               </div>
               <div className="ml-auto text-sm sm:text-base">
                 {formatDollarValue(
-                  10n ** 18n,
+                  1000000000000000000n,
                   18,
                   prices[asset.currency.address] ?? 0,
                 )}

@@ -5,7 +5,7 @@ import '../../styles/globals.css'
 import CurrencyAmountInput from './currency-amount-input'
 
 export default {
-  title: 'CurrencyAmountInput',
+  title: 'Input/CurrencyAmountInput',
   component: CurrencyAmountInput,
   parameters: {
     layout: 'centered',

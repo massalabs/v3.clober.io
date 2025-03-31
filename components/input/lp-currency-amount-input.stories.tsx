@@ -5,7 +5,7 @@ import '../../styles/globals.css'
 import LpCurrencyAmountInput from './lp-currency-amount-input'
 
 export default {
-  title: 'LpCurrencyAmountInput',
+  title: 'Input/LpCurrencyAmountInput',
   component: LpCurrencyAmountInput,
   parameters: {
     layout: 'centered',

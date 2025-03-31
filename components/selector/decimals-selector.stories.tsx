@@ -5,7 +5,7 @@ import '../../styles/globals.css'
 import DecimalsSelector from './decimals-selector'
 
 export default {
-  title: 'DecimalsSelector',
+  title: 'Selector/DecimalsSelector',
   component: DecimalsSelector,
   parameters: {
     layout: 'centered',

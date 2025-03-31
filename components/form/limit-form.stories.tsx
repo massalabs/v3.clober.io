@@ -7,13 +7,13 @@ import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
 import { LimitForm } from './limit-form'
 
 export default {
-  title: 'LimitForm',
+  title: 'Form/LimitForm',
   component: LimitForm,
   parameters: {
     layout: 'centered',
   },
   render: ({ ...args }) => (
-    <div className="flex flex-col rounded-2xl bg-gray-900 p-6 w-full sm:w-[480px] lg:h-[480px]">
+    <div className="flex flex-col rounded-2xl bg-gray-900 p-6 w-full sm:w-[480px] h-[616px]">
       <LimitForm {...args} />
     </div>
   ),
@@ -42,6 +42,11 @@ export const Default: Story = {
       isLoading: false,
       action: async () => {},
     },
+    actionButtonProps: {
+      onClick: () => {},
+      disabled: false,
+      text: 'Limit Order',
+    },
   },
 }
 
@@ -68,6 +73,11 @@ export const Selected: Story = {
       isLoading: false,
       action: async () => {},
     },
+    actionButtonProps: {
+      onClick: () => {},
+      disabled: false,
+      text: 'Limit Order',
+    },
   },
 }
 
@@ -91,6 +101,11 @@ export const IsFetchingPrice: Story = {
     setMarketRateAction: {
       isLoading: true,
       action: async () => {},
+    },
+    actionButtonProps: {
+      onClick: () => {},
+      disabled: false,
+      text: 'Limit Order',
     },
   },
 }

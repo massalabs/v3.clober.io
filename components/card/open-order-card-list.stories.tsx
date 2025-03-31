@@ -10,7 +10,7 @@ import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
 import { OpenOrderCardList } from './open-order-card-list'
 
 export default {
-  title: 'OpenOrderCardList',
+  title: 'Card/OpenOrderCardList',
   component: OpenOrderCardList,
   parameters: {
     layout: 'centered',
@@ -60,6 +60,7 @@ const bidOpenOrder = {
 export const Bid: Story = {
   args: {
     chainId: arbitrumSepolia.id,
+    userAddress: zeroAddress,
     openOrders: [bidOpenOrder, bidOpenOrder] as OpenOrder[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     claims: async (_) => {},
@@ -104,6 +105,7 @@ const askOpenOrder = {
 export const Ask: Story = {
   args: {
     chainId: arbitrumSepolia.id,
+    userAddress: zeroAddress,
     openOrders: [askOpenOrder, askOpenOrder] as OpenOrder[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     claims: async (_) => {},

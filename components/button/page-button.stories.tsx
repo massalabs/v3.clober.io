@@ -7,7 +7,7 @@ import { LimitPageSvg } from '../svg/limit-page-svg'
 import { PageButton } from './page-button'
 
 export default {
-  title: 'PageButton',
+  title: 'Button/PageButton',
   component: PageButton,
   parameters: {
     layout: 'centered',

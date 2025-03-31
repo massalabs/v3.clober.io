@@ -9,7 +9,7 @@ import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
 import { OpenOrderCard } from './open-order-card'
 
 export default {
-  title: 'OpenOrderCard',
+  title: 'Card/OpenOrderCard',
   component: OpenOrderCard,
   parameters: {
     layout: 'centered',

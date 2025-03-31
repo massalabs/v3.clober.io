@@ -5,7 +5,7 @@ import '../../../styles/globals.css'
 import { RemoveLiquidityForm } from './remove-liquidity-form'
 
 export default {
-  title: 'RemoveLiquidityForm',
+  title: 'Form/RemoveLiquidityForm',
   component: RemoveLiquidityForm,
   parameters: {
     layout: 'centered',

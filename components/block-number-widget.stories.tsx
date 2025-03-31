@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import '../styles/globals.css'
 import { BlockNumberWidget } from './block-number-widget'
 export default {
-  title: 'BlockNumberWidget',
+  title: 'Common/BlockNumberWidget',
   component: BlockNumberWidget,
   parameters: {
     layout: 'centered',

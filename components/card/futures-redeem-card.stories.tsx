@@ -1,3 +1,4 @@
+import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
@@ -5,11 +6,16 @@ import { zeroAddress } from 'viem'
 import { FuturesRedeemCard } from './futures-redeem-card'
 
 export default {
-  title: 'FuturesRedeemCard',
+  title: 'Card/FuturesRedeemCard',
   component: FuturesRedeemCard,
   parameters: {
     layout: 'centered',
   },
+  render: ({ ...args }) => (
+    <div className="text-white">
+      <FuturesRedeemCard {...args} />
+    </div>
+  ),
 } as Meta<typeof FuturesRedeemCard>
 
 type Story = StoryObj<typeof FuturesRedeemCard>
@@ -39,13 +45,24 @@ export const Default: Story = {
       maxLTV: 700000n,
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
-      minDebt: 10n * 10n ** 6n,
+      minDebt: 10000000n,
       settlePrice: 254000,
     },
     prices: {
       [zeroAddress]: 240.1,
       ['0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795']: 1.0001,
     },
-    balance: 100n * 10n ** 18n,
+    balance: 100000000000000000000n,
+    redeemableCollateral: 10000000n,
+    actionButtonProps: {
+      onClick: () => {},
+      disabled: false,
+      text: 'Redeem',
+    },
   },
+}
+
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString()
 }

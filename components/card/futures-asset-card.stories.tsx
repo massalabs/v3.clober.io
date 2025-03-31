@@ -6,7 +6,7 @@ import { zeroAddress } from 'viem'
 import { FuturesAssetCard } from './futures-asset-card'
 
 export default {
-  title: 'FuturesAssetCard',
+  title: 'Card/FuturesAssetCard',
   component: FuturesAssetCard,
   parameters: {
     layout: 'centered',
@@ -41,8 +41,13 @@ export const Default: Story = {
       maxLTV: 700000n,
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
-      minDebt: 10n * 10n ** 6n,
+      minDebt: 10000000n,
       settlePrice: 254000,
     },
   },
+}
+
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString()
 }
