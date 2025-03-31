@@ -42,6 +42,24 @@ export const calculateMaxLoanableAmount = (
     : 0n
 }
 
+export const calculateMinCollateralAmount = (
+  loanCurrency: Currency,
+  loanAssetPrice: bigint,
+  collateral: Currency,
+  collateralPrice: bigint,
+  loanAmount: bigint,
+  maxLTV: bigint,
+  ltvPrecision: bigint,
+): bigint => {
+  return loanAssetPrice && collateralPrice
+    ? (loanAmount *
+        ltvPrecision *
+        loanAssetPrice *
+        10n ** BigInt(18 - loanCurrency.decimals)) /
+        (maxLTV * collateralPrice * 10n ** BigInt(18 - collateral.decimals))
+    : 0n
+}
+
 export const calculateLtv = (
   debtCurrency: Currency,
   debtCurrencyPrice: number,

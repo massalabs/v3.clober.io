@@ -16,6 +16,7 @@ import { useFuturesContractContext } from '../../contexts/futures/futures-contra
 import { WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
 
 import { FuturesPositionAdjustModalContainer } from './futures-position-adjust-modal-container'
+import { FuturesPositionEditCollateralModalContainer } from './futures-position-edit-collateral-modal-container'
 
 export const FuturesContainer = () => {
   const { selectedChain } = useChainContext()
@@ -258,7 +259,14 @@ export const FuturesContainer = () => {
         <></>
       )}
 
-      {editCollateralPosition ? <div>TBD</div> : <></>}
+      {editCollateralPosition ? (
+        <FuturesPositionEditCollateralModalContainer
+          userPosition={editCollateralPosition}
+          onClose={() => setEditCollateralPosition(null)}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   )
 }
