@@ -7,11 +7,11 @@ import {
   getExpirationDateTextColor,
 } from '../../utils/date'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
-import { UserPosition } from '../../model/future/user-position'
+import { UserPosition } from '../../model/futures/user-position'
 import { toCommaSeparated } from '../../utils/number'
 import { EditSvg } from '../svg/edit-svg'
 
-export const FutureAssetShortPositionCard = ({
+export const FuturesAssetShortPositionCard = ({
   position,
   loanAssetPrice,
   onEditCollateral,

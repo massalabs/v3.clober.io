@@ -7,12 +7,12 @@ import {
   getExpirationDateTextColor,
 } from '../../utils/date'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
-import { Asset } from '../../model/future/asset'
+import { Asset } from '../../model/futures/asset'
 import { Prices } from '../../model/prices'
 import { ActionButtonProps } from '../button/action-button'
 import { toCommaSeparated } from '../../utils/number'
 
-export const FutureRedeemCard = ({
+export const FuturesRedeemCard = ({
   asset,
   balance,
   prices,

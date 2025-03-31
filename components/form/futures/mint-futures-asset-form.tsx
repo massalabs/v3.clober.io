@@ -6,10 +6,10 @@ import CurrencyAmountInput from '../../input/currency-amount-input'
 import { getLTVTextColor } from '../../../utils/ltv'
 import { Balances } from '../../../model/balances'
 import { Prices } from '../../../model/prices'
-import { Asset } from '../../../model/future/asset'
+import { Asset } from '../../../model/futures/asset'
 import { formatDollarValue } from '../../../utils/bigint'
 
-export const MintFutureAssetForm = ({
+export const MintFuturesAssetForm = ({
   asset,
   maxBorrowAmount,
   borrowLTV,

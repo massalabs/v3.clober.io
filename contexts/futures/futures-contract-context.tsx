@@ -16,18 +16,18 @@ import {
 } from 'viem'
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js'
 
-import { Asset } from '../../model/future/asset'
+import { Asset } from '../../model/futures/asset'
 import { useCurrencyContext } from '../currency-context'
 import { Confirmation, useTransactionContext } from '../transaction-context'
 import { WETH } from '../../constants/currency'
 import { maxApprove } from '../../utils/approve20'
-import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/future/contracts'
+import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/futures/contracts'
 import { useChainContext } from '../chain-context'
 import { formatUnits } from '../../utils/bigint'
-import { VAULT_MANAGER_ABI } from '../../abis/future/vault-manager.json-abi'
+import { VAULT_MANAGER_ABI } from '../../abis/futures/vault-manager.json-abi'
 import { supportChains } from '../../constants/chain'
-import { PYTH_ABI } from '../../abis/future/pyth-abi'
-import { UserPosition } from '../../model/future/user-position'
+import { PYTH_ABI } from '../../abis/futures/pyth-abi'
+import { UserPosition } from '../../model/futures/user-position'
 import { buildTransaction } from '../../utils/build-transaction'
 import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-urls'
@@ -35,9 +35,9 @@ import { currentTimestampInSeconds } from '../../utils/date'
 import { Currency } from '../../model/currency'
 import { deduplicateCurrencies } from '../../utils/currency'
 
-import { useFutureContext } from './future-context'
+import { useFuturesContext } from './futures-context'
 
-type FutureContractContext = {
+type FuturesContractContext = {
   isMarketClose: (asset: Asset, debtAmount: bigint) => Promise<boolean>
   borrow: (
     asset: Asset,
@@ -56,7 +56,7 @@ type FutureContractContext = {
   pendingPositionCurrencies: Currency[]
 }
 
-const Context = React.createContext<FutureContractContext>({
+const Context = React.createContext<FuturesContractContext>({
   borrow: () => Promise.resolve(undefined),
   isMarketClose: () => Promise.resolve(false),
   repay: () => Promise.resolve(undefined),
@@ -70,7 +70,7 @@ const Context = React.createContext<FutureContractContext>({
 export const LOCAL_STORAGE_PENDING_POSITIONS_KEY = (address: `0x${string}`) =>
   `pending-futures-positions-currencies-for-${address}`
 
-export const FutureContractProvider = ({
+export const FuturesContractProvider = ({
   children,
 }: React.PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
@@ -84,7 +84,7 @@ export const FutureContractProvider = ({
     dequeuePendingTransaction,
     latestSubgraphBlockNumber,
   } = useTransactionContext()
-  const { positions } = useFutureContext()
+  const { positions } = useFuturesContext()
   const { selectedChain } = useChainContext()
   const { address: userAddress } = useAccount()
   const { allowances, prices, balances } = useCurrencyContext()
@@ -445,7 +445,7 @@ export const FutureContractProvider = ({
         console.error(e)
       } finally {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
           queryClient.invalidateQueries({ queryKey: ['allowances'] }),
         ])
@@ -546,7 +546,7 @@ export const FutureContractProvider = ({
         console.error(e)
       } finally {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
         ])
         setConfirmation(undefined)
@@ -695,7 +695,7 @@ export const FutureContractProvider = ({
         console.error(e)
       } finally {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
         ])
         setConfirmation(undefined)
@@ -800,7 +800,7 @@ export const FutureContractProvider = ({
         console.error(e)
       } finally {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['future-assets'] }),
+          queryClient.invalidateQueries({ queryKey: ['futures-assets'] }),
         ])
         setConfirmation(undefined)
       }
@@ -877,7 +877,7 @@ export const FutureContractProvider = ({
         console.error(e)
       } finally {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
         ])
         setConfirmation(undefined)
@@ -971,7 +971,7 @@ export const FutureContractProvider = ({
         console.error(e)
       } finally {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['future-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
         ])
         setConfirmation(undefined)
@@ -1007,5 +1007,5 @@ export const FutureContractProvider = ({
   )
 }
 
-export const useFutureContractContext = () =>
-  React.useContext(Context) as FutureContractContext
+export const useFuturesContractContext = () =>
+  React.useContext(Context) as FuturesContractContext

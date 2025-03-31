@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import { Asset } from '../model/future/asset'
+import { Asset } from '../model/futures/asset'
 import { Currency } from '../model/currency'
 
 import { dollarValue } from './bigint'

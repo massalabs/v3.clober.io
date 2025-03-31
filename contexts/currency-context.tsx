@@ -15,7 +15,7 @@ import { AGGREGATORS } from '../constants/aggregators'
 import { Allowances } from '../model/allowances'
 import { wagmiConfig } from '../constants/chain'
 import { deduplicateCurrencies } from '../utils/currency'
-import { FUTURES_CONTRACT_ADDRESSES } from '../constants/future/contracts'
+import { FUTURES_CONTRACT_ADDRESSES } from '../constants/futures/contracts'
 import { fetchPricesFromPyth } from '../apis/price'
 import { PRICE_FEED_ID_LIST } from '../constants/currency'
 

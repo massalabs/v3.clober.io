@@ -1,4 +1,4 @@
-import { MARKET_HOURS } from '../constants/future/asset'
+import { MARKET_HOURS } from '../constants/futures/asset'
 
 export const SECONDS_IN_DAY = 60 * 60 * 24
 

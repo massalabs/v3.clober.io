@@ -3,8 +3,8 @@ import { parseUnits } from 'viem'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { Asset } from '../../model/future/asset'
-import { MintFutureAssetForm } from '../../components/form/future/mint-future-asset-form'
+import { Asset } from '../../model/futures/asset'
+import { MintFuturesAssetForm } from '../../components/form/futures/mint-futures-asset-form'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import {
   calculateLiquidationPrice,
@@ -12,18 +12,18 @@ import {
   calculateMaxLoanableAmount,
 } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
-import { useFutureContractContext } from '../../contexts/future/future-contract-context'
+import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 import Modal from '../../components/modal/modal'
 import { useChainContext } from '../../contexts/chain-context'
 import { isMarketClose } from '../../utils/date'
 
-export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
+export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
   const router = useRouter()
   const { selectedChain } = useChainContext()
   const [displayMarketClosedModal, setDisplayMarketClosedModal] =
     useState(false)
   const { balances, prices } = useCurrencyContext()
-  const { borrow } = useFutureContractContext()
+  const { borrow } = useFuturesContractContext()
   const [collateralValue, setCollateralValue] = useState('')
   const [borrowValue, setBorrowValue] = useState('')
 
@@ -89,7 +89,7 @@ export const FutureManagerContainer = ({ asset }: { asset: Asset }) => {
       </div>
     </Modal>
   ) : (
-    <MintFutureAssetForm
+    <MintFuturesAssetForm
       asset={asset}
       maxBorrowAmount={maxBorrowAmount}
       borrowLTV={calculateLtv(

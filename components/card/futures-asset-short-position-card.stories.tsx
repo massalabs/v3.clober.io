@@ -2,17 +2,17 @@ import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
 
-import { FutureAssetShortPositionCard } from './future-asset-short-position-card'
+import { FuturesAssetShortPositionCard } from './futures-asset-short-position-card'
 
 export default {
-  title: 'FutureAssetShortPositionCard',
-  component: FutureAssetShortPositionCard,
+  title: 'FuturesAssetShortPositionCard',
+  component: FuturesAssetShortPositionCard,
   parameters: {
     layout: 'centered',
   },
-} as Meta<typeof FutureAssetShortPositionCard>
+} as Meta<typeof FuturesAssetShortPositionCard>
 
-type Story = StoryObj<typeof FutureAssetShortPositionCard>
+type Story = StoryObj<typeof FuturesAssetShortPositionCard>
 
 export const Default: Story = {
   args: {

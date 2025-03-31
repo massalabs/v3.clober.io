@@ -1,19 +1,18 @@
-import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
+import '../../../styles/globals.css'
 import { zeroAddress } from 'viem'
 
-import { FutureRedeemCard } from './future-redeem-card'
+import { MintFuturesAssetForm } from './mint-futures-asset-form'
 
 export default {
-  title: 'FutureRedeemCard',
-  component: FutureRedeemCard,
+  title: 'Form/MintFuturesAssetForm',
+  component: MintFuturesAssetForm,
   parameters: {
     layout: 'centered',
   },
-} as Meta<typeof FutureRedeemCard>
+} as Meta<typeof MintFuturesAssetForm>
 
-type Story = StoryObj<typeof FutureRedeemCard>
-
+type Story = StoryObj<typeof MintFuturesAssetForm>
 export const Default: Story = {
   args: {
     asset: {
@@ -40,12 +39,17 @@ export const Default: Story = {
       liquidationThreshold: 800000n,
       ltvPrecision: 1000000n,
       minDebt: 10n * 10n ** 6n,
-      settlePrice: 254000,
+      settlePrice: 315234,
     },
-    prices: {
-      [zeroAddress]: 240.1,
-      ['0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795']: 1.0001,
+    actionButtonProps: {
+      disabled: false,
+      onClick: () => {},
+      text: 'Borrow',
     },
-    balance: 100n * 10n ** 18n,
   },
+}
+
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString()
 }

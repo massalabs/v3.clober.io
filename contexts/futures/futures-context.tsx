@@ -6,29 +6,29 @@ import { monadTestnet } from 'viem/chains'
 import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
-import { fetchFuturePositions } from '../../apis/future/position'
-import { UserPosition } from '../../model/future/user-position'
-import { fetchFutureAssets } from '../../apis/future/asset'
-import { Asset } from '../../model/future/asset'
+import { fetchFuturePositions } from '../../apis/futures/position'
+import { UserPosition } from '../../model/futures/user-position'
+import { fetchFutureAssets } from '../../apis/futures/asset'
+import { Asset } from '../../model/futures/asset'
 
-type FutureContext = {
+type FuturesContext = {
   assets: Asset[]
   positions: UserPosition[]
 }
 
-const Context = React.createContext<FutureContext>({
+const Context = React.createContext<FuturesContext>({
   assets: [],
   positions: [],
 })
 
-export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { selectedChain, setSelectedChain } = useChainContext()
   const { prices } = useCurrencyContext()
   const { address: userAddress } = useAccount()
   const { setCurrencies, whitelistCurrencies } = useCurrencyContext()
 
   const { data: assets } = useQuery({
-    queryKey: ['future-assets', selectedChain.id],
+    queryKey: ['futures-assets', selectedChain.id],
     queryFn: async () => {
       return fetchFutureAssets(selectedChain.id)
     },
@@ -38,7 +38,7 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }
 
   const { data: positions } = useQuery({
-    queryKey: ['future-positions', userAddress, selectedChain.id],
+    queryKey: ['futures-positions', userAddress, selectedChain.id],
     queryFn: async () => {
       if (!userAddress) {
         return []
@@ -83,4 +83,5 @@ export const FutureProvider = ({ children }: React.PropsWithChildren<{}>) => {
   )
 }
 
-export const useFutureContext = () => React.useContext(Context) as FutureContext
+export const useFuturesContext = () =>
+  React.useContext(Context) as FuturesContext

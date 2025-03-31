@@ -3,13 +3,13 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 import { monadTestnet } from 'viem/chains'
 
 import { Subgraph } from '../../constants/subgraph'
-import { UserPosition } from '../../model/future/user-position'
+import { UserPosition } from '../../model/futures/user-position'
 import { Prices } from '../../model/prices'
 import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
-import { COLLATERALS } from '../../constants/future/collateral'
-import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/future/asset'
-import { FUTURES_SUBGRAPH_ENDPOINTS } from '../../constants/future/subgraph-endpoint'
+import { COLLATERALS } from '../../constants/futures/collateral'
+import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
+import { FUTURES_SUBGRAPH_ENDPOINTS } from '../../constants/futures/subgraph-endpoint'
 
 type ShortPositionDto = {
   id: string

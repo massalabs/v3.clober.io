@@ -5,10 +5,10 @@ import { getAddress } from 'viem'
 import Link from 'next/link'
 
 import { CurrencyIcon } from '../icon/currency-icon'
-import { Asset } from '../../model/future/asset'
+import { Asset } from '../../model/futures/asset'
 import { formatDate } from '../../utils/date'
 
-export const FutureAssetCard = ({
+export const FuturesAssetCard = ({
   chainId,
   asset,
   router,

@@ -4,18 +4,18 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { isAddressEqual } from 'viem'
 
-import { TRADING_VIEW_SYMBOLS } from '../../../constants/future/asset'
+import { TRADING_VIEW_SYMBOLS } from '../../../constants/futures/asset'
 import { useChainContext } from '../../../contexts/chain-context'
-import { FutureManagerContainer } from '../../../containers/future/future-manager-container'
+import { FuturesManagerContainer } from '../../../containers/futures/futures-manager-container'
 import { CurrencyIcon } from '../../../components/icon/currency-icon'
 import BackSvg from '../../../components/svg/back-svg'
 import { TradingViewContainer } from '../../../containers/chart/trading-view-container'
-import { useFutureContext } from '../../../contexts/future/future-context'
+import { useFuturesContext } from '../../../contexts/futures/futures-context'
 
 export default function MintFutureAssetManage() {
   const router = useRouter()
   const { selectedChain } = useChainContext()
-  const { assets } = useFutureContext()
+  const { assets } = useFuturesContext()
   const asset = assets?.find(
     (asset) =>
       router.query.assetKey &&
@@ -49,7 +49,7 @@ export default function MintFutureAssetManage() {
             <TradingViewContainer
               symbol={TRADING_VIEW_SYMBOLS[asset.currency.priceFeedId]}
             />
-            <FutureManagerContainer asset={asset} />
+            <FuturesManagerContainer asset={asset} />
           </div>
         </div>
       </main>

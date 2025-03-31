@@ -213,7 +213,7 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 6,
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/images.png/public',
     },
-    // future assets
+    // futures assets
     {
       address: '0xE9E6ceF9043A64b0284AFe5993Da11c1381bBc72',
       name: 'BTC 2025-04-01',

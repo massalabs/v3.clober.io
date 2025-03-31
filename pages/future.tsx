@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { FutureContainer } from '../containers/future/future-container'
+import { FuturesContainer } from '../containers/futures/futures-container'
 
 export default function Future() {
-  return <FutureContainer />
+  return <FuturesContainer />
 }

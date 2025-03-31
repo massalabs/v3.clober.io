@@ -3,27 +3,27 @@ import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 import { getAddress, parseUnits } from 'viem'
 
-import { FutureAssetCard } from '../../components/card/future-asset-card'
+import { FuturesAssetCard } from '../../components/card/futures-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
-import { UserPosition } from '../../model/future/user-position'
-import { FutureAssetShortPositionCard } from '../../components/card/future-asset-short-position-card'
+import { UserPosition } from '../../model/futures/user-position'
+import { FuturesAssetShortPositionCard } from '../../components/card/futures-asset-short-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { currentTimestampInSeconds } from '../../utils/date'
-import { useFutureContext } from '../../contexts/future/future-context'
-import { FutureRedeemCard } from '../../components/card/future-redeem-card'
+import { useFuturesContext } from '../../contexts/futures/futures-context'
+import { FuturesRedeemCard } from '../../components/card/futures-redeem-card'
 import { formatUnits } from '../../utils/bigint'
-import { useFutureContractContext } from '../../contexts/future/future-contract-context'
-import { WHITE_LISTED_ASSETS } from '../../constants/future/asset'
+import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
+import { WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
 
-import { FuturePositionAdjustModalContainer } from './future-position-adjust-modal-container'
+import { FuturesPositionAdjustModalContainer } from './futures-position-adjust-modal-container'
 
-export const FutureContainer = () => {
+export const FuturesContainer = () => {
   const { selectedChain } = useChainContext()
   const router = useRouter()
   const { settle, close, redeem, pendingPositionCurrencies } =
-    useFutureContractContext()
+    useFuturesContractContext()
   const { prices, balances } = useCurrencyContext()
-  const { assets, positions } = useFutureContext()
+  const { assets, positions } = useFuturesContext()
   const { address: userAddress } = useAccount()
 
   const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>(
@@ -136,7 +136,7 @@ export const FutureContainer = () => {
                     a.currency.symbol.localeCompare(b.currency.symbol),
                   )
                   .map((asset, index) => (
-                    <FutureAssetCard
+                    <FuturesAssetCard
                       chainId={selectedChain.id}
                       key={`mint-${asset.id}-${index}`}
                       asset={asset}
@@ -160,7 +160,7 @@ export const FutureContainer = () => {
                       WHITE_LISTED_ASSETS.includes(asset.currency.address),
                   )
                   .map((asset, index) => (
-                    <FutureRedeemCard
+                    <FuturesRedeemCard
                       key={`redeem-${asset.id}-${index}`}
                       asset={asset}
                       balance={balances[asset.currency.address] ?? 0n}
@@ -205,7 +205,7 @@ export const FutureContainer = () => {
                 .filter((position) => position.averagePrice > 0)
                 .map((position, index) =>
                   position.type === 'short' ? (
-                    <FutureAssetShortPositionCard
+                    <FuturesAssetShortPositionCard
                       key={`${position.type}-${position.asset.id}-${index}`}
                       position={position}
                       loanAssetPrice={
@@ -250,7 +250,7 @@ export const FutureContainer = () => {
       )}
 
       {adjustPosition ? (
-        <FuturePositionAdjustModalContainer
+        <FuturesPositionAdjustModalContainer
           userPosition={adjustPosition}
           onClose={() => setAdjustPosition(null)}
         />

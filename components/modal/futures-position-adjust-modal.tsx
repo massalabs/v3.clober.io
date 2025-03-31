@@ -3,13 +3,13 @@ import React from 'react'
 import Modal from '../../components/modal/modal'
 import { getLTVTextColor } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
-import { Asset } from '../../model/future/asset'
+import { Asset } from '../../model/futures/asset'
 import { ArrowSvg } from '../svg/arrow-svg'
 import { ActionButton, ActionButtonProps } from '../button/action-button'
 import Slider from '../svg/slider'
 import { DotSvg } from '../svg/dot-svg'
 
-export const FuturePositionAdjustModal = ({
+export const FuturesPositionAdjustModal = ({
   asset,
   onClose,
   ltv,

@@ -2,16 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
 import Link from 'next/link'
 
-import { FuturePositionAdjustModal } from '../../components/modal/future-position-adjust-modal'
-import { UserPosition } from '../../model/future/user-position'
+import { FuturesPositionAdjustModal } from '../../components/modal/futures-position-adjust-modal'
+import { UserPosition } from '../../model/futures/user-position'
 import { calculateLtv, calculateMaxLoanableAmount } from '../../utils/ltv'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { applyPercent, formatUnits } from '../../utils/bigint'
-import { useFutureContractContext } from '../../contexts/future/future-contract-context'
+import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 import Modal from '../../components/modal/modal'
 import { isMarketClose } from '../../utils/date'
 
-export const FuturePositionAdjustModalContainer = ({
+export const FuturesPositionAdjustModalContainer = ({
   userPosition,
   onClose,
 }: {
@@ -20,7 +20,7 @@ export const FuturePositionAdjustModalContainer = ({
 }) => {
   const [isClose, setIsClose] = useState(false)
   const { prices, balances } = useCurrencyContext()
-  const { borrow, repay, repayAll } = useFutureContractContext()
+  const { borrow, repay, repayAll } = useFuturesContractContext()
 
   const ltv = calculateLtv(
     userPosition.asset.currency,
@@ -118,7 +118,7 @@ export const FuturePositionAdjustModalContainer = ({
       </div>
     </Modal>
   ) : (
-    <FuturePositionAdjustModal
+    <FuturesPositionAdjustModal
       asset={userPosition.asset}
       onClose={onClose}
       ltv={ltv}
@@ -177,7 +177,7 @@ export const FuturePositionAdjustModalContainer = ({
               : debtAmountDelta < 0n &&
                   balances[userPosition.asset.currency.address] <
                     -debtAmountDelta
-                ? 'Not enough future balance'
+                ? 'Not enough futures balance'
                 : newLTV === 0
                   ? 'Close Position'
                   : ltv < newLTV

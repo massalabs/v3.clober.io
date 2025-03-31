@@ -37,8 +37,8 @@ import { SwapContractProvider } from '../contexts/trade/swap-contract-context'
 import { VaultProvider } from '../contexts/vault/vault-context'
 import { VaultContractProvider } from '../contexts/vault/vault-contract-context'
 import { RPC_URL } from '../constants/rpc-urls'
-import { FutureProvider } from '../contexts/future/future-context'
-import { FutureContractProvider } from '../contexts/future/future-contract-context'
+import { FuturesProvider } from '../contexts/futures/futures-context'
+import { FuturesContractProvider } from '../contexts/futures/futures-contract-context'
 
 const config = getDefaultConfig({
   appName: 'Clober',
@@ -94,11 +94,11 @@ const VaultProvidersWrapper = ({ children }: React.PropsWithChildren) => {
   )
 }
 
-const FutureProvidersWrapper = ({ children }: React.PropsWithChildren) => {
+const FuturesProvidersWrapper = ({ children }: React.PropsWithChildren) => {
   return (
-    <FutureProvider>
-      <FutureContractProvider>{children}</FutureContractProvider>
-    </FutureProvider>
+    <FuturesProvider>
+      <FuturesContractProvider>{children}</FuturesContractProvider>
+    </FuturesProvider>
   )
 }
 
@@ -188,13 +188,13 @@ function App({ Component, pageProps }: AppProps) {
                       </div>
                     </VaultProvidersWrapper>
                   ) : router.pathname.includes('/future') ? (
-                    <FutureProvidersWrapper>
+                    <FuturesProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0">
                           <Component {...pageProps} />
                         </div>
                       </div>
-                    </FutureProvidersWrapper>
+                    </FuturesProvidersWrapper>
                   ) : (
                     <TradeProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">

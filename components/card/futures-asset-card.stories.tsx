@@ -3,17 +3,17 @@ import { Meta, StoryObj } from '@storybook/react'
 import { base } from 'viem/chains'
 import { zeroAddress } from 'viem'
 
-import { FutureAssetCard } from './future-asset-card'
+import { FuturesAssetCard } from './futures-asset-card'
 
 export default {
-  title: 'FutureAssetCard',
-  component: FutureAssetCard,
+  title: 'FuturesAssetCard',
+  component: FuturesAssetCard,
   parameters: {
     layout: 'centered',
   },
-} as Meta<typeof FutureAssetCard>
+} as Meta<typeof FuturesAssetCard>
 
-type Story = StoryObj<typeof FutureAssetCard>
+type Story = StoryObj<typeof FuturesAssetCard>
 
 export const Default: Story = {
   args: {
