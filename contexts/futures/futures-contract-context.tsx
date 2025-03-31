@@ -194,7 +194,7 @@ export const FuturesContractProvider = ({
           transaction.type === 'add-collateral' ||
           transaction.type === 'repay' ||
           transaction.type === 'repay-all' ||
-          transaction.type === 'removeCollateral') &&
+          transaction.type === 'remove-collateral') &&
         debtCurrency
       ) {
         dequeuePendingTransaction(transaction.txHash)
