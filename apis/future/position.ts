@@ -1,5 +1,6 @@
 import { getAddress, isAddressEqual } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
+import { monadTestnet } from 'viem/chains'
 
 import { Subgraph } from '../../constants/subgraph'
 import { UserPosition } from '../../model/future/user-position'
@@ -8,6 +9,7 @@ import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
 import { COLLATERALS } from '../../constants/future/collateral'
 import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/future/asset'
+import { FUTURES_SUBGRAPH_ENDPOINTS } from '../../constants/future/subgraph-endpoint'
 
 type ShortPositionDto = {
   id: string
@@ -43,6 +45,9 @@ export const fetchFuturePositions = async (
   userAddress: `0x${string}`,
   price: Prices,
 ): Promise<UserPosition[]> => {
+  if (chainId !== monadTestnet.id) {
+    return []
+  }
   const {
     data: { shortPositions },
   } = await Subgraph.get<{
@@ -50,7 +55,7 @@ export const fetchFuturePositions = async (
       shortPositions: ShortPositionDto[]
     }
   }>(
-    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/clober-future-subgraph-monad-testnet/v1.0.0/gn',
+    FUTURES_SUBGRAPH_ENDPOINTS[chainId]!,
     'getPositions',
     'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV settlePrice liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
     {

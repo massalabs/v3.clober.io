@@ -6,6 +6,7 @@ import { Asset } from '../../model/future/asset'
 import { Subgraph } from '../../constants/subgraph'
 import { COLLATERALS } from '../../constants/future/collateral'
 import { ASSET_ICONS } from '../../constants/future/asset'
+import { FUTURES_SUBGRAPH_ENDPOINTS } from '../../constants/future/subgraph-endpoint'
 
 type AssetDto = {
   id: string
@@ -42,7 +43,7 @@ export const fetchFutureAssets = async (
       assets: AssetDto[]
     }
   }>(
-    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/clober-future-subgraph-monad-testnet/v1.0.0/gn',
+    FUTURES_SUBGRAPH_ENDPOINTS[chainId]!,
     'getAssets',
     'query getAssets { assets { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV liquidationThreshold minDebt settlePrice } }',
     {},
