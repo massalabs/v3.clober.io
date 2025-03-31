@@ -7,7 +7,7 @@ export function Legend({ data }: { data: LegendInfo[] }) {
   return (
     <div
       id="protocolGraphLegend"
-      className="bg-gray-600 absolute pointer-events-none p-2 gap-1.5 rounded-xl border shadow-lg z-50 w-[180px]"
+      className="bg-gray-600 absolute pointer-events-none p-2 gap-1.5 rounded-xl border shadow-lg z-50 w-fit"
     >
       {data
         .map(({ value: display, label, color }) => {
@@ -15,7 +15,7 @@ export function Legend({ data }: { data: LegendInfo[] }) {
             !!display &&
             !BigNumber(display).isZero() && (
               <div
-                className="flex text-xs lg:text-sm px-2 items-center gap-2"
+                className="flex text-xs lg:text-sm px-2 items-center gap-2 text-nowrap"
                 key={label}
               >
                 <div>{label}</div>
