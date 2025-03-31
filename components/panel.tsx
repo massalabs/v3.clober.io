@@ -4,8 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { NextRouter } from 'next/router'
 import { CHAIN_IDS } from '@clober/v2-sdk'
-
-import { monadTestnet } from '../constants/monad-testnet-chain'
+import { monadTestnet } from 'viem/chains'
 
 import { TwitterLogoSvg } from './svg/twitter-logo-svg'
 import { DiscordLogoSvg } from './svg/discord-logo-svg'

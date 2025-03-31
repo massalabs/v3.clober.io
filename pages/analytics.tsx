@@ -3,10 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { UTCTimestamp } from 'lightweight-charts'
 import { getAddress, isAddressEqual } from 'viem'
+import { monadTestnet } from 'viem/chains'
 
 import { HistogramChart } from '../components/chart/histogram-chart'
 import { useChainContext } from '../contexts/chain-context'
-import { monadTestnet } from '../constants/monad-testnet-chain'
 import { useCurrencyContext } from '../contexts/currency-context'
 
 export default function Analytics() {

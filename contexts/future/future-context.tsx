@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
+import { monadTestnet } from 'viem/chains'
 
 import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
 import { fetchFuturePositions } from '../../apis/future/position'
 import { UserPosition } from '../../model/future/user-position'
-import { monadTestnet } from '../../constants/monad-testnet-chain'
 import { fetchFutureAssets } from '../../apis/future/asset'
 import { Asset } from '../../model/future/asset'
 

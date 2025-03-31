@@ -36,7 +36,7 @@
     "reactflow": "^11.9.4",
     "set-interval-async": "^3.0.3",
     "uuid": "^10.0.0",
-    "viem": "^2.23.10",
+    "viem": "^2.24.2",
     "wagmi": "^2.14.13"
   },
   "devDependencies": {

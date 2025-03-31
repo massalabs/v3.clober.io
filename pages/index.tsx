@@ -1,8 +1,8 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { monadTestnet } from 'viem/chains'
 
 import { useChainContext } from '../contexts/chain-context'
-import { monadTestnet } from '../constants/monad-testnet-chain'
 
 export default function Home() {
   const { selectedChain } = useChainContext()

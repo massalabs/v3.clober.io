@@ -1,11 +1,8 @@
 import {
-  createPublicClient,
   encodeFunctionData,
   getAddress,
-  http,
   isAddressEqual,
   parseUnits,
-  PublicClient,
   zeroAddress,
 } from 'viem'
 import {
@@ -13,6 +10,7 @@ import {
   getSubgraphEndpoint,
   marketOrder,
 } from '@clober/v2-sdk'
+import { monadTestnet } from 'viem/chains'
 
 import { Currency } from '../currency'
 import { Prices } from '../prices'
@@ -23,7 +21,6 @@ import { WETH } from '../../constants/currency'
 import { WETH_ABI } from '../../abis/weth-abi'
 import { Chain } from '../chain'
 import { Subgraph } from '../../constants/subgraph'
-import { monadTestnet } from '../../constants/monad-testnet-chain'
 
 import { Aggregator } from './index'
 
@@ -35,17 +32,12 @@ export class CloberV2Aggregator implements Aggregator {
   public readonly chain: Chain
   public readonly weth: `0x${string}`
 
-  private publicClient: PublicClient
   private defaultGasLimit = 500_000n
 
   constructor(contract: `0x${string}`, chain: Chain) {
     this.contract = contract
     this.chain = chain
     this.weth = WETH[chain.id].address
-    this.publicClient = createPublicClient({
-      chain,
-      transport: http(RPC_URL[chain.id]),
-    })
   }
 
   public async currencies(): Promise<Currency[]> {

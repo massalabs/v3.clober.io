@@ -1,11 +1,10 @@
-import { base } from 'viem/chains'
+import { base, monadTestnet } from 'viem/chains'
 import { createConfig, http } from 'wagmi'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Chain } from '../model/chain'
 
 import { RPC_URL } from './rpc-urls'
-import { monadTestnet } from './monad-testnet-chain'
 
 export const DEFAULT_CHAIN_ID = base.id
 

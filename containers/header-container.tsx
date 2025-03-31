@@ -7,6 +7,7 @@ import {
   useChainModal,
   useConnectModal,
 } from '@rainbow-me/rainbowkit'
+import { monadTestnet } from 'viem/chains'
 
 import { useChainContext } from '../contexts/chain-context'
 import ChainSelector from '../components/selector/chain-selector'
@@ -20,7 +21,6 @@ import { SwapPageSvg } from '../components/svg/swap-page-svg'
 import { VaultPageSvg } from '../components/svg/vault-page-svg'
 import { GithubLogoSvg } from '../components/svg/github-logo-svg'
 import { LimitPageSvg } from '../components/svg/limit-page-svg'
-import { monadTestnet } from '../constants/monad-testnet-chain'
 import { ConnectButton } from '../components/button/connect-button'
 import { UserButton } from '../components/button/user-button'
 import { WrongNetworkButton } from '../components/button/wrong-network-button'

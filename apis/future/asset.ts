@@ -1,11 +1,11 @@
 import { getAddress, isAddressEqual } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
+import { monadTestnet } from 'viem/chains'
 
 import { Asset } from '../../model/future/asset'
 import { Subgraph } from '../../constants/subgraph'
 import { COLLATERALS } from '../../constants/future/collateral'
 import { ASSET_ICONS } from '../../constants/future/asset'
-import { monadTestnet } from '../../constants/monad-testnet-chain'
 
 type AssetDto = {
   id: string
