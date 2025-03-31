@@ -7,10 +7,12 @@ export const isMarketClose = (assetId: string): boolean => {
     return false
   }
   const now = currentTimestampInSeconds()
-  const utcHours = new Date(now * 1000).getUTCHours()
+  const utcHoursMinutes =
+    new Date(now * 1000).getUTCHours() * 100 +
+    new Date(now * 1000).getUTCMinutes()
   return !(
-    MARKET_HOURS[assetId].open <= utcHours &&
-    utcHours < MARKET_HOURS[assetId].close
+    MARKET_HOURS[assetId].open <= utcHoursMinutes &&
+    utcHoursMinutes < MARKET_HOURS[assetId].close
   )
 }
 
