@@ -43,7 +43,7 @@ type ShortPositionDto = {
 export const fetchFuturePositions = async (
   chainId: CHAIN_IDS,
   userAddress: `0x${string}`,
-  price: Prices,
+  prices: Prices,
 ): Promise<UserPosition[]> => {
   if (chainId !== monadTestnet.id) {
     return []
@@ -106,9 +106,9 @@ export const fetchFuturePositions = async (
         debtAmount: BigInt(position.debtAmount),
         liquidationPrice: calculateLiquidationPrice(
           debtCurrency,
-          price[debtCurrency.address],
+          prices[debtCurrency.address],
           collateral,
-          price[collateral.address],
+          prices[collateral.address],
           BigInt(position.debtAmount),
           BigInt(position.collateralAmount),
           BigInt(position.asset.liquidationThreshold),
@@ -116,21 +116,21 @@ export const fetchFuturePositions = async (
         ),
         ltv: calculateLtv(
           debtCurrency,
-          price[debtCurrency.address],
+          prices[debtCurrency.address],
           BigInt(position.debtAmount),
           collateral,
-          price[collateral.address],
+          prices[collateral.address],
           BigInt(position.collateralAmount),
         ),
         averagePrice,
-        pnl: averagePrice / price[debtCurrency.address],
-        profit: debtAmountDB * (averagePrice - price[debtCurrency.address]),
+        pnl: averagePrice / prices[debtCurrency.address],
+        profit: debtAmountDB * (averagePrice - prices[debtCurrency.address]),
       }
     }),
   ].filter(
     (position) =>
       position &&
-      price[position.asset.currency.address] > 0 &&
+      prices[position.asset.currency.address] > 0 &&
       WHITE_LISTED_ASSETS.includes(position.asset.currency.address),
   ) as UserPosition[]
 }
