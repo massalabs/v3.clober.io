@@ -1,4 +1,5 @@
 import { getAddress, isAddressEqual, zeroAddress } from 'viem'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Chain } from '../chain'
 import { Currency } from '../currency'
@@ -155,7 +156,7 @@ export class MagpieAggregator implements Aggregator {
     }
   }
 
-  private getChainName(chainId: number): string {
+  private getChainName(chainId: CHAIN_IDS): string {
     const chainMap: { [key: number]: string } = {
       1: 'ethereum',
       56: 'bsc',

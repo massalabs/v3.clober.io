@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { TokenInfo } from '../model/token-info'
 
@@ -7,7 +8,7 @@ export async function fetchTokenInfo({
   base,
   quote,
 }: {
-  chainId: number
+  chainId: CHAIN_IDS
   base: `0x${string}`
   quote: `0x${string}`
 }): Promise<TokenInfo | null> {

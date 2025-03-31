@@ -5,11 +5,12 @@ import {
   isAddressEqual,
   zeroAddress,
 } from 'viem'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { findSupportChain, supportChains } from '../constants/chain'
 import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { Currency } from '../model/currency'
-import { ETH, WETH } from '../constants/currency'
+import { WETH } from '../constants/currency'
 import { Chain } from '../model/chain'
 import { fetchApi } from '../apis/utils'
 import { RPC_URL } from '../constants/rpc-urls'
@@ -28,7 +29,7 @@ export const QUERY_PARAM_OUTPUT_CURRENCY_KEY = 'outputCurrency'
 const currencyCache: {
   [key: string]: Currency[]
 } = {}
-const getCurrencyCacheKey = (chainId: number, name: string) =>
+const getCurrencyCacheKey = (chainId: CHAIN_IDS, name: string) =>
   `${chainId}-${name.toLowerCase()}`
 
 let fetchCurrencyJobId: NodeJS.Timeout | null = null
@@ -47,11 +48,15 @@ export const deduplicateCurrencies = (currencies: Currency[]) => {
 }
 
 export const fetchCurrency = async (
-  chainId: number,
+  chainId: CHAIN_IDS,
   address: `0x${string}`,
 ): Promise<Currency | undefined> => {
   if (isAddressEqual(address, zeroAddress)) {
-    return ETH
+    const chain = findSupportChain(chainId)
+    if (!chain) {
+      return undefined
+    }
+    return { ...chain.nativeCurrency, address: zeroAddress }
   }
 
   const publicClient = createPublicClient({
@@ -91,7 +96,7 @@ export const fetchCurrency = async (
 }
 
 export const fetchCurrenciesByName = async (
-  chainId: number,
+  chainId: CHAIN_IDS,
   name: string,
 ): Promise<Currency[]> => {
   if (fetchCurrencyJobId) {
@@ -112,7 +117,7 @@ export const fetchCurrenciesByName = async (
 }
 
 export const fetchCurrencyByNameImpl = async (
-  chainId: number,
+  chainId: CHAIN_IDS,
   name: string,
 ): Promise<Currency[]> => {
   const chain = findSupportChain(chainId)

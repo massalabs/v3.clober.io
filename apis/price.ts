@@ -1,4 +1,4 @@
-import { getQuoteToken } from '@clober/v2-sdk'
+import { CHAIN_IDS, getQuoteToken } from '@clober/v2-sdk'
 import { getAddress, isAddressEqual, parseUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
@@ -12,7 +12,7 @@ import { fetchQuotes } from './swap/quotes'
 import { fetchFutureAssets } from './future/asset'
 
 export const fetchPrice = async (
-  chainId: number,
+  chainId: CHAIN_IDS,
   currency0: Currency,
   currency1: Currency,
 ): Promise<BigNumber> => {
@@ -44,7 +44,7 @@ export const fetchPrice = async (
 }
 
 export const fetchPythPrice = async (
-  chainId: number,
+  chainId: CHAIN_IDS,
   extraPriceFeedIdList: {
     priceFeedId: string
     address: string

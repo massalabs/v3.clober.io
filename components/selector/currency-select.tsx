@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { getAddress, isAddress, isAddressEqual } from 'viem'
 import Image from 'next/image'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Currency } from '../../model/currency'
 import { LeftBracketAngleSvg } from '../svg/left-bracket-angle-svg'
@@ -26,7 +27,7 @@ const CurrencySelect = ({
   onCurrencySelect,
   defaultBlacklistedCurrency,
 }: {
-  chainId: number
+  chainId: CHAIN_IDS
   currencies: Currency[]
   balances: Balances
   prices: Prices

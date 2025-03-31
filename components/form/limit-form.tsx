@@ -1,6 +1,11 @@
 import React from 'react'
 import { isAddressEqual } from 'viem'
-import { getMarketPrice, getPriceNeighborhood, Market } from '@clober/v2-sdk'
+import {
+  CHAIN_IDS,
+  getMarketPrice,
+  getPriceNeighborhood,
+  Market,
+} from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 
 import NumberInput from '../input/number-input'
@@ -49,7 +54,7 @@ export const LimitForm = ({
   closeLimitFormAction,
   actionButtonProps,
 }: {
-  chainId: number
+  chainId: CHAIN_IDS
   currencies: Currency[]
   setCurrencies: (currencies: Currency[]) => void
   balances: Balances

@@ -1,5 +1,6 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Currency } from '../../model/currency'
 import { CurrencyIcon } from '../icon/currency-icon'
@@ -13,7 +14,7 @@ const InspectCurrencyModal = ({
   onCurrencySelect,
   setInspectingCurrency,
 }: {
-  chainId: number
+  chainId: CHAIN_IDS
   currency: Currency | undefined
   onCurrencySelect: (currency: Currency) => void
   setInspectingCurrency: (currency: Currency | undefined) => void

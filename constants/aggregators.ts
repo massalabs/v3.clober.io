@@ -10,7 +10,7 @@ import { CloberV2Aggregator } from '../model/aggregator/clober-v2'
 import { findSupportChain } from './chain'
 
 export const AGGREGATORS: {
-  [chain in number]: Aggregator[]
+  [chain in CHAIN_IDS]: Aggregator[]
 } = {
   [CHAIN_IDS.BASE]: [
     new OdosAggregator(

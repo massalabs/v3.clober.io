@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { isAddressEqual, parseUnits } from 'viem'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import CurrencyAmountInput from '../input/currency-amount-input'
 import { Currency } from '../../model/currency'
@@ -40,7 +41,7 @@ export const SwapForm = ({
   closeSwapFormAction,
   actionButtonProps,
 }: {
-  chainId: number
+  chainId: CHAIN_IDS
   currencies: Currency[]
   setCurrencies: (currencies: Currency[]) => void
   balances: Balances

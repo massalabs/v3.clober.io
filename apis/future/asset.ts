@@ -1,4 +1,5 @@
 import { getAddress } from 'viem'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Asset } from '../../model/future/asset'
 import { Subgraph } from '../../constants/subgraph'
@@ -27,7 +28,9 @@ type AssetDto = {
   settlePrice: string
 }
 
-export const fetchFutureAssets = async (chainId: number): Promise<Asset[]> => {
+export const fetchFutureAssets = async (
+  chainId: CHAIN_IDS,
+): Promise<Asset[]> => {
   const {
     data: { assets },
   } = await Subgraph.get<{

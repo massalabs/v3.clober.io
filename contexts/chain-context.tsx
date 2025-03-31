@@ -3,6 +3,7 @@ import { useAccount, useDisconnect, useSwitchChain } from 'wagmi'
 import { hexValue } from '@ethersproject/bytes'
 import { SwitchChainErrorType } from '@wagmi/core'
 import { useQueryClient } from '@tanstack/react-query'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Chain } from '../model/chain'
 import {
@@ -37,7 +38,7 @@ export const ChainProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { chainId, connector } = useAccount()
 
   const removeQueryKeys = useCallback(
-    (chainId: number) => {
+    (chainId: CHAIN_IDS) => {
       const queryKeys = queryClient
         .getQueryCache()
         .getAll()

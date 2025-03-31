@@ -27,7 +27,7 @@ export const EXTRA_PRICE_FEED_ID_LIST = [
 ]
 
 export const WETH: {
-  [chain in number]: Currency
+  [chain in CHAIN_IDS]: Currency
 } = {
   [CHAIN_IDS.BASE]: {
     address: '0x4200000000000000000000000000000000000006',
@@ -43,28 +43,26 @@ export const WETH: {
   },
 }
 
-export const ETH: Currency = {
-  address: zeroAddress,
-  name: 'Ethereum',
-  symbol: 'ETH',
-  decimals: 18,
-  icon: 'https://assets.odos.xyz/tokens/ETH.webp',
-}
-
-export const MON: Currency = {
-  address: zeroAddress,
-  name: 'Monad Token',
-  symbol: 'MON',
-  decimals: 18,
-  icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/MON.png/public',
-}
-
 export const WHITELISTED_CURRENCIES: {
-  [chain in number]: Currency[]
+  [chain in CHAIN_IDS]: Currency[]
 } = {
-  [CHAIN_IDS.BASE]: [ETH],
+  [CHAIN_IDS.BASE]: [
+    {
+      address: zeroAddress,
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+      icon: 'https://assets.odos.xyz/tokens/ETH.webp',
+    },
+  ],
   [CHAIN_IDS.MONAD_TESTNET]: [
-    MON,
+    {
+      address: zeroAddress,
+      name: 'Monad Token',
+      symbol: 'MON',
+      decimals: 18,
+      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/MON.png/public',
+    },
     {
       address: '0x836047a99e11f376522b447bffb6e3495dd0637c',
       name: 'Orbiter Wrapped ETH',
@@ -214,7 +212,7 @@ export const WHITELISTED_CURRENCIES: {
 }
 
 export const DEFAULT_INPUT_CURRENCY: {
-  [chain in number]: Currency
+  [chain in CHAIN_IDS]: Currency
 } = {
   [CHAIN_IDS.BASE]: {
     address: '0x4200000000000000000000000000000000000006',
@@ -232,7 +230,7 @@ export const DEFAULT_INPUT_CURRENCY: {
 }
 
 export const DEFAULT_OUTPUT_CURRENCY: {
-  [chain in number]: Currency
+  [chain in CHAIN_IDS]: Currency
 } = {
   [CHAIN_IDS.BASE]: {
     address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',

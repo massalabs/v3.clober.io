@@ -1,7 +1,7 @@
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
 export const COLLATERALS: {
-  [chain in number]: {
+  [chain in CHAIN_IDS]: {
     address: `0x${string}`
     name: string
     symbol: string

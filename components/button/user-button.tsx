@@ -1,5 +1,6 @@
 import React from 'react'
 import { Connector } from 'wagmi'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { textStyles } from '../../themes/text-styles'
 import { formatAddress } from '../../utils/string'
@@ -16,7 +17,7 @@ export const UserButton = ({
 }: {
   address: `0x${string}`
   connector: Connector
-  chainId: number
+  chainId: CHAIN_IDS
   openTransactionHistoryModal: () => void
   shiny?: boolean
 }) => {

@@ -1,5 +1,6 @@
 import { base } from 'viem/chains'
 import { createConfig, http } from 'wagmi'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Chain } from '../model/chain'
 
@@ -18,7 +19,7 @@ export const supportChains: Chain[] = [
 
 export const testnetChainIds: number[] = [monadTestnet.id]
 
-export const findSupportChain = (chainId: number): Chain | undefined =>
+export const findSupportChain = (chainId: CHAIN_IDS): Chain | undefined =>
   supportChains.find((chain) => chain.id === chainId)
 
 export const wagmiConfig = createConfig({

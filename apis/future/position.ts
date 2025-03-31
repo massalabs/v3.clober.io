@@ -1,4 +1,5 @@
 import { getAddress, isAddressEqual } from 'viem'
+import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Subgraph } from '../../constants/subgraph'
 import { UserPosition } from '../../model/future/user-position'
@@ -38,7 +39,7 @@ type ShortPositionDto = {
 }
 
 export const fetchFuturePositions = async (
-  chainId: number,
+  chainId: CHAIN_IDS,
   userAddress: `0x${string}`,
   price: Prices,
 ): Promise<UserPosition[]> => {
