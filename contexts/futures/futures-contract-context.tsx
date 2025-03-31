@@ -57,6 +57,8 @@ type FuturesContractContext = {
     amount: bigint,
     collateralReceived: bigint,
   ) => Promise<Hash | undefined>
+  addCollateral: (asset: Asset, amount: bigint) => Promise<Hash | undefined>
+  removeCollateral: (asset: Asset, amount: bigint) => Promise<Hash | undefined>
   pendingPositionCurrencies: Currency[]
 }
 
@@ -68,6 +70,8 @@ const Context = React.createContext<FuturesContractContext>({
   settle: () => Promise.resolve(undefined),
   close: () => Promise.resolve(undefined),
   redeem: () => Promise.resolve(undefined),
+  addCollateral: () => Promise.resolve(undefined),
+  removeCollateral: () => Promise.resolve(undefined),
   pendingPositionCurrencies: [],
 })
 
@@ -185,11 +189,12 @@ export const FuturesContractProvider = ({
           debtCurrency: Currency
         }
       )?.debtCurrency
-      if (transaction.type === 'borrow' && debtCurrency) {
-        dequeuePendingTransaction(transaction.txHash)
-        dequeuePendingPositionCurrency(debtCurrency)
-      } else if (
-        (transaction.type === 'repay' || transaction.type === 'repay-all') &&
+      if (
+        (transaction.type === 'borrow' ||
+          transaction.type === 'add-collateral' ||
+          transaction.type === 'repay' ||
+          transaction.type === 'repay-all' ||
+          transaction.type === 'removeCollateral') &&
         debtCurrency
       ) {
         dequeuePendingTransaction(transaction.txHash)
@@ -996,6 +1001,215 @@ export const FuturesContractProvider = ({
     ],
   )
 
+  const addCollateral = useCallback(
+    async (asset: Asset, amount: bigint): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      try {
+        const confirmation = {
+          title: `Add Collateral`,
+          body: 'Please confirm in your wallet.',
+          chain: selectedChain,
+          fields: [
+            {
+              currency: asset.collateral,
+              label: asset.collateral.symbol,
+              direction: 'in',
+              value: formatUnits(
+                amount,
+                asset.collateral.decimals,
+                prices[asset.collateral.address] ?? 0,
+              ),
+            },
+          ] as Confirmation['fields'],
+        }
+        setConfirmation(confirmation)
+
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'deposit',
+            abi: VAULT_MANAGER_ABI,
+            args: [
+              asset.currency.address,
+              walletClient.account.address,
+              amount,
+            ],
+          },
+          1_000_000n,
+        )
+        const transactionReceipt = await sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
+            type: 'add-collateral',
+            timestamp: currentTimestampInSeconds(),
+            debtCurrency: asset.currency,
+          } as Transaction)
+          if (transactionReceipt.status === 'success') {
+            queuePendingPositionCurrency(asset.currency)
+          }
+        }
+        return transactionReceipt?.transactionHash
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [
+      disconnectAsync,
+      prices,
+      publicClient,
+      queryClient,
+      queuePendingPositionCurrency,
+      queuePendingTransaction,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
+  const removeCollateral = useCallback(
+    async (asset: Asset, amount: bigint): Promise<Hash | undefined> => {
+      if (!walletClient) {
+        return
+      }
+
+      try {
+        const confirmation = {
+          title: `Remove Collateral`,
+          body: 'Please confirm in your wallet.',
+          chain: selectedChain,
+          fields: [
+            {
+              currency: asset.collateral,
+              label: asset.collateral.symbol,
+              direction: 'out',
+              value: formatUnits(
+                amount,
+                asset.collateral.decimals,
+                prices[asset.collateral.address] ?? 0,
+              ),
+            },
+          ] as Confirmation['fields'],
+        }
+        setConfirmation(confirmation)
+
+        const evmPriceServiceConnection = new EvmPriceServiceConnection(
+          'https://hermes.pyth.network',
+        )
+        const priceFeedUpdateData =
+          await evmPriceServiceConnection.getPriceFeedsUpdateData([
+            asset.currency.priceFeedId,
+            asset.collateral.priceFeedId,
+          ])
+
+        if (priceFeedUpdateData.length === 0) {
+          console.error('Price feed not found')
+          return
+        }
+
+        const fee = await publicClient.readContract({
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          abi: PYTH_ABI,
+          functionName: 'getUpdateFee',
+          args: [priceFeedUpdateData as any],
+        })
+
+        const transaction = await buildTransaction(
+          publicClient,
+          {
+            chain: selectedChain,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            functionName: 'multicall',
+            abi: VAULT_MANAGER_ABI,
+            value: fee,
+            args: [
+              [
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'updateOracle',
+                  args: [
+                    encodeAbiParameters(parseAbiParameters('bytes[]'), [
+                      priceFeedUpdateData as any,
+                    ]),
+                  ],
+                }),
+                encodeFunctionData({
+                  abi: VAULT_MANAGER_ABI,
+                  functionName: 'withdraw',
+                  args: [
+                    asset.currency.address,
+                    walletClient.account.address,
+                    amount,
+                  ],
+                }),
+              ],
+            ],
+          },
+          5_000_000n,
+        )
+        const transactionReceipt = await sendTransaction(
+          selectedChain,
+          walletClient,
+          transaction,
+          disconnectAsync,
+        )
+        if (transactionReceipt) {
+          queuePendingTransaction({
+            ...confirmation,
+            txHash: transactionReceipt.transactionHash,
+            success: transactionReceipt.status === 'success',
+            blockNumber: Number(transactionReceipt.blockNumber),
+            type: 'remove-collateral',
+            timestamp: currentTimestampInSeconds(),
+            debtCurrency: asset.currency,
+          } as Transaction)
+          if (transactionReceipt.status === 'success') {
+            queuePendingPositionCurrency(asset.currency)
+          }
+        }
+        return transactionReceipt?.transactionHash
+      } catch (e) {
+        console.error(e)
+      } finally {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['futures-positions'] }),
+          queryClient.invalidateQueries({ queryKey: ['balances'] }),
+        ])
+        setConfirmation(undefined)
+      }
+    },
+    [
+      disconnectAsync,
+      prices,
+      publicClient,
+      queryClient,
+      queuePendingPositionCurrency,
+      queuePendingTransaction,
+      selectedChain,
+      setConfirmation,
+      walletClient,
+    ],
+  )
+
   return (
     <Context.Provider
       value={{
@@ -1006,6 +1220,8 @@ export const FuturesContractProvider = ({
         settle,
         close,
         redeem,
+        addCollateral,
+        removeCollateral,
         pendingPositionCurrencies,
       }}
     >

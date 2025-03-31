@@ -6,6 +6,7 @@ import { useCurrencyContext } from '../../contexts/currency-context'
 import { calculateLtv, calculateMinCollateralAmount } from '../../utils/ltv'
 import { max } from '../../utils/bigint'
 import { FuturesPositionEditCollateralModal } from '../../components/modal/futures-position-edit-collateral-modal'
+import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 
 export const FuturesPositionEditCollateralModalContainer = ({
   userPosition,
@@ -15,6 +16,7 @@ export const FuturesPositionEditCollateralModalContainer = ({
   onClose: () => void
 }) => {
   const { prices, balances } = useCurrencyContext()
+  const { addCollateral, removeCollateral } = useFuturesContractContext()
 
   const [value, setValue] = useState('')
   const [isWithdrawCollateral, setIsWithdrawCollateral] = useState(false)
@@ -96,9 +98,9 @@ export const FuturesPositionEditCollateralModalContainer = ({
       actionButtonProps={{
         disabled: amount === 0n || amount > availableCollateralAmount,
         onClick: async () => {
-          // isWithdrawCollateral
-          //   ? await removeCollateral(position, amount)
-          //   : await addCollateral(position, amount)
+          isWithdrawCollateral
+            ? await removeCollateral(userPosition.asset, amount)
+            : await addCollateral(userPosition.asset, amount)
           setValue('')
           onClose()
         },
