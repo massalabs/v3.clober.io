@@ -117,7 +117,7 @@ export default function Analytics() {
                     ),
                     TotalUSD: item.volumeSnapshots.reduce(
                       (sum, { amount, address }) =>
-                        sum + prices[address] * amount,
+                        sum + (prices[address] ?? 0) * amount,
                       0,
                     ),
                   },

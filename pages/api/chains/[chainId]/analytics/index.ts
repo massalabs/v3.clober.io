@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
-import { CHAIN_IDS } from '@clober/v2-sdk'
+import { CHAIN_IDS, getSubgraphEndpoint } from '@clober/v2-sdk'
 import { getAddress, isAddressEqual, zeroAddress } from 'viem'
 
 import { Subgraph } from '../../../../../constants/subgraph'
@@ -82,8 +82,7 @@ const getOnChainSnapshot = async ({
     volumeSnapshots: { symbol: string; amount: number }[]
   }[]
 > => {
-  // TODO: Use getSubgraphEndpoint
-  // const endpoint = getSubgraphEndpoint({ chainId: CHAIN_IDS.MONAD_TESTNET })
+  const endpoint = getSubgraphEndpoint({ chainId: CHAIN_IDS.MONAD_TESTNET })
   const {
     data: { snapshots },
   } = await Subgraph.get<{
@@ -104,7 +103,7 @@ const getOnChainSnapshot = async ({
       }[]
     }
   }>(
-    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/v2-core-subgraph-monad-testnet/v1.0.4/gn',
+    endpoint,
     'getOnChainSnapshot',
     '{ snapshots { id transactionCount walletCount volumeSnapshots { token { id name symbol decimals } amount } } }',
     {},
@@ -118,21 +117,23 @@ const getOnChainSnapshot = async ({
           timestamp: Number(snapshot.id),
           transactionCount: Number(snapshot.transactionCount),
           walletCount: Number(snapshot.walletCount),
-          volumeSnapshots: snapshot.volumeSnapshots.map((volumeSnapshot) => ({
-            symbol: isAddressEqual(
-              volumeSnapshot.token.id as `0x${string}`,
-              zeroAddress,
-            )
-              ? nativeCurrency.symbol
-              : volumeSnapshot.token.symbol,
-            amount: Number(
-              formatUnits(
-                BigInt(volumeSnapshot.amount),
-                Number(volumeSnapshot.token.decimals),
+          volumeSnapshots: snapshot.volumeSnapshots
+            .map((volumeSnapshot) => ({
+              symbol: isAddressEqual(
+                volumeSnapshot.token.id as `0x${string}`,
+                zeroAddress,
+              )
+                ? nativeCurrency.symbol
+                : volumeSnapshot.token.symbol,
+              amount: Number(
+                formatUnits(
+                  BigInt(volumeSnapshot.amount),
+                  Number(volumeSnapshot.token.decimals),
+                ),
               ),
-            ),
-            address: getAddress(volumeSnapshot.token.id as `0x${string}`),
-          })),
+              address: getAddress(volumeSnapshot.token.id as `0x${string}`),
+            }))
+            .filter((volumeSnapshot) => volumeSnapshot.amount > 0),
         }))
         .filter((snapshot) => snapshot.volumeSnapshots.length > 0)
     : []
