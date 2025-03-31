@@ -9,7 +9,6 @@ import { Currency } from '../model/currency'
 import { Prices } from '../model/prices'
 
 import { fetchQuotes } from './swap/quotes'
-import { fetchFutureAssets } from './future/asset'
 
 export const fetchPrice = async (
   chainId: CHAIN_IDS,
@@ -43,39 +42,24 @@ export const fetchPrice = async (
   }
 }
 
-export const fetchPythPrice = async (
-  chainId: CHAIN_IDS,
-  extraPriceFeedIdList: {
-    priceFeedId: string
-    address: string
+export const fetchPricesFromPyth = async (
+  priceFeedIdList: {
+    priceFeedId: `0x${string}`
+    address: `0x${string}`
   }[],
 ): Promise<Prices> => {
+  priceFeedIdList = priceFeedIdList.filter(
+    ({ address }, index, self) =>
+      index ===
+      self.findIndex(({ address: _address }) =>
+        isAddressEqual(_address as `0x${string}`, address as `0x${string}`),
+      ),
+  )
+  if (priceFeedIdList.length === 0) {
+    return {} as Prices
+  }
   const pythPriceService = new EvmPriceServiceConnection(
     'https://hermes.pyth.network',
-  )
-  const priceFeedIdList = [
-    ...(await fetchFutureAssets(chainId))
-      .map((asset) => [
-        {
-          priceFeedId: asset.currency.priceFeedId,
-          address: asset.currency.address,
-        },
-        {
-          priceFeedId: asset.collateral.priceFeedId,
-          address: asset.collateral.address,
-        },
-      ])
-      .flat(),
-    ...extraPriceFeedIdList,
-  ].filter(
-    (priceFeedId, index, self) =>
-      index ===
-      self.findIndex((t) =>
-        isAddressEqual(
-          t.address as `0x${string}`,
-          priceFeedId.address as `0x${string}`,
-        ),
-      ),
   )
   const prices: PriceFeed[] | undefined =
     await pythPriceService.getLatestPriceFeeds(

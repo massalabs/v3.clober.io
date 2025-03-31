@@ -3,28 +3,66 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Currency } from '../model/currency'
 
-export const EXTRA_PRICE_FEED_ID_LIST = [
-  {
-    address: '0x836047a99e11f376522b447bffb6e3495dd0637c', // oWETH
-    priceFeedId:
-      '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-  },
-  {
-    address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768', // wWETH
-    priceFeedId:
-      '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-  },
-  {
-    address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37', // WETH
-    priceFeedId:
-      '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-  },
-  {
-    address: '0x88b8E2161DEDC77EF4ab7585569D2415a1C1055D', // USDT
-    priceFeedId:
-      '0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
-  },
-]
+export const PRICE_FEED_ID_LIST: {
+  [chain in CHAIN_IDS]: {
+    priceFeedId: `0x${string}`
+    address: `0x${string}`
+  }[]
+} = {
+  [CHAIN_IDS.BASE]: [],
+  [CHAIN_IDS.MONAD_TESTNET]: [
+    {
+      address: '0x836047a99e11f376522b447bffb6e3495dd0637c', // oWETH
+      priceFeedId:
+        '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+    },
+    {
+      address: '0xA296f47E8Ff895Ed7A092b4a9498bb13C46ac768', // wWETH
+      priceFeedId:
+        '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+    },
+    {
+      address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37', // WETH
+      priceFeedId:
+        '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+    },
+    {
+      address: '0x88b8E2161DEDC77EF4ab7585569D2415a1C1055D', // USDT
+      priceFeedId:
+        '0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
+    },
+    {
+      address: '0x6Ec1C48Eef35617319EDa970E387f155EaeDa79f', // AAPL
+      priceFeedId:
+        '0x49f6b65cb1de6b10eaf75e7c03ca029c306d0357e91b5311b175084a5ad55688',
+    },
+    {
+      address: '0x5293596273432de9Ec74B63235b0264831bB61Cc', // AMZN
+      priceFeedId:
+        '0xb5d0e0fa58a1f8b81498ae670ce93c872d14434b72c364885d4fa1b257cbb07a',
+    },
+    {
+      address: '0xE9E6ceF9043A64b0284AFe5993Da11c1381bBc72', // BTC
+      priceFeedId:
+        '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
+    },
+    {
+      address: '0x2f8fb46539BfCDEBa867Ca892bDB66e4ba46c394', // GOOG
+      priceFeedId:
+        '0xe65ff435be42630439c96396653a342829e877e2aafaeaf1a10d0ee5fd2cf3f2',
+    },
+    {
+      address: '0x2E4FcD2AB14ea77dfdE67d12489c64af92DB1493', // MSFT
+      priceFeedId:
+        '0xd0ca23c1cc005e004ccf1db5bf76aeb6a49218f43dac3d4b275e92de12ded4d1',
+    },
+    {
+      address: '0x48aE1080948EAa1b7F5EfEb3914b45F0c41F736d', // MON
+      priceFeedId:
+        '0xb44565b8b9b39ab2f4ba792f1c8f8aa8ef7d780e709b191637ef886d96fd1472',
+    },
+  ],
+}
 
 export const WETH: {
   [chain in CHAIN_IDS]: Currency

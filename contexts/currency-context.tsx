@@ -15,10 +15,9 @@ import { AGGREGATORS } from '../constants/aggregators'
 import { Allowances } from '../model/allowances'
 import { wagmiConfig } from '../constants/chain'
 import { deduplicateCurrencies } from '../utils/currency'
-import { monadTestnet } from '../constants/monad-testnet-chain'
-import { CONTRACT_ADDRESSES } from '../constants/future/contracts'
-import { fetchPythPrice } from '../apis/price'
-import { EXTRA_PRICE_FEED_ID_LIST } from '../constants/currency'
+import { FUTURES_CONTRACT_ADDRESSES } from '../constants/future/contracts'
+import { fetchPricesFromPyth } from '../apis/price'
+import { PRICE_FEED_ID_LIST } from '../constants/currency'
 
 import { useChainContext } from './chain-context'
 
@@ -138,17 +137,12 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { data: prices } = useQuery({
     queryKey: ['prices', selectedChain.id],
     queryFn: async () => {
-      if (selectedChain.id === monadTestnet.id) {
-        const [pythPrices, prices] = await Promise.all([
-          fetchPythPrice(monadTestnet.id, EXTRA_PRICE_FEED_ID_LIST),
+      return (
+        await Promise.all([
+          fetchPricesFromPyth(PRICE_FEED_ID_LIST[selectedChain.id]),
           fetchPrices(AGGREGATORS[selectedChain.id]),
         ])
-        return {
-          ...prices,
-          ...pythPrices,
-        } as Prices
-      }
-      return fetchPrices(AGGREGATORS[selectedChain.id])
+      ).reduce((acc, price) => ({ ...acc, ...price }), {} as Prices)
     },
     refetchInterval: 30 * 1000, // checked
     refetchIntervalInBackground: true,
@@ -173,11 +167,11 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         ),
       ]
       if (
-        CONTRACT_ADDRESSES[selectedChain.id] &&
-        CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
+        FUTURES_CONTRACT_ADDRESSES[selectedChain.id] &&
+        FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
       ) {
         spenders = spenders.concat(
-          CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+          FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
         )
       }
       const _currencies = currencies.filter(

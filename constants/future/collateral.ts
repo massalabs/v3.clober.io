@@ -9,6 +9,7 @@ export const COLLATERALS: {
     priceFeedId: `0x${string}`
   }[]
 } = {
+  [CHAIN_IDS.BASE]: [],
   [CHAIN_IDS.MONAD_TESTNET]: [
     {
       address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',

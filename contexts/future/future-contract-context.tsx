@@ -21,7 +21,7 @@ import { useCurrencyContext } from '../currency-context'
 import { Confirmation, useTransactionContext } from '../transaction-context'
 import { WETH } from '../../constants/currency'
 import { maxApprove } from '../../utils/approve20'
-import { CONTRACT_ADDRESSES } from '../../constants/future/contracts'
+import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/future/contracts'
 import { useChainContext } from '../chain-context'
 import { formatUnits } from '../../utils/bigint'
 import { VAULT_MANAGER_ABI } from '../../abis/future/vault-manager.json-abi'
@@ -209,7 +209,7 @@ export const FutureContractProvider = ({
         if (!walletClient) {
           throw new Error('Wallet not connected')
         }
-        if (CONTRACT_ADDRESSES[selectedChain.id] === undefined) {
+        if (FUTURES_CONTRACT_ADDRESSES[selectedChain.id] === undefined) {
           throw new Error('Contract address not found')
         }
 
@@ -223,7 +223,7 @@ export const FutureContractProvider = ({
           ])
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -231,7 +231,7 @@ export const FutureContractProvider = ({
 
         await publicClient.simulateContract({
           chain: walletClient.chain,
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
           functionName: 'multicall',
           abi: VAULT_MANAGER_ABI,
           value: fee,
@@ -294,7 +294,8 @@ export const FutureContractProvider = ({
           fields: [],
         })
 
-        const spender = CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
+        const spender =
+          FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(asset.collateral.address, zeroAddress) &&
@@ -372,7 +373,7 @@ export const FutureContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -502,7 +503,7 @@ export const FutureContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
             functionName: 'multicall',
             abi: VAULT_MANAGER_ABI,
             args: [
@@ -622,7 +623,7 @@ export const FutureContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -632,7 +633,7 @@ export const FutureContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
             functionName: 'multicall',
             abi: VAULT_MANAGER_ABI,
             value: fee,
@@ -743,7 +744,7 @@ export const FutureContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
           abi: PYTH_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
@@ -753,7 +754,7 @@ export const FutureContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
             functionName: 'multicall',
             abi: VAULT_MANAGER_ABI,
             value: fee,
@@ -848,7 +849,7 @@ export const FutureContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
             functionName: 'close',
             abi: VAULT_MANAGER_ABI,
             args: [asset.currency.address, walletClient.account.address],
@@ -938,7 +939,7 @@ export const FutureContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
             functionName: 'redeem',
             abi: VAULT_MANAGER_ABI,
             args: [

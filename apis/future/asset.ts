@@ -1,10 +1,11 @@
-import { getAddress } from 'viem'
+import { getAddress, isAddressEqual } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Asset } from '../../model/future/asset'
 import { Subgraph } from '../../constants/subgraph'
 import { COLLATERALS } from '../../constants/future/collateral'
 import { ASSET_ICONS } from '../../constants/future/asset'
+import { monadTestnet } from '../../constants/monad-testnet-chain'
 
 type AssetDto = {
   id: string
@@ -31,6 +32,9 @@ type AssetDto = {
 export const fetchFutureAssets = async (
   chainId: CHAIN_IDS,
 ): Promise<Asset[]> => {
+  if (chainId !== monadTestnet.id) {
+    return []
+  }
   const {
     data: { assets },
   } = await Subgraph.get<{
@@ -45,8 +49,8 @@ export const fetchFutureAssets = async (
   )
   return assets
     .map((asset) => {
-      const collateral = COLLATERALS[chainId].find(
-        (collateral) => collateral.address === getAddress(asset.collateral.id),
+      const collateral = COLLATERALS[chainId].find((collateral) =>
+        isAddressEqual(collateral.address, getAddress(asset.collateral.id)),
       )
       if (!collateral) {
         return undefined
