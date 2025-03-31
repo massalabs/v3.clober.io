@@ -7,12 +7,15 @@ import { calculateLtv, calculateMinCollateralAmount } from '../../utils/ltv'
 import { max } from '../../utils/bigint'
 import { FuturesPositionEditCollateralModal } from '../../components/modal/futures-position-edit-collateral-modal'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
+import { isMarketClose } from '../../utils/date'
 
 export const FuturesPositionEditCollateralModalContainer = ({
   userPosition,
+  setIsMarketClose,
   onClose,
 }: {
   userPosition: UserPosition
+  setIsMarketClose: (isMarketClose: boolean) => void
   onClose: () => void
 }) => {
   const { prices, balances } = useCurrencyContext()
@@ -98,9 +101,25 @@ export const FuturesPositionEditCollateralModalContainer = ({
       actionButtonProps={{
         disabled: amount === 0n || amount > availableCollateralAmount,
         onClick: async () => {
-          isWithdrawCollateral
-            ? await removeCollateral(userPosition.asset, amount)
-            : await addCollateral(userPosition.asset, amount)
+          if (isWithdrawCollateral) {
+            const closed = isMarketClose(
+              userPosition.asset.currency.priceFeedId,
+            )
+            if (closed) {
+              setIsMarketClose(true)
+              return
+            }
+
+            const hash = await removeCollateral(userPosition.asset, amount)
+            if (hash) {
+              onClose()
+            }
+          } else {
+            const hash = await addCollateral(userPosition.asset, amount)
+            if (hash) {
+              onClose()
+            }
+          }
           setValue('')
           onClose()
         },

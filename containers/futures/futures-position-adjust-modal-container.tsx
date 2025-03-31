@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
-import Link from 'next/link'
 
 import { FuturesPositionAdjustModal } from '../../components/modal/futures-position-adjust-modal'
 import { UserPosition } from '../../model/futures/user-position'
@@ -8,17 +7,17 @@ import { calculateLtv, calculateMaxLoanableAmount } from '../../utils/ltv'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { applyPercent, formatUnits } from '../../utils/bigint'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
-import Modal from '../../components/modal/modal'
 import { isMarketClose } from '../../utils/date'
 
 export const FuturesPositionAdjustModalContainer = ({
   userPosition,
+  setIsMarketClose,
   onClose,
 }: {
   userPosition: UserPosition
+  setIsMarketClose: (isMarketClose: boolean) => void
   onClose: () => void
 }) => {
-  const [isClose, setIsClose] = useState(false)
   const { prices, balances } = useCurrencyContext()
   const { borrow, repay, repayAll } = useFuturesContractContext()
 
@@ -100,24 +99,7 @@ export const FuturesPositionAdjustModalContainer = ({
     [expectedDebtAmount, userPosition?.debtAmount],
   )
 
-  return isClose ? (
-    <Modal show onClose={() => {}} onButtonClick={() => setIsClose(false)}>
-      <h1 className="flex font-bold text-xl mb-2">Notice</h1>
-      <div className="text-sm">
-        our price feeds follow the traditional market hours of each asset
-        classes and will be available at the following hours:{' '}
-        <span>
-          <Link
-            className="text-blue-500 underline font-bold"
-            target="_blank"
-            href="https://docs.pyth.network/price-feeds/market-hours"
-          >
-            [Link]
-          </Link>
-        </span>
-      </div>
-    </Modal>
-  ) : (
+  return (
     <FuturesPositionAdjustModal
       asset={userPosition.asset}
       onClose={onClose}
@@ -143,7 +125,7 @@ export const FuturesPositionAdjustModalContainer = ({
               userPosition.asset.currency.priceFeedId,
             )
             if (closed) {
-              setIsClose(true)
+              setIsMarketClose(true)
               return
             }
             const hash = await borrow(userPosition.asset, 0n, debtAmountDelta)

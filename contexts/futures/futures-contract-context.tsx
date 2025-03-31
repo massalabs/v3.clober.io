@@ -191,9 +191,9 @@ export const FuturesContractProvider = ({
       )?.debtCurrency
       if (
         (transaction.type === 'borrow' ||
-          transaction.type === 'add-collateral' ||
           transaction.type === 'repay' ||
           transaction.type === 'repay-all' ||
+          transaction.type === 'add-collateral' ||
           transaction.type === 'remove-collateral') &&
         debtCurrency
       ) {
