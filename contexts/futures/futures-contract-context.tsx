@@ -18,7 +18,11 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js'
 
 import { Asset } from '../../model/futures/asset'
 import { useCurrencyContext } from '../currency-context'
-import { Confirmation, useTransactionContext } from '../transaction-context'
+import {
+  Confirmation,
+  Transaction,
+  useTransactionContext,
+} from '../transaction-context'
 import { WETH } from '../../constants/currency'
 import { maxApprove } from '../../utils/approve20'
 import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/futures/contracts'
@@ -176,20 +180,20 @@ export const FuturesContractProvider = ({
         return
       }
 
-      const [userDecreasedCurrency, userIncreasedCurrency] = [
-        transaction.fields.find((field) => field.direction === 'in')?.currency,
-        transaction.fields.find((field) => field.direction === 'out')?.currency,
-      ]
-
-      if (transaction.type === 'borrow' && userIncreasedCurrency) {
+      const debtCurrency = (
+        transaction as Transaction & {
+          debtCurrency: Currency
+        }
+      )?.debtCurrency
+      if (transaction.type === 'borrow' && debtCurrency) {
         dequeuePendingTransaction(transaction.txHash)
-        dequeuePendingPositionCurrency(userIncreasedCurrency)
+        dequeuePendingPositionCurrency(debtCurrency)
       } else if (
         (transaction.type === 'repay' || transaction.type === 'repay-all') &&
-        userDecreasedCurrency
+        debtCurrency
       ) {
         dequeuePendingTransaction(transaction.txHash)
-        dequeuePendingPositionCurrency(userDecreasedCurrency)
+        dequeuePendingPositionCurrency(debtCurrency)
       }
     })
   }, [
@@ -435,7 +439,8 @@ export const FuturesContractProvider = ({
             blockNumber: Number(transactionReceipt.blockNumber),
             type: 'borrow',
             timestamp: currentTimestampInSeconds(),
-          })
+            debtCurrency: asset.currency,
+          } as Transaction)
           if (transactionReceipt.status === 'success') {
             queuePendingPositionCurrency(asset.currency)
           }
@@ -536,7 +541,8 @@ export const FuturesContractProvider = ({
             blockNumber: Number(transactionReceipt.blockNumber),
             type: 'repay',
             timestamp: currentTimestampInSeconds(),
-          })
+            debtCurrency: asset.currency,
+          } as Transaction)
           if (transactionReceipt.status === 'success') {
             queuePendingPositionCurrency(asset.currency)
           }
@@ -685,7 +691,8 @@ export const FuturesContractProvider = ({
             blockNumber: Number(transactionReceipt.blockNumber),
             type: 'repay-all',
             timestamp: currentTimestampInSeconds(),
-          })
+            debtCurrency: userPosition.asset.currency,
+          } as Transaction)
           if (transactionReceipt.status === 'success') {
             queuePendingPositionCurrency(userPosition.asset.currency)
           }
