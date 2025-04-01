@@ -37,13 +37,61 @@ export class MagpieAggregator implements Aggregator {
   }
 
   public async currencies(): Promise<Currency[]> {
-    // TODO: implement if Magpie provides a token list endpoint
-    return []
+    return (
+      await fetchApi<
+        {
+          address: string
+          name: string
+          symbol: string
+          decimals: number
+        }[]
+      >(this.baseUrl, 'token-manager/tokens', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+        },
+        timeout: this.TIMEOUT,
+        data: {
+          networkNames: [this.chainName],
+          searchValue: '',
+          exact: false,
+          offset: 0,
+        },
+      })
+    ).map((token) => ({
+      address: getAddress(token.address),
+      name: token.name,
+      symbol: token.symbol,
+      decimals: token.decimals,
+    }))
   }
 
   public async prices(): Promise<Prices> {
-    // TODO: implement if Magpie provides a price endpoint
-    return {}
+    return (
+      await fetchApi<
+        {
+          address: string
+          usdPrice: string
+        }[]
+      >(this.baseUrl, 'token-manager/tokens', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+        },
+        timeout: this.TIMEOUT,
+        data: {
+          networkNames: [this.chainName],
+          searchValue: '',
+          exact: false,
+          offset: 0,
+        },
+      })
+    ).reduce((acc, token) => {
+      acc[getAddress(token.address)] = Number(token.usdPrice)
+      return acc
+    }, {} as Prices)
   }
 
   public async quote(

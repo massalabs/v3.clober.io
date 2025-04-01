@@ -181,6 +181,7 @@ export class OdosAggregator implements Aggregator {
         'Content-Type': 'application/json',
         accept: 'application/json',
       },
+      timeout: this.TIMEOUT,
       data: {
         pathId: this.latestPathId,
         simulate: true,
