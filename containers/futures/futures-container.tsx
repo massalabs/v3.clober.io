@@ -153,7 +153,7 @@ export const FuturesContainer = () => {
         </div>
       ) : tab === 'redeem' ? (
         <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
-          <div className="flex flex-col w-full lg:w-[960px] h-full gap-6">
+          <div className="flex flex-col w-full md:w-[740px] lg:w-[1060px] h-full gap-6">
             <div className="relative flex justify-center w-full h-full">
               <div className="w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-[18px]">
                 {assets
