@@ -36,7 +36,7 @@ import { TradeProvider } from '../contexts/trade/trade-context'
 import { SwapContractProvider } from '../contexts/trade/swap-contract-context'
 import { VaultProvider } from '../contexts/vault/vault-context'
 import { VaultContractProvider } from '../contexts/vault/vault-contract-context'
-import { RPC_URL } from '../constants/rpc-urls'
+import { RPC_URL } from '../constants/rpc-url'
 import { FuturesProvider } from '../contexts/futures/futures-context'
 import { FuturesContractProvider } from '../contexts/futures/futures-contract-context'
 

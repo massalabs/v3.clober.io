@@ -19,7 +19,7 @@ import {
 import { useChainContext } from '../chain-context'
 import { getCurrencyAddress } from '../../utils/currency'
 import { toPlacesString } from '../../utils/bignumber'
-import { RPC_URL } from '../../constants/rpc-urls'
+import { RPC_URL } from '../../constants/rpc-url'
 
 import { useTradeContext } from './trade-context'
 

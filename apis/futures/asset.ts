@@ -3,8 +3,8 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 import { monadTestnet } from 'viem/chains'
 
 import { Asset } from '../../model/futures/asset'
-import { Subgraph } from '../../constants/subgraph'
-import { COLLATERALS } from '../../constants/futures/collateral'
+import { Subgraph } from '../../model/subgraph'
+import { COLLATERALS } from '../../constants/futures/collaterals'
 import { ASSET_ICONS } from '../../constants/futures/asset'
 import { FUTURES_SUBGRAPH_ENDPOINT } from '../../constants/futures/subgraph-endpoint'
 

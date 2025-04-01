@@ -1,7 +1,7 @@
 import { CHAIN_IDS } from '@clober/v2-sdk'
 import { zeroHash } from 'viem'
 
-export const VAULT_KEY_INFOS: {
+export const WHITELISTED_VAULTS: {
   [chain in CHAIN_IDS]: {
     token0: `0x${string}`
     token1: `0x${string}`

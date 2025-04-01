@@ -23,7 +23,7 @@ import { useCurrencyContext } from '../currency-context'
 import { maxApprove } from '../../utils/approve20'
 import { toPlacesAmountString } from '../../utils/bignumber'
 import { sendTransaction } from '../../utils/transaction'
-import { RPC_URL } from '../../constants/rpc-urls'
+import { RPC_URL } from '../../constants/rpc-url'
 import { currentTimestampInSeconds } from '../../utils/date'
 
 import { useVaultContext } from './vault-context'

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 
 import { VaultManagerContainer } from '../../../containers/vault/vault-manager-container'
 import { useVaultContext } from '../../../contexts/vault/vault-context'
-import { VAULT_KEY_INFOS } from '../../../constants/vault'
+import { WHITELISTED_VAULTS } from '../../../constants/vault'
 import { useChainContext } from '../../../contexts/chain-context'
 
 export default function PoolManage() {
@@ -13,7 +13,7 @@ export default function PoolManage() {
 
   useEffect(() => {
     if (
-      !VAULT_KEY_INFOS[selectedChain.id].find(
+      !WHITELISTED_VAULTS[selectedChain.id].find(
         (v) => v.key.toLowerCase() === router.query.poolKey,
       )
     ) {

@@ -9,12 +9,12 @@ import {
 } from '@clober/v2-sdk'
 import { isAddressEqual } from 'viem'
 
-import { VAULT_KEY_INFOS } from '../constants/vault'
+import { WHITELISTED_VAULTS } from '../constants/vault'
 import { Prices } from '../model/prices'
 import { Vault } from '../model/vault'
 import { calculateApy } from '../utils/apy'
 import { StackedLineData } from '../components/chart/tvl-chart-model'
-import { RPC_URL } from '../constants/rpc-urls'
+import { RPC_URL } from '../constants/rpc-url'
 import { testnetChainIds } from '../constants/chain'
 
 export async function fetchVaults(
@@ -31,7 +31,7 @@ export async function fetchVaults(
     vault: SdkPool
     vaultPerformanceData: PoolPerformanceData
   }[] = await Promise.all(
-    VAULT_KEY_INFOS[chainId].map(async ({ token0, token1, salt }) => {
+    WHITELISTED_VAULTS[chainId].map(async ({ token0, token1, salt }) => {
       const vault = await getPool({
         chainId,
         token0,
@@ -74,7 +74,7 @@ export async function fetchVaults(
     const spreadProfits = vaultPerformanceData.poolSpreadProfits.sort(
       (a, b) => a.timestamp - b.timestamp,
     )
-    const startLPInfo = VAULT_KEY_INFOS[chainId].find(
+    const startLPInfo = WHITELISTED_VAULTS[chainId].find(
       ({ key }) => key.toLowerCase() === vault.key.toLowerCase(),
     )?.startLPInfo
     if (!startLPInfo) {

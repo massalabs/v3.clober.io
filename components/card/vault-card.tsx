@@ -6,7 +6,7 @@ import { base } from 'viem/chains'
 import { Vault } from '../../model/vault'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toCommaSeparated } from '../../utils/number'
-import { VAULT_KEY_INFOS } from '../../constants/vault'
+import { WHITELISTED_VAULTS } from '../../constants/vault'
 
 export const VaultCard = ({
   chainId,
@@ -18,7 +18,7 @@ export const VaultCard = ({
   router: NextRouter
 }) => {
   const hasDashboard =
-    VAULT_KEY_INFOS[chainId].find((info) => info.key === vault.key)
+    WHITELISTED_VAULTS[chainId].find((info) => info.key === vault.key)
       ?.hasDashboard ?? false
   return (
     <>

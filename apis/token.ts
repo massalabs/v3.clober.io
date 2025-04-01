@@ -8,7 +8,7 @@ import {
 import { getCurrentTimestamp } from 'hardhat/internal/hardhat-network/provider/utils/getCurrentTimestamp'
 
 import { supportChains } from '../constants/chain'
-import { RPC_URL } from '../constants/rpc-urls'
+import { RPC_URL } from '../constants/rpc-url'
 import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { DEFAULT_TOKEN_INFO, TokenInfo } from '../model/token-info'
 import { formatUnits } from '../utils/bigint'

@@ -13,7 +13,7 @@ import { Currency } from '../model/currency'
 import { WETH } from '../constants/currency'
 import { Chain } from '../model/chain'
 import { fetchApi } from '../apis/utils'
-import { RPC_URL } from '../constants/rpc-urls'
+import { RPC_URL } from '../constants/rpc-url'
 
 export const LOCAL_STORAGE_INPUT_CURRENCY_KEY = (
   context: string,

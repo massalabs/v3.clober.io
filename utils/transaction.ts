@@ -8,7 +8,7 @@ import {
 import { CHAIN_IDS, Transaction } from '@clober/v2-sdk'
 
 import { supportChains } from '../constants/chain'
-import { RPC_URL } from '../constants/rpc-urls'
+import { RPC_URL } from '../constants/rpc-url'
 import { Chain } from '../model/chain'
 
 export async function sendTransaction(

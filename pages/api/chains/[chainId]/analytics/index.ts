@@ -3,7 +3,7 @@ import { BetaAnalyticsDataClient } from '@google-analytics/data'
 import { CHAIN_IDS, getSubgraphEndpoint } from '@clober/v2-sdk'
 import { getAddress, isAddressEqual, zeroAddress } from 'viem'
 
-import { Subgraph } from '../../../../../constants/subgraph'
+import { Subgraph } from '../../../../../model/subgraph'
 import { formatUnits } from '../../../../../utils/bigint'
 import { WHITELISTED_CURRENCIES } from '../../../../../constants/currency'
 

@@ -19,7 +19,7 @@ import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
 import { testnetChainIds } from '../../constants/chain'
 import { VaultDashboardContainer } from '../chart/vault-dashboard-container'
-import { VAULT_KEY_INFOS } from '../../constants/vault'
+import { WHITELISTED_VAULTS } from '../../constants/vault'
 
 import { VaultChartContainer } from './vault-chart-container'
 
@@ -37,7 +37,7 @@ export const VaultManagerContainer = ({
   const { data: walletClient } = useWalletClient()
   const { selectedChain } = useChainContext()
   const hashDashboard =
-    VAULT_KEY_INFOS[selectedChain.id].find(
+    WHITELISTED_VAULTS[selectedChain.id].find(
       (v) => v.key.toLowerCase() === vault.key.toLowerCase(),
     )?.hasDashboard ?? false
   const { balances, prices } = useCurrencyContext()

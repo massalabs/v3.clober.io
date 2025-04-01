@@ -6,6 +6,7 @@ import {
 
 import {
   Bar,
+  DatafeedConfiguration,
   HistoryCallback,
   IBasicDataFeed,
   LibrarySymbolInfo,
@@ -19,7 +20,32 @@ import {
 import { Currency } from '../currency'
 import { SUPPORTED_INTERVALS } from '../../utils/chart'
 import { getPriceDecimals } from '../../utils/prices'
-import { CONFIGURATION_DATA } from '../../constants/chart'
+
+const CONFIGURATION_DATA: Partial<DatafeedConfiguration> &
+  Required<
+    Pick<
+      DatafeedConfiguration,
+      'supported_resolutions' | 'exchanges' | 'symbols_types'
+    >
+  > = {
+  supported_resolutions: SUPPORTED_INTERVALS.map(
+    (interval) => interval[0],
+  ) as ResolutionString[],
+  exchanges: [
+    {
+      value: 'Clober',
+      name: 'Clober',
+      desc: 'Clober',
+    },
+  ],
+  symbols_types: [
+    {
+      name: 'crypto',
+      // `symbolType` argument for the `searchSymbols` method, if a user selects this symbol type
+      value: 'crypto',
+    },
+  ],
+}
 
 export default class CloberDatafeed implements IBasicDataFeed {
   private chainId: CHAIN_IDS

@@ -19,7 +19,7 @@ import { maxApprove } from '../../utils/approve20'
 import { Aggregator } from '../../model/aggregator'
 import { WETH } from '../../constants/currency'
 import { useChainContext } from '../chain-context'
-import { RPC_URL } from '../../constants/rpc-urls'
+import { RPC_URL } from '../../constants/rpc-url'
 import { currentTimestampInSeconds } from '../../utils/date'
 
 type SwapContractContext = {

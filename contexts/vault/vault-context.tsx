@@ -12,7 +12,7 @@ import {
 } from '../../utils/currency'
 import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
-import { VAULT_KEY_INFOS } from '../../constants/vault'
+import { WHITELISTED_VAULTS } from '../../constants/vault'
 import { wagmiConfig } from '../../constants/chain'
 import { fetchVaults } from '../../apis/vault'
 
@@ -80,7 +80,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
         return {}
       }
       const results = await readContracts(wagmiConfig, {
-        contracts: VAULT_KEY_INFOS[selectedChain.id].map(({ key }) => ({
+        contracts: WHITELISTED_VAULTS[selectedChain.id].map(({ key }) => ({
           chainId: selectedChain.id,
           address: getContractAddresses({ chainId: selectedChain.id })
             .Rebalancer,
@@ -117,7 +117,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
       return results.reduce((acc: {}, { result }, index: number) => {
         return {
           ...acc,
-          [VAULT_KEY_INFOS[selectedChain.id][index].key]: result ?? 0n,
+          [WHITELISTED_VAULTS[selectedChain.id][index].key]: result ?? 0n,
         }
       }, {})
     },

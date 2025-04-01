@@ -4,7 +4,7 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Chain } from '../model/chain'
 
-import { RPC_URL } from './rpc-urls'
+import { RPC_URL } from './rpc-url'
 
 export const DEFAULT_CHAIN_ID = base.id
 
