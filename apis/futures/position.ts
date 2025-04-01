@@ -7,7 +7,7 @@ import { UserPosition } from '../../model/futures/user-position'
 import { Prices } from '../../model/prices'
 import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
-import { COLLATERALS } from '../../constants/futures/collaterals'
+import { FUTURES_COLLATERALS } from '../../constants/futures/collaterals'
 import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
 import { FUTURES_SUBGRAPH_ENDPOINT } from '../../constants/futures/subgraph-endpoint'
 
@@ -76,7 +76,7 @@ export const fetchFuturePositions = async (
       const debtAmountDB = Number(
         formatUnits(BigInt(position.debtAmount), debtCurrency.decimals),
       )
-      const collateral = COLLATERALS[chainId].find((collateral) =>
+      const collateral = FUTURES_COLLATERALS.find((collateral) =>
         isAddressEqual(
           collateral.address,
           position.asset.collateral.id as `0x${string}`,
