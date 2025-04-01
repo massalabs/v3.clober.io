@@ -12,6 +12,7 @@ export const VAULT_KEY_INFOS: {
       quoteAmount: number
       baseAmount: number
       lpAmount: number
+      timestamp: number
     }
   }[]
 } = {
@@ -26,6 +27,7 @@ export const VAULT_KEY_INFOS: {
         quoteAmount: 271.254,
         baseAmount: 0.1,
         lpAmount: 271.254,
+        timestamp: 1739260397,
       },
     },
   ],
@@ -40,6 +42,7 @@ export const VAULT_KEY_INFOS: {
         quoteAmount: 16.2,
         baseAmount: 1,
         lpAmount: 1,
+        timestamp: 1742198400,
       },
     },
     {
@@ -52,6 +55,7 @@ export const VAULT_KEY_INFOS: {
         quoteAmount: 10031,
         baseAmount: 10000,
         lpAmount: 10031,
+        timestamp: 1743062400,
       },
     },
   ],
