@@ -1,13 +1,11 @@
 import React from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
-import { Tooltip } from 'react-tooltip'
 import { base } from 'viem/chains'
 
 import { useVaultContext } from '../../contexts/vault/vault-context'
 import { useChainContext } from '../../contexts/chain-context'
 import { toCommaSeparated } from '../../utils/number'
-import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 import { VaultCard } from '../../components/card/vault-card'
 import { formatUnits } from '../../utils/bigint'
 import { VaultPositionCard } from '../../components/card/vault-position-card'
@@ -132,24 +130,6 @@ export const VaultContainer = () => {
                 </div>
                 <div className="flex flex-row gap-2 w-[140px] text-gray-400 text-sm font-semibold">
                   APY
-                  <div className="z-[100] flex justify-center items-center">
-                    <QuestionMarkSvg
-                      data-tooltip-id="apy-info"
-                      data-tooltip-place="top"
-                      data-tooltip-html={
-                        'Note that the APY displayed reflects only the spread profit generated through market-making activities. It does not account for the opportunity costs arising from changes in portfolio composition due to market price volatility during the market-making process.'
-                      }
-                      className="w-3 h-3"
-                    />
-                    <Tooltip
-                      id="apy-info"
-                      style={{
-                        width: '300px',
-                        opacity: 1,
-                      }}
-                      clickable
-                    />
-                  </div>
                 </div>
                 <div className="w-[140px] text-gray-400 text-sm font-semibold">
                   Total Liquidity

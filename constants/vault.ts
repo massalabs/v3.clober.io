@@ -18,6 +18,7 @@ export const VAULT_KEY_INFOS: {
 } = {
   [CHAIN_IDS.BASE]: [
     {
+      // https://basescan.org/tx/0x12dc122f8d1bd78b3f2be55d6e228c9926b4ab0d97bc766bb37e0b7ec8e353ea#eventlog
       token0: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
       token1: '0x4200000000000000000000000000000000000006',
       salt: zeroHash,
