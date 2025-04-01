@@ -13,7 +13,7 @@ export class OpenOceanAggregator implements Aggregator {
   public readonly baseUrl = 'https://open-api.openocean.finance'
   public readonly contract: `0x${string}`
   public readonly chain: Chain
-  private readonly TIMEOUT = 5000
+  private readonly TIMEOUT = 4000
   private readonly nativeTokenAddress = zeroAddress
 
   constructor(contract: `0x${string}`, chain: Chain) {

@@ -13,7 +13,7 @@ export class OdosAggregator implements Aggregator {
   public readonly baseUrl = 'https://api.odos.xyz'
   public readonly contract: `0x${string}`
   public readonly chain: Chain
-  private readonly TIMEOUT = 2000
+  private readonly TIMEOUT = 4000
 
   private latestPathId: string | undefined
   private transactionCache: {
