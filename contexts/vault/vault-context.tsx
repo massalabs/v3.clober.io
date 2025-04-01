@@ -14,7 +14,7 @@ import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
 import { VAULT_KEY_INFOS } from '../../constants/vault'
 import { wagmiConfig } from '../../constants/chain'
-import { fetchVaults } from '../../apis/vaults'
+import { fetchVaults } from '../../apis/vault'
 
 type VaultContext = {
   lpCurrencyAmount: string

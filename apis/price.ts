@@ -8,7 +8,7 @@ import { formatUnits } from '../utils/bigint'
 import { Currency } from '../model/currency'
 import { Prices } from '../model/prices'
 
-import { fetchQuotes } from './swap/quotes'
+import { fetchQuotes } from './swap/quote'
 
 export const fetchPrice = async (
   chainId: CHAIN_IDS,
