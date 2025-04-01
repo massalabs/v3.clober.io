@@ -13,6 +13,7 @@ export const VAULT_KEY_INFOS: {
       baseAmount: number
       lpAmount: number
       timestamp: number
+      priceMultiplier: number
     }
   }[]
 } = {
@@ -29,6 +30,7 @@ export const VAULT_KEY_INFOS: {
         baseAmount: 0.1,
         lpAmount: 271.254,
         timestamp: 1739260397,
+        priceMultiplier: 1,
       },
     },
   ],
@@ -40,10 +42,11 @@ export const VAULT_KEY_INFOS: {
       key: '0xad46920833ad7a1ba8e74cc241faf9ae4fd3dc4616ad9648b13160f8453e444f',
       hasDashboard: false,
       startLPInfo: {
-        quoteAmount: 16.2,
-        baseAmount: 1,
-        lpAmount: 1,
+        quoteAmount: 405000,
+        baseAmount: 25000,
+        lpAmount: 405000,
         timestamp: 1742198400,
+        priceMultiplier: 1e10,
       },
     },
     {
@@ -57,6 +60,7 @@ export const VAULT_KEY_INFOS: {
         baseAmount: 10000,
         lpAmount: 10031,
         timestamp: 1743062400,
+        priceMultiplier: 1e10,
       },
     },
   ],

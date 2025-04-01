@@ -71,6 +71,9 @@ export async function fetchVaults(
   return vaults.map(({ vault, vaultPerformanceData }) => {
     const base = vault.market.base
     const quote = vault.market.quote
+    const spreadProfits = vaultPerformanceData.poolSpreadProfits.sort(
+      (a, b) => a.timestamp - b.timestamp,
+    )
     const startLPInfo = VAULT_KEY_INFOS[chainId].find(
       ({ key }) => key.toLowerCase() === vault.key.toLowerCase(),
     )?.startLPInfo
@@ -79,7 +82,7 @@ export async function fetchVaults(
     }
     const historicalLpPrices = vaultPerformanceData.poolSnapshots
       .map(({ price, liquidityA, liquidityB, totalSupply, timestamp }) => {
-        const _price = Number(price)
+        const _price = Number(price) * startLPInfo.priceMultiplier
         const onHoldValuePerLp =
           (startLPInfo.quoteAmount + startLPInfo.baseAmount * _price) /
           startLPInfo.lpAmount
@@ -120,6 +123,10 @@ export async function fetchVaults(
         Number(vault.liquidityA.total.value) +
       (prices[vault.currencyB.address] ?? 0) *
         Number(vault.liquidityB.total.value)
+    const totalSpreadProfit = spreadProfits.reduce(
+      (acc, { accumulatedProfitInUsd }) => acc + Number(accumulatedProfitInUsd),
+      0,
+    )
     return {
       key: vault.key,
       lpCurrency: {
@@ -135,7 +142,7 @@ export async function fetchVaults(
       reserve1: Number(vault.liquidityB.total.value),
       tvl,
       apy: testnetChainIds.includes(chainId)
-        ? 0
+        ? calculateApy(1 + totalSpreadProfit / tvl, 24 * 60 * 60)
         : calculateApy(
             historicalLpPrices.sort((a, b) => b.time - a.time)[0].pnl,
             currentTimestampInSeconds - startLPInfo.timestamp,
