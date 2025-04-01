@@ -15,7 +15,6 @@ import {
   fetchCurrenciesByName,
   fetchCurrency,
 } from '../../utils/currency'
-import { shortAddress } from '../../utils/address'
 import InspectCurrencyModal from '../modal/inspect-currency-modal'
 
 const CurrencySelect = ({
@@ -206,39 +205,8 @@ const CurrencySelect = ({
                         <></>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="text-xs text-gray-500">
-                        {currency.name}
-                      </div>
-                      {!currency.isVerified ? (
-                        <button
-                          className="flex px-1 py-[2px] justify-center items-center gap-1 rounded bg-gray-800 active:ring-2"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            navigator.clipboard.writeText(currency.address)
-                          }}
-                        >
-                          <div className="text-white text-xs margin">
-                            {shortAddress(currency.address)}
-                          </div>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="12"
-                            height="12"
-                            viewBox="0 0 12 12"
-                            fill="none"
-                          >
-                            <path
-                              d="M2.006 8.3685C1.85267 8.28109 1.72514 8.15475 1.63629 8.00225C1.54744 7.84975 1.50043 7.67649 1.5 7.5V3.25C1.5 2 2.25 1.5 3.25 1.5L7.5 1.5C7.875 1.5 8.079 1.6925 8.25 2M3.5 4.8335C3.5 4.47983 3.64049 4.14065 3.89057 3.89057C4.14065 3.64049 4.47983 3.5 4.8335 3.5H9.1665C9.34162 3.5 9.51502 3.53449 9.67681 3.60151C9.8386 3.66852 9.9856 3.76675 10.1094 3.89057C10.2333 4.0144 10.3315 4.1614 10.3985 4.32319C10.4655 4.48498 10.5 4.65838 10.5 4.8335V9.1665C10.5 9.34162 10.4655 9.51502 10.3985 9.67681C10.3315 9.8386 10.2333 9.9856 10.1094 10.1094C9.9856 10.2333 9.8386 10.3315 9.67681 10.3985C9.51502 10.4655 9.34162 10.5 9.1665 10.5H4.8335C4.65838 10.5 4.48498 10.4655 4.32319 10.3985C4.1614 10.3315 4.0144 10.2333 3.89057 10.1094C3.76675 9.9856 3.66852 9.8386 3.60151 9.67681C3.53449 9.51502 3.5 9.34162 3.5 9.1665V4.8335Z"
-                              stroke="#9CA3AF"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      ) : (
-                        <></>
-                      )}
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      {currency.name}
                     </div>
                   </div>
                 </div>
