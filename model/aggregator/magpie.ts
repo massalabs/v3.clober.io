@@ -214,7 +214,7 @@ export class MagpieAggregator implements Aggregator {
       method: 'GET',
       params: {
         quoteId: this.latestQuoteId,
-        estimateGas: true,
+        estimateGas: false, // if true, result will be 404 when the user balance is not enough
       },
       headers: {
         accept: 'application/json',
