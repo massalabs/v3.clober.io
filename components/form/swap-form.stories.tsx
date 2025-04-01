@@ -25,6 +25,7 @@ type Story = StoryObj<typeof SwapForm>
 export const Default: Story = {
   args: {
     chainId: 1,
+    explorerUrl: 'https://etherscan.io',
     currencies: dummyCurrencies,
     setCurrencies: () => {},
     prices: dummyPrices,

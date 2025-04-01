@@ -20,6 +20,7 @@ import InspectCurrencyModal from '../modal/inspect-currency-modal'
 
 const CurrencySelect = ({
   chainId,
+  explorerUrl,
   currencies,
   balances,
   prices,
@@ -28,6 +29,7 @@ const CurrencySelect = ({
   defaultBlacklistedCurrency,
 }: {
   chainId: CHAIN_IDS
+  explorerUrl: string
   currencies: Currency[]
   balances: Balances
   prices: Prices
@@ -83,10 +85,10 @@ const CurrencySelect = ({
   return (
     <>
       <InspectCurrencyModal
-        chainId={chainId}
         currency={inspectingCurrency}
         onCurrencySelect={onCurrencySelect}
         setInspectingCurrency={setInspectingCurrency}
+        explorerUrl={explorerUrl}
       />
       <div className="flex flex-col gap-4 w-full h-full">
         <div className="flex items-center justify-center">

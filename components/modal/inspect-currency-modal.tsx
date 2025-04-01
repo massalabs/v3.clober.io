@@ -1,31 +1,26 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Currency } from '../../model/currency'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { shortAddress } from '../../utils/address'
-import { EXPLORER_URL } from '../../constants/explorer-urls'
 import { sliceUrl } from '../../utils/url'
 
 const InspectCurrencyModal = ({
-  chainId,
   currency,
   onCurrencySelect,
   setInspectingCurrency,
+  explorerUrl,
 }: {
-  chainId: CHAIN_IDS
   currency: Currency | undefined
   onCurrencySelect: (currency: Currency) => void
   setInspectingCurrency: (currency: Currency | undefined) => void
+  explorerUrl: string
 }) => {
   if (!currency) {
     return <></>
   }
-
-  const explorerUrl = `${EXPLORER_URL[chainId] ?? EXPLORER_URL[0]}/address/${
-    currency.address
-  }`
+  explorerUrl = `${explorerUrl}/address/${currency.address}`
 
   return createPortal(
     <div

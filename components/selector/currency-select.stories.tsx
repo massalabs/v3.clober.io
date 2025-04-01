@@ -24,6 +24,7 @@ type Story = StoryObj<typeof CurrencySelect>
 export const Default: Story = {
   args: {
     chainId: 1,
+    explorerUrl: 'https://etherscan.io',
     currencies: dummyCurrencies,
     balances: {
       '0x0000000000000000000000000000000000000000': 1000000000000000000n,

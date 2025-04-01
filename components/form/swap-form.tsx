@@ -16,6 +16,7 @@ import { testnetChainIds } from '../../constants/chain'
 
 export const SwapForm = ({
   chainId,
+  explorerUrl,
   currencies,
   setCurrencies,
   balances,
@@ -42,6 +43,7 @@ export const SwapForm = ({
   actionButtonProps,
 }: {
   chainId: CHAIN_IDS
+  explorerUrl: string
   currencies: Currency[]
   setCurrencies: (currencies: Currency[]) => void
   balances: Balances
@@ -96,6 +98,7 @@ export const SwapForm = ({
   return showInputCurrencySelect ? (
     <CurrencySelect
       chainId={chainId}
+      explorerUrl={explorerUrl}
       currencies={
         outputCurrency
           ? currencies.filter(
@@ -127,6 +130,7 @@ export const SwapForm = ({
   ) : showOutputCurrencySelect ? (
     <CurrencySelect
       chainId={chainId}
+      explorerUrl={explorerUrl}
       currencies={
         inputCurrency
           ? currencies.filter(

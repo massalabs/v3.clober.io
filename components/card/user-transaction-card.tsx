@@ -3,7 +3,6 @@ import React from 'react'
 import { Transaction } from '../../contexts/transaction-context'
 import { CurrencyIcon } from '../icon/currency-icon'
 import ChainIcon from '../icon/chain-icon'
-import { EXPLORER_URL } from '../../constants/explorer-urls'
 
 const UserTransactionCard = ({
   transaction,
@@ -12,9 +11,7 @@ const UserTransactionCard = ({
   transaction: Transaction
   isPending: boolean
 }) => {
-  const explorerUrl = transaction.chain
-    ? EXPLORER_URL[transaction.chain.id]
-    : undefined
+  const explorerUrl = transaction.chain?.blockExplorers?.default.url ?? ''
   return (
     <button
       className="self-stretch pt-2 pb-4 flex flex-col w-full justify-start items-start gap-3 cursor-pointer"

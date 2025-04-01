@@ -1,6 +1,6 @@
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
-export const FUTURES_SUBGRAPH_ENDPOINTS: {
+export const FUTURES_SUBGRAPH_ENDPOINT: {
   [chainId in CHAIN_IDS]: string | undefined
 } = {
   [CHAIN_IDS.BASE]: undefined,

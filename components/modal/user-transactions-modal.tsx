@@ -7,7 +7,6 @@ import { convertTimeAgo } from '../../utils/time'
 import { ClipboardSvg } from '../svg/clipboard-svg'
 import { Toast } from '../toast'
 import { formatAddress, handleCopyClipBoard } from '../../utils/string'
-import { EXPLORER_URL } from '../../constants/explorer-urls'
 import UserIcon from '../icon/user-icon'
 import ChainIcon from '../icon/chain-icon'
 import { Chain } from '../../model/chain'
@@ -51,6 +50,7 @@ export const UserTransactionsModal = ({
   const cache = new Map<string, boolean>()
   const [isCopyToast, setIsCopyToast] = useState(false)
   const [tab, setTab] = React.useState<'pending' | 'history'>('history')
+  const explorerUrl = chain.blockExplorers?.default?.url ?? ''
 
   useEffect(() => {
     if (pendingTransactions.length > 0) {
@@ -135,10 +135,7 @@ export const UserTransactionsModal = ({
               </button>
               <button
                 onClick={() =>
-                  window.open(
-                    `${EXPLORER_URL[chain.id]}/address/${userAddress}`,
-                    '_blank',
-                  )
+                  window.open(`${explorerUrl}/address/${userAddress}`, '_blank')
                 }
                 className="p-1 sm:p-2 bg-gray-700 rounded-lg flex flex-col items-center justify-center w-6 sm:w-8 h-6 sm:h-8"
               >

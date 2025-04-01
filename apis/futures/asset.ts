@@ -6,7 +6,7 @@ import { Asset } from '../../model/futures/asset'
 import { Subgraph } from '../../constants/subgraph'
 import { COLLATERALS } from '../../constants/futures/collateral'
 import { ASSET_ICONS } from '../../constants/futures/asset'
-import { FUTURES_SUBGRAPH_ENDPOINTS } from '../../constants/futures/subgraph-endpoint'
+import { FUTURES_SUBGRAPH_ENDPOINT } from '../../constants/futures/subgraph-endpoint'
 
 type AssetDto = {
   id: string
@@ -43,7 +43,7 @@ export const fetchFutureAssets = async (
       assets: AssetDto[]
     }
   }>(
-    FUTURES_SUBGRAPH_ENDPOINTS[chainId]!,
+    FUTURES_SUBGRAPH_ENDPOINT[chainId]!,
     'getAssets',
     'query getAssets { assets { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV liquidationThreshold minDebt settlePrice } }',
     {},

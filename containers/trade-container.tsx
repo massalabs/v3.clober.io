@@ -537,6 +537,7 @@ export const TradeContainer = () => {
               {tab === 'limit' ? (
                 <LimitForm
                   chainId={selectedChain.id}
+                  explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                   prices={prices}
                   balances={balances}
                   currencies={currencies}
@@ -645,6 +646,7 @@ export const TradeContainer = () => {
               ) : (
                 <SwapForm
                   chainId={selectedChain.id}
+                  explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                   currencies={currencies}
                   setCurrencies={setCurrencies}
                   balances={balances}
@@ -875,6 +877,7 @@ export const TradeContainer = () => {
             {tab === 'limit' ? (
               <LimitForm
                 chainId={selectedChain.id}
+                explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                 prices={prices}
                 balances={balances}
                 currencies={currencies}
@@ -975,6 +978,7 @@ export const TradeContainer = () => {
             ) : (
               <SwapForm
                 chainId={selectedChain.id}
+                explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                 currencies={currencies}
                 setCurrencies={setCurrencies}
                 balances={balances}

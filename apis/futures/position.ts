@@ -9,7 +9,7 @@ import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { formatUnits } from '../../utils/bigint'
 import { COLLATERALS } from '../../constants/futures/collateral'
 import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
-import { FUTURES_SUBGRAPH_ENDPOINTS } from '../../constants/futures/subgraph-endpoint'
+import { FUTURES_SUBGRAPH_ENDPOINT } from '../../constants/futures/subgraph-endpoint'
 
 type ShortPositionDto = {
   id: string
@@ -55,7 +55,7 @@ export const fetchFuturePositions = async (
       shortPositions: ShortPositionDto[]
     }
   }>(
-    FUTURES_SUBGRAPH_ENDPOINTS[chainId]!,
+    FUTURES_SUBGRAPH_ENDPOINT[chainId]!,
     'getPositions',
     'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV settlePrice liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
     {

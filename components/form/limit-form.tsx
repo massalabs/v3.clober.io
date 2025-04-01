@@ -22,6 +22,7 @@ import CloseSvg from '../svg/close-svg'
 
 export const LimitForm = ({
   chainId,
+  explorerUrl,
   currencies,
   setCurrencies,
   balances,
@@ -55,6 +56,7 @@ export const LimitForm = ({
   actionButtonProps,
 }: {
   chainId: CHAIN_IDS
+  explorerUrl: string
   currencies: Currency[]
   setCurrencies: (currencies: Currency[]) => void
   balances: Balances
@@ -112,6 +114,7 @@ export const LimitForm = ({
   return showInputCurrencySelect ? (
     <CurrencySelect
       chainId={chainId}
+      explorerUrl={explorerUrl}
       currencies={
         outputCurrency
           ? currencies.filter(
@@ -143,6 +146,7 @@ export const LimitForm = ({
   ) : showOutputCurrencySelect ? (
     <CurrencySelect
       chainId={chainId}
+      explorerUrl={explorerUrl}
       currencies={
         inputCurrency
           ? currencies.filter(
