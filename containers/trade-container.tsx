@@ -297,7 +297,7 @@ export const TradeContainer = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedValue(inputCurrencyAmount)
-    }, 500)
+    }, 2000)
 
     return () => clearTimeout(timer)
   }, [inputCurrencyAmount])

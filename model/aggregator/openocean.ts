@@ -16,62 +16,16 @@ export class OpenOceanAggregator implements Aggregator {
   private readonly TIMEOUT = 5000
   private readonly nativeTokenAddress = zeroAddress
 
-  private latestQuoteData: any
-
   constructor(contract: `0x${string}`, chain: Chain) {
     this.contract = contract
     this.chain = chain
   }
 
   public async currencies(): Promise<Currency[]> {
-    // const response = await fetchApi<{
-    //   code: number
-    //   data: any[]
-    // }>(this.baseUrl, `v3/${this.chain.id}/tokenList`, {
-    //   method: 'GET',
-    //   timeout: this.TIMEOUT,
-    //   headers: {
-    //     accept: 'application/json',
-    //   },
-    // })
-    //
-    // if (response.code !== 200) {
-    //   throw new Error(`Failed to fetch currencies: ${response.code}`)
-    // }
-    // return response.data.map((token: any) => ({
-    //   address: token.address as `0x${string}`,
-    //   name: token.name,
-    //   symbol: token.symbol,
-    //   decimals: token.decimals,
-    //   icon: token.icon || undefined,
-    // }))
     return [] as Currency[]
   }
 
   public async prices(): Promise<Prices> {
-    // const response = await fetchApi<{
-    //   code: number
-    //   data: any[]
-    // }>(this.baseUrl, `v3/${this.chain.id}/tokenList`, {
-    //   method: 'GET',
-    //   timeout: this.TIMEOUT,
-    //   headers: {
-    //     accept: 'application/json',
-    //   },
-    // })
-    //
-    // if (response.code !== 200) {
-    //   throw new Error(`Failed to fetch currencies: ${response.code}`)
-    // }
-    // const prices: Prices = {}
-    //
-    // response.data.forEach((token: any) => {
-    //   if (token.address && token.usd) {
-    //     prices[token.address] = parseFloat(token.usd)
-    //   }
-    // })
-    //
-    // return prices
     return {} as Prices
   }
 
@@ -126,12 +80,10 @@ export class OpenOceanAggregator implements Aggregator {
       throw new Error(`Quote failed: ${response.code}`)
     }
 
-    this.latestQuoteData = response.data
-
     return {
       amountOut: BigInt(response.data.outAmount),
       gasLimit: BigInt(response.data.estimatedGas),
-      pathViz: undefined, // TODO: implement pathViz
+      pathViz: undefined,
       aggregator: this,
       priceImpact: Number(response.data.price_impact.replace('%', '')) / 100,
     }
@@ -152,17 +104,6 @@ export class OpenOceanAggregator implements Aggregator {
     nonce?: number
     gasPrice?: bigint
   }> {
-    if (!this.latestQuoteData) {
-      await this.quote(
-        inputCurrency,
-        amountIn,
-        outputCurrency,
-        slippageLimitPercent,
-        gasPrice,
-        userAddress,
-      )
-    }
-
     const response = await fetchApi<{
       code: number
       data: {

@@ -121,11 +121,6 @@ export const MarketProvider = ({ children }: React.PropsWithChildren<{}>) => {
             queryClient.removeQueries({ queryKey: key })
           }
         }
-        console.log('Fetch market...', {
-          chainId: selectedChain.id,
-          marketId,
-          useSubgraph: !cache.get(marketId),
-        })
         const market = await getMarket({
           chainId: selectedChain.id,
           token0: getAddress(inputCurrencyAddress),

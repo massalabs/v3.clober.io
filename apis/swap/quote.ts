@@ -21,14 +21,20 @@ export async function fetchQuotes(
   const quotes = (
     await Promise.allSettled(
       aggregators.map((aggregator) =>
-        aggregator.quote(
-          inputCurrency,
-          amountIn,
-          outputCurrency,
-          slippageLimitPercent,
-          gasPrice,
-          userAddress,
-        ),
+        aggregator
+          .quote(
+            inputCurrency,
+            amountIn,
+            outputCurrency,
+            slippageLimitPercent,
+            gasPrice,
+            userAddress,
+          )
+          .catch((error) => {
+            console.error(
+              `Failed to get quote from ${aggregator.name}: ${error}`,
+            )
+          }),
       ),
     )
   )

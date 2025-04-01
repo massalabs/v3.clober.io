@@ -13,14 +13,19 @@ export class OdosAggregator implements Aggregator {
   public readonly baseUrl = 'https://api.odos.xyz'
   public readonly contract: `0x${string}`
   public readonly chain: Chain
-  private readonly TIMEOUT = 4000
+  private readonly TIMEOUT = 2000
 
-  private latestState:
-    | {
-        pathId: string
-        amountIn: bigint
-      }
-    | undefined = undefined
+  private latestPathId: string | undefined
+  private transactionCache: {
+    [quoteId: string]: {
+      data: `0x${string}`
+      gas: bigint
+      value: bigint
+      to: `0x${string}`
+      nonce?: number
+      gasPrice?: bigint
+    }
+  } = {}
 
   constructor(contract: `0x${string}`, chain: Chain) {
     this.contract = contract
@@ -69,13 +74,7 @@ export class OdosAggregator implements Aggregator {
     aggregator: Aggregator
     priceImpact: number
   }> {
-    this.latestState = undefined
-    console.log(
-      'Fetching quote...',
-      inputCurrency.symbol,
-      outputCurrency.symbol,
-      amountIn,
-    )
+    this.latestPathId = undefined
     const result: {
       outAmounts: string[]
       pathViz: PathViz
@@ -111,7 +110,19 @@ export class OdosAggregator implements Aggregator {
         referralCode: '1939997089',
       },
     })
-    this.latestState = { pathId: result.pathId, amountIn }
+    this.latestPathId = result.pathId
+
+    if (userAddress) {
+      this.transactionCache[result.pathId] = await this.buildCallData(
+        inputCurrency,
+        amountIn,
+        outputCurrency,
+        slippageLimitPercent,
+        gasPrice,
+        userAddress,
+      )
+    }
+
     return {
       amountOut: BigInt(result.outAmounts[0]),
       gasLimit: BigInt(result.gasEstimate),
@@ -136,48 +147,25 @@ export class OdosAggregator implements Aggregator {
     nonce?: number
     gasPrice?: bigint
   }> {
-    if (
-      !this.latestState ||
-      (this.latestState && (this.latestState?.amountIn ?? 0n) !== amountIn)
-    ) {
-      console.log('Path ID is not defined, fetching...')
-      const { pathId } = await fetchApi<{
-        pathId: string
-      }>(this.baseUrl, 'sor/quote/v2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          accept: 'application/json',
-        },
-        timeout: this.TIMEOUT,
-        data: {
-          chainId: this.chain.id,
-          inputTokens: [
-            {
-              tokenAddress: getAddress(inputCurrency.address),
-              amount: amountIn.toString(),
-            },
-          ],
-          outputTokens: [
-            {
-              tokenAddress: getAddress(outputCurrency.address),
-              proportion: 1,
-            },
-          ],
-          gasPrice: Number(gasPrice) / 1000000000,
-          userAddr: userAddress,
-          slippageLimitPercent,
-          sourceBlacklist: [],
-          pathViz: true,
-          referralCode: '1939997089',
-        },
-      })
-      this.latestState = { pathId, amountIn }
+    if (!this.latestPathId) {
+      await this.quote(
+        inputCurrency,
+        amountIn,
+        outputCurrency,
+        slippageLimitPercent,
+        gasPrice,
+        userAddress,
+      )
     }
-    if (!this.latestState) {
+
+    if (!this.latestPathId) {
       throw new Error('Path ID is not defined')
     }
-    console.log('Assembling transaction...', this.latestState)
+
+    if (this.transactionCache[this.latestPathId]) {
+      return this.transactionCache[this.latestPathId]
+    }
+
     const result = await fetchApi<{
       transaction: {
         data: `0x${string}`
@@ -194,15 +182,18 @@ export class OdosAggregator implements Aggregator {
         accept: 'application/json',
       },
       data: {
-        pathId: this.latestState.pathId,
+        pathId: this.latestPathId,
         simulate: true,
         userAddr: userAddress,
       },
     })
     const gas = BigInt(result.transaction.gas)
+    if (gas === -1n) {
+      throw new Error('Gas estimate failed')
+    }
     return {
       data: result.transaction.data,
-      gas: gas === -1n ? 1_000_000n : gas,
+      gas,
       value: BigInt(result.transaction.value),
       to: result.transaction.to,
       nonce: result.transaction.nonce,

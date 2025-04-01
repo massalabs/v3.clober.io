@@ -19,6 +19,16 @@ export class MagpieAggregator implements Aggregator {
 
   private chainName: string
   private latestQuoteId: string | undefined
+  private transactionCache: {
+    [quoteId: string]: {
+      data: `0x${string}`
+      gas: bigint
+      value: bigint
+      to: `0x${string}`
+      nonce?: number
+      gasPrice?: bigint
+    }
+  } = {}
 
   constructor(contract: `0x${string}`, chain: Chain) {
     this.contract = contract
@@ -49,6 +59,7 @@ export class MagpieAggregator implements Aggregator {
     pathViz: PathViz | undefined
     aggregator: Aggregator
   }> {
+    this.latestQuoteId = undefined
     const response = await fetchApi<{
       id: string
       amountOut: string
@@ -56,6 +67,7 @@ export class MagpieAggregator implements Aggregator {
         type: string
         value: string
       }[]
+      resourceEstimate: { gasLimit: string }
     }>(this.baseUrl, 'aggregator/quote', {
       method: 'GET',
       headers: {
@@ -85,17 +97,28 @@ export class MagpieAggregator implements Aggregator {
         // affiliateFeeInPercentage: 0.01, // 1%
       },
     })
-
     this.latestQuoteId = response.id
+
     const estimatedGas = response.fees.find((fee) => fee.type === 'gas')?.value
     if (!estimatedGas) {
       throw new Error('Estimated gas not found')
     }
 
+    if (userAddress) {
+      this.transactionCache[this.latestQuoteId] = await this.buildCallData(
+        inputCurrency,
+        amountIn,
+        outputCurrency,
+        slippageLimitPercent,
+        gasPrice,
+        userAddress,
+      )
+    }
+
     return {
       amountOut: BigInt(response.amountOut),
-      gasLimit: 500000n,
-      pathViz: undefined, // TODO: implement path visualization
+      gasLimit: BigInt(response.resourceEstimate.gasLimit),
+      pathViz: undefined,
       aggregator: this,
     }
   }
@@ -130,6 +153,10 @@ export class MagpieAggregator implements Aggregator {
       throw new Error('Quote ID is not defined')
     }
 
+    if (this.transactionCache[this.latestQuoteId]) {
+      return this.transactionCache[this.latestQuoteId]
+    }
+
     const response = await fetchApi<{
       data: string
       gasLimit: string
@@ -149,7 +176,7 @@ export class MagpieAggregator implements Aggregator {
 
     return {
       data: response.data as `0x${string}`,
-      gas: 500000n,
+      gas: BigInt(response.gasLimit),
       value: BigInt(response.value),
       to: response.to as `0x${string}`,
       gasPrice: gasPrice,
