@@ -335,7 +335,7 @@ export const VaultManagerContainer = ({
                   </div>
                   <div className="flex mr-auto justify-center items-center">
                     <QuestionMarkSvg
-                      data-tooltip-id="trading-view-info"
+                      data-tooltip-id="rpi-info"
                       data-tooltip-place="bottom-end"
                       data-tooltip-html={
                         'Relative Price Index (RPI) measures the historical performance of the Clober Liquidity Vault compared to a reference portfolio. The reference portfolio represents the value of assets if they had been held without any active management from the initial point. RPI effectively indicates how well the vault has performed relative to a passive “just hold” strategy.'
@@ -343,10 +343,8 @@ export const VaultManagerContainer = ({
                       className="w-3 h-3"
                     />
                     <Tooltip
-                      id="trading-view-info"
-                      style={{
-                        width: '300px',
-                      }}
+                      id="rpi-info"
+                      className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
                       clickable
                     />
                   </div>
@@ -399,7 +397,7 @@ export const VaultManagerContainer = ({
                     </div>
                     <div className="flex mr-auto justify-center items-center z-50">
                       <QuestionMarkSvg
-                        data-tooltip-id="trading-view-info"
+                        data-tooltip-id="index-info"
                         data-tooltip-place="bottom-end"
                         data-tooltip-html={
                           showPnL
@@ -409,10 +407,8 @@ export const VaultManagerContainer = ({
                         className="w-3 h-3"
                       />
                       <Tooltip
-                        id="trading-view-info"
-                        style={{
-                          width: '300px',
-                        }}
+                        id="index-info"
+                        className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
                         clickable
                       />
                     </div>
