@@ -107,7 +107,9 @@ export class MagpieAggregator implements Aggregator {
     pathViz: PathViz | undefined
     aggregator: Aggregator
   }> {
-    this.latestQuoteId = undefined
+    if (userAddress) {
+      this.latestQuoteId = undefined
+    }
     const response = await fetchApi<{
       id: string
       amountOut: string
@@ -145,7 +147,6 @@ export class MagpieAggregator implements Aggregator {
         // affiliateFeeInPercentage: 0.01, // 1%
       },
     })
-    this.latestQuoteId = response.id
 
     const estimatedGas = response.fees.find((fee) => fee.type === 'gas')?.value
     if (!estimatedGas) {
@@ -153,6 +154,7 @@ export class MagpieAggregator implements Aggregator {
     }
 
     if (userAddress) {
+      this.latestQuoteId = response.id
       this.transactionCache[this.latestQuoteId] = await this.buildCallData(
         inputCurrency,
         amountIn,

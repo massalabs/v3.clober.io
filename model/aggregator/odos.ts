@@ -74,7 +74,9 @@ export class OdosAggregator implements Aggregator {
     aggregator: Aggregator
     priceImpact: number
   }> {
-    this.latestPathId = undefined
+    if (userAddress) {
+      this.latestPathId = undefined
+    }
     const result: {
       outAmounts: string[]
       pathViz: PathViz
@@ -110,9 +112,9 @@ export class OdosAggregator implements Aggregator {
         referralCode: '1939997089',
       },
     })
-    this.latestPathId = result.pathId
 
     if (userAddress) {
+      this.latestPathId = result.pathId
       this.transactionCache[result.pathId] = await this.buildCallData(
         inputCurrency,
         amountIn,
