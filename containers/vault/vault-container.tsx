@@ -218,9 +218,9 @@ export const VaultContainer = () => {
                 </div>
               </div>
 
-              <div className="self-stretch w-full flex flex-col justify-start items-start gap-1 sm:gap-2">
+              <div className="self-stretch w-full flex flex-col justify-start items-start gap-1 sm:gap-2 overflow-y-scroll max-h-[500px]">
                 {userAddress && myRank && (
-                  <div className="self-stretch px-4 sm:px-8 h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm">
+                  <div className="self-stretch px-4 sm:px-8 min-h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm">
                     <div className="w-16 flex justify-start items-center gap-2.5 text-white font-bold">
                       {myRank.rank}
                     </div>
@@ -247,11 +247,11 @@ export const VaultContainer = () => {
 
                 {vaultPoints
                   .filter((rank) => rank.point > 0.00001)
-                  .slice(0, 20)
+                  .slice(0, 100)
                   .map(({ userAddress, point, vaultBalances, rank }, index) => (
                     <div
                       key={`rank-${userAddress}`}
-                      className={`self-stretch px-4 sm:px-8 h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm`}
+                      className={`self-stretch px-4 sm:px-8 min-h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm`}
                     >
                       <div
                         className={`${rank === 1 ? 'text-[#ffe607]' : rank === 2 ? 'text-[#e4e5f5]' : rank === 3 ? 'text-[#ffc038]' : 'text-white'} w-16 flex justify-start items-center gap-2.5 text-white font-bold`}
