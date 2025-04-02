@@ -1,0 +1,1 @@
+[All Rights Reserved © Clober Dex](./LICENSE_V2.pdf)
