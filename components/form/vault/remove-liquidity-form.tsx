@@ -48,21 +48,21 @@ export const RemoveLiquidityForm = ({
         />
       </div>
       <div className="flex flex-col items-start gap-3 self-stretch">
-        <div className="flex justify-start h-[72px] md:h-[76px] items-center gap-2 self-stretch">
-          <div className="flex h-full text-gray-400 text-sm font-semibold">
+        <div className="flex justify-start h-[72px] md:h-[76px] items-center gap-2 self-stretch text-xs sm:text-sm">
+          <div className="flex h-full text-gray-400 font-semibold">
             You will receive
           </div>
           <div className="flex h-full flex-col ml-auto gap-2">
             {receiveCurrencies.map((receiveCurrency, index) => (
               <div
                 key={index}
-                className="flex ml-auto items-center gap-1 ml-2 text-white text-sm md:text-base font-semibold"
+                className="flex ml-auto items-center gap-1 text-white text-sm md:text-base font-semibold"
               >
                 {isCalculatingReceiveCurrencies ? (
                   <span className="w-[100px] h-6 mx-1 rounded animate-pulse bg-gray-500"></span>
                 ) : (
                   <div className="flex items-center gap-1">
-                    <div className="flex items-center gap-1 text-white text-sm md:text-base font-bold">
+                    <div className="flex items-center gap-1 text-white font-bold">
                       <div>
                         {formatUnits(
                           receiveCurrency.amount,
@@ -72,7 +72,7 @@ export const RemoveLiquidityForm = ({
                       </div>
                       <div>{receiveCurrency.currency.symbol}</div>
                     </div>
-                    <div className="text-gray-400 text-sm md:text-base font-semibold">
+                    <div className="text-gray-400 font-semibold">
                       (
                       {formatDollarValue(
                         receiveCurrency.amount,
@@ -87,8 +87,8 @@ export const RemoveLiquidityForm = ({
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-3 sm:gap-2 self-stretch flex-col sm:flex-row">
-          <div className="text-gray-400 text-sm font-semibold flex mr-auto">
+        <div className="flex gap-3 sm:gap-2 self-stretch flex-col sm:flex-row text-xs sm:text-sm">
+          <div className="text-gray-400 font-semibold flex mr-auto">
             Max Slippage
           </div>
           <div className="flex items-center gap-1 ml-auto">

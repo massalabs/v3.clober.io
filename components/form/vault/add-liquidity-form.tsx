@@ -70,7 +70,7 @@ export const AddLiquidityForm = ({
           />
         </div>
         <div className="flex items-center gap-3 ml-auto">
-          <div className="text-white text-sm font-semibold ">
+          <div className="text-white text-xs sm:text-sm font-semibold">
             Auto-Balance Liquidity
           </div>
           <label className="inline-flex items-center cursor-pointer">
@@ -86,15 +86,13 @@ export const AddLiquidityForm = ({
                 setDisableSwap(!disableSwap)
               }}
             />
-            <div className="relative w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <div className="relative w-7 sm:w-11 h-4 sm:h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 sm:after:h-5 after:w-3 sm:after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
           </label>
         </div>
       </div>
-      <div className="flex flex-col items-start gap-3 self-stretch">
+      <div className="flex flex-col items-start gap-3 self-stretch text-xs sm:text-sm">
         <div className="flex items-center gap-2 self-stretch">
-          <div className="text-gray-400 text-sm font-semibold">
-            You will receive
-          </div>
+          <div className="text-gray-400 font-semibold">You will receive</div>
           <div className="flex items-center gap-1 ml-auto">
             {isCalculatingReceiveLpAmount ? (
               <span className="w-[100px] h-6 mx-1 rounded animate-pulse bg-gray-500"></span>
@@ -123,8 +121,9 @@ export const AddLiquidityForm = ({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3 sm:gap-2 self-stretch flex-col sm:flex-row">
-          <div className="text-gray-400 text-sm font-semibold flex mr-auto">
+
+        <div className="flex gap-3 sm:gap-2 self-stretch flex-col sm:flex-row text-xs sm:text-sm">
+          <div className="text-gray-400 font-semibold flex mr-auto">
             Max Slippage
           </div>
           <div className="flex items-center gap-1 ml-auto">

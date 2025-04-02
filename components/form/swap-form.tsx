@@ -256,7 +256,7 @@ export const SwapForm = ({
         </div>
 
         <div className="flex flex-col gap-5 mb-1 md:mb-2 text-[13px] sm:text-sm font-medium">
-          <div className="flex flex-col items-start gap-6 md:gap-4 self-stretch justify-end text-white text-[13px] sm:text-sm">
+          <div className="flex flex-col items-start gap-3 md:gap-4 self-stretch justify-end text-white text-[13px] sm:text-sm">
             {!testnetChainIds.includes(chainId) ? (
               <div className="flex items-center gap-2 self-stretch">
                 <div className="text-gray-400">Price Impact</div>
