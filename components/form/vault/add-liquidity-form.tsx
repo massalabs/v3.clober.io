@@ -90,7 +90,7 @@ export const AddLiquidityForm = ({
           </label>
         </div>
       </div>
-      <div className="flex flex-col items-start gap-3 self-stretch text-xs sm:text-sm">
+      <div className="flex flex-col items-start gap-3 md:gap-4 self-stretch text-xs sm:text-sm">
         <div className="flex items-center gap-2 self-stretch">
           <div className="text-gray-400 font-semibold">You will receive</div>
           <div className="flex items-center gap-1 ml-auto">

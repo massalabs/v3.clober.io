@@ -47,8 +47,8 @@ export const RemoveLiquidityForm = ({
           price={prices[vault.lpCurrency.address] ?? 0}
         />
       </div>
-      <div className="flex flex-col items-start gap-3 self-stretch">
-        <div className="flex justify-start h-[72px] md:h-[76px] items-center gap-2 self-stretch text-xs sm:text-sm">
+      <div className="flex flex-col items-start gap-3 md:gap-4 self-stretch">
+        <div className="flex justify-start items-center gap-2 self-stretch text-xs sm:text-sm">
           <div className="flex h-full text-gray-400 font-semibold">
             You will receive
           </div>
