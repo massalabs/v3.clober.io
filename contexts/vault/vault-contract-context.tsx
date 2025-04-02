@@ -200,6 +200,8 @@ export const VaultContractProvider = ({
             disableSwap,
             slippage,
             testnetPrice: prices[baseCurrency.address] ?? 0,
+            token0Price: prices[currency0.address] ?? 0,
+            token1Price: prices[currency1.address] ?? 0,
           },
         })
 

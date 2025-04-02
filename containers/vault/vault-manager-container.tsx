@@ -2,8 +2,8 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useWalletClient } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
-import { isAddressEqual, parseUnits, zeroAddress, zeroHash } from 'viem'
-import { addLiquidity, getQuoteToken, removeLiquidity } from '@clober/v2-sdk'
+import { parseUnits, zeroAddress, zeroHash } from 'viem'
+import { removeLiquidity } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
 
@@ -79,36 +79,20 @@ export const VaultManagerContainer = ({
       if (Number(currency0Amount) === 0 && Number(currency1Amount) === 0) {
         return 0n
       }
-      const baseCurrency = isAddressEqual(
-        getQuoteToken({
-          chainId: selectedChain.id,
-          token0: vault.currency0.address,
-          token1: vault.currency1.address,
-        }),
-        vault.currency0.address,
+      const totalInputUsdValue = new BigNumber(
+        new BigNumber(currency0Amount).isNaN() ? 0 : currency0Amount,
       )
-        ? vault.currency1
-        : vault.currency0
-
-      const { result } = await addLiquidity({
-        chainId: selectedChain.id,
-        token0: vault.currency0.address,
-        token1: vault.currency1.address,
-        salt: zeroHash,
-        userAddress: zeroAddress,
-        amount0: currency0Amount,
-        amount1: currency1Amount,
-        options: {
-          useSubgraph: false,
-          gasLimit: 1_000_000n,
-          disableSwap,
-          slippage: Number(slippageInput),
-          testnetPrice: prices[baseCurrency.address] ?? 0,
-        },
-      })
+        .times(prices[vault.currency0.address] ?? 0)
+        .plus(
+          new BigNumber(
+            new BigNumber(currency1Amount).isNaN() ? 0 : currency1Amount,
+          ).times(prices[vault.currency1.address] ?? 0),
+        )
       return parseUnits(
-        result.lpCurrency.amount,
-        result.lpCurrency.currency.decimals,
+        totalInputUsdValue
+          .div(vault.lpUsdValue)
+          .toFixed(vault.lpCurrency.decimals),
+        vault.lpCurrency.decimals,
       )
     },
     initialData: 0n,
