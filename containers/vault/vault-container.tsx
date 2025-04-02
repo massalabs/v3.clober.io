@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import { base } from 'viem/chains'
@@ -12,29 +12,23 @@ import { formatUnits } from '../../utils/bigint'
 import { VaultPositionCard } from '../../components/card/vault-position-card'
 import { shortAddress } from '../../utils/address'
 
-const ranks = [
-  ...Array.from({ length: 10 }, (_, i) => ({
-    rank: i + 1,
-    user: zeroAddress,
-    amount: 1295012,
-    point: 1295012,
-  })),
-  {
-    rank: 240,
-    user: '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
-    amount: 1295012,
-    point: 1295012,
-  },
-]
-
 export const VaultContainer = () => {
   const router = useRouter()
   const { address: userAddress } = useAccount()
-  const { vaults, vaultLpBalances } = useVaultContext()
+  const { vaults, vaultLpBalances, vaultPoints } = useVaultContext()
   const { selectedChain } = useChainContext()
 
   const [tab, setTab] = React.useState<'my-liquidity' | 'vault' | 'point'>(
     'vault',
+  )
+
+  const myRank = useMemo(
+    () =>
+      userAddress &&
+      vaultPoints.find((rank) =>
+        isAddressEqual(rank.userAddress as `0x${string}`, userAddress),
+      ),
+    [userAddress, vaultPoints],
   )
 
   return (
@@ -88,6 +82,16 @@ export const VaultContainer = () => {
               </button>
 
               <button
+                onClick={() => setTab('point')}
+                disabled={tab === 'point'}
+                className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
+              >
+                <div className="text-center text-sm sm:text-base font-bold">
+                  Point
+                </div>
+              </button>
+
+              <button
                 onClick={() =>
                   userAddress &&
                   Object.entries(vaultLpBalances).filter(
@@ -100,22 +104,6 @@ export const VaultContainer = () => {
               >
                 <div className="text-center text-sm sm:text-base font-bold">
                   My Vaults
-                </div>
-              </button>
-
-              <button
-                onClick={() =>
-                  userAddress &&
-                  Object.entries(vaultLpBalances).filter(
-                    ([, amount]) => amount > 0n,
-                  ).length > 0 &&
-                  setTab('point')
-                }
-                disabled={tab === 'point'}
-                className="flex flex-1 gap-2 items-center justify-center w-full h-full text-gray-500 disabled:text-white disabled:bg-gray-800 bg-transparent rounded-tl-2xl rounded-tr-2xl"
-              >
-                <div className="text-center text-sm sm:text-base font-bold">
-                  Point
                 </div>
               </button>
             </div>
@@ -231,58 +219,63 @@ export const VaultContainer = () => {
               </div>
 
               <div className="self-stretch w-full flex flex-col justify-start items-start gap-1 sm:gap-2">
-                {userAddress && (
+                {userAddress && myRank && (
                   <div className="self-stretch px-4 sm:px-8 h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm">
                     <div className="w-16 flex justify-start items-center gap-2.5 text-white font-bold">
-                      240
+                      {myRank.rank}
                     </div>
                     <div className="flex w-full">
                       <div className="flex flex-1 justify-start text-blue-400 gap-1">
                         Me
                         <span className="hidden sm:flex">
-                          {shortAddress(userAddress, 6)}
+                          ({shortAddress(userAddress, 6)})
                         </span>
                       </div>
-                      <div className="flex flex-1 justify-start text-white">
-                        {toCommaSeparated('1295012')}
+                      <div className="flex flex-1 justify-start text-white font-semibold">
+                        {toCommaSeparated(
+                          myRank.vaultBalances
+                            .reduce((acc, { balance }) => acc + balance, 0)
+                            .toFixed(2),
+                        )}
                       </div>
-                      <div className="flex flex-1 justify-start text-white">
-                        {toCommaSeparated('1295012')}
+                      <div className="flex flex-1 justify-start text-white font-semibold">
+                        {toCommaSeparated(myRank.point.toFixed(6))}
                       </div>
                     </div>
                   </div>
                 )}
 
-                {ranks
-                  .filter(
-                    (rank) =>
-                      userAddress &&
-                      !isAddressEqual(rank.user as `0x${string}`, userAddress),
-                  )
-                  .map(({ rank, user, amount, point }) => (
+                {vaultPoints
+                  .filter((rank) => rank.point > 0.00001)
+                  .slice(0, 20)
+                  .map(({ userAddress, point, vaultBalances, rank }, index) => (
                     <div
-                      key={`rank-${user}`}
+                      key={`rank-${userAddress}`}
                       className={`self-stretch px-4 sm:px-8 h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm`}
                     >
                       <div
                         className={`${rank === 1 ? 'text-[#ffe607]' : rank === 2 ? 'text-[#e4e5f5]' : rank === 3 ? 'text-[#ffc038]' : 'text-white'} w-16 flex justify-start items-center gap-2.5 text-white font-bold`}
                       >
-                        {rank}
+                        {index + 1}
                       </div>
                       <div className="flex w-full">
                         <div className="flex flex-1 justify-start text-white gap-1">
                           <span className="flex sm:hidden">
-                            {shortAddress(user, 2)}
+                            {shortAddress(userAddress, 2)}
                           </span>
                           <span className="hidden sm:flex">
-                            {shortAddress(user, 8)}
+                            {shortAddress(userAddress, 8)}
                           </span>
                         </div>
-                        <div className="flex flex-1 justify-start text-white">
-                          {toCommaSeparated(amount.toString())}
+                        <div className="flex flex-1 justify-start text-white font-semibold">
+                          {toCommaSeparated(
+                            vaultBalances
+                              .reduce((acc, { balance }) => acc + balance, 0)
+                              .toFixed(2),
+                          )}
                         </div>
-                        <div className="flex flex-1 justify-start text-white">
-                          {toCommaSeparated(point.toString())}
+                        <div className="flex flex-1 justify-start text-white font-semibold">
+                          {toCommaSeparated(point.toFixed(6))}
                         </div>
                       </div>
                     </div>
