@@ -1,5 +1,5 @@
 import { CHAIN_IDS } from '@clober/v2-sdk'
-import { zeroHash } from 'viem'
+import { zeroAddress, zeroHash } from 'viem'
 
 export const WHITELISTED_VAULTS: {
   [chain in CHAIN_IDS]: {
@@ -60,6 +60,20 @@ export const WHITELISTED_VAULTS: {
         baseAmount: 10000,
         lpAmount: 10031,
         timestamp: 1743062400,
+        priceMultiplier: 1e10,
+      },
+    },
+    {
+      token0: '0xb2f82D0f38dc453D596Ad40A37799446Cc89274A',
+      token1: zeroAddress,
+      salt: zeroHash,
+      key: '0xebadcf03683413b3fc72a0d16a0a02902db04ee7a3b439de5033e825c1d79380',
+      hasDashboard: false,
+      startLPInfo: {
+        quoteAmount: 1000,
+        baseAmount: 1000,
+        lpAmount: 1000,
+        timestamp: 1743667318,
         priceMultiplier: 1e10,
       },
     },
