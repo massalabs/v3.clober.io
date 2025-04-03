@@ -30,7 +30,9 @@ export default function CheckIcon({
         ) : (
           <CheckDefaultSvg className="w-[14px] h-[14px] sm:w-4 sm:h-4" />
         )}
-        {label && <p className="text-xs sm:text-sm text-white">{label}</p>}
+        {label && (
+          <p className="text-xs sm:text-sm text-white text-nowrap">{label}</p>
+        )}
       </div>
     </div>
   )
