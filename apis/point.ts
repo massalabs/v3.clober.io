@@ -61,14 +61,15 @@ export async function fetchLiquidVaultPoints(
             })
             return acc
           }
-          const timeDelta = now - Number(vaultBalance.updatedAt)
+          const timeDelta =
+            now - Math.max(Number(vaultBalance.updatedAt), startedAt)
           const point = new BigNumber(vaultBalance.amount)
             .times(timeDelta)
             .times(pointsPerSecond)
             .div(1000000000000000000)
             .toNumber()
           return acc + point
-        }, 0),
+        }, Number(user.accumulatedPoints)),
       }
     })
     .sort((a, b) => b.point - a.point)
