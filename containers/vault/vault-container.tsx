@@ -110,10 +110,21 @@ export const VaultContainer = () => {
           </div>
         </div>
       </div>
-      <div className="flex w-auto flex-col items-center mt-6 lg:mt-12 px-4 lg:px-0">
+      <div className="flex w-full flex-col items-center mt-6 px-4 lg:px-0 gap-4 sm:gap-8">
         <div
           className={`flex flex-col w-full lg:w-[${selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
         >
+          <div className="w-full sm:ml-auto sm:w-[360px] pl-2 pr-3 py-2 bg-blue-400/20 rounded-lg inline-flex justify-start items-center gap-3">
+            <div className="px-2 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">
+              <div className="self-stretch justify-start text-blue-400 text-base font-bold">
+                P
+              </div>
+            </div>
+            <div className="justify-start text-blue-300 text-[13px] sm:text-sm font-bold text-nowrap">
+              You can earn points through the vault!
+            </div>
+          </div>
+
           {tab === 'vault' ? (
             <>
               <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
