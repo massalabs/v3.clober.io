@@ -2,6 +2,7 @@ import React from 'react'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 import { base } from 'viem/chains'
+import BigNumber from 'bignumber.js'
 
 import { Vault } from '../../model/vault'
 import { CurrencyIcon } from '../icon/currency-icon'
@@ -43,7 +44,7 @@ export const VaultCard = ({
           </div>
         </div>
         <div className="w-[140px] text-white text-base font-bold">
-          {`${vault.apy > 0 ? `${vault.apy.toFixed(2)}%` : '-'}`}
+          {`${!BigNumber(vault.apy).isNaN() && !BigNumber(vault.apy).isZero() && BigNumber(vault.apy).lt(1000) ? `${vault.apy.toFixed(2)}%` : '-'}`}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
           ${toCommaSeparated(vault.tvl.toFixed(0))}
