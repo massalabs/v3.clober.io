@@ -45,7 +45,10 @@ export const VaultCard = ({
             <div>-</div>
             <div>{vault.currency1.symbol}</div>
           </div>
-
+        </div>
+        <div className="w-[140px] text-white text-base font-bold flex flex-row gap-2">
+          {`${!BigNumber(vault.apy).isNaN() && !BigNumber(vault.apy).isZero() && BigNumber(vault.apy).lt(1000) ? `${vault.apy.toFixed(2)}%` : '-'}`}
+          {hashCloberPoint && ' + '}
           {hashCloberPoint && (
             <div className="px-2 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">
               <div className="self-stretch justify-start text-blue-400 text-base font-bold">
@@ -53,9 +56,6 @@ export const VaultCard = ({
               </div>
             </div>
           )}
-        </div>
-        <div className="w-[140px] text-white text-base font-bold">
-          {`${!BigNumber(vault.apy).isNaN() && !BigNumber(vault.apy).isZero() && BigNumber(vault.apy).lt(1000) ? `${vault.apy.toFixed(2)}%` : '-'}`}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
           ${toCommaSeparated(vault.tvl.toFixed(0))}
@@ -136,6 +136,14 @@ export const VaultCard = ({
             <div className="self-stretch text-gray-400 text-xs">APY</div>
             <div className="self-stretch text-white text-sm font-bold">
               {`${vault.apy > 0 ? `${vault.apy.toFixed(2)}%` : '-'}`}
+              {hashCloberPoint && ' + '}
+              {hashCloberPoint && (
+                <div className="px-1.5 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">
+                  <div className="self-stretch justify-start text-blue-400 text-sm font-bold">
+                    P
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex w-full flex-col justify-start items-center gap-2">
