@@ -32,7 +32,7 @@ export async function fetchLiquidVaultPoints(
   }>(
     LIQUIDITY_VAULT_POINT_SUBGRAPH_ENDPOINT[chainId]!,
     'getPoints',
-    'query getPoints { users { id vaultBalances { amount pool { id } updatedAt } accumulatedPoints } }',
+    'query getPoints { users (orderBy: accumulatedPoints, orderDirection: desc) { id vaultBalances { amount pool { id } updatedAt } accumulatedPoints } }',
     {},
   )
   const now = currentTimestampInSeconds()

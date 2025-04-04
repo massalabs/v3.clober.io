@@ -6,7 +6,7 @@ export const LIQUIDITY_VAULT_POINT_SUBGRAPH_ENDPOINT: {
   [CHAIN_IDS.BASE]:
     'https://subgraph.satsuma-prod.com/f6a8c4889b7b/clober/liquidity-vault-point-base/api',
   [CHAIN_IDS.MONAD_TESTNET]:
-    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/liquidity-vault-point-monad-testnet/v1.0.0/gn',
+    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/liquidity-vault-point-monad-testnet/v1.1.2/gn',
 }
 
 export const LIQUIDITY_VAULT_POINT_START_AT: {
