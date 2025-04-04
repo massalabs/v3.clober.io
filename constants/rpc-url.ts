@@ -4,7 +4,7 @@ export const RPC_URL: {
   [chain in CHAIN_IDS]: string
 } = {
   [CHAIN_IDS.BASE]:
-    'https://base.blockpi.network/v1/rpc/d19f249ccf70c63f55e6fcddf5903edfc7b8df32',
+    'https://base-mainnet.g.alchemy.com/v2/3Um4IcT1mrq2MEOYurXvsRAzk_v3Q_4X',
   [CHAIN_IDS.MONAD_TESTNET]:
     'https://monad-testnet.blockvision.org/v1/2uIMqtxI4tKB9wkTX3ozeutNKfp',
 }
