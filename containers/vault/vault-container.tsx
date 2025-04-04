@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import { base } from 'viem/chains'
-import { isAddressEqual, zeroAddress } from 'viem'
+import { isAddressEqual } from 'viem'
 
 import { useVaultContext } from '../../contexts/vault/vault-context'
 import { useChainContext } from '../../contexts/chain-context'
@@ -15,20 +15,12 @@ import { shortAddress } from '../../utils/address'
 export const VaultContainer = () => {
   const router = useRouter()
   const { address: userAddress } = useAccount()
-  const { vaults, vaultLpBalances, vaultPoints } = useVaultContext()
+  const { vaults, vaultLpBalances, vaultPoints, myVaultPoint } =
+    useVaultContext()
   const { selectedChain } = useChainContext()
 
   const [tab, setTab] = React.useState<'my-liquidity' | 'vault' | 'point'>(
     'vault',
-  )
-
-  const myRank = useMemo(
-    () =>
-      userAddress &&
-      vaultPoints.find((rank) =>
-        isAddressEqual(rank.userAddress as `0x${string}`, userAddress),
-      ),
-    [userAddress, vaultPoints],
   )
 
   return (
@@ -230,10 +222,12 @@ export const VaultContainer = () => {
               </div>
 
               <div className="self-stretch w-full flex flex-col justify-start items-start gap-1 sm:gap-2 overflow-y-scroll max-h-[500px]">
-                {userAddress && myRank && (
+                {userAddress && vaultPoints.length > 0 && myVaultPoint && (
                   <div className="self-stretch px-4 sm:px-8 min-h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm">
                     <div className="w-16 flex justify-start items-center gap-2.5 text-white font-bold">
-                      {myRank.rank}
+                      {vaultPoints.find((rank) =>
+                        isAddressEqual(rank.userAddress, userAddress),
+                      )?.rank ?? '-'}
                     </div>
                     <div className="flex w-full">
                       <div className="flex flex-1 justify-start text-blue-400 gap-1">
@@ -244,13 +238,13 @@ export const VaultContainer = () => {
                       </div>
                       <div className="flex flex-1 justify-start text-white font-semibold">
                         {toCommaSeparated(
-                          myRank.vaultBalances
+                          myVaultPoint.vaultBalances
                             .reduce((acc, { balance }) => acc + balance, 0)
                             .toFixed(2),
                         )}
                       </div>
                       <div className="flex flex-1 justify-start text-white font-semibold">
-                        {toCommaSeparated(myRank.point.toFixed(6))}
+                        {toCommaSeparated(myVaultPoint.point.toFixed(6))}
                       </div>
                     </div>
                   </div>
