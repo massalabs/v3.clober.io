@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getAddress, isAddress } from 'viem'
 
 import { fetchLiquidVaultPoint } from '../../../../../../apis/point'
-import { currentTimestampInSeconds } from '../../../../../../utils/date'
 
 export default async function handler(
   req: NextApiRequest,
