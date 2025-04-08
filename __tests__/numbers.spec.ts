@@ -41,6 +41,11 @@ describe('Numbers', () => {
   })
 
   it('toShortNumber', () => {
+    expect(toShortNumber(10000.001234566)).toBe('10,000')
+    expect(toShortNumber(10000.1234566)).toBe('10,000.1')
+    expect(toShortNumber(10000.123)).toBe('10,000.1')
+    expect(toShortNumber(10000)).toBe('10,000')
+    expect(toShortNumber(1000)).toBe('1,000')
     expect(toShortNumber(100)).toBe('100')
     expect(toShortNumber(10)).toBe('10')
     expect(toShortNumber(1)).toBe('1')

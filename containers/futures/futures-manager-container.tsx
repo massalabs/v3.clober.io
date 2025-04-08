@@ -131,7 +131,7 @@ export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
           }
           const hash = await borrow(asset, collateralAmount, debtAmount)
           if (hash) {
-            await router.replace(`/future?chain=${selectedChain.id}`)
+            await router.replace(`/futures?chain=${selectedChain.id}`)
           }
         },
         text:

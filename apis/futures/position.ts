@@ -40,7 +40,7 @@ type ShortPositionDto = {
   averagePrice: string
 }
 
-export const fetchFuturePositions = async (
+export const fetchFuturesPositions = async (
   chainId: CHAIN_IDS,
   userAddress: `0x${string}`,
   prices: Prices,

@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
-import { monadTestnet } from 'viem/chains'
 
 import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
-import { fetchFuturePositions } from '../../apis/futures/position'
+import { fetchFuturesPositions } from '../../apis/futures/position'
 import { UserPosition } from '../../model/futures/user-position'
-import { fetchFutureAssets } from '../../apis/futures/asset'
+import { fetchFuturesAssets } from '../../apis/futures/asset'
 import { Asset } from '../../model/futures/asset'
 
 type FuturesContext = {
@@ -30,7 +29,7 @@ export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { data: assets } = useQuery({
     queryKey: ['futures-assets', selectedChain.id],
     queryFn: async () => {
-      return fetchFutureAssets(selectedChain.id)
+      return fetchFuturesAssets(selectedChain.id)
     },
     initialData: [],
   }) as {
@@ -43,7 +42,7 @@ export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (!userAddress) {
         return []
       }
-      return fetchFuturePositions(selectedChain.id, userAddress, prices)
+      return fetchFuturesPositions(selectedChain.id, userAddress, prices)
     },
     initialData: [],
     refetchIntervalInBackground: true,
@@ -51,15 +50,6 @@ export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }) as {
     data: UserPosition[]
   }
-
-  // TODO: remove this after testnet
-  useEffect(() => {
-    if (selectedChain.id !== monadTestnet.id) {
-      setSelectedChain(monadTestnet)
-      const url = new URL(window.location.href)
-      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
-    }
-  }, [selectedChain, setSelectedChain])
 
   useEffect(() => {
     setCurrencies(

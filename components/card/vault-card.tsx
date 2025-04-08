@@ -135,7 +135,7 @@ export const VaultCard = ({
           <div className="flex w-full flex-col justify-start items-center gap-2">
             <div className="self-stretch text-gray-400 text-xs">APY</div>
             <div className="self-stretch text-white text-sm font-bold">
-              {`${vault.apy > 0 ? `${vault.apy.toFixed(2)}%` : '-'}`}
+              {`${!BigNumber(vault.apy).isNaN() && !BigNumber(vault.apy).isZero() && BigNumber(vault.apy).lt(1000) ? `${vault.apy.toFixed(2)}%` : '-'}`}
               {hashCloberPoint && ' + '}
               {hashCloberPoint && (
                 <div className="px-1.5 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">

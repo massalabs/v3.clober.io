@@ -62,7 +62,7 @@ export const FuturesAssetCard = ({
           </Link>
           <button
             onClick={() =>
-              router.push(`/future/mint/${asset.id}?chain=${chainId}`)
+              router.push(`/futures/mint/${asset.id}?chain=${chainId}`)
             }
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
             rel="noreferrer"
@@ -90,7 +90,7 @@ export const FuturesAssetCard = ({
           <button
             onClick={() =>
               router.push(
-                `/future/mint/${getAddress(asset.id)}?chain=${chainId}`,
+                `/futures/mint/${getAddress(asset.id)}?chain=${chainId}`,
               )
             }
             className="flex ml-auto"

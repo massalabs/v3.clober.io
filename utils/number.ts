@@ -37,7 +37,9 @@ export const toShortNumber = (number: BigNumber.Value): string => {
   if (integer.gt(0)) {
     // minimum tick is 0.1bp
     const fractionDigits = findFirstNonZeroIndex(integer.div(100000))
-    return removeZeroTail(bn.toFixed(fractionDigits, BigNumber.ROUND_DOWN))
+    return toCommaSeparated(
+      removeZeroTail(bn.toFixed(fractionDigits, BigNumber.ROUND_DOWN)),
+    )
   }
   const index = findFirstNonZeroIndex(bn) - 1
   if (index === -1) {
@@ -46,11 +48,15 @@ export const toShortNumber = (number: BigNumber.Value): string => {
     }
     // minimum tick is 0.1bp
     const fractionDigits = findFirstNonZeroIndex(integer.div(100000))
-    return removeZeroTail(bn.toFixed(fractionDigits, BigNumber.ROUND_FLOOR))
+    return toCommaSeparated(
+      removeZeroTail(bn.toFixed(fractionDigits, BigNumber.ROUND_FLOOR)),
+    )
   }
   if (index <= 3) {
-    return removeZeroTail(
-      bn.toFixed(index + 1 + POLLY_FILL_DECIMALS, BigNumber.ROUND_DOWN),
+    return toCommaSeparated(
+      removeZeroTail(
+        bn.toFixed(index + 1 + POLLY_FILL_DECIMALS, BigNumber.ROUND_DOWN),
+      ),
     )
   }
   const list = [

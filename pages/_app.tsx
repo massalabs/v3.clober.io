@@ -153,6 +153,18 @@ function App({ Component, pageProps }: AppProps) {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [handlePopState])
 
+  const getBackground = (pathname: string) => {
+    if (pathname.includes('/trade')) {
+      return "bg-[url('../public/trade-background.png')] bg-top"
+    } else if (pathname.includes('/earn')) {
+      return "bg-[url('../public/earn-background.png')] bg-top"
+    } else if (pathname.includes('/futures')) {
+      return "bg-[url('../public/trade-background.png')] bg-top"
+    } else if (pathname.includes('/discover')) {
+      return "bg-[url('../public/discover-background.png')] bg-top"
+    }
+  }
+
   return (
     <>
       <ErrorBoundary>
@@ -166,7 +178,9 @@ function App({ Component, pageProps }: AppProps) {
             <TransactionProvider>
               <CurrencyProvider>
                 <div
-                  className={`flex flex-col w-[100vw] min-h-[100vh] bg-[#0F1013] text-white bg-right`}
+                  className={`flex flex-col w-[100vw] min-h-[100vh] bg-[#0F1013] text-white ${getBackground(
+                    router.pathname,
+                  )} bg-right bg-no-repeat`}
                 >
                   <PanelWrapper open={open} setOpen={setOpen} />
                   <HeaderContainer onMenuClick={() => setOpen(true)} />
@@ -187,7 +201,7 @@ function App({ Component, pageProps }: AppProps) {
                         </div>
                       </div>
                     </VaultProvidersWrapper>
-                  ) : router.pathname.includes('/future') ? (
+                  ) : router.pathname.includes('/futures') ? (
                     <FuturesProvidersWrapper>
                       <div className="flex flex-1 relative justify-center">
                         <div className="flex w-full flex-col items-center gap-6 md:gap-11 px-2 pb-0">

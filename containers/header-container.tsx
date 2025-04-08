@@ -26,6 +26,7 @@ import { UserButton } from '../components/button/user-button'
 import { WrongNetworkButton } from '../components/button/wrong-network-button'
 import { UserTransactionsModal } from '../components/modal/user-transactions-modal'
 import { useTransactionContext } from '../contexts/transaction-context'
+import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -55,11 +56,11 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
       <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
         <div className="flex items-center gap-2.5 md:gap-12">
-          {router.pathname.includes('/future') ? (
+          {router.pathname.includes('/futures') ? (
             <Link
               className="flex gap-2 items-center"
               target="_blank"
-              href="https://alpha.clober.io/future?chain=10143"
+              href="https://alpha.clober.io/futures?chain=10143"
               rel="noreferrer"
             >
               <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
@@ -74,7 +75,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
             </Link>
           )}
-          <div className="hidden lg:flex py-1 justify-start items-center gap-8">
+          <div className="hidden xl:flex py-1 justify-start items-center gap-8">
             <PageButton
               disabled={router.pathname.includes('/trade')}
               onClick={() => {
@@ -92,15 +93,25 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               }}
             >
               <VaultPageSvg className="w-4 h-4" />
-              Vault
+              Earn
             </PageButton>
 
             {selectedChain.id === monadTestnet.id && (
               <>
+                {/*<PageButton*/}
+                {/*  disabled={router.pathname.includes('/discover')}*/}
+                {/*  onClick={() => {*/}
+                {/*    router.push(`/discover?chain=${selectedChain.id}`)*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  <DiscoverPageSvg className="w-4 h-4" />*/}
+                {/*  Discover*/}
+                {/*</PageButton>*/}
+
                 <PageButton
-                  disabled={router.pathname.includes('/future')}
+                  disabled={router.pathname.includes('/futures')}
                   onClick={() => {
-                    router.push(`/future?chain=${monadTestnet.id}`)
+                    router.push(`/futures?chain=${monadTestnet.id}`)
                   }}
                 >
                   <LimitPageSvg className="w-4 h-4" />
@@ -200,7 +211,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             )}
           </div>
           <button
-            className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center lg:hidden"
+            className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center xl:hidden"
             onClick={onMenuClick}
           >
             <MenuSvg />
