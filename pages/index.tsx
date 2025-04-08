@@ -10,9 +10,8 @@ export default function Home() {
   const url = window.location.href
 
   if (router.pathname === '/') {
-    // TODO: remove this after the futures page is ready
     if (url.includes('futures.clober.io')) {
-      router.push(`/future?chain=${monadTestnet.id}`)
+      router.push(`/futures?chain=${monadTestnet.id}`)
     } else {
       router.push(`/trade?chain=${selectedChain.id}`)
     }

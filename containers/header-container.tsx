@@ -55,11 +55,11 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
       <div className="flex items-center justify-between h-[46px] md:h-[60px] py-0 px-4">
         <div className="flex items-center gap-2.5 md:gap-12">
-          {router.pathname.includes('/future') ? (
+          {router.pathname.includes('/futures') ? (
             <Link
               className="flex gap-2 items-center"
               target="_blank"
-              href="https://alpha.clober.io/future?chain=10143"
+              href="https://alpha.clober.io/futures?chain=10143"
               rel="noreferrer"
             >
               <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
@@ -98,9 +98,9 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             {selectedChain.id === monadTestnet.id && (
               <>
                 <PageButton
-                  disabled={router.pathname.includes('/future')}
+                  disabled={router.pathname.includes('/futures')}
                   onClick={() => {
-                    router.push(`/future?chain=${monadTestnet.id}`)
+                    router.push(`/futures?chain=${monadTestnet.id}`)
                   }}
                 >
                   <LimitPageSvg className="w-4 h-4" />

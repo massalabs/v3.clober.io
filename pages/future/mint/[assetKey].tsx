@@ -33,7 +33,7 @@ export default function MintFutureAssetManage() {
           <Link
             className="flex items-center font-bold text-base sm:text-2xl gap-2 sm:gap-3 mt-4 mb-2 sm:mb-2 ml-4 sm:ml-6"
             replace={true}
-            href={`/future?chain=${selectedChain.id}`}
+            href={`/futures?chain=${selectedChain.id}`}
           >
             <BackSvg className="w-4 h-4 sm:w-8 sm:h-8" />
             <div className="flex gap-2">

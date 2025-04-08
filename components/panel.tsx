@@ -87,9 +87,9 @@ const Panel = ({
                         {chainId === monadTestnet.id && (
                           <>
                             <PageButton
-                              disabled={router.pathname.includes('/future')}
+                              disabled={router.pathname.includes('/futures')}
                               onClick={() => {
-                                router.push(`/future?chain=${monadTestnet.id}`)
+                                router.push(`/futures?chain=${monadTestnet.id}`)
                                 setOpen(false)
                               }}
                             >

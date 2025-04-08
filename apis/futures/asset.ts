@@ -30,7 +30,7 @@ type AssetDto = {
   settlePrice: string
 }
 
-export const fetchFutureAssets = async (
+export const fetchFuturesAssets = async (
   chainId: CHAIN_IDS,
 ): Promise<Asset[]> => {
   if (chainId !== monadTestnet.id) {
