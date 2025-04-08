@@ -10,6 +10,7 @@ export interface StackedAreaSeriesOptions extends CustomSeriesOptions {
   gradients?: { start: string; end: string }[]
   // Modification: tracks the hovered data point, used for rendering crosshair
   hoveredLogicalIndex?: Logical
+  priceTicks?: number[]
 }
 
 export const defaultOptions: StackedAreaSeriesOptions = {

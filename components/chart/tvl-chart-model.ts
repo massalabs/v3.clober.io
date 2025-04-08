@@ -23,7 +23,6 @@ export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
 interface TVLChartParams extends ChartModelParams<StackedLineData> {
   colors: string[]
   gradients?: { start: string; end: string }[]
-  priceTicks?: number[]
 }
 
 export class TVLChartModel extends ChartModel<StackedLineData> {
