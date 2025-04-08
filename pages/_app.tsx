@@ -160,6 +160,8 @@ function App({ Component, pageProps }: AppProps) {
       return "bg-[url('../public/earn-background.png')] bg-top"
     } else if (pathname.includes('/futures')) {
       return "bg-[url('../public/trade-background.png')] bg-top"
+    } else if (pathname.includes('/discover')) {
+      return "bg-[url('../public/discover-background.png')] bg-top"
     }
   }
 
