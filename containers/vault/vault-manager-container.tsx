@@ -409,11 +409,11 @@ export const VaultManagerContainer = ({
               </div>
             </div>
             <div className="h-full md:h-[576px] flex flex-col w-full sm:w-[480px] justify-start items-start gap-4">
-              <div className="w-full sm:h-14 p-1.5 sm:px-2 rounded-xl md:rounded-2xl border-2 border-slate-800 border-solid justify-center items-center inline-flex">
+              <div className="w-full sm:h-14 p-1.5 sm:px-2 rounded-xl md:rounded-2xl border-2 border-slate-400 border-solid justify-center items-center inline-flex">
                 <button
                   disabled={tab === 'add-liquidity'}
                   onClick={() => setTab('add-liquidity')}
-                  className="whitespace-nowrap flex-1 h-8 sm:h-10 px-4 sm:px-6 py-1.5 sm:py-4 disabled:bg-slate-800 rounded-xl justify-center items-center gap-1 sm:gap-2 flex"
+                  className="whitespace-nowrap flex-1 h-8 sm:h-10 px-4 sm:px-6 py-1.5 sm:py-4 disabled:bg-slate-700 rounded-xl justify-center items-center gap-1 sm:gap-2 flex"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -437,7 +437,7 @@ export const VaultManagerContainer = ({
                 <button
                   disabled={tab === 'remove-liquidity'}
                   onClick={() => setTab('remove-liquidity')}
-                  className="whitespace-nowrap flex-1 h-8 sm:h-10 px-4 sm:px-6 py-1.5 sm:py-4 disabled:bg-slate-800 rounded-xl justify-center items-center gap-1 sm:gap-2 flex"
+                  className="whitespace-nowrap flex-1 h-8 sm:h-10 px-4 sm:px-6 py-1.5 sm:py-4 disabled:bg-slate-700 rounded-xl justify-center items-center gap-1 sm:gap-2 flex"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
