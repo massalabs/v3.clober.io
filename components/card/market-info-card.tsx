@@ -52,7 +52,7 @@ export const MarketInfoCard = ({
       </Toast>
 
       <div className="flex w-full h-full lg:h-[74px] lg:w-[740px] flex-col lg:flex-row justify-start items-start px-4 lg:px-0 lg:pl-5 lg:pr-4 lg:py-3 lg:bg-[#171b24] lg:rounded-2xl lg:justify-start lg:items-center gap-4">
-        <div className="flex flex-row w-full">
+        <div className="flex flex-row">
           <div className="justify-start items-center gap-2.5 flex w-full">
             <div className="justify-start items-center flex relative w-14">
               <CurrencyIcon
@@ -255,7 +255,7 @@ export const MarketInfoCard = ({
           </div>
         </div>
 
-        <div className="hidden lg:flex h-full w-full lg:min-w-[400px] items-center gap-7">
+        <div className="hidden lg:flex h-full ml-auto min-w-[400px] items-center gap-7">
           <div className="flex-col justify-center items-start gap-0.5 inline-flex">
             <div className="text-[#38e69f] text-[17px] font-bold">
               {toShortNumber(price)}
