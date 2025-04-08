@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { isAddressEqual, parseUnits } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
-import BigNumber from 'bignumber.js'
 
 import CurrencyAmountInput from '../input/currency-amount-input'
 import { Currency } from '../../model/currency'
