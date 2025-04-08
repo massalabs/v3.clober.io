@@ -211,7 +211,7 @@ export const VaultContainer = () => {
                     </div>
                     <div className="flex flex-1 justify-start items-center gap-2.5">
                       <div className="justify-start text-gray-400 text-nowrap">
-                        Lp
+                        LP in wallet
                       </div>
                     </div>
                     <div className="flex flex-1 justify-start items-center gap-2.5">
