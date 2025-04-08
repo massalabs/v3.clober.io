@@ -33,6 +33,8 @@ import { DEFAULT_TOKEN_INFO } from '../model/token-info'
 import { WETH } from '../constants/currency'
 import { fetchPrice } from '../apis/price'
 import { fetchTokenInfoFromOrderBook } from '../apis/token'
+import { SearchSvg } from '../components/svg/search-svg'
+import CheckIcon from '../components/icon/check-icon'
 
 import { IframeChartContainer } from './chart/iframe-chart-container'
 import { NativeChartContainer } from './chart/native-chart-container'
@@ -89,6 +91,25 @@ export const TradeContainer = () => {
 
   const [debouncedValue, setDebouncedValue] = useState('')
   const [tab, setTab] = useState<'limit' | 'swap'>('swap')
+  const [searchValue, _setSearchValue] = useState('')
+  const [searchInCurrentMarket, _setSearchInCurrentMarket] = useState(false)
+
+  const setSearchInCurrentMarket = useCallback((value: boolean) => {
+    _setSearchInCurrentMarket(value)
+    if (value) {
+      _setSearchValue('')
+    }
+  }, [])
+
+  const setSearchValue = useCallback(
+    (value: string) => {
+      _setSearchValue(value)
+      if (value) {
+        setSearchInCurrentMarket(false)
+      }
+    },
+    [setSearchInCurrentMarket],
+  )
 
   useEffect(() => {
     if (testnetChainIds.includes(selectedChain.id)) {
@@ -172,11 +193,47 @@ export const TradeContainer = () => {
     [inputCurrency?.decimals, inputCurrencyAmount],
   )
 
-  const claimableOpenOrders = openOrders.filter(
+  const filteredOpenOrders = useMemo(
+    () =>
+      openOrders.filter((order) => {
+        if (selectedMarket && searchInCurrentMarket) {
+          return (
+            (isAddressEqual(
+              selectedMarket.base.address,
+              order.inputCurrency.address,
+            ) &&
+              isAddressEqual(
+                selectedMarket.quote.address,
+                order.outputCurrency.address,
+              )) ||
+            (isAddressEqual(
+              selectedMarket.base.address,
+              order.outputCurrency.address,
+            ) &&
+              isAddressEqual(
+                selectedMarket.quote.address,
+                order.inputCurrency.address,
+              ))
+          )
+        }
+        const _searchValue = searchValue.toLowerCase()
+        return (
+          order.inputCurrency.symbol.toLowerCase().includes(_searchValue) ||
+          order.outputCurrency.symbol.toLowerCase().includes(_searchValue) ||
+          order.inputCurrency.name.toLowerCase().includes(_searchValue) ||
+          order.outputCurrency.name.toLowerCase().includes(_searchValue) ||
+          order.inputCurrency.address.toLowerCase().includes(_searchValue) ||
+          order.outputCurrency.address.toLowerCase().includes(_searchValue)
+        )
+      }),
+    [openOrders, searchInCurrentMarket, searchValue, selectedMarket],
+  )
+
+  const claimableOpenOrders = filteredOpenOrders.filter(
     ({ claimable }) =>
       parseUnits(claimable.value, claimable.currency.decimals) > 0n,
   )
-  const cancellableOpenOrders = openOrders.filter(
+  const cancellableOpenOrders = filteredOpenOrders.filter(
     ({ cancelable }) =>
       parseUnits(cancelable.value, cancelable.currency.decimals) > 0n,
   )
@@ -767,14 +824,46 @@ export const TradeContainer = () => {
                 <div className="text-white font-semibold">Open Order</div>
                 <div className="flex px-2 py-0.5 lg:h-7 lg:px-2.5 lg:py-0.5 bg-blue-500/20 rounded-[17.02px] flex-col justify-center items-center">
                   <div className="text-blue-500 text-[13px] font-semibold">
-                    {openOrders.length}
+                    {filteredOpenOrders.length}
                   </div>
                 </div>
               </div>
             </div>
 
+            <div className="flex flex-row mb-4 gap-5 max-w-[480px] lg:max-w-full lg:ml-auto lg:flex-row-reverse">
+              <div className="w-full lg:w-[246px] flex flex-col relative rounded shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <div className="relative h-4 w-4">
+                    <SearchSvg />
+                  </div>
+                </div>
+                <div className="inline-block">
+                  <div className="invisible h-0 mx-[29px]" aria-hidden="true">
+                    Search by symbol
+                  </div>
+                  <input
+                    type="search"
+                    name="search"
+                    id="search"
+                    className="inline w-full pl-10 py-2 lg:py-3 text-white bg-transparent rounded-xl border border-solid border-gray-600 focus:ring-1 focus:ring-inset focus:ring-gray-400 flex-col placeholder:text-gray-500 text-xs sm:text-sm"
+                    placeholder="Search tokens"
+                    value={searchValue}
+                    onChange={(event) => setSearchValue(event.target.value)}
+                  />
+                </div>
+              </div>
+
+              <button className="flex justify-start items-center gap-2">
+                <CheckIcon
+                  checked={searchInCurrentMarket}
+                  onCheck={setSearchInCurrentMarket}
+                  text="Current Market"
+                />
+              </button>
+            </div>
+
             {/*pc open order card*/}
-            {openOrders.length > 0 ? (
+            {filteredOpenOrders.length > 0 ? (
               <div className="hidden lg:flex flex-col justify-start items-center gap-4 bg-transparent mb-14">
                 <div className="w-full justify-start items-end inline-flex">
                   <div className="flex text-gray-500 text-xs font-semibold">
@@ -807,7 +896,7 @@ export const TradeContainer = () => {
                 <OpenOrderCardList
                   chainId={selectedChain.id}
                   userAddress={userAddress}
-                  openOrders={openOrders}
+                  openOrders={filteredOpenOrders}
                   claims={claims}
                   cancels={cancels}
                   router={router}
@@ -820,7 +909,7 @@ export const TradeContainer = () => {
             {/*mobile open order card*/}
             <div className="flex lg:hidden w-full justify-center mb-28 sm:mb-0">
               <div className="flex flex-col w-full lg:w-auto h-full lg:grid lg:grid-cols-3 gap-4 sm:gap-6">
-                {openOrders.length > 0 ? (
+                {filteredOpenOrders.length > 0 ? (
                   <div className="flex ml-auto h-6 opacity-80 justify-start items-center gap-2">
                     <button
                       disabled={claimableOpenOrders.length === 0}
@@ -848,7 +937,7 @@ export const TradeContainer = () => {
                 <OpenOrderCardList
                   chainId={selectedChain.id}
                   userAddress={userAddress}
-                  openOrders={openOrders}
+                  openOrders={filteredOpenOrders}
                   claims={claims}
                   cancels={cancels}
                   router={router}
