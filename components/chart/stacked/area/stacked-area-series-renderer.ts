@@ -48,7 +48,7 @@ function moveYs(
   ys: number,
   verticalPixelRatio: number,
 ): number {
-  return ys * verticalPixelRatio + (ys / firstYs - 1) * 2500
+  return ys * verticalPixelRatio + (ys / firstYs - 1) * 1000
 }
 
 export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
@@ -258,7 +258,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
       ),
     )
 
-    ctx.font = '20px sans-serif'
+    ctx.font = '13px sans-serif'
     ctx.fillStyle = 'white'
     ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
