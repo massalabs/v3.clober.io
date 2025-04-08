@@ -104,7 +104,7 @@ export const VaultContainer = () => {
       </div>
       <div className="flex w-full flex-col items-center mt-6 px-4 lg:px-0 gap-4 sm:gap-8">
         <div
-          className={`flex flex-col w-full lg:w-[${selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
+          className={`flex flex-col w-full lg:w-[${tab === 'vault' && selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
         >
           <div className="w-full sm:ml-auto sm:w-[360px] pl-2 pr-3 py-2 bg-blue-400/20 rounded-lg inline-flex justify-start items-center gap-3">
             <div className="px-2 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">
@@ -201,7 +201,7 @@ export const VaultContainer = () => {
           ) : (
             <div className="flex flex-col justify-start items-center gap-3 sm:gap-4 mb-4">
               <div className="w-full py-3 sm:py-4 bg-[#1d1f27] sm:bg-[#1c1e27] rounded-xl inline-flex flex-col justify-start items-start gap-3">
-                <div className="self-stretch px-4 sm:px-8 inline-flex justify-start items-start gap-1.5 sm:text-xs text-sm">
+                <div className="self-stretch px-4 sm:px-8 inline-flex justify-start items-start gap-1.5 sm:text-sm text-xs">
                   <div className="w-16 flex justify-start items-center gap-2.5 text-gray-400">
                     Rank
                   </div>
@@ -223,7 +223,7 @@ export const VaultContainer = () => {
 
               <div className="self-stretch w-full flex flex-col justify-start items-start gap-1 sm:gap-2 overflow-y-scroll max-h-[500px]">
                 {userAddress && vaultPoints.length > 0 && myVaultPoint && (
-                  <div className="self-stretch px-4 sm:px-8 min-h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm">
+                  <div className="self-stretch px-4 sm:px-8 min-h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-sm text-xs">
                     <div className="w-16 flex justify-start items-center gap-2.5 text-white font-bold">
                       {vaultPoints.find((rank) =>
                         isAddressEqual(rank.userAddress, userAddress),
@@ -256,7 +256,7 @@ export const VaultContainer = () => {
                   .map(({ userAddress, point, vaultBalances, rank }, index) => (
                     <div
                       key={`rank-${userAddress}`}
-                      className={`self-stretch px-4 sm:px-8 min-h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-xs text-sm`}
+                      className={`self-stretch px-4 sm:px-8 min-h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-sm text-xs`}
                     >
                       <div
                         className={`${rank === 1 ? 'text-[#ffe607]' : rank === 2 ? 'text-[#e4e5f5]' : rank === 3 ? 'text-[#ffc038]' : 'text-white'} w-16 flex justify-start items-center gap-2.5 text-white font-bold`}
