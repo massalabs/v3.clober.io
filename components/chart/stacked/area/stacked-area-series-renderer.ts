@@ -249,7 +249,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
       }
     })
 
-    const priceTicks = [0.95, 1, 1.05, 1.1, 1.15]
+    const priceTicks = this._options?.priceTicks ?? []
     const tickPositions = priceTicks.map((price) =>
       moveYs(
         firstYs,
@@ -265,7 +265,9 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
 
     const labelX = 10
     for (let i = 0; i < priceTicks.length; i++) {
-      ctx.fillText(priceTicks[i].toString(), labelX, tickPositions[i])
+      if (tickPositions[i] > 100) {
+        ctx.fillText(priceTicks[i].toString(), labelX, tickPositions[i])
+      }
     }
 
     ctx.restore()
