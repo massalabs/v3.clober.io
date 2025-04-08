@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { monadTestnet } from 'viem/chains'
 
 import { useChainContext } from '../contexts/chain-context'
+import { DiscoverContainer } from '../containers/discover-container'
 
 export default function Discover() {
   const { selectedChain, setSelectedChain } = useChainContext()
@@ -14,5 +15,5 @@ export default function Discover() {
     }
   }, [selectedChain, setSelectedChain])
 
-  return <div>aa</div>
+  return <DiscoverContainer />
 }

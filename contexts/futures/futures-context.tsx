@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
-import { monadTestnet } from 'viem/chains'
 
 import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
@@ -51,15 +50,6 @@ export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }) as {
     data: UserPosition[]
   }
-
-  // TODO: remove this after testnet
-  useEffect(() => {
-    if (selectedChain.id !== monadTestnet.id) {
-      setSelectedChain(monadTestnet)
-      const url = new URL(window.location.href)
-      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
-    }
-  }, [selectedChain, setSelectedChain])
 
   useEffect(() => {
     setCurrencies(
