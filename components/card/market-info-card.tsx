@@ -255,7 +255,7 @@ export const MarketInfoCard = ({
           </div>
         </div>
 
-        <div className="hidden lg:flex h-full w-full items-center gap-7">
+        <div className="hidden lg:flex h-full w-full lg:min-w-[400px] items-center gap-7">
           <div className="flex-col justify-center items-start gap-0.5 inline-flex">
             <div className="text-[#38e69f] text-[17px] font-bold">
               {toShortNumber(price)}
