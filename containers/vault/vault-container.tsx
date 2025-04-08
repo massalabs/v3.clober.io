@@ -244,14 +244,14 @@ export const VaultContainer = () => {
                         )}
                       </div>
                       <div className="flex flex-1 justify-start text-white font-semibold">
-                        {toCommaSeparated(myVaultPoint.point.toFixed(6))}
+                        {toCommaSeparated(myVaultPoint.point.toFixed(2))}
                       </div>
                     </div>
                   </div>
                 )}
 
                 {vaultPoints
-                  .filter((rank) => rank.point > 0.00001)
+                  .filter((rank) => rank.point >= 0.01)
                   .slice(0, 100)
                   .map(({ userAddress, point, vaultBalances, rank }, index) => (
                     <div
@@ -280,7 +280,7 @@ export const VaultContainer = () => {
                           )}
                         </div>
                         <div className="flex flex-1 justify-start text-white font-semibold">
-                          {toCommaSeparated(point.toFixed(6))}
+                          {toCommaSeparated(point.toFixed(2))}
                         </div>
                       </div>
                     </div>
