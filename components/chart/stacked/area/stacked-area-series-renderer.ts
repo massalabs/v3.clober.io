@@ -48,7 +48,7 @@ function moveYs(
   ys: number,
   verticalPixelRatio: number,
 ): number {
-  return ys * verticalPixelRatio + (ys / firstYs - 1) * 500
+  return ys * verticalPixelRatio + (ys / firstYs - 1) * 2500
 }
 
 export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
@@ -99,6 +99,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
       }
     })
     const zeroY = priceToCoordinate(0) ?? 0
+    const firstYs = bars[0].ys[0]
     const { linesMeshed, hoverInfo } = this._createLinePaths(
       bars,
       this._data.visibleRange,
@@ -247,6 +248,27 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
         ctx.stroke(linePath.path)
       }
     })
+
+    const priceTicks = [0.95, 1, 1.05, 1.1, 1.15]
+    const tickPositions = priceTicks.map((price) =>
+      moveYs(
+        firstYs,
+        priceToCoordinate(price) ?? 0,
+        renderingScope.verticalPixelRatio,
+      ),
+    )
+
+    ctx.font = '20px sans-serif'
+    ctx.fillStyle = 'white'
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'middle'
+
+    const labelX = 10
+    for (let i = 0; i < priceTicks.length; i++) {
+      ctx.fillText(priceTicks[i].toString(), labelX, tickPositions[i])
+    }
+
+    ctx.restore()
   }
 
   /** Builds canvas line paths based on input data  */
