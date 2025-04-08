@@ -15,6 +15,8 @@ import { useCurrencyContext } from '../currency-context'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
 import { wagmiConfig } from '../../constants/chain'
 import { fetchVaults } from '../../apis/vault'
+import { fetchLiquidVaultPoint, fetchLiquidVaultPoints } from '../../apis/point'
+import { LiquidityVaultPoint } from '../../model/liquidity-vault-point'
 
 type VaultContext = {
   lpCurrencyAmount: string
@@ -29,6 +31,8 @@ type VaultContext = {
   setSlippageInput: (slippageInput: string) => void
   vaultLpBalances: Balances
   vaults: Vault[]
+  vaultPoints: LiquidityVaultPoint[]
+  myVaultPoint: LiquidityVaultPoint | null
 }
 
 const Context = React.createContext<VaultContext>({
@@ -44,6 +48,8 @@ const Context = React.createContext<VaultContext>({
   setSlippageInput: () => {},
   vaultLpBalances: {},
   vaults: [],
+  vaultPoints: [],
+  myVaultPoint: null,
 })
 
 export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
@@ -127,6 +133,29 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
     data: Balances
   }
 
+  const { data: vaultPoints } = useQuery({
+    queryKey: ['vault-points', selectedChain.id],
+    queryFn: async () => {
+      return fetchLiquidVaultPoints(selectedChain.id)
+    },
+    initialData: [],
+  }) as {
+    data: LiquidityVaultPoint[]
+  }
+
+  const { data: myVaultPoint } = useQuery({
+    queryKey: ['my-vault-point', selectedChain.id, userAddress],
+    queryFn: async () => {
+      if (!userAddress) {
+        return null
+      }
+      return fetchLiquidVaultPoint(selectedChain.id, userAddress)
+    },
+    initialData: null,
+  }) as {
+    data: LiquidityVaultPoint | null
+  }
+
   useEffect(() => {
     const action = () => {
       if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
@@ -162,6 +191,8 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
         setSlippageInput,
         vaultLpBalances: vaultLpBalances ?? {},
         vaults: vaults ?? [],
+        vaultPoints: vaultPoints ?? [],
+        myVaultPoint: myVaultPoint ?? null,
       }}
     >
       {children}
