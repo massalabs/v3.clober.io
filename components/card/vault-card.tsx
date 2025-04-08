@@ -124,7 +124,7 @@ export const VaultCard = ({
           <div className="flex w-full flex-col justify-start items-center gap-2">
             <div className="self-stretch text-gray-400 text-xs">APY</div>
             <div className="self-stretch text-white text-sm font-bold">
-              {`${vault.apy > 0 ? `${vault.apy.toFixed(2)}%` : '-'}`}
+              {`${!BigNumber(vault.apy).isNaN() && !BigNumber(vault.apy).isZero() && BigNumber(vault.apy).lt(1000) ? `${vault.apy.toFixed(2)}%` : '-'}`}
             </div>
           </div>
           <div className="flex w-full flex-col justify-start items-center gap-2">
