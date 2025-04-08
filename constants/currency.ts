@@ -179,6 +179,13 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://imagedelivery.net/tWwhAahBw7afBzFUrX5mYQ/5d1206c2-042c-4edc-9f8b-dcef2e9e8f00/public',
     },
     {
+      address: '0x3B37b6D72c8149b35F160cdd87f974dd293a094A',
+      name: 'RWAGMI',
+      symbol: 'RWAGMI',
+      decimals: 18,
+      icon: 'https://storage.nadapp.net/coin/75fe7f11-4c82-45aa-8ea8-806eb1134592',
+    },
+    {
       address: '0xb2f82D0f38dc453D596Ad40A37799446Cc89274A',
       name: 'aPriori Monad LST',
       symbol: 'aprMON',
