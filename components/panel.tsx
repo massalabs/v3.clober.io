@@ -81,11 +81,24 @@ const Panel = ({
                           }}
                         >
                           <VaultPageSvg className="w-4 h-4" />
-                          Vault
+                          Earn
                         </PageButton>
 
                         {chainId === monadTestnet.id && (
                           <>
+                            {/*<PageButton*/}
+                            {/*  disabled={router.pathname.includes('/discover')}*/}
+                            {/*  onClick={() => {*/}
+                            {/*    router.push(*/}
+                            {/*      `/discover?chain=${monadTestnet.id}`,*/}
+                            {/*    )*/}
+                            {/*    setOpen(false)*/}
+                            {/*  }}*/}
+                            {/*>*/}
+                            {/*  <DiscoverPageSvg className="w-4 h-4" />*/}
+                            {/*  Discover*/}
+                            {/*</PageButton>*/}
+
                             <PageButton
                               disabled={router.pathname.includes('/futures')}
                               onClick={() => {

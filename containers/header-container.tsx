@@ -26,6 +26,7 @@ import { UserButton } from '../components/button/user-button'
 import { WrongNetworkButton } from '../components/button/wrong-network-button'
 import { UserTransactionsModal } from '../components/modal/user-transactions-modal'
 import { useTransactionContext } from '../contexts/transaction-context'
+import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -74,7 +75,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               <img className="h-5 md:h-7" src="/logo.svg" alt="logo" />
             </Link>
           )}
-          <div className="hidden lg:flex py-1 justify-start items-center gap-8">
+          <div className="hidden xl:flex py-1 justify-start items-center gap-8">
             <PageButton
               disabled={router.pathname.includes('/trade')}
               onClick={() => {
@@ -92,11 +93,21 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               }}
             >
               <VaultPageSvg className="w-4 h-4" />
-              Vault
+              Earn
             </PageButton>
 
             {selectedChain.id === monadTestnet.id && (
               <>
+                {/*<PageButton*/}
+                {/*  disabled={router.pathname.includes('/discover')}*/}
+                {/*  onClick={() => {*/}
+                {/*    router.push(`/discover?chain=${selectedChain.id}`)*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  <DiscoverPageSvg className="w-4 h-4" />*/}
+                {/*  Discover*/}
+                {/*</PageButton>*/}
+
                 <PageButton
                   disabled={router.pathname.includes('/futures')}
                   onClick={() => {
@@ -200,7 +211,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             )}
           </div>
           <button
-            className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center lg:hidden"
+            className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center xl:hidden"
             onClick={onMenuClick}
           >
             <MenuSvg />

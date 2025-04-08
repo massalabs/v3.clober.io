@@ -153,6 +153,16 @@ function App({ Component, pageProps }: AppProps) {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [handlePopState])
 
+  const getBackground = (pathname: string) => {
+    if (pathname.includes('/trade')) {
+      return "bg-[url('../public/trade-background.png')] bg-top"
+    } else if (pathname.includes('/earn')) {
+      return "bg-[url('../public/earn-background.png')] bg-top"
+    } else if (pathname.includes('/futures')) {
+      return "bg-[url('../public/trade-background.png')] bg-top"
+    }
+  }
+
   return (
     <>
       <ErrorBoundary>
@@ -166,7 +176,9 @@ function App({ Component, pageProps }: AppProps) {
             <TransactionProvider>
               <CurrencyProvider>
                 <div
-                  className={`flex flex-col w-[100vw] min-h-[100vh] bg-[#0F1013] text-white bg-right`}
+                  className={`flex flex-col w-[100vw] min-h-[100vh] bg-[#0F1013] text-white ${getBackground(
+                    router.pathname,
+                  )} bg-right bg-no-repeat`}
                 >
                   <PanelWrapper open={open} setOpen={setOpen} />
                   <HeaderContainer onMenuClick={() => setOpen(true)} />
