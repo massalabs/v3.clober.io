@@ -106,14 +106,14 @@ export const VaultContainer = () => {
         <div
           className={`flex flex-col w-full lg:w-[${tab === 'vault' && selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
         >
-          <div className="w-full sm:ml-auto sm:w-[360px] pl-2 pr-3 py-2 bg-blue-400/20 rounded-lg inline-flex justify-start items-center gap-3">
+          <div className="w-full sm:ml-auto sm:w-[260px] pl-2 pr-3 py-2 bg-blue-400/20 rounded-lg inline-flex justify-start items-center gap-3">
             <div className="px-2 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">
               <div className="self-stretch justify-start text-blue-400 text-base font-bold">
                 P
               </div>
             </div>
             <div className="justify-start text-blue-300 text-[13px] sm:text-sm font-bold text-nowrap">
-              You can earn points through the vault!
+              Clober Points distributed
             </div>
           </div>
 
