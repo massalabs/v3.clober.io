@@ -188,7 +188,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           ) : (
             <></>
           )}
-          <div className="flex items-center flex-row gap-3">
+          <div className="flex items-center flex-row gap-1 sm:gap-3">
             {address && (
               <div className="flex w-full">
                 <UserPointButton score={myVaultPoint?.point ?? 0} />
