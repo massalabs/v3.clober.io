@@ -2,15 +2,17 @@ import React from 'react'
 import { CHAIN_IDS, Currency } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 import BigNumber from 'bignumber.js'
+import { Tooltip } from 'react-tooltip'
 
 import { CurrencyIcon } from '../icon/currency-icon'
-import { convertTimeAgo } from '../../utils/time'
 import { toHumanReadableString, toShortNumber } from '../../utils/number'
+import { QuestionMarkSvg } from '../svg/question-mark-svg'
 
 export const MarketCard = ({
   chainId,
   baseCurrency,
   quoteCurrency,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createAt,
   price,
   dailyVolume,
@@ -73,7 +75,7 @@ export const MarketCard = ({
               strokeLinejoin="round"
             />
           </svg>
-          {convertTimeAgo(createAt * 1000)}
+          {/*{convertTimeAgo(createAt * 1000)}*/} -
         </div>
         <div className="w-[140px] text-white text-base font-bold">
           ${toShortNumber(price)}
@@ -87,7 +89,7 @@ export const MarketCard = ({
         <div
           className={`w-[120px] ${dailyChange === 0 ? 'text-white' : dailyChange > 0 ? 'text-green-500' : 'text-red-500'} text-base font-bold`}
         >
-          {dailyChange.toFixed(2)} %
+          {dailyChange.toFixed(2)}%
         </div>
         <div className="w-[59px] flex h-full text-white text-base font-bold items-center justify-center">
           <svg
@@ -151,7 +153,7 @@ export const MarketCard = ({
           <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
             <div className="flex w-full flex-col justify-start items-center gap-2">
               <div className="self-stretch text-gray-400 text-xs">Age</div>
-              <div className="flex flex-row self-stretch text-white text-sm font-bold items-center gap-1">
+              <div className="flex flex-row self-stretch text-white text-sm font-bold items-center gap-1 text-nowrap">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -168,22 +170,35 @@ export const MarketCard = ({
                     strokeLinejoin="round"
                   />
                 </svg>
-                {convertTimeAgo(createAt * 1000)}
+                {/*{convertTimeAgo(createAt * 1000)}*/}-
               </div>
             </div>
             <div className="flex w-full flex-col justify-start items-center gap-2">
-              <div className="self-stretch text-center text-gray-400 text-xs">
-                Price
-              </div>
-              <div className="self-stretch text-center text-white text-sm font-bold">
+              <div className="self-stretch text-gray-400 text-xs">Price</div>
+              <div className="self-stretch text-white text-sm font-bold">
                 ${toShortNumber(price)}
               </div>
             </div>
-            <div className="flex w-full flex-col justify-start items-center gap-2">
-              <div className="self-stretch text-right text-gray-400 text-xs">
+            <div className="flex flex-col justify-start items-center gap-2">
+              <div className="flex w-full ml-auto self-stretch text-gray-400 text-xs text-nowrap gap-1">
+                <div className="flex justify-center items-center mt-0.5">
+                  <QuestionMarkSvg
+                    data-tooltip-id="24h-volume-info"
+                    data-tooltip-place="bottom-end"
+                    data-tooltip-html={
+                      'Cumulative volume from 00:00 UTC to now.'
+                    }
+                    className="w-3 h-3"
+                  />
+                  <Tooltip
+                    id="24h-volume-info"
+                    className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
+                    clickable
+                  />
+                </div>
                 24h Volume
               </div>
-              <div className="self-stretch text-right text-white text-sm font-bold">
+              <div className="self-stretch text-white text-sm font-bold">
                 ${toShortNumber(dailyVolume)}
               </div>
             </div>
@@ -199,10 +214,10 @@ export const MarketCard = ({
               </div>
             </div>
             <div className="flex w-full flex-col justify-start items-center gap-2">
-              <div className="self-stretch text-center text-gray-400 text-xs">
+              <div className="self-stretch text-gray-400 text-xs">
                 24h Change
               </div>
-              <div className="self-stretch text-center text-white text-sm font-bold">
+              <div className="self-stretch text-white text-sm font-bold">
                 <div
                   className={`${
                     dailyChange === 0
@@ -212,7 +227,7 @@ export const MarketCard = ({
                         : 'text-red-500'
                   }`}
                 >
-                  {dailyChange.toFixed(2)} %
+                  {dailyChange.toFixed(2)}%
                 </div>
               </div>
             </div>
