@@ -156,7 +156,7 @@ function App({ Component, pageProps }: AppProps) {
 
   const getBackground = (pathname: string) => {
     if (pathname.includes('/trade')) {
-      return "bg-[url('../public/trade-background.png')] bg-top"
+      return "lg:bg-[url('../public/trade-background.png')] lg:bg-top"
     } else if (pathname.includes('/earn')) {
       return "bg-[url('../public/earn-background.png')] bg-top"
     } else if (pathname.includes('/futures')) {

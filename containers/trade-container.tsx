@@ -828,45 +828,45 @@ export const TradeContainer = () => {
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-row mb-4 gap-5 max-w-[480px] lg:max-w-full lg:ml-auto lg:flex-row-reverse">
-              <div className="w-full lg:w-[246px] flex flex-col relative rounded shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <div className="relative h-4 w-4">
-                    <SearchSvg />
+              <div className="flex flex-row mb-4 gap-5 max-w-[480px] lg:max-w-full lg:ml-auto lg:flex-row-reverse">
+                <div className="w-full lg:w-[246px] flex flex-col relative rounded shadow-sm">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <div className="relative h-4 w-4">
+                      <SearchSvg />
+                    </div>
+                  </div>
+                  <div className="inline-block">
+                    <div className="invisible h-0 mx-[29px]" aria-hidden="true">
+                      Search by symbol
+                    </div>
+                    <input
+                      type="search"
+                      name="search"
+                      id="search"
+                      className="inline w-full pl-10 py-2 lg:py-3 text-white bg-transparent rounded-xl border border-solid border-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-400 flex-col placeholder:text-gray-400 text-xs sm:text-sm"
+                      placeholder="Search tokens"
+                      value={searchValue}
+                      onChange={(event) => setSearchValue(event.target.value)}
+                    />
                   </div>
                 </div>
-                <div className="inline-block">
-                  <div className="invisible h-0 mx-[29px]" aria-hidden="true">
-                    Search by symbol
-                  </div>
-                  <input
-                    type="search"
-                    name="search"
-                    id="search"
-                    className="inline w-full pl-10 py-2 lg:py-3 text-white bg-transparent rounded-xl border border-solid border-gray-600 focus:ring-1 focus:ring-inset focus:ring-gray-400 flex-col placeholder:text-gray-500 text-xs sm:text-sm"
-                    placeholder="Search tokens"
-                    value={searchValue}
-                    onChange={(event) => setSearchValue(event.target.value)}
+
+                <button className="flex justify-start items-center gap-2">
+                  <CheckIcon
+                    checked={searchInCurrentMarket}
+                    onCheck={setSearchInCurrentMarket}
+                    text="Current Market"
                   />
-                </div>
+                </button>
               </div>
-
-              <button className="flex justify-start items-center gap-2">
-                <CheckIcon
-                  checked={searchInCurrentMarket}
-                  onCheck={setSearchInCurrentMarket}
-                  text="Current Market"
-                />
-              </button>
             </div>
 
             {/*pc open order card*/}
             {filteredOpenOrders.length > 0 ? (
               <div className="hidden lg:flex flex-col justify-start items-center gap-4 bg-transparent mb-14">
                 <div className="w-full justify-start items-end inline-flex">
-                  <div className="flex text-gray-500 text-xs font-semibold">
+                  <div className="flex text-gray-50 text-sm font-semibold">
                     <div className="flex w-[180px] ml-5">Market</div>
                     <div className="flex w-[130px]">Price</div>
                     <div className="flex w-[200px]">Amount</div>
