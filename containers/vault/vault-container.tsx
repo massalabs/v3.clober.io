@@ -106,17 +106,6 @@ export const VaultContainer = () => {
         <div
           className={`flex flex-col w-full lg:w-[${tab === 'vault' && selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
         >
-          <div className="w-full sm:ml-auto sm:w-[260px] pl-2 pr-3 py-2 bg-blue-400/20 rounded-lg inline-flex justify-start items-center gap-3">
-            <div className="px-2 bg-[#4c90ff]/30 rounded-md shadow-[0px_0px_8px_0px_rgba(147,197,253,0.25)] inline-flex flex-col justify-center items-center gap-2.5">
-              <div className="self-stretch justify-start text-blue-400 text-base font-bold">
-                P
-              </div>
-            </div>
-            <div className="justify-start text-blue-300 text-[13px] sm:text-sm font-bold text-nowrap">
-              Clober Points distributed
-            </div>
-          </div>
-
           {tab === 'vault' ? (
             <>
               <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
@@ -210,11 +199,6 @@ export const VaultContainer = () => {
                       <div className="justify-start text-gray-400">User</div>
                     </div>
                     <div className="flex flex-1 justify-start items-center gap-2.5">
-                      <div className="justify-start text-gray-400 text-nowrap">
-                        LP in wallet
-                      </div>
-                    </div>
-                    <div className="flex flex-1 justify-start items-center gap-2.5">
                       <div className="justify-start text-gray-400">Point</div>
                     </div>
                   </div>
@@ -237,13 +221,6 @@ export const VaultContainer = () => {
                         </span>
                       </div>
                       <div className="flex flex-1 justify-start text-white font-semibold">
-                        {toCommaSeparated(
-                          myVaultPoint.vaultBalances
-                            .reduce((acc, { balance }) => acc + balance, 0)
-                            .toFixed(2),
-                        )}
-                      </div>
-                      <div className="flex flex-1 justify-start text-white font-semibold">
                         {toCommaSeparated(myVaultPoint.point.toFixed(2))}
                       </div>
                     </div>
@@ -253,7 +230,7 @@ export const VaultContainer = () => {
                 {vaultPoints
                   .filter((rank) => rank.point >= 0.01)
                   .slice(0, 100)
-                  .map(({ userAddress, point, vaultBalances, rank }, index) => (
+                  .map(({ userAddress, point, rank }, index) => (
                     <div
                       key={`rank-${userAddress}`}
                       className={`self-stretch px-4 sm:px-8 min-h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-sm text-xs`}
@@ -271,13 +248,6 @@ export const VaultContainer = () => {
                           <span className="hidden sm:flex">
                             {shortAddress(userAddress, 8)}
                           </span>
-                        </div>
-                        <div className="flex flex-1 justify-start text-white font-semibold">
-                          {toCommaSeparated(
-                            vaultBalances
-                              .reduce((acc, { balance }) => acc + balance, 0)
-                              .toFixed(2),
-                          )}
                         </div>
                         <div className="flex flex-1 justify-start text-white font-semibold">
                           {toCommaSeparated(point.toFixed(2))}

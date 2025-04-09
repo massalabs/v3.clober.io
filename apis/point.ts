@@ -22,6 +22,10 @@ type LiquidityVaultPointDto = {
   accumulatedPoints: string
 }
 
+const BLACKLISTED_USER_ADDRESSES = [
+  '0x5F79EE8f8fA862E98201120d83c4eC39D9468D49',
+].map((address) => getAddress(address))
+
 const toLiquidityVaultPoint = (
   chainId: CHAIN_IDS,
   now: number,
@@ -86,6 +90,12 @@ export async function fetchLiquidVaultPoints(
         rank: index + 1,
       }
     })
+    .filter(
+      (liquidityVaultPoint) =>
+        !BLACKLISTED_USER_ADDRESSES.includes(
+          getAddress(liquidityVaultPoint.userAddress),
+        ),
+    )
 }
 
 export async function fetchLiquidVaultPoint(
