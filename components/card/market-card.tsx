@@ -8,18 +8,18 @@ import { CurrencyIcon } from '../icon/currency-icon'
 import { toHumanReadableString, toShortNumber } from '../../utils/number'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
 import { VerifiedSvg } from '../svg/verified-svg'
-import { convertShortTimeAgo, convertTimeAgo } from '../../utils/time'
+import { convertShortTimeAgo } from '../../utils/time'
 
 export const MarketCard = ({
   chainId,
   baseCurrency,
   quoteCurrency,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createAt,
   price,
   dailyVolume,
   fdv,
   dailyChange,
+  verified,
   router,
 }: {
   chainId: CHAIN_IDS
@@ -30,6 +30,7 @@ export const MarketCard = ({
   dailyVolume: number
   fdv: number
   dailyChange: number
+  verified: boolean
   router: NextRouter
 }) => {
   return (
@@ -77,7 +78,7 @@ export const MarketCard = ({
               strokeLinejoin="round"
             />
           </svg>
-          {convertShortTimeAgo(createAt * 1000)}
+          {createAt > 0 ? convertShortTimeAgo(createAt * 1000) : '-'}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
           ${toShortNumber(price)}
@@ -94,7 +95,7 @@ export const MarketCard = ({
           {toHumanReadableString(dailyChange.toFixed(2))}%
         </div>
         <div className="w-[59px] flex h-full text-white text-base font-bold items-center justify-center">
-          <VerifiedSvg />
+          {verified ? <VerifiedSvg /> : <></>}
         </div>
       </button>
 
@@ -120,7 +121,7 @@ export const MarketCard = ({
             </div>
           </div>
 
-          <VerifiedSvg />
+          {verified ? <VerifiedSvg /> : <></>}
         </div>
 
         <div className="flex flex-col w-full gap-[14px]">
@@ -144,7 +145,7 @@ export const MarketCard = ({
                     strokeLinejoin="round"
                   />
                 </svg>
-                {convertShortTimeAgo(createAt * 1000)}
+                {createAt > 0 ? convertShortTimeAgo(createAt * 1000) : '-'}
               </div>
             </div>
             <div className="flex flex-1 w-full flex-col justify-start items-center gap-2">

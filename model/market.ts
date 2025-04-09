@@ -9,5 +9,6 @@ export type Market = {
   dailyVolume: number
   dailyChange: number
   fdv: number
+  liquidityUsd: number
   verified: boolean
 }

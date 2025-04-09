@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { createPublicClient, getAddress, http, zeroAddress } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
 import { Tooltip } from 'react-tooltip'
@@ -31,7 +31,7 @@ export const DiscoverContainer = () => {
     queryFn: async () => {
       return fetchAllMarkets(
         publicClient,
-        selectedChain.id,
+        selectedChain,
         prices,
         whitelistCurrencies.map((currency) => currency.address),
       )
@@ -66,13 +66,13 @@ export const DiscoverContainer = () => {
 
       <div className="flex flex-col w-full h-full gap-6">
         <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-          <div className="w-[320px] text-gray-400 text-sm font-semibold">
+          <div className="w-[330px] text-gray-400 text-sm font-semibold">
             Market
           </div>
-          <div className="w-[170px] text-gray-400 text-sm font-semibold">
+          <div className="w-[180px] text-gray-400 text-sm font-semibold">
             Age
           </div>
-          <div className="w-[140px] text-gray-400 text-sm font-semibold">
+          <div className="w-[160px] text-gray-400 text-sm font-semibold">
             Price
           </div>
           <div className="flex flex-row gap-1 w-[160px] text-gray-400 text-sm font-semibold">
@@ -101,22 +101,52 @@ export const DiscoverContainer = () => {
         </div>
         <div className="relative flex justify-center w-full h-full lg:h-[500px] mb-6">
           <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
-            {(markets ?? []).map((market) => {
-              return (
-                <MarketCard
-                  key={`${market.baseCurrency.address}-${market.quoteCurrency.address}`}
-                  chainId={selectedChain.id}
-                  baseCurrency={market.baseCurrency}
-                  quoteCurrency={market.quoteCurrency}
-                  createAt={market.createAt}
-                  price={market.price}
-                  dailyVolume={market.dailyVolume}
-                  fdv={market.fdv}
-                  dailyChange={market.dailyChange}
-                  router={router}
-                />
+            {(markets ?? [])
+              .filter(
+                (market) =>
+                  market.baseCurrency.symbol
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  market.quoteCurrency.symbol
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  market.baseCurrency.name
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  market.quoteCurrency.name
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  market.baseCurrency.address
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  market.quoteCurrency.address
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  `${market.baseCurrency.name}${market.quoteCurrency.name}`
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  `${market.baseCurrency.symbol}${market.quoteCurrency.symbol}`
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()),
               )
-            })}
+              .sort((a, b) => b.liquidityUsd - a.liquidityUsd)
+              .map((market) => {
+                return (
+                  <MarketCard
+                    key={`${market.baseCurrency.address}-${market.quoteCurrency.address}`}
+                    chainId={selectedChain.id}
+                    baseCurrency={market.baseCurrency}
+                    quoteCurrency={market.quoteCurrency}
+                    createAt={market.createAt}
+                    price={market.price}
+                    dailyVolume={market.dailyVolume}
+                    fdv={market.fdv}
+                    dailyChange={market.dailyChange}
+                    verified={market.verified}
+                    router={router}
+                  />
+                )
+              })}
           </div>
         </div>
       </div>

@@ -1,9 +1,4 @@
-import {
-  CHAIN_IDS,
-  formatPrice,
-  getQuoteToken,
-  getSubgraphEndpoint,
-} from '@clober/v2-sdk'
+import { formatPrice, getQuoteToken, getSubgraphEndpoint } from '@clober/v2-sdk'
 import { getAddress, isAddressEqual, PublicClient, zeroAddress } from 'viem'
 import { getCurrentTimestamp } from 'hardhat/internal/hardhat-network/provider/utils/getCurrentTimestamp'
 
@@ -12,6 +7,7 @@ import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { Prices } from '../model/prices'
 import { formatUnits } from '../utils/bigint'
 import { Market } from '../model/market'
+import { Chain } from '../model/chain'
 
 type TokenDto = {
   id: string
@@ -35,7 +31,9 @@ type BookDto = {
     symbol: string
   }
   depths: {
-    id: string
+    price: string
+    quoteAmount: string
+    baseAmount: string
   }[]
   latestPrice: string
   latestTimestamp: string
@@ -43,15 +41,19 @@ type BookDto = {
 
 export const fetchAllMarkets = async (
   publicClient: PublicClient,
-  chainId: CHAIN_IDS,
+  chain: Chain,
   prices: Prices,
   verifiedTokenAddresses: `0x${string}`[],
 ): Promise<Market[]> => {
+  if (Object.keys(prices).length === 0) {
+    return [] as Market[]
+  }
+
   const currentTimestampInSeconds = getCurrentTimestamp()
   const dailyNormalizedCurrentTimestampInSeconds =
     currentTimestampInSeconds - (currentTimestampInSeconds % (24 * 60 * 60))
 
-  const endpoint = getSubgraphEndpoint({ chainId })
+  const endpoint = getSubgraphEndpoint({ chainId: chain.id })
   const {
     data: { tokens },
   } = await Subgraph.get<{
@@ -80,7 +82,7 @@ export const fetchAllMarkets = async (
   }>(
     endpoint,
     'getMarkets',
-    'query getMarkets($baseAddresses: [String!], $quoteAddresses: [String!]) { books( first: 1000 where: {and: [{base_in: $baseAddresses}, {quote_in: $quoteAddresses}]} ) { id base { id decimals name symbol } quote { id decimals name symbol } depths { id } latestPrice latestTimestamp } }',
+    'query getMarkets($baseAddresses: [String!], $quoteAddresses: [String!]) { books( first: 1000 where: {and: [{base_in: $baseAddresses}, {quote_in: $quoteAddresses}]} ) { id base { id decimals name symbol } quote { id decimals name symbol } depths(orderBy: tick, orderDirection: desc) { price baseAmount quoteAmount } latestPrice latestTimestamp } }',
     {
       baseAddresses: tokenAddresses.map((address) => address.toLowerCase()),
       quoteAddresses: tokenAddresses.map((address) => address.toLowerCase()),
@@ -100,6 +102,7 @@ export const fetchAllMarkets = async (
   const totalSupplyMap: {
     [address: `0x${string}`]: bigint
   } = tokenAddresses
+    .filter((address) => !isAddressEqual(address, zeroAddress))
     .map((address, index) => [address, totalSupplies[index]] as const)
     .reduce(
       (acc, [address, result]) => {
@@ -120,7 +123,7 @@ export const fetchAllMarkets = async (
         isAddressEqual(
           quoteAddress,
           getQuoteToken({
-            chainId,
+            chainId: chain.id,
             token0: getAddress(book.base.id),
             token1: getAddress(book.quote.id),
           }),
@@ -155,12 +158,12 @@ export const fetchAllMarkets = async (
 
   return books
     .map((book) => {
-      const quoteAddress = getAddress(book.quote.id)
       if (
+        // only bid book
         isAddressEqual(
-          quoteAddress,
+          getAddress(book.quote.id),
           getQuoteToken({
-            chainId,
+            chainId: chain.id,
             token0: getAddress(book.base.id),
             token1: getAddress(book.quote.id),
           }),
@@ -179,30 +182,69 @@ export const fetchAllMarkets = async (
             Number(book.base.decimals),
           ),
         )
+        const quotePrice = prices[getAddress(book.quote.id)] ?? 0
+        const basePrice = prices[getAddress(book.base.id)] ?? 0
         const totalSupply = totalSupplyMap[getAddress(book.base.id)] ?? 0n
+        if (totalSupply === 0n) {
+          return null
+        }
+        const liquidityUsdInBidBook =
+          book.depths.reduce(
+            (acc, depth) =>
+              acc +
+              Number(
+                formatUnits(
+                  BigInt(depth.quoteAmount),
+                  Number(book.quote.decimals) ?? 0n,
+                ),
+              ),
+            0,
+          ) * quotePrice
+        const askBook = books.find(
+          (b) =>
+            isAddressEqual(getAddress(b.quote.id), getAddress(book.base.id)) &&
+            isAddressEqual(getAddress(b.base.id), getAddress(book.quote.id)),
+        )
+        const liquidityUsdInAskBook = askBook
+          ? askBook.depths.reduce(
+              (acc, depth) =>
+                acc +
+                Number(
+                  formatUnits(
+                    BigInt(depth.baseAmount),
+                    Number(askBook.base.decimals) ?? 0n,
+                  ),
+                ),
+              0,
+            ) * basePrice
+          : 0
+
         return {
-          baseCurrency: {
-            address: getAddress(book.base.id),
-            decimals: Number(book.base.decimals),
-            name: book.base.name,
-            symbol: book.base.symbol,
-          },
-          quoteCurrency: {
-            address: getAddress(book.quote.id),
-            decimals: Number(book.quote.decimals),
-            name: book.quote.name,
-            symbol: book.quote.symbol,
-          },
-          createAt: 1741087719, // TODO: fix it
+          baseCurrency: isAddressEqual(getAddress(book.base.id), zeroAddress)
+            ? { ...chain.nativeCurrency, address: zeroAddress }
+            : {
+                address: getAddress(book.base.id),
+                decimals: Number(book.base.decimals),
+                name: book.base.name,
+                symbol: book.base.symbol,
+              },
+          quoteCurrency: isAddressEqual(getAddress(book.quote.id), zeroAddress)
+            ? { ...chain.nativeCurrency, address: zeroAddress }
+            : {
+                address: getAddress(book.quote.id),
+                decimals: Number(book.quote.decimals),
+                name: book.quote.name,
+                symbol: book.quote.symbol,
+              },
+          createAt: 0, // TODO: fix it
           updatedAt: Number(book.latestTimestamp),
           price: latestPrice,
-          dailyVolume:
-            Number(chartLog?.baseVolume ?? 0) *
-            (prices[getAddress(book.base.id)] ?? 0),
+          dailyVolume: Number(chartLog?.baseVolume ?? 0) * basePrice,
           fdv:
             Number(formatUnits(totalSupply, Number(book.base.decimals) ?? 0n)) *
-            latestPrice,
-          dailyChange: (latestPrice * 100) / Number(chartLog?.open ?? 1),
+            basePrice,
+          liquidityUsd: liquidityUsdInBidBook + liquidityUsdInAskBook,
+          dailyChange: (latestPrice / Number(chartLog?.open ?? 1) - 1) * 100,
           verified:
             verifiedTokenAddresses
               .map((address) => getAddress(address))
@@ -214,5 +256,5 @@ export const fetchAllMarkets = async (
       }
       return null
     })
-    .filter((market) => market !== null)
+    .filter((market) => market !== null) as Market[]
 }

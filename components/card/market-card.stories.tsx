@@ -39,6 +39,7 @@ export const Default: Story = {
     fdv: 100000,
     dailyVolume: 100000,
     dailyChange: 0.2,
+    verified: true,
   },
 }
 
@@ -61,6 +62,30 @@ export const Minus: Story = {
     fdv: 100000,
     dailyVolume: 100000,
     dailyChange: 0.2,
+    verified: true,
+  },
+}
+
+export const NotVerified: Story = {
+  args: {
+    baseCurrency: {
+      symbol: 'BTC',
+      name: 'BTC',
+      address: zeroAddress,
+      decimals: 18,
+    },
+    quoteCurrency: {
+      symbol: 'USDC',
+      name: 'USD Coin',
+      address: zeroAddress,
+      decimals: 18,
+    },
+    createAt: 1744005461,
+    price: 100000,
+    fdv: 100000,
+    dailyVolume: 100000,
+    dailyChange: 0.2,
+    verified: false,
   },
 }
 
