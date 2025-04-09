@@ -337,6 +337,8 @@ export const DiscoverContainer = () => {
                   fdv={market.fdv}
                   dailyChange={market.dailyChange}
                   verified={market.verified}
+                  bidSideUpdatedAt={market.bidSideUpdatedAt}
+                  askSideUpdatedAt={market.askSideUpdatedAt}
                 />
               )
             })}
@@ -344,7 +346,7 @@ export const DiscoverContainer = () => {
             {filteredMarkets.length === 0 && searchValue.length === 0 && (
               <div
                 role="status"
-                className="flex justify-center items-center mt-16 sm:mt-8 w-full h-full"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-24 lg:mt-0"
               >
                 <svg
                   aria-hidden="true"

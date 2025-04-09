@@ -4,7 +4,8 @@ export type Market = {
   baseCurrency: Currency
   quoteCurrency: Currency
   createAt: number
-  updatedAt: number
+  bidSideUpdatedAt: number
+  askSideUpdatedAt: number
   price: number
   dailyVolume: number
   dailyChange: number

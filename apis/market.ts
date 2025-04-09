@@ -39,6 +39,12 @@ type BookDto = {
   latestTimestamp: string
 }
 
+let totalSupplyMap: {
+  [address: `0x${string}`]: bigint
+} = {
+  [zeroAddress]: 120_000_000n * 1000000000000000000n, // DEV: 120M for ETH,
+}
+
 export const fetchAllMarkets = async (
   publicClient: PublicClient,
   chain: Chain,
@@ -89,32 +95,28 @@ export const fetchAllMarkets = async (
     },
   )
 
+  const _tokenAddresses = tokenAddresses
+    .filter((address) => !isAddressEqual(address, zeroAddress))
+    .filter(
+      (address) =>
+        !Object.keys(totalSupplyMap)
+          .map((a) => getAddress(a))
+          .includes(getAddress(address)),
+    )
   const totalSupplies = await publicClient.multicall({
-    contracts: tokenAddresses
-      .filter((address) => !isAddressEqual(address, zeroAddress))
-      .map((address) => ({
-        address,
-        abi: ERC20_PERMIT_ABI,
-        functionName: 'totalSupply',
-      })),
+    contracts: _tokenAddresses.map((address) => ({
+      address,
+      abi: ERC20_PERMIT_ABI,
+      functionName: 'totalSupply',
+    })),
   })
 
-  const totalSupplyMap: {
-    [address: `0x${string}`]: bigint
-  } = tokenAddresses
-    .filter((address) => !isAddressEqual(address, zeroAddress))
+  totalSupplyMap = _tokenAddresses
     .map((address, index) => [address, totalSupplies[index]] as const)
-    .reduce(
-      (acc, [address, result]) => {
-        if (address && result && result?.result) {
-          acc[getAddress(address as string)] = (result?.result as bigint) ?? 0n
-        }
-        return acc
-      },
-      {
-        [zeroAddress]: 120_000_000n * 1000000000000000000n, // DEV: 120M for ETH,
-      } as { [address: `0x${string}`]: bigint },
-    )
+    .reduce((acc, [address, result]) => {
+      acc[getAddress(address as string)] = (result?.result as bigint) ?? 0n
+      return acc
+    }, totalSupplyMap)
 
   const marketCodes = books
     .map((book) => {
@@ -237,7 +239,8 @@ export const fetchAllMarkets = async (
                 symbol: book.quote.symbol,
               },
           createAt: 0, // TODO: fix it
-          updatedAt: Number(book.latestTimestamp),
+          bidSideUpdatedAt: Number(book.latestTimestamp),
+          askSideUpdatedAt: Number(askBook?.latestTimestamp) || 0,
           price: latestPrice,
           dailyVolume:
             Number(chartLog?.baseVolume ?? 0) * (basePrice || latestPrice),

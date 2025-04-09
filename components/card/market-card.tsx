@@ -9,6 +9,7 @@ import { toHumanReadableString, toShortNumber } from '../../utils/number'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
 import { VerifiedSvg } from '../svg/verified-svg'
 import { convertShortTimeAgo } from '../../utils/time'
+import { currentTimestampInSeconds } from '../../utils/date'
 
 export const MarketCard = ({
   chainId,
@@ -20,6 +21,8 @@ export const MarketCard = ({
   fdv,
   dailyChange,
   verified,
+  bidSideUpdatedAt,
+  askSideUpdatedAt,
 }: {
   chainId: CHAIN_IDS
   baseCurrency: Currency
@@ -30,7 +33,11 @@ export const MarketCard = ({
   fdv: number
   dailyChange: number
   verified: boolean
+  bidSideUpdatedAt: number
+  askSideUpdatedAt: number
 }) => {
+  const now = currentTimestampInSeconds()
+  console.log('createAt', now, bidSideUpdatedAt, askSideUpdatedAt)
   return (
     <>
       <Link
