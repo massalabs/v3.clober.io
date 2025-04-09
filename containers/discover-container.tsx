@@ -194,7 +194,7 @@ export const DiscoverContainer = () => {
                 setMarketSortOption('none')
               }
             }}
-            className="w-[330px] flex items-center gap-1 text-gray-400 text-sm font-semibold hover:underline cursor-pointer"
+            className="w-[330px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             Market
             {marketSortOption === 'asc' ? (
@@ -205,9 +205,7 @@ export const DiscoverContainer = () => {
               <></>
             )}
           </button>
-          <div className="w-[180px] text-gray-400 text-sm font-semibold">
-            Age
-          </div>
+          <div className="w-[180px] text-sm font-semibold">Age</div>
           <button
             onClick={() => {
               if (priceSortOption === 'none') {
@@ -218,7 +216,7 @@ export const DiscoverContainer = () => {
                 setPriceSortOption('none')
               }
             }}
-            className="w-[160px] flex items-center gap-1 text-gray-400 text-sm font-semibold hover:underline cursor-pointer"
+            className="w-[160px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             Price
             {priceSortOption === 'asc' ? (
@@ -239,7 +237,7 @@ export const DiscoverContainer = () => {
                 setDailyVolumeSortOption('none')
               }
             }}
-            className="flex flex-row gap-1 w-[160px] text-gray-400 text-sm font-semibold hover:underline cursor-pointer"
+            className="flex flex-row gap-1 w-[160px] text-sm font-semibold hover:underline cursor-pointer"
           >
             24h Volume
             <div className="flex mr-auto justify-center items-center">
@@ -273,7 +271,7 @@ export const DiscoverContainer = () => {
                 setFdvSortOption('none')
               }
             }}
-            className="w-[160px] flex items-center gap-1 text-gray-400 text-sm font-semibold hover:underline cursor-pointer"
+            className="w-[160px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             FDV
             {fdvSortOption === 'asc' ? (
@@ -294,7 +292,7 @@ export const DiscoverContainer = () => {
                 setDailyChangeSortOption('none')
               }
             }}
-            className="w-[140px] flex items-center gap-1 text-gray-400 text-sm font-semibold hover:underline cursor-pointer"
+            className="w-[140px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             24h Change
             {dailyChangeSortOption === 'asc' ? (
@@ -315,7 +313,7 @@ export const DiscoverContainer = () => {
                 setVerifiedSortOption('none')
               }
             }}
-            className="flex items-center gap-1 text-gray-400 text-sm font-semibold hover:underline cursor-pointer"
+            className="flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             Verified
             {verifiedSortOption === 'asc' ? (
