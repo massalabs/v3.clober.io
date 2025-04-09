@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { createPublicClient, http } from 'viem'
 import { useQuery } from '@tanstack/react-query'
 import { Tooltip } from 'react-tooltip'
@@ -12,6 +12,7 @@ import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-url'
 import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 import { TriangleDownSvg } from '../components/svg/triangle-down-svg'
+import { Market } from '../model/market'
 
 type SortOption = 'none' | 'desc' | 'asc'
 
@@ -24,6 +25,7 @@ export const DiscoverContainer = () => {
       transport: http(RPC_URL[selectedChain.id]),
     })
   }, [selectedChain.id])
+  const prevMarkets = useRef<Market[]>([])
 
   const [searchValue, setSearchValue] = React.useState('')
   const [marketSortOption, setMarketSortOption] = useState<SortOption>('none')
@@ -39,12 +41,15 @@ export const DiscoverContainer = () => {
   const { data: markets } = useQuery({
     queryKey: ['markets', selectedChain.id],
     queryFn: async () => {
-      return fetchAllMarkets(
+      const market = await fetchAllMarkets(
         publicClient,
         selectedChain,
         prices,
         whitelistCurrencies.map((currency) => currency.address),
+        prevMarkets.current,
       )
+      prevMarkets.current = market
+      return market
     },
     refetchInterval: 2 * 1000, // checked
     refetchIntervalInBackground: true,
@@ -337,8 +342,8 @@ export const DiscoverContainer = () => {
                   fdv={market.fdv}
                   dailyChange={market.dailyChange}
                   verified={market.verified}
-                  bidSideUpdatedAt={market.bidSideUpdatedAt}
-                  askSideUpdatedAt={market.askSideUpdatedAt}
+                  isBidTaken={market.isBidTaken}
+                  isAskTaken={market.isAskTaken}
                 />
               )
             })}

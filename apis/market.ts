@@ -50,6 +50,7 @@ export const fetchAllMarkets = async (
   chain: Chain,
   prices: Prices,
   verifiedTokenAddresses: `0x${string}`[],
+  prevMarkets: Market[],
 ): Promise<Market[]> => {
   if (Object.keys(prices).length === 0) {
     return [] as Market[]
@@ -221,6 +222,19 @@ export const fetchAllMarkets = async (
             ) * basePrice
           : 0
 
+        const bidSideUpdatedAt = Number(book.latestTimestamp)
+        const askSideUpdatedAt = Number(askBook?.latestTimestamp) || 0
+        const prevMarket = prevMarkets.find(
+          (market) =>
+            isAddressEqual(
+              market.baseCurrency.address,
+              getAddress(book.base.id),
+            ) &&
+            isAddressEqual(
+              market.quoteCurrency.address,
+              getAddress(book.quote.id),
+            ),
+        )
         return {
           baseCurrency: isAddressEqual(getAddress(book.base.id), zeroAddress)
             ? { ...chain.nativeCurrency, address: zeroAddress }
@@ -240,7 +254,15 @@ export const fetchAllMarkets = async (
               },
           createAt: 0, // TODO: fix it
           bidSideUpdatedAt: Number(book.latestTimestamp),
+          isBidTaken:
+            bidSideUpdatedAt -
+              (prevMarket?.bidSideUpdatedAt || currentTimestampInSeconds) >
+            0,
           askSideUpdatedAt: Number(askBook?.latestTimestamp) || 0,
+          isAskTaken:
+            askSideUpdatedAt -
+              (prevMarket?.askSideUpdatedAt || currentTimestampInSeconds) >
+            0,
           price: latestPrice,
           dailyVolume:
             Number(chartLog?.baseVolume ?? 0) * (basePrice || latestPrice),

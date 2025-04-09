@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CHAIN_IDS, Currency } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
@@ -9,7 +9,6 @@ import { toHumanReadableString, toShortNumber } from '../../utils/number'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
 import { VerifiedSvg } from '../svg/verified-svg'
 import { convertShortTimeAgo } from '../../utils/time'
-import { currentTimestampInSeconds } from '../../utils/date'
 
 export const MarketCard = ({
   chainId,
@@ -21,8 +20,8 @@ export const MarketCard = ({
   fdv,
   dailyChange,
   verified,
-  bidSideUpdatedAt,
-  askSideUpdatedAt,
+  isBidTaken,
+  isAskTaken,
 }: {
   chainId: CHAIN_IDS
   baseCurrency: Currency
@@ -33,18 +32,28 @@ export const MarketCard = ({
   fdv: number
   dailyChange: number
   verified: boolean
-  bidSideUpdatedAt: number
-  askSideUpdatedAt: number
+  isBidTaken: boolean
+  isAskTaken: boolean
 }) => {
-  const now = currentTimestampInSeconds()
-  console.log('createAt', now, bidSideUpdatedAt, askSideUpdatedAt)
+  const [flashState, setFlashState] = useState<'green' | 'red' | null>(null)
+
+  useEffect(() => {
+    if (isBidTaken) {
+      setFlashState('green')
+      setTimeout(() => setFlashState(null), 500)
+    } else if (isAskTaken) {
+      setFlashState('red')
+      setTimeout(() => setFlashState(null), 500)
+    }
+  }, [isBidTaken, isAskTaken])
+
   return (
     <>
       <Link
         target="_blank"
         href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}&chainId=${chainId}`}
         rel="noreferrer"
-        className="hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4"
+        className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/10' : flashState === 'red' ? 'bg-red-500/10' : 'bg-gray-800'} hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 hover:bg-gray-700 rounded-2xl justify-start items-center gap-4`}
       >
         <div className="flex w-[300px] items-center gap-3">
           <div className="w-14 h-8 shrink-0 relative">
@@ -101,7 +110,12 @@ export const MarketCard = ({
         </div>
       </Link>
 
-      <div className="flex lg:hidden w-full h-[168px] p-4 bg-gray-800 rounded-xl flex-col justify-center items-start gap-4">
+      <Link
+        target="_blank"
+        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}&chainId=${chainId}`}
+        rel="noreferrer"
+        className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/10' : flashState === 'red' ? 'bg-red-500/10' : 'bg-gray-800'} hover:bg-gray-700 flex lg:hidden w-full h-[168px] p-4 bg-gray-800 rounded-xl flex-col justify-center items-start gap-4`}
+      >
         <div className="flex items-center gap-2 self-stretch">
           <div className="w-10 h-6 relative">
             <CurrencyIcon
@@ -126,9 +140,9 @@ export const MarketCard = ({
           {verified ? <VerifiedSvg /> : <></>}
         </div>
 
-        <div className="flex flex-col w-full gap-[14px]">
+        <div className="flex flex-col w-full gap-[12px]">
           <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
-            <div className="flex flex-1 w-full flex-col justify-start items-center gap-2">
+            <div className="flex flex-1 w-full flex-col justify-start items-center gap-1">
               <div className="self-stretch text-gray-400 text-xs">Age</div>
               <div className="flex flex-row self-stretch text-white text-sm font-bold items-center gap-1 text-nowrap">
                 <svg
@@ -150,7 +164,7 @@ export const MarketCard = ({
                 {createAt > 0 ? convertShortTimeAgo(createAt * 1000) : '-'}
               </div>
             </div>
-            <div className="flex flex-1 w-full flex-col justify-start items-center gap-2">
+            <div className="flex flex-1 w-full flex-col justify-start items-center gap-1">
               <div className="self-stretch text-gray-400 text-xs">Price</div>
               <div className="self-stretch text-white text-sm font-bold">
                 ${toShortNumber(price)}
@@ -211,7 +225,7 @@ export const MarketCard = ({
             <div className="flex w-full flex-col justify-start items-center gap-2"></div>
           </div>
         </div>
-      </div>
+      </Link>
     </>
   )
 }

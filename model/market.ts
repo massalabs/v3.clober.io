@@ -5,7 +5,9 @@ export type Market = {
   quoteCurrency: Currency
   createAt: number
   bidSideUpdatedAt: number
+  isBidTaken: boolean
   askSideUpdatedAt: number
+  isAskTaken: boolean
   price: number
   dailyVolume: number
   dailyChange: number

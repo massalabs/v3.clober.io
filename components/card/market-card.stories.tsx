@@ -40,8 +40,8 @@ export const Default: Story = {
     dailyVolume: 100000,
     dailyChange: 0.2,
     verified: true,
-    bidSideUpdatedAt: 1744005461,
-    askSideUpdatedAt: 1744005461,
+    isBidTaken: false,
+    isAskTaken: false,
   },
 }
 
@@ -65,8 +65,8 @@ export const Minus: Story = {
     dailyVolume: 100000,
     dailyChange: 0.2,
     verified: true,
-    bidSideUpdatedAt: 1744005461,
-    askSideUpdatedAt: 1744005461,
+    isBidTaken: false,
+    isAskTaken: false,
   },
 }
 
@@ -90,8 +90,8 @@ export const NotVerified: Story = {
     dailyVolume: 100000,
     dailyChange: 0.2,
     verified: false,
-    bidSideUpdatedAt: 1744005461,
-    askSideUpdatedAt: 1744005461,
+    isBidTaken: false,
+    isAskTaken: false,
   },
 }
 
