@@ -1,28 +1,44 @@
-import React from 'react'
-import { getAddress, zeroAddress } from 'viem'
+import React, { useMemo } from 'react'
+import { createPublicClient, getAddress, http, zeroAddress } from 'viem'
 import { useRouter } from 'next/router'
+import { useQuery } from '@tanstack/react-query'
+import { Tooltip } from 'react-tooltip'
 
 import { MarketCard } from '../components/card/market-card'
 import { useChainContext } from '../contexts/chain-context'
 import { SearchSvg } from '../components/svg/search-svg'
-
-const baseCurrency = {
-  symbol: 'ETH',
-  name: 'ETH',
-  address: zeroAddress,
-  decimals: 18,
-}
-const quoteCurrency = {
-  symbol: 'USDC',
-  name: 'USD Coin',
-  address: getAddress('0xf817257fed379853cDe0fa4F97AB987181B1E5Ea'),
-  decimals: 6,
-}
+import { fetchAllMarkets } from '../apis/market'
+import { useCurrencyContext } from '../contexts/currency-context'
+import { supportChains } from '../constants/chain'
+import { RPC_URL } from '../constants/rpc-url'
+import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 
 export const DiscoverContainer = () => {
   const router = useRouter()
   const { selectedChain } = useChainContext()
+  const { whitelistCurrencies, prices } = useCurrencyContext()
+  const publicClient = useMemo(() => {
+    return createPublicClient({
+      chain: supportChains.find((chain) => chain.id === selectedChain.id),
+      transport: http(RPC_URL[selectedChain.id]),
+    })
+  }, [selectedChain.id])
+
   const [searchValue, setSearchValue] = React.useState('')
+
+  const { data: markets } = useQuery({
+    queryKey: ['markets', selectedChain.id],
+    queryFn: async () => {
+      return fetchAllMarkets(
+        publicClient,
+        selectedChain.id,
+        prices,
+        whitelistCurrencies.map((currency) => currency.address),
+      )
+    },
+    refetchInterval: 2 * 1000, // checked
+    refetchIntervalInBackground: true,
+  })
 
   return (
     <div className="text-white mb-4 flex w-full lg:w-[1072px]  flex-col items-center mt-6 lg:mt-8 px-4 lg:px-0 gap-4 lg:gap-8">
@@ -50,42 +66,57 @@ export const DiscoverContainer = () => {
 
       <div className="flex flex-col w-full h-full gap-6">
         <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-          <div className="w-[220px] text-gray-400 text-sm font-semibold">
+          <div className="w-[320px] text-gray-400 text-sm font-semibold">
             Market
           </div>
-          <div className="w-[210px] text-gray-400 text-sm font-semibold">
+          <div className="w-[170px] text-gray-400 text-sm font-semibold">
             Age
           </div>
-          <div className="w-[145px] text-gray-400 text-sm font-semibold">
+          <div className="w-[140px] text-gray-400 text-sm font-semibold">
             Price
           </div>
-          <div className="w-[160px] text-gray-400 text-sm font-semibold">
+          <div className="flex flex-row gap-1 w-[160px] text-gray-400 text-sm font-semibold">
             24h Volume
+            <div className="flex mr-auto justify-center items-center">
+              <QuestionMarkSvg
+                data-tooltip-id="24h-volume-info"
+                data-tooltip-place="bottom-end"
+                data-tooltip-html={'Cumulative volume from 00:00 UTC to now.'}
+                className="w-3 h-3"
+              />
+              <Tooltip
+                id="24h-volume-info"
+                className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
+                clickable
+              />
+            </div>
           </div>
-          <div className="w-[140px] text-gray-400 text-sm font-semibold">
+          <div className="w-[160px] text-gray-400 text-sm font-semibold">
             FDV
           </div>
-          <div className="w-[120px] text-gray-400 text-sm font-semibold">
+          <div className="w-[140px] text-gray-400 text-sm font-semibold">
             24h Change
           </div>
           <div className="text-gray-400 text-sm font-semibold">Verified</div>
         </div>
         <div className="relative flex justify-center w-full h-full lg:h-[500px] mb-6">
           <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
-            {Array.from({ length: 20 }).map((_, index) => (
-              <MarketCard
-                key={index}
-                chainId={selectedChain.id}
-                baseCurrency={baseCurrency}
-                quoteCurrency={quoteCurrency}
-                createAt={1744005461}
-                price={100000}
-                dailyVolume={100000}
-                fdv={100000}
-                dailyChange={10}
-                router={router}
-              />
-            ))}
+            {(markets ?? []).map((market) => {
+              return (
+                <MarketCard
+                  key={`${market.baseCurrency.address}-${market.quoteCurrency.address}`}
+                  chainId={selectedChain.id}
+                  baseCurrency={market.baseCurrency}
+                  quoteCurrency={market.quoteCurrency}
+                  createAt={market.createAt}
+                  price={market.price}
+                  dailyVolume={market.dailyVolume}
+                  fdv={market.fdv}
+                  dailyChange={market.dailyChange}
+                  router={router}
+                />
+              )
+            })}
           </div>
         </div>
       </div>

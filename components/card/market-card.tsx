@@ -7,6 +7,8 @@ import { Tooltip } from 'react-tooltip'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toHumanReadableString, toShortNumber } from '../../utils/number'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
+import { VerifiedSvg } from '../svg/verified-svg'
+import { convertShortTimeAgo, convertTimeAgo } from '../../utils/time'
 
 export const MarketCard = ({
   chainId,
@@ -39,9 +41,9 @@ export const MarketCard = ({
           )
         }
         rel="noreferrer"
-        className="hidden lg:flex max-w-[1072px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4"
+        className="hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4"
       >
-        <div className="flex w-[200px] items-center gap-3">
+        <div className="flex w-[300px] items-center gap-3">
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
               currency={baseCurrency}
@@ -75,7 +77,7 @@ export const MarketCard = ({
               strokeLinejoin="round"
             />
           </svg>
-          {/*{convertTimeAgo(createAt * 1000)}*/} -
+          {convertShortTimeAgo(createAt * 1000)}
         </div>
         <div className="w-[140px] text-white text-base font-bold">
           ${toShortNumber(price)}
@@ -89,24 +91,10 @@ export const MarketCard = ({
         <div
           className={`w-[120px] ${dailyChange === 0 ? 'text-white' : dailyChange > 0 ? 'text-green-500' : 'text-red-500'} text-base font-bold`}
         >
-          {dailyChange.toFixed(2)}%
+          {toHumanReadableString(dailyChange.toFixed(2))}%
         </div>
         <div className="w-[59px] flex h-full text-white text-base font-bold items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-          >
-            <path
-              d="M9.5 12L11.5 14L15.5 10M3.5 12C3.5 13.1819 3.73279 14.3522 4.18508 15.4442C4.63738 16.5361 5.30031 17.5282 6.13604 18.364C6.97177 19.1997 7.96392 19.8626 9.05585 20.3149C10.1478 20.7672 11.3181 21 12.5 21C13.6819 21 14.8522 20.7672 15.9442 20.3149C17.0361 19.8626 18.0282 19.1997 18.864 18.364C19.6997 17.5282 20.3626 16.5361 20.8149 15.4442C21.2672 14.3522 21.5 13.1819 21.5 12C21.5 10.8181 21.2672 9.64778 20.8149 8.55585C20.3626 7.46392 19.6997 6.47177 18.864 5.63604C18.0282 4.80031 17.0361 4.13738 15.9442 3.68508C14.8522 3.23279 13.6819 3 12.5 3C11.3181 3 10.1478 3.23279 9.05585 3.68508C7.96392 4.13738 6.97177 4.80031 6.13604 5.63604C5.30031 6.47177 4.63738 7.46392 4.18508 8.55585C3.73279 9.64778 3.5 10.8181 3.5 12Z"
-              stroke="#60A5FA"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <VerifiedSvg />
         </div>
       </button>
 
@@ -132,26 +120,12 @@ export const MarketCard = ({
             </div>
           </div>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-          >
-            <path
-              d="M9.5 12L11.5 14L15.5 10M3.5 12C3.5 13.1819 3.73279 14.3522 4.18508 15.4442C4.63738 16.5361 5.30031 17.5282 6.13604 18.364C6.97177 19.1997 7.96392 19.8626 9.05585 20.3149C10.1478 20.7672 11.3181 21 12.5 21C13.6819 21 14.8522 20.7672 15.9442 20.3149C17.0361 19.8626 18.0282 19.1997 18.864 18.364C19.6997 17.5282 20.3626 16.5361 20.8149 15.4442C21.2672 14.3522 21.5 13.1819 21.5 12C21.5 10.8181 21.2672 9.64778 20.8149 8.55585C20.3626 7.46392 19.6997 6.47177 18.864 5.63604C18.0282 4.80031 17.0361 4.13738 15.9442 3.68508C14.8522 3.23279 13.6819 3 12.5 3C11.3181 3 10.1478 3.23279 9.05585 3.68508C7.96392 4.13738 6.97177 4.80031 6.13604 5.63604C5.30031 6.47177 4.63738 7.46392 4.18508 8.55585C3.73279 9.64778 3.5 10.8181 3.5 12Z"
-              stroke="#60A5FA"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <VerifiedSvg />
         </div>
 
         <div className="flex flex-col w-full gap-[14px]">
           <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
-            <div className="flex w-full flex-col justify-start items-center gap-2">
+            <div className="flex flex-1 w-full flex-col justify-start items-center gap-2">
               <div className="self-stretch text-gray-400 text-xs">Age</div>
               <div className="flex flex-row self-stretch text-white text-sm font-bold items-center gap-1 text-nowrap">
                 <svg
@@ -170,16 +144,16 @@ export const MarketCard = ({
                     strokeLinejoin="round"
                   />
                 </svg>
-                {/*{convertTimeAgo(createAt * 1000)}*/}-
+                {convertShortTimeAgo(createAt * 1000)}
               </div>
             </div>
-            <div className="flex w-full flex-col justify-start items-center gap-2">
+            <div className="flex flex-1 w-full flex-col justify-start items-center gap-2">
               <div className="self-stretch text-gray-400 text-xs">Price</div>
               <div className="self-stretch text-white text-sm font-bold">
                 ${toShortNumber(price)}
               </div>
             </div>
-            <div className="flex flex-col justify-start items-center gap-2">
+            <div className="flex flex-1 flex-col justify-start items-center gap-2">
               <div className="flex w-full ml-auto self-stretch text-gray-400 text-xs text-nowrap gap-1">
                 <div className="flex justify-center items-center mt-0.5">
                   <QuestionMarkSvg
@@ -227,7 +201,7 @@ export const MarketCard = ({
                         : 'text-red-500'
                   }`}
                 >
-                  {dailyChange.toFixed(2)}%
+                  {toHumanReadableString(dailyChange.toFixed(2))}%
                 </div>
               </div>
             </div>

@@ -12,6 +12,15 @@ export const convertTimeAgo = (timestamp: number) => {
   }
 }
 
+export const convertShortTimeAgo = (timestamp: number) => {
+  try {
+    const timeAgo = new TimeAgo('en-US')
+    return timeAgo.format(new Date(timestamp), 'mini')
+  } catch {
+    return '-'
+  }
+}
+
 export const convertRemainingTime = (timestamp: number) => {
   const now = new Date().getTime()
   const distance = timestamp - now
