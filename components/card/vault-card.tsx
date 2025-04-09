@@ -3,11 +3,13 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 import { base } from 'viem/chains'
 import BigNumber from 'bignumber.js'
+import { Tooltip } from 'react-tooltip'
 
 import { Vault } from '../../model/vault'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toCommaSeparated } from '../../utils/number'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
+import { QuestionMarkSvg } from '../svg/question-mark-svg'
 
 export const VaultCard = ({
   chainId,
@@ -123,7 +125,22 @@ export const VaultCard = ({
         </div>
         <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
           <div className="flex w-full flex-col justify-start items-center gap-2">
-            <div className="self-stretch text-gray-400 text-xs">APY</div>
+            <div className="flex gap-1 self-stretch text-gray-400 text-xs">
+              APY
+              <div className="flex justify-center items-center">
+                <QuestionMarkSvg
+                  data-tooltip-id="apy-info"
+                  data-tooltip-place="bottom-end"
+                  data-tooltip-html={'Annualized Return'}
+                  className="w-3 h-3"
+                />
+                <Tooltip
+                  id="apy-info"
+                  className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
+                  clickable
+                />
+              </div>
+            </div>
             <div className="self-stretch text-white text-sm font-bold">
               {`${!BigNumber(vault.apy).isNaN() && !BigNumber(vault.apy).isZero() && BigNumber(vault.apy).lt(1000) ? `${vault.apy.toFixed(2)}%` : '-'}`}
             </div>

@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import { base } from 'viem/chains'
 import { isAddressEqual } from 'viem'
+import { Tooltip } from 'react-tooltip'
 
 import { useVaultContext } from '../../contexts/vault/vault-context'
 import { useChainContext } from '../../contexts/chain-context'
@@ -12,6 +13,7 @@ import { formatUnits } from '../../utils/bigint'
 import { VaultPositionCard } from '../../components/card/vault-position-card'
 import { shortAddress } from '../../utils/address'
 import { usePointContext } from '../../contexts/point-context'
+import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 
 export const VaultContainer = () => {
   const router = useRouter()
@@ -115,6 +117,19 @@ export const VaultContainer = () => {
                 </div>
                 <div className="flex flex-row gap-2 w-[140px] text-gray-400 text-sm font-semibold">
                   APY
+                  <div className="flex mr-auto justify-center items-center">
+                    <QuestionMarkSvg
+                      data-tooltip-id="apy-info"
+                      data-tooltip-place="bottom-end"
+                      data-tooltip-html={'Annualized Return'}
+                      className="w-3 h-3"
+                    />
+                    <Tooltip
+                      id="apy-info"
+                      className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
+                      clickable
+                    />
+                  </div>
                 </div>
                 <div className="w-[140px] text-gray-400 text-sm font-semibold">
                   Total Liquidity
