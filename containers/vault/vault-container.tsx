@@ -11,12 +11,13 @@ import { VaultCard } from '../../components/card/vault-card'
 import { formatUnits } from '../../utils/bigint'
 import { VaultPositionCard } from '../../components/card/vault-position-card'
 import { shortAddress } from '../../utils/address'
+import { usePointContext } from '../../contexts/point-context'
 
 export const VaultContainer = () => {
   const router = useRouter()
   const { address: userAddress } = useAccount()
-  const { vaults, vaultLpBalances, vaultPoints, myVaultPoint } =
-    useVaultContext()
+  const { myVaultPoint } = usePointContext()
+  const { vaults, vaultLpBalances, vaultPoints } = useVaultContext()
   const { selectedChain } = useChainContext()
 
   const [tab, setTab] = React.useState<'my-liquidity' | 'vault' | 'point'>(

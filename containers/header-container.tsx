@@ -26,7 +26,8 @@ import { UserButton } from '../components/button/user-button'
 import { WrongNetworkButton } from '../components/button/wrong-network-button'
 import { UserTransactionsModal } from '../components/modal/user-transactions-modal'
 import { useTransactionContext } from '../contexts/transaction-context'
-import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
+import { UserPointButton } from '../components/button/user-point-button'
+import { usePointContext } from '../contexts/point-context'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -36,6 +37,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const { openConnectModal } = useConnectModal()
   const { openAccountModal } = useAccountModal()
   const { disconnectAsync } = useDisconnect()
+  const { myVaultPoint } = usePointContext()
   const [openTransactionHistoryModal, setOpenTransactionHistoryModal] =
     useState(false)
   const { pendingTransactions, transactionHistory } = useTransactionContext()
@@ -186,7 +188,12 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           ) : (
             <></>
           )}
-          <div className="flex items-center">
+          <div className="flex items-center flex-row gap-3">
+            {address && (
+              <div className="flex w-full">
+                <UserPointButton score={myVaultPoint?.point ?? 0} />
+              </div>
+            )}
             {status === 'disconnected' || status === 'connecting' ? (
               <ConnectButton openConnectModal={openConnectModal} />
             ) : openAccountModal && address && connector && chainId ? (
