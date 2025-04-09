@@ -239,10 +239,11 @@ export const fetchAllMarkets = async (
           createAt: 0, // TODO: fix it
           updatedAt: Number(book.latestTimestamp),
           price: latestPrice,
-          dailyVolume: Number(chartLog?.baseVolume ?? 0) * basePrice,
+          dailyVolume:
+            Number(chartLog?.baseVolume ?? 0) * (basePrice || latestPrice),
           fdv:
             Number(formatUnits(totalSupply, Number(book.base.decimals) ?? 0n)) *
-            basePrice,
+            (basePrice || latestPrice),
           liquidityUsd: liquidityUsdInBidBook + liquidityUsdInAskBook,
           dailyChange: (latestPrice / Number(chartLog?.open ?? 1) - 1) * 100,
           verified:

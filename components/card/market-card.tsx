@@ -1,8 +1,8 @@
 import React from 'react'
 import { CHAIN_IDS, Currency } from '@clober/v2-sdk'
-import { NextRouter } from 'next/router'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
+import Link from 'next/link'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toHumanReadableString, toShortNumber } from '../../utils/number'
@@ -20,7 +20,6 @@ export const MarketCard = ({
   fdv,
   dailyChange,
   verified,
-  router,
 }: {
   chainId: CHAIN_IDS
   baseCurrency: Currency
@@ -31,16 +30,12 @@ export const MarketCard = ({
   fdv: number
   dailyChange: number
   verified: boolean
-  router: NextRouter
 }) => {
   return (
     <>
-      <button
-        onClick={() =>
-          router.push(
-            `/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}&chainId=${chainId}`,
-          )
-        }
+      <Link
+        target="_blank"
+        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}&chainId=${chainId}`}
         rel="noreferrer"
         className="hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4"
       >
@@ -97,7 +92,7 @@ export const MarketCard = ({
         <div className="w-[59px] flex h-full text-white text-base font-bold items-center justify-center">
           {verified ? <VerifiedSvg /> : <></>}
         </div>
-      </button>
+      </Link>
 
       <div className="flex lg:hidden w-full h-[168px] p-4 bg-gray-800 rounded-xl flex-col justify-center items-start gap-4">
         <div className="flex items-center gap-2 self-stretch">
