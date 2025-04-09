@@ -258,14 +258,14 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData>
       ),
     )
 
-    ctx.font = '13px sans-serif'
+    ctx.font = `${13 * renderingScope.verticalPixelRatio}px sans-serif`
     ctx.fillStyle = 'white'
     ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
 
     const labelX = 10
     for (let i = 0; i < priceTicks.length; i++) {
-      if (tickPositions[i] > 100) {
+      if (600 > tickPositions[i] && tickPositions[i] > 100) {
         ctx.fillText(priceTicks[i].toString(), labelX, tickPositions[i])
       }
     }
