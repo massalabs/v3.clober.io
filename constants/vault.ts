@@ -82,5 +82,20 @@ export const WHITELISTED_VAULTS: {
         priceMultiplier: 1e10,
       },
     },
+    {
+      token0: '0xF62F63169cA4085Af82C3a147475EFDe3EdD4b50',
+      token1: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
+      salt: zeroHash,
+      key: '0x2b4a8f6c598547dede3868e214f4f1e972deff1508ad7667d7556264662a5796',
+      hasDashboard: false,
+      hasCloberPoint: false,
+      startLPInfo: {
+        quoteAmount: 10,
+        baseAmount: 10,
+        lpAmount: 10,
+        timestamp: 1744269888,
+        priceMultiplier: 1e10,
+      },
+    },
   ],
 }

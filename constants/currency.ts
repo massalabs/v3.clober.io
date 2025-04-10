@@ -67,6 +67,11 @@ export const PRICE_FEED_ID_LIST: {
         '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
     },
     {
+      address: '0xF62F63169cA4085Af82C3a147475EFDe3EdD4b50', // HIVE
+      priceFeedId:
+        '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+    },
+    {
       address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795', // MOCKB
       priceFeedId:
         '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
@@ -143,6 +148,13 @@ export const WHITELISTED_CURRENCIES: {
       name: 'USD Coin',
       symbol: 'USDC',
       decimals: 6,
+    },
+    {
+      address: '0xF62F63169cA4085Af82C3a147475EFDe3EdD4b50',
+      name: 'Hive Stablecoin',
+      symbol: 'HIVE',
+      decimals: 18,
+      icon: '/hive-usd.png',
     },
     {
       address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
