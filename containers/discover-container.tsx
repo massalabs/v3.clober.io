@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { createPublicClient, http } from 'viem'
 import { useQuery } from '@tanstack/react-query'
 import { Tooltip } from 'react-tooltip'
@@ -14,7 +14,44 @@ import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 import { TriangleDownSvg } from '../components/svg/triangle-down-svg'
 import { Market } from '../model/market'
 
-type SortOption = 'none' | 'desc' | 'asc'
+type Column =
+  | 'market'
+  | 'price'
+  | 'daily-volume'
+  | 'fdv'
+  | 'daily-change'
+  | 'verified'
+
+type SortOption =
+  | 'none'
+  | 'market-desc'
+  | 'market-asc'
+  | 'price-desc'
+  | 'price-asc'
+  | 'daily-volume-desc'
+  | 'daily-volume-asc'
+  | 'fdv-desc'
+  | 'fdv-asc'
+  | 'daily-change-desc'
+  | 'daily-change-asc'
+  | 'verified-desc'
+  | 'verified-asc'
+
+const TriangleDown = ({
+  column,
+  sortOption,
+}: {
+  column: Column
+  sortOption: SortOption
+}) => {
+  return sortOption === `${column}-asc` ? (
+    <TriangleDownSvg className="rotate-180" />
+  ) : sortOption === `${column}-desc` ? (
+    <TriangleDownSvg />
+  ) : (
+    <></>
+  )
+}
 
 export const DiscoverContainer = () => {
   const { selectedChain } = useChainContext()
@@ -28,15 +65,7 @@ export const DiscoverContainer = () => {
   const prevMarkets = useRef<Market[]>([])
 
   const [searchValue, setSearchValue] = React.useState('')
-  const [marketSortOption, setMarketSortOption] = useState<SortOption>('none')
-  const [priceSortOption, setPriceSortOption] = useState<SortOption>('none')
-  const [dailyVolumeSortOption, setDailyVolumeSortOption] =
-    useState<SortOption>('none')
-  const [fdvSortOption, setFdvSortOption] = useState<SortOption>('none')
-  const [dailyChangeSortOption, setDailyChangeSortOption] =
-    useState<SortOption>('none')
-  const [verifiedSortOption, setVerifiedSortOption] =
-    useState<SortOption>('none')
+  const [sortOption, setSortOption] = useState<SortOption>('none')
 
   const { data: markets } = useQuery({
     queryKey: ['markets', selectedChain.id],
@@ -56,7 +85,7 @@ export const DiscoverContainer = () => {
   })
 
   const filteredMarkets = useMemo(() => {
-    const _market = (markets ?? [])
+    return (markets ?? [])
       .filter(
         (market) =>
           market.baseCurrency.symbol
@@ -85,78 +114,53 @@ export const DiscoverContainer = () => {
             .includes(searchValue.toLowerCase()),
       )
       .sort((a, b) => {
-        if (marketSortOption === 'asc') {
+        if (sortOption === 'none') {
+          return (
+            b.dailyVolume - a.dailyVolume || b.liquidityUsd - a.liquidityUsd
+          )
+        } else if (sortOption === 'market-asc') {
+          return a.baseCurrency.symbol.localeCompare(b.baseCurrency.symbol)
+        } else if (sortOption === 'market-desc') {
+          return b.baseCurrency.symbol.localeCompare(a.baseCurrency.symbol)
+        } else if (sortOption === 'price-asc') {
           return a.price - b.price
-        } else if (marketSortOption === 'desc') {
+        } else if (sortOption === 'price-desc') {
           return b.price - a.price
-        }
-        return 0
-      })
-      .sort((a, b) => {
-        if (priceSortOption === 'asc') {
-          return a.price - b.price
-        } else if (priceSortOption === 'desc') {
-          return b.price - a.price
-        }
-        return 0
-      })
-      .sort((a, b) => {
-        if (dailyVolumeSortOption === 'asc') {
+        } else if (sortOption === 'daily-volume-asc') {
           return a.dailyVolume - b.dailyVolume
-        } else if (dailyVolumeSortOption === 'desc') {
+        } else if (sortOption === 'daily-volume-desc') {
           return b.dailyVolume - a.dailyVolume
-        }
-        return 0
-      })
-      .sort((a, b) => {
-        if (fdvSortOption === 'asc') {
+        } else if (sortOption === 'fdv-asc') {
           return a.fdv - b.fdv
-        } else if (fdvSortOption === 'desc') {
+        } else if (sortOption === 'fdv-desc') {
           return b.fdv - a.fdv
-        }
-        return 0
-      })
-      .sort((a, b) => {
-        if (dailyChangeSortOption === 'asc') {
+        } else if (sortOption === 'daily-change-asc') {
           return a.dailyChange - b.dailyChange
-        } else if (dailyChangeSortOption === 'desc') {
+        } else if (sortOption === 'daily-change-desc') {
           return b.dailyChange - a.dailyChange
-        }
-        return 0
-      })
-      .sort((a, b) => {
-        if (verifiedSortOption === 'asc') {
+        } else if (sortOption === 'verified-asc') {
           return a.verified ? -1 : 1
-        } else if (verifiedSortOption === 'desc') {
+        } else if (sortOption === 'verified-desc') {
           return b.verified ? -1 : 1
         }
         return 0
       })
+  }, [markets, searchValue, sortOption])
 
-    if (
-      marketSortOption === 'none' &&
-      priceSortOption === 'none' &&
-      dailyVolumeSortOption === 'none' &&
-      fdvSortOption === 'none' &&
-      dailyChangeSortOption === 'none' &&
-      verifiedSortOption === 'none'
-    ) {
-      return _market
-        .sort((a, b) => b.liquidityUsd - a.liquidityUsd)
-        .sort((a, b) => b.dailyVolume - a.dailyVolume)
-    }
-
-    return _market
-  }, [
-    dailyChangeSortOption,
-    dailyVolumeSortOption,
-    fdvSortOption,
-    marketSortOption,
-    markets,
-    priceSortOption,
-    searchValue,
-    verifiedSortOption,
-  ])
+  const sort = useCallback(
+    (column: Column) => {
+      if (sortOption === 'none') {
+        setSortOption(`${column}-desc` as SortOption)
+      } else if (sortOption === `${column}-desc`) {
+        setSortOption(`${column}-asc` as SortOption)
+      } else if (sortOption === `${column}-asc`) {
+        setSortOption(`${column}-desc` as SortOption)
+      } else {
+        setSortOption(`${column}-desc` as SortOption)
+      }
+    },
+    [sortOption],
+  )
 
   return (
     <div className="text-white mb-4 flex w-full lg:w-[1072px]  flex-col items-center mt-6 lg:mt-8 px-4 lg:px-0 gap-4 lg:gap-8">
@@ -185,58 +189,22 @@ export const DiscoverContainer = () => {
       <div className="flex flex-col w-full h-full gap-6">
         <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
           <button
-            onClick={() => {
-              if (marketSortOption === 'none') {
-                setMarketSortOption('desc')
-              } else if (marketSortOption === 'desc') {
-                setMarketSortOption('asc')
-              } else {
-                setMarketSortOption('none')
-              }
-            }}
+            onClick={() => sort('market')}
             className="w-[330px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             Market
-            {marketSortOption === 'asc' ? (
-              <TriangleDownSvg className="rotate-180" />
-            ) : marketSortOption === 'desc' ? (
-              <TriangleDownSvg />
-            ) : (
-              <></>
-            )}
+            <TriangleDown column="market" sortOption={sortOption} />
           </button>
           <div className="w-[180px] text-sm font-semibold">Age</div>
           <button
-            onClick={() => {
-              if (priceSortOption === 'none') {
-                setPriceSortOption('desc')
-              } else if (priceSortOption === 'desc') {
-                setPriceSortOption('asc')
-              } else {
-                setPriceSortOption('none')
-              }
-            }}
+            onClick={() => sort('price')}
             className="w-[160px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             Price
-            {priceSortOption === 'asc' ? (
-              <TriangleDownSvg className="rotate-180" />
-            ) : priceSortOption === 'desc' ? (
-              <TriangleDownSvg />
-            ) : (
-              <></>
-            )}
+            <TriangleDown column="price" sortOption={sortOption} />
           </button>
           <button
-            onClick={() => {
-              if (dailyVolumeSortOption === 'none') {
-                setDailyVolumeSortOption('desc')
-              } else if (dailyVolumeSortOption === 'desc') {
-                setDailyVolumeSortOption('asc')
-              } else {
-                setDailyVolumeSortOption('none')
-              }
-            }}
+            onClick={() => sort('daily-volume')}
             className="flex flex-row gap-1 w-[160px] text-sm font-semibold hover:underline cursor-pointer"
           >
             24h Volume
@@ -252,77 +220,29 @@ export const DiscoverContainer = () => {
                 className="max-w-[300px] bg-gray-950 !opacity-100 z-[100]"
                 clickable
               />
-              {dailyVolumeSortOption === 'asc' ? (
-                <TriangleDownSvg className="rotate-180" />
-              ) : dailyVolumeSortOption === 'desc' ? (
-                <TriangleDownSvg />
-              ) : (
-                <></>
-              )}
+              <TriangleDown column="daily-volume" sortOption={sortOption} />
             </div>
           </button>
           <button
-            onClick={() => {
-              if (fdvSortOption === 'none') {
-                setFdvSortOption('desc')
-              } else if (fdvSortOption === 'desc') {
-                setFdvSortOption('asc')
-              } else {
-                setFdvSortOption('none')
-              }
-            }}
+            onClick={() => sort('fdv')}
             className="w-[160px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             FDV
-            {fdvSortOption === 'asc' ? (
-              <TriangleDownSvg className="rotate-180" />
-            ) : fdvSortOption === 'desc' ? (
-              <TriangleDownSvg />
-            ) : (
-              <></>
-            )}
+            <TriangleDown column="fdv" sortOption={sortOption} />
           </button>
           <button
-            onClick={() => {
-              if (dailyChangeSortOption === 'none') {
-                setDailyChangeSortOption('desc')
-              } else if (dailyChangeSortOption === 'desc') {
-                setDailyChangeSortOption('asc')
-              } else {
-                setDailyChangeSortOption('none')
-              }
-            }}
+            onClick={() => sort('daily-change')}
             className="w-[140px] flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             24h Change
-            {dailyChangeSortOption === 'asc' ? (
-              <TriangleDownSvg className="rotate-180" />
-            ) : dailyChangeSortOption === 'desc' ? (
-              <TriangleDownSvg />
-            ) : (
-              <></>
-            )}
+            <TriangleDown column="daily-change" sortOption={sortOption} />
           </button>
           <button
-            onClick={() => {
-              if (verifiedSortOption === 'none') {
-                setVerifiedSortOption('desc')
-              } else if (verifiedSortOption === 'desc') {
-                setVerifiedSortOption('asc')
-              } else {
-                setVerifiedSortOption('none')
-              }
-            }}
+            onClick={() => sort('verified')}
             className="flex items-center gap-1 text-sm font-semibold hover:underline cursor-pointer"
           >
             Verified
-            {verifiedSortOption === 'asc' ? (
-              <TriangleDownSvg className="rotate-180" />
-            ) : verifiedSortOption === 'desc' ? (
-              <TriangleDownSvg />
-            ) : (
-              <></>
-            )}
+            <TriangleDown column="verified" sortOption={sortOption} />
           </button>
         </div>
         <div className="relative flex justify-center w-full h-full lg:h-[500px] mb-6">
