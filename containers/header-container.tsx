@@ -79,6 +79,18 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             </Link>
           )}
           <div className="hidden xl:flex py-1 justify-start items-center gap-8">
+            {chainId === monadTestnet.id && (
+              <PageButton
+                disabled={router.pathname.includes('/discover')}
+                onClick={() => {
+                  router.push(`/discover?chain=${monadTestnet.id}`)
+                }}
+              >
+                <DiscoverPageSvg className="w-4 h-4" />
+                Discover
+              </PageButton>
+            )}
+
             <PageButton
               disabled={router.pathname.includes('/trade')}
               onClick={() => {
@@ -101,16 +113,6 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
             {selectedChain.id === monadTestnet.id && (
               <>
-                <PageButton
-                  disabled={router.pathname.includes('/discover')}
-                  onClick={() => {
-                    router.push(`/discover?chain=${selectedChain.id}`)
-                  }}
-                >
-                  <DiscoverPageSvg className="w-4 h-4" />
-                  Discover
-                </PageButton>
-
                 <PageButton
                   disabled={router.pathname.includes('/futures')}
                   onClick={() => {

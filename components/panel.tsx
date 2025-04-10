@@ -63,6 +63,19 @@ const Panel = ({
                     </div>
                     <div className="flex flex-col text-white text-base font-bold relative mb-6 flex-1 pl-8 pr-16 gap-[40px]">
                       <div className="flex flex-col gap-8 items-start">
+                        {chainId === monadTestnet.id && (
+                          <PageButton
+                            disabled={router.pathname.includes('/discover')}
+                            onClick={() => {
+                              router.push(`/discover?chain=${monadTestnet.id}`)
+                              setOpen(false)
+                            }}
+                          >
+                            <DiscoverPageSvg className="w-4 h-4" />
+                            Discover
+                          </PageButton>
+                        )}
+
                         <PageButton
                           disabled={router.pathname.includes('/trade')}
                           onClick={() => {
@@ -87,19 +100,6 @@ const Panel = ({
 
                         {chainId === monadTestnet.id && (
                           <>
-                            <PageButton
-                              disabled={router.pathname.includes('/discover')}
-                              onClick={() => {
-                                router.push(
-                                  `/discover?chain=${monadTestnet.id}`,
-                                )
-                                setOpen(false)
-                              }}
-                            >
-                              <DiscoverPageSvg className="w-4 h-4" />
-                              Discover
-                            </PageButton>
-
                             <PageButton
                               disabled={router.pathname.includes('/futures')}
                               onClick={() => {
