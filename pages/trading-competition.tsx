@@ -5,15 +5,14 @@ import { useChainContext } from '../contexts/chain-context'
 import { TradingCompetitionContainer } from '../containers/trading-competition-container'
 
 export default function TradingCompetition() {
-  const { selectedChain, setSelectedChain } = useChainContext()
+  const { selectedChain } = useChainContext()
 
   useEffect(() => {
     if (selectedChain.id !== monadTestnet.id) {
-      setSelectedChain(monadTestnet)
       const url = new URL(window.location.href)
-      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
+      window.location.href = `${url.origin}`
     }
-  }, [selectedChain, setSelectedChain])
+  }, [selectedChain])
 
   return <TradingCompetitionContainer />
 }

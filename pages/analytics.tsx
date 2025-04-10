@@ -11,15 +11,14 @@ import { useCurrencyContext } from '../contexts/currency-context'
 
 export default function Analytics() {
   const { prices, whitelistCurrencies } = useCurrencyContext()
-  const { selectedChain, setSelectedChain } = useChainContext()
+  const { selectedChain } = useChainContext()
 
   useEffect(() => {
     if (selectedChain.id !== monadTestnet.id) {
-      setSelectedChain(monadTestnet)
       const url = new URL(window.location.href)
-      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
+      window.location.href = `${url.origin}`
     }
-  }, [selectedChain, setSelectedChain])
+  }, [selectedChain])
 
   const { data: analytics } = useQuery({
     queryKey: ['analytics', selectedChain.id],

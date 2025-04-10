@@ -5,15 +5,14 @@ import { useChainContext } from '../contexts/chain-context'
 import { DiscoverContainer } from '../containers/discover-container'
 
 export default function Discover() {
-  const { selectedChain, setSelectedChain } = useChainContext()
+  const { selectedChain } = useChainContext()
 
   useEffect(() => {
     if (selectedChain.id !== monadTestnet.id) {
-      setSelectedChain(monadTestnet)
       const url = new URL(window.location.href)
-      window.history.replaceState({}, '', `${url.origin}${url.pathname}`)
+      window.location.href = `${url.origin}`
     }
-  }, [selectedChain, setSelectedChain])
+  }, [selectedChain])
 
   return <DiscoverContainer />
 }
