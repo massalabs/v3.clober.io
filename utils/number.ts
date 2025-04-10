@@ -124,7 +124,10 @@ const MILLION = '1000000'
 const BILLION = '1000000000'
 const TRILLION = '1000000000000'
 
-export const toHumanReadableString = (value: BigNumber.Value): string => {
+export const toHumanReadableString = (
+  value: BigNumber.Value,
+  decimalPlaces = 1,
+): string => {
   value = new BigNumber(value)
   let abbreviatedDollarValue = new BigNumber(value)
   let suffix = ''
@@ -141,5 +144,5 @@ export const toHumanReadableString = (value: BigNumber.Value): string => {
     abbreviatedDollarValue = value.div(KILO)
     suffix = 'K'
   }
-  return `${toCommaSeparated(abbreviatedDollarValue.toFixed(1))}${suffix}`
+  return `${toCommaSeparated(abbreviatedDollarValue.toFixed(decimalPlaces))}${suffix}`
 }

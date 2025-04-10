@@ -103,7 +103,7 @@ export const MarketCard = ({
         <div
           className={`w-[120px] ${dailyChange === 0 ? 'text-white' : dailyChange > 0 ? 'text-green-500' : 'text-red-500'} text-base font-bold`}
         >
-          {toHumanReadableString(dailyChange.toFixed(2))}%
+          {toHumanReadableString(dailyChange.toFixed(2), 2)}%
         </div>
         <div className="w-[59px] flex h-full text-white text-base font-bold items-center justify-center">
           {verified ? <VerifiedSvg /> : <></>}
@@ -218,7 +218,7 @@ export const MarketCard = ({
                         : 'text-red-500'
                   }`}
                 >
-                  {toHumanReadableString(dailyChange.toFixed(2))}%
+                  {toHumanReadableString(dailyChange.toFixed(2), 2)}%
                 </div>
               </div>
             </div>
