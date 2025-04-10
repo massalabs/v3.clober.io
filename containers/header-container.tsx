@@ -13,13 +13,9 @@ import { useChainContext } from '../contexts/chain-context'
 import ChainSelector from '../components/selector/chain-selector'
 import { supportChains } from '../constants/chain'
 import MenuSvg from '../components/svg/menu-svg'
-import { DocsIconSvg } from '../components/svg/docs-icon-svg'
-import { DiscordLogoSvg } from '../components/svg/discord-logo-svg'
-import { TwitterLogoSvg } from '../components/svg/twitter-logo-svg'
 import { PageButton } from '../components/button/page-button'
 import { SwapPageSvg } from '../components/svg/swap-page-svg'
 import { VaultPageSvg } from '../components/svg/vault-page-svg'
-import { GithubLogoSvg } from '../components/svg/github-logo-svg'
 import { LimitPageSvg } from '../components/svg/limit-page-svg'
 import { ConnectButton } from '../components/button/connect-button'
 import { UserButton } from '../components/button/user-button'
@@ -148,40 +144,6 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </div>
         </div>
         <div className="flex gap-2 w-auto md:gap-4 ml-auto">
-          <div className="hidden lg:flex items-center justify-center mr-2 gap-4">
-            <Link
-              className="link"
-              target="_blank"
-              href="https://github.com/clober-dex/"
-              rel="noreferrer"
-            >
-              <GithubLogoSvg className="w-5 h-5" />
-            </Link>
-            <Link
-              className="link"
-              target="_blank"
-              href="https://docs.clober.io/"
-              rel="noreferrer"
-            >
-              <DocsIconSvg className="w-5 h-5" />
-            </Link>
-            <Link
-              className="link"
-              target="_blank"
-              href="https://discord.gg/clober-dex"
-              rel="noreferrer"
-            >
-              <DiscordLogoSvg className="w-5 h-5" />
-            </Link>
-            <Link
-              className="link"
-              target="_blank"
-              href="https://x.com/CloberDEX"
-              rel="noreferrer"
-            >
-              <TwitterLogoSvg className="w-5 h-5" />
-            </Link>
-          </div>
           {supportChains.length > 1 ? (
             <ChainSelector
               chain={selectedChain}
@@ -221,7 +183,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             )}
           </div>
           <button
-            className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center xl:hidden"
+            className="w-8 h-8 lg:hover:bg-gray-200 hover:bg-gray-700 rounded sm:rounded-lg flex items-center justify-center"
             onClick={onMenuClick}
           >
             <MenuSvg />
