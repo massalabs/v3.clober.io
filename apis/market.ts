@@ -270,7 +270,10 @@ export const fetchAllMarkets = async (
             Number(formatUnits(totalSupply, Number(book.base.decimals) ?? 0n)) *
             (basePrice || latestPrice),
           liquidityUsd: liquidityUsdInBidBook + liquidityUsdInAskBook,
-          dailyChange: (latestPrice / Number(chartLog?.open ?? 1) - 1) * 100,
+          dailyChange:
+            chartLog && chartLog.open && Number(chartLog.open) > 0
+              ? (latestPrice / Number(chartLog.open) - 1) * 100
+              : 0,
           verified:
             verifiedTokenAddresses
               .map((address) => getAddress(address))
