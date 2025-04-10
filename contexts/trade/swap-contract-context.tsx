@@ -103,17 +103,7 @@ export const SwapContractProvider = ({
           fields: [],
         })
 
-        const swapData = await fetchSwapData(
-          aggregator,
-          inputCurrency,
-          amountIn,
-          outputCurrency,
-          slippageLimitPercent,
-          gasPrice,
-          userAddress,
-        )
-
-        const spender = getAddress(swapData.transaction.to)
+        const spender = getAddress(aggregator.contract)
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(inputCurrency.address, zeroAddress) &&
@@ -174,6 +164,17 @@ export const SwapContractProvider = ({
           ] as Confirmation['fields'],
         }
         setConfirmation(confirmation)
+
+        const swapData = await fetchSwapData(
+          aggregator,
+          inputCurrency,
+          amountIn,
+          outputCurrency,
+          slippageLimitPercent,
+          gasPrice,
+          userAddress,
+        )
+
         const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
