@@ -590,7 +590,7 @@ export const TradeContainer = () => {
                 Limit
               </button>
             </div>
-            <div className="hidden sm:flex flex-col rounded-2xl bg-[#171b24] p-6 w-full sm:w-[480px] h-[644px]">
+            <div className="hidden sm:flex flex-col rounded-2xl bg-[#171b24] p-6 w-fit sm:w-[480px] h-[644px]">
               {tab === 'limit' ? (
                 <LimitForm
                   chainId={selectedChain.id}
@@ -817,9 +817,9 @@ export const TradeContainer = () => {
             </div>
           </div>
         </div>
-        {userAddress ? (
+        {userAddress && openOrders.length > 0 ? (
           <>
-            <div className="flex mt-[20px] mb-4 lg:mt-12 text-white">
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 mt-[20px] mb-4 lg:mt-12 text-white">
               <div className="border-b-blue-500 text-[13px] lg:text-base border-solid lg:border-0 flex w-1/2 lg:w-[161px] h-[37px] px-6 lg:px-0 lg:justify-start pt-1.5 pb-2.5 border-b-2 border-[#ffc32d] justify-center items-center gap-2">
                 <div className="text-white font-semibold">Open Order</div>
                 <div className="flex px-2 py-0.5 lg:h-7 lg:px-2.5 lg:py-0.5 bg-blue-500/20 rounded-[17.02px] flex-col justify-center items-center">
