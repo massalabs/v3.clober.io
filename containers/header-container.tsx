@@ -28,6 +28,7 @@ import { UserTransactionsModal } from '../components/modal/user-transactions-mod
 import { useTransactionContext } from '../contexts/transaction-context'
 import { UserPointButton } from '../components/button/user-point-button'
 import { usePointContext } from '../contexts/point-context'
+import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -100,15 +101,15 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
             {selectedChain.id === monadTestnet.id && (
               <>
-                {/*<PageButton*/}
-                {/*  disabled={router.pathname.includes('/discover')}*/}
-                {/*  onClick={() => {*/}
-                {/*    router.push(`/discover?chain=${selectedChain.id}`)*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  <DiscoverPageSvg className="w-4 h-4" />*/}
-                {/*  Discover*/}
-                {/*</PageButton>*/}
+                <PageButton
+                  disabled={router.pathname.includes('/discover')}
+                  onClick={() => {
+                    router.push(`/discover?chain=${selectedChain.id}`)
+                  }}
+                >
+                  <DiscoverPageSvg className="w-4 h-4" />
+                  Discover
+                </PageButton>
 
                 <PageButton
                   disabled={router.pathname.includes('/futures')}

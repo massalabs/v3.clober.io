@@ -14,6 +14,7 @@ import { PageButton } from './button/page-button'
 import { VaultPageSvg } from './svg/vault-page-svg'
 import { GithubLogoSvg } from './svg/github-logo-svg'
 import { LimitPageSvg } from './svg/limit-page-svg'
+import { DiscoverPageSvg } from './svg/discover-page-svg'
 
 const Panel = ({
   chainId,
@@ -86,18 +87,18 @@ const Panel = ({
 
                         {chainId === monadTestnet.id && (
                           <>
-                            {/*<PageButton*/}
-                            {/*  disabled={router.pathname.includes('/discover')}*/}
-                            {/*  onClick={() => {*/}
-                            {/*    router.push(*/}
-                            {/*      `/discover?chain=${monadTestnet.id}`,*/}
-                            {/*    )*/}
-                            {/*    setOpen(false)*/}
-                            {/*  }}*/}
-                            {/*>*/}
-                            {/*  <DiscoverPageSvg className="w-4 h-4" />*/}
-                            {/*  Discover*/}
-                            {/*</PageButton>*/}
+                            <PageButton
+                              disabled={router.pathname.includes('/discover')}
+                              onClick={() => {
+                                router.push(
+                                  `/discover?chain=${monadTestnet.id}`,
+                                )
+                                setOpen(false)
+                              }}
+                            >
+                              <DiscoverPageSvg className="w-4 h-4" />
+                              Discover
+                            </PageButton>
 
                             <PageButton
                               disabled={router.pathname.includes('/futures')}
