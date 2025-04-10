@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { getAddress, isAddressEqual } from 'viem'
+import { getAddress, isAddress, isAddressEqual } from 'viem'
 import { getQuoteToken } from '@clober/v2-sdk'
 import { useAccount, useDisconnect } from 'wagmi'
 
@@ -141,7 +141,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
       localStorage.getItem(
         LOCAL_STORAGE_OUTPUT_CURRENCY_KEY('trade', selectedChain),
       ),
-  ]
+  ].map((address) => (isAddress(address) ? getAddress(address) : address))
 
   const setSlippageInput = useCallback((slippage: string) => {
     localStorage.setItem(TRADE_SLIPPAGE_KEY, slippage)
@@ -225,7 +225,9 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
         if (_inputCurrency && _outputCurrency) {
           console.log({
             context: 'trade',
+            inputCurrencyAddress,
             inputCurrency: _inputCurrency,
+            outputCurrencyAddress,
             outputCurrency: _outputCurrency,
             url: window.location.href,
           })
