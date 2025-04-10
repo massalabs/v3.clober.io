@@ -15,6 +15,7 @@ import { VaultPageSvg } from './svg/vault-page-svg'
 import { GithubLogoSvg } from './svg/github-logo-svg'
 import { LimitPageSvg } from './svg/limit-page-svg'
 import { DiscoverPageSvg } from './svg/discover-page-svg'
+import { PointPageSvg } from './svg/point-page-svg'
 
 const Panel = ({
   chainId,
@@ -96,6 +97,17 @@ const Panel = ({
                         >
                           <VaultPageSvg className="w-4 h-4" />
                           Earn
+                        </PageButton>
+
+                        <PageButton
+                          disabled={router.pathname.includes('/point')}
+                          onClick={() => {
+                            router.push(`/point?chain=${chainId}`)
+                            setOpen(false)
+                          }}
+                        >
+                          <PointPageSvg className="w-4 h-4" />
+                          Point
                         </PageButton>
 
                         {chainId === monadTestnet.id && (

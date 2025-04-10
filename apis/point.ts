@@ -83,6 +83,12 @@ export async function fetchLiquidVaultPoints(
     .map((liquidityVaultPoint) =>
       toLiquidityVaultPoint(chainId, now, liquidityVaultPoint),
     )
+    .filter(
+      (liquidityVaultPoint) =>
+        !BLACKLISTED_USER_ADDRESSES.includes(
+          getAddress(liquidityVaultPoint.userAddress),
+        ),
+    )
     .sort((a, b) => b.point - a.point)
     .map((liquidityVaultPoint, index) => {
       return {
@@ -90,12 +96,6 @@ export async function fetchLiquidVaultPoints(
         rank: index + 1,
       }
     })
-    .filter(
-      (liquidityVaultPoint) =>
-        !BLACKLISTED_USER_ADDRESSES.includes(
-          getAddress(liquidityVaultPoint.userAddress),
-        ),
-    )
 }
 
 export async function fetchLiquidVaultPoint(

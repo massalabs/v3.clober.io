@@ -15,8 +15,6 @@ import { useCurrencyContext } from '../currency-context'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
 import { wagmiConfig } from '../../constants/chain'
 import { fetchVaults } from '../../apis/vault'
-import { fetchLiquidVaultPoints } from '../../apis/point'
-import { LiquidityVaultPoint } from '../../model/liquidity-vault-point'
 
 type VaultContext = {
   lpCurrencyAmount: string
@@ -31,7 +29,6 @@ type VaultContext = {
   setSlippageInput: (slippageInput: string) => void
   vaultLpBalances: Balances
   vaults: Vault[]
-  vaultPoints: LiquidityVaultPoint[]
 }
 
 const Context = React.createContext<VaultContext>({
@@ -47,7 +44,6 @@ const Context = React.createContext<VaultContext>({
   setSlippageInput: () => {},
   vaultLpBalances: {},
   vaults: [],
-  vaultPoints: [],
 })
 
 export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
@@ -131,16 +127,6 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
     data: Balances
   }
 
-  const { data: vaultPoints } = useQuery({
-    queryKey: ['vault-points', selectedChain.id],
-    queryFn: async () => {
-      return fetchLiquidVaultPoints(selectedChain.id)
-    },
-    initialData: [],
-  }) as {
-    data: LiquidityVaultPoint[]
-  }
-
   useEffect(() => {
     const action = () => {
       if (!fetchCurrenciesDone(whitelistCurrencies, selectedChain)) {
@@ -176,7 +162,6 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
         setSlippageInput,
         vaultLpBalances: vaultLpBalances ?? {},
         vaults: vaults ?? [],
-        vaultPoints: vaultPoints ?? [],
       }}
     >
       {children}

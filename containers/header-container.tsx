@@ -25,6 +25,7 @@ import { useTransactionContext } from '../contexts/transaction-context'
 import { UserPointButton } from '../components/button/user-point-button'
 import { usePointContext } from '../contexts/point-context'
 import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
+import { PointPageSvg } from '../components/svg/point-page-svg'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -105,6 +106,16 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             >
               <VaultPageSvg className="w-4 h-4" />
               Earn
+            </PageButton>
+
+            <PageButton
+              disabled={router.pathname.includes('/point')}
+              onClick={() => {
+                router.push(`/point?chain=${selectedChain.id}`)
+              }}
+            >
+              <PointPageSvg className="w-4 h-4" />
+              Point
             </PageButton>
 
             {selectedChain.id === monadTestnet.id && (

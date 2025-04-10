@@ -2,17 +2,19 @@ import React, { useContext } from 'react'
 import { useAccount } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 
-import { fetchLiquidVaultPoint } from '../apis/point'
+import { fetchLiquidVaultPoint, fetchLiquidVaultPoints } from '../apis/point'
 import { LiquidityVaultPoint } from '../model/liquidity-vault-point'
 
 import { useChainContext } from './chain-context'
 
 type PointContext = {
   myVaultPoint: LiquidityVaultPoint | null
+  vaultPoints: LiquidityVaultPoint[]
 }
 
 const Context = React.createContext<PointContext>({
   myVaultPoint: null,
+  vaultPoints: [],
 })
 
 export const PointProvider = ({ children }: React.PropsWithChildren<{}>) => {
@@ -32,8 +34,20 @@ export const PointProvider = ({ children }: React.PropsWithChildren<{}>) => {
     data: LiquidityVaultPoint | null
   }
 
+  const { data: vaultPoints } = useQuery({
+    queryKey: ['vault-points', selectedChain.id],
+    queryFn: async () => {
+      return fetchLiquidVaultPoints(selectedChain.id)
+    },
+    initialData: [],
+  }) as {
+    data: LiquidityVaultPoint[]
+  }
+
   return (
-    <Context.Provider value={{ myVaultPoint }}>{children}</Context.Provider>
+    <Context.Provider value={{ myVaultPoint, vaultPoints: vaultPoints ?? [] }}>
+      {children}
+    </Context.Provider>
   )
 }
 
