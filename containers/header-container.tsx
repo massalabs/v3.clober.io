@@ -108,18 +108,18 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               Earn
             </PageButton>
 
-            <PageButton
-              disabled={router.pathname.includes('/point')}
-              onClick={() => {
-                router.push(`/point?chain=${selectedChain.id}`)
-              }}
-            >
-              <PointPageSvg className="w-4 h-4" />
-              Point
-            </PageButton>
-
             {selectedChain.id === monadTestnet.id && (
               <>
+                <PageButton
+                  disabled={router.pathname.includes('/point')}
+                  onClick={() => {
+                    router.push(`/point?chain=${selectedChain.id}`)
+                  }}
+                >
+                  <PointPageSvg className="w-4 h-4" />
+                  Point
+                </PageButton>
+
                 <PageButton
                   disabled={router.pathname.includes('/futures')}
                   onClick={() => {

@@ -99,19 +99,19 @@ const Panel = ({
                           Earn
                         </PageButton>
 
-                        <PageButton
-                          disabled={router.pathname.includes('/point')}
-                          onClick={() => {
-                            router.push(`/point?chain=${chainId}`)
-                            setOpen(false)
-                          }}
-                        >
-                          <PointPageSvg className="w-4 h-4" />
-                          Point
-                        </PageButton>
-
                         {chainId === monadTestnet.id && (
                           <>
+                            <PageButton
+                              disabled={router.pathname.includes('/point')}
+                              onClick={() => {
+                                router.push(`/point?chain=${chainId}`)
+                                setOpen(false)
+                              }}
+                            >
+                              <PointPageSvg className="w-4 h-4" />
+                              Point
+                            </PageButton>
+
                             <PageButton
                               disabled={router.pathname.includes('/futures')}
                               onClick={() => {
@@ -129,6 +129,7 @@ const Panel = ({
                                 router.push(
                                   `/analytics?chain=${monadTestnet.id}`,
                                 )
+                                setOpen(false)
                               }}
                             >
                               <svg
