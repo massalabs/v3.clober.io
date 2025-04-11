@@ -155,7 +155,7 @@ export const FuturesPositionAdjustModalContainer = ({
                   userPosition.asset.minDebt,
                   userPosition.asset.currency.decimals,
                   prices[userPosition.asset.currency.address] ?? 0,
-                )} ${userPosition.asset.currency.symbol}`
+                )} ${userPosition.asset.currency.symbol.split('-')[0]}`
               : debtAmountDelta < 0n &&
                   balances[userPosition.asset.currency.address] <
                     -debtAmountDelta

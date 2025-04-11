@@ -7,6 +7,7 @@ import { AGGREGATORS } from '../constants/aggregators'
 import { formatUnits } from '../utils/bigint'
 import { Currency } from '../model/currency'
 import { Prices } from '../model/prices'
+import { PYTH_HERMES_ENDPOINT } from '../constants/pyth'
 
 import { fetchQuotes } from './swap/quote'
 
@@ -43,6 +44,7 @@ export const fetchPrice = async (
 }
 
 export const fetchPricesFromPyth = async (
+  chainId: CHAIN_IDS,
   priceFeedIdList: {
     priceFeedId: `0x${string}`
     address: `0x${string}`
@@ -59,7 +61,7 @@ export const fetchPricesFromPyth = async (
     return {} as Prices
   }
   const pythPriceService = new EvmPriceServiceConnection(
-    'https://hermes.pyth.network',
+    PYTH_HERMES_ENDPOINT[chainId],
   )
   const prices: PriceFeed[] | undefined =
     await pythPriceService.getLatestPriceFeeds(

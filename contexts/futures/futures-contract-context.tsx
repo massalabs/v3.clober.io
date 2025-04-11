@@ -38,6 +38,7 @@ import { RPC_URL } from '../../constants/rpc-url'
 import { currentTimestampInSeconds } from '../../utils/date'
 import { Currency } from '../../model/currency'
 import { deduplicateCurrencies } from '../../utils/currency'
+import { PYTH_HERMES_ENDPOINT } from '../../constants/pyth'
 
 import { useFuturesContext } from './futures-context'
 
@@ -223,7 +224,7 @@ export const FuturesContractProvider = ({
         }
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
-          'https://hermes.pyth.network',
+          PYTH_HERMES_ENDPOINT[selectedChain.id],
         )
         const priceFeedUpdateData =
           await evmPriceServiceConnection.getPriceFeedsUpdateData([
@@ -368,7 +369,7 @@ export const FuturesContractProvider = ({
         setConfirmation(confirmation)
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
-          'https://hermes.pyth.network',
+          PYTH_HERMES_ENDPOINT[selectedChain.id],
         )
         const priceFeedUpdateData =
           await evmPriceServiceConnection.getPriceFeedsUpdateData([
@@ -621,7 +622,7 @@ export const FuturesContractProvider = ({
         setConfirmation(confirmation)
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
-          'https://hermes.pyth.network',
+          PYTH_HERMES_ENDPOINT[selectedChain.id],
         )
         const priceFeedUpdateData =
           await evmPriceServiceConnection.getPriceFeedsUpdateData([
@@ -744,7 +745,7 @@ export const FuturesContractProvider = ({
         setConfirmation(confirmation)
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
-          'https://hermes.pyth.network',
+          PYTH_HERMES_ENDPOINT[selectedChain.id],
         )
         const priceFeedUpdateData =
           await evmPriceServiceConnection.getPriceFeedsUpdateData([
@@ -1119,7 +1120,7 @@ export const FuturesContractProvider = ({
         setConfirmation(confirmation)
 
         const evmPriceServiceConnection = new EvmPriceServiceConnection(
-          'https://hermes.pyth.network',
+          PYTH_HERMES_ENDPOINT[selectedChain.id],
         )
         const priceFeedUpdateData =
           await evmPriceServiceConnection.getPriceFeedsUpdateData([

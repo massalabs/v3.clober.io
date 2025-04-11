@@ -148,7 +148,7 @@ export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
                         asset.minDebt,
                         asset.currency.decimals,
                         prices[asset.currency.address] ?? 0,
-                      )} ${asset.currency.symbol}`
+                      )} ${asset.currency.symbol.split('-')[0]}`
                     : 'Borrow',
       }}
     />

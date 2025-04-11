@@ -25,7 +25,7 @@ export const Default: Story = {
         symbol: 'AAPL',
         icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-aapl-usd.inline.svg&w=1920&q=75',
         priceFeedId:
-          '0x49f6b65cb1de6b10eaf75e7c03ca029c306d0357e91b5311b175084a5ad55688',
+          '0xafcc9a5bb5eefd55e12b6f0b4c8e6bccf72b785134ee232a5d175afd082e8832',
       },
       collateral: {
         address: '0x43D614B1bA4bA469fAEAa4557AEAFdec039b8795',
@@ -33,7 +33,7 @@ export const Default: Story = {
         symbol: 'USDC',
         decimals: 6,
         priceFeedId:
-          '0x49f6b65cb1de6b10eaf75e7c03ca029c306d0357e91b5311b175084a5ad55688',
+          '0xafcc9a5bb5eefd55e12b6f0b4c8e6bccf72b785134ee232a5d175afd082e8832',
       },
       expiration: 1635724800,
       maxLTV: 700000n,

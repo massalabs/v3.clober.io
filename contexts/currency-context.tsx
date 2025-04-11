@@ -139,7 +139,10 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
     queryFn: async () => {
       return (
         await Promise.all([
-          fetchPricesFromPyth(PRICE_FEED_ID_LIST[selectedChain.id]),
+          fetchPricesFromPyth(
+            selectedChain.id,
+            PRICE_FEED_ID_LIST[selectedChain.id],
+          ),
           fetchPrices(AGGREGATORS[selectedChain.id]),
         ])
       ).reduce((acc, price) => ({ ...acc, ...price }), {} as Prices)
