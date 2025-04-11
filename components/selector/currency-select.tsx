@@ -146,12 +146,12 @@ const CurrencySelect = ({
             )
             .sort((a, b) => {
               const aValue =
-                Number(balances[a.address] ?? 0n) *
+                Number(formatUnits(balances[a.address] ?? 0n, a.decimals)) *
                 (prices[a.address] ?? 0.000000000000001)
               const bValue =
-                Number(balances[b.address] ?? 0n) *
+                Number(formatUnits(balances[b.address] ?? 0n, b.decimals)) *
                 (prices[b.address] ?? 0.000000000000001)
-              return aValue > bValue ? -1 : aValue < bValue ? 1 : 0
+              return bValue - aValue
             })
             .map((currency) => (
               <button
