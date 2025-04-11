@@ -158,13 +158,13 @@ function App({ Component, pageProps }: AppProps) {
     if (pathname.includes('/trade')) {
       return "lg:bg-[url('../public/trade-background.png')] lg:bg-top"
     } else if (pathname.includes('/earn')) {
-      return "bg-[url('../public/earn-background.png')] bg-top"
+      return "bg-[url('../public/base-background.png')] bg-top"
     } else if (pathname.includes('/futures')) {
-      return "bg-[url('../public/trade-background.png')] bg-top"
+      return "bg-[url('../public/base-background.png')] bg-top"
     } else if (pathname.includes('/discover')) {
-      return "bg-[url('../public/discover-background.png')] bg-top"
+      return "bg-[url('../public/base-background.png')] bg-top"
     } else if (pathname.includes('/point')) {
-      return "sm:bg-[url('../public/earn-background.png')] bg-top"
+      return "sm:bg-[url('../public/base-background.png')] bg-top"
     } else if (pathname.includes('/trading-competition')) {
       return "sm:bg-[url('../public/trading-competition-background.png')] bg-top"
     }
