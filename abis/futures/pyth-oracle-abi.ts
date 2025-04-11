@@ -1,4 +1,4 @@
-export const PYTH_ABI = [
+export const PYTH_ORACLE_ABI = [
   {
     inputs: [
       {

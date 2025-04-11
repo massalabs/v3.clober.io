@@ -117,6 +117,19 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/MON.png/public',
     },
     {
+      address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
+    },
+    {
+      address: '0x6A922cdB0C88Bce79aFe85f65Cc1d10cd3bF6d86',
+      name: 'S&P 500 2025-07-01',
+      symbol: 'S&P500-250701',
+      decimals: 18,
+      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-ivv-usd.inline.svg&w=3840&q=75',
+    },
+    {
       address: '0x836047a99e11f376522b447bffb6e3495dd0637c',
       name: 'Orbiter Wrapped ETH',
       symbol: 'oWETH',
@@ -142,12 +155,6 @@ export const WHITELISTED_CURRENCIES: {
       name: 'WETH',
       symbol: 'WETH',
       decimals: 18,
-    },
-    {
-      address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
-      name: 'USD Coin',
-      symbol: 'USDC',
-      decimals: 6,
     },
     {
       address: '0xF62F63169cA4085Af82C3a147475EFDe3EdD4b50',

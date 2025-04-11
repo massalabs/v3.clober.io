@@ -21,7 +21,7 @@ const Context = React.createContext<FuturesContext>({
 })
 
 export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const { selectedChain, setSelectedChain } = useChainContext()
+  const { selectedChain } = useChainContext()
   const { prices } = useCurrencyContext()
   const { address: userAddress } = useAccount()
   const { setCurrencies, whitelistCurrencies } = useCurrencyContext()

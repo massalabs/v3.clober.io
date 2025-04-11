@@ -12,6 +12,7 @@ import { useChainContext } from '../contexts/chain-context'
 import { sendTransaction } from '../utils/transaction'
 import { useTransactionContext } from '../contexts/transaction-context'
 import { currentTimestampInSeconds } from '../utils/date'
+import { FUTURES_CONTRACT_ADDRESSES } from '../constants/futures/contract-addresses'
 
 const Profit = ({ profit }: { profit: number }) => {
   return (
@@ -71,7 +72,9 @@ export const TradingCompetitionContainer = () => {
         publicClient,
         {
           chain: selectedChain,
-          address: '0x58e84BAc13e19966A17F7Df370d3452bb0c23BF7', // REGISTER_CONTRACT_ADDRESS
+          address:
+            FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!
+              .TradingCompetitionRegistration,
           abi: [
             {
               type: 'function',

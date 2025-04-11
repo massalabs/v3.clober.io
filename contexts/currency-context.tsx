@@ -168,10 +168,10 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
       ]
       if (
         FUTURES_CONTRACT_ADDRESSES[selectedChain.id] &&
-        FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
+        FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket
       ) {
         spenders = spenders.concat(
-          FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+          FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
         )
       }
       const _currencies = currencies.filter(

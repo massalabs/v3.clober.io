@@ -28,9 +28,9 @@ import { maxApprove } from '../../utils/approve20'
 import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/futures/contract-addresses'
 import { useChainContext } from '../chain-context'
 import { formatUnits } from '../../utils/bigint'
-import { VAULT_MANAGER_ABI } from '../../abis/futures/vault-manager.json-abi'
+import { FUTURES_MARKET_ABI } from '../../abis/futures/futures-market-abi'
 import { supportChains } from '../../constants/chain'
-import { PYTH_ABI } from '../../abis/futures/pyth-abi'
+import { PYTH_ORACLE_ABI } from '../../abis/futures/pyth-oracle-abi'
 import { UserPosition } from '../../model/futures/user-position'
 import { buildTransaction } from '../../utils/build-transaction'
 import { sendTransaction } from '../../utils/transaction'
@@ -232,22 +232,22 @@ export const FuturesContractProvider = ({
           ])
 
         const fee = await publicClient.readContract({
-          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
-          abi: PYTH_ABI,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.PythOracle,
+          abi: PYTH_ORACLE_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
         })
 
         await publicClient.simulateContract({
           chain: walletClient.chain,
-          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
           functionName: 'multicall',
-          abi: VAULT_MANAGER_ABI,
+          abi: FUTURES_MARKET_ABI,
           value: fee,
           args: [
             [
               encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
+                abi: FUTURES_MARKET_ABI,
                 functionName: 'updateOracle',
                 args: [
                   encodeAbiParameters(parseAbiParameters('bytes[]'), [
@@ -256,7 +256,7 @@ export const FuturesContractProvider = ({
                 ],
               }),
               encodeFunctionData({
-                abi: VAULT_MANAGER_ABI,
+                abi: FUTURES_MARKET_ABI,
                 functionName: 'mint',
                 args: [
                   asset.currency.address,
@@ -304,7 +304,7 @@ export const FuturesContractProvider = ({
         })
 
         const spender =
-          FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager
+          FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket
         if (
           !isAddressEqual(spender, WETH[selectedChain.id].address) &&
           !isAddressEqual(asset.collateral.address, zeroAddress) &&
@@ -382,8 +382,8 @@ export const FuturesContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
-          abi: PYTH_ABI,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.PythOracle,
+          abi: PYTH_ORACLE_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
         })
@@ -394,12 +394,12 @@ export const FuturesContractProvider = ({
             chain: selectedChain,
             address: spender,
             functionName: 'multicall',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             value: fee,
             args: [
               [
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'updateOracle',
                   args: [
                     encodeAbiParameters(parseAbiParameters('bytes[]'), [
@@ -408,7 +408,7 @@ export const FuturesContractProvider = ({
                   ],
                 }),
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'deposit',
                   args: [
                     asset.currency.address,
@@ -417,7 +417,7 @@ export const FuturesContractProvider = ({
                   ],
                 }),
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'mint',
                   args: [
                     asset.currency.address,
@@ -513,13 +513,14 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'multicall',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             args: [
               [
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'burn',
                   args: [
                     asset.currency.address,
@@ -634,8 +635,8 @@ export const FuturesContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
-          abi: PYTH_ABI,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.PythOracle,
+          abi: PYTH_ORACLE_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
         })
@@ -644,14 +645,15 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'multicall',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             value: fee,
             args: [
               [
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'updateOracle',
                   args: [
                     encodeAbiParameters(parseAbiParameters('bytes[]'), [
@@ -660,7 +662,7 @@ export const FuturesContractProvider = ({
                   ],
                 }),
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'burn',
                   args: [
                     userPosition.asset.currency.address,
@@ -669,7 +671,7 @@ export const FuturesContractProvider = ({
                   ],
                 }),
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'withdraw',
                   args: [
                     userPosition.asset.currency.address,
@@ -756,8 +758,8 @@ export const FuturesContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
-          abi: PYTH_ABI,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.PythOracle,
+          abi: PYTH_ORACLE_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
         })
@@ -766,14 +768,15 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'multicall',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             value: fee,
             args: [
               [
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'updateOracle',
                   args: [
                     encodeAbiParameters(parseAbiParameters('bytes[]'), [
@@ -782,7 +785,7 @@ export const FuturesContractProvider = ({
                   ],
                 }),
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'settle',
                   args: [asset.currency.address],
                 }),
@@ -861,9 +864,10 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'close',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             args: [asset.currency.address, walletClient.account.address],
           },
           5_000_000n,
@@ -951,9 +955,10 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'redeem',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             args: [
               asset.currency.address,
               walletClient.account.address,
@@ -1031,9 +1036,10 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'deposit',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             args: [
               asset.currency.address,
               walletClient.account.address,
@@ -1127,8 +1133,8 @@ export const FuturesContractProvider = ({
         }
 
         const fee = await publicClient.readContract({
-          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.Pyth,
-          abi: PYTH_ABI,
+          address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.PythOracle,
+          abi: PYTH_ORACLE_ABI,
           functionName: 'getUpdateFee',
           args: [priceFeedUpdateData as any],
         })
@@ -1137,14 +1143,15 @@ export const FuturesContractProvider = ({
           publicClient,
           {
             chain: selectedChain,
-            address: FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.VaultManager,
+            address:
+              FUTURES_CONTRACT_ADDRESSES[selectedChain.id]!.FuturesMarket,
             functionName: 'multicall',
-            abi: VAULT_MANAGER_ABI,
+            abi: FUTURES_MARKET_ABI,
             value: fee,
             args: [
               [
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'updateOracle',
                   args: [
                     encodeAbiParameters(parseAbiParameters('bytes[]'), [
@@ -1153,7 +1160,7 @@ export const FuturesContractProvider = ({
                   ],
                 }),
                 encodeFunctionData({
-                  abi: VAULT_MANAGER_ABI,
+                  abi: FUTURES_MARKET_ABI,
                   functionName: 'withdraw',
                   args: [
                     asset.currency.address,

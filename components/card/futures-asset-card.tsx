@@ -20,7 +20,7 @@ export const FuturesAssetCard = ({
   const ltv = (Number(asset.maxLTV) * 100) / Number(asset.ltvPrecision)
   return (
     <>
-      <div className="hidden lg:flex w-[960px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
+      <div className="hidden lg:flex w-[1040px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
         <div className="flex w-44 items-center gap-2">
           <div className="w-8 h-8 shrink-0 relative">
             <CurrencyIcon
@@ -114,13 +114,13 @@ export const FuturesAssetCard = ({
           </button>
         </div>
         <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
-          <div className="flex flex-col justify-start items-center gap-2 w-16">
+          <div className="flex flex-1 flex-col gap-2 w-16">
             <div className="self-stretch text-gray-400 text-xs">Collateral</div>
             <div className="self-stretch text-white text-sm font-bold">
               {asset.collateral.symbol}
             </div>
           </div>
-          <div className="flex w-full flex-col flex-1 justify-start items-center gap-2">
+          <div className="flex flex-1 w-full flex-col gap-2">
             <div className="self-stretch text-gray-400 text-xs">
               Expiry Date
             </div>
@@ -128,7 +128,7 @@ export const FuturesAssetCard = ({
               {formatDate(new Date(asset.expiration * 1000))}
             </div>
           </div>
-          <div className="flex w-full flex-col flex-1 justify-start items-center gap-2">
+          <div className="flex flex-1 w-full flex-col gap-2">
             <div className="self-stretch text-gray-400 text-xs">Max LTV</div>
             <div className="self-stretch text-white text-sm font-bold">
               {ltv.toFixed(2)}%

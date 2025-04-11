@@ -4,14 +4,18 @@ import { getAddress } from 'viem'
 export const FUTURES_CONTRACT_ADDRESSES: {
   [chain in CHAIN_IDS]:
     | {
-        VaultManager: `0x${string}`
-        Pyth: `0x${string}`
+        FuturesMarket: `0x${string}`
+        PythOracle: `0x${string}`
+        TradingCompetitionRegistration: `0x${string}`
       }
     | undefined
 } = {
   [CHAIN_IDS.BASE]: undefined,
   [CHAIN_IDS.MONAD_TESTNET]: {
-    VaultManager: getAddress('0xAa7a07414d23F1153ED13C702CB84c5DD1319a62'),
-    Pyth: getAddress('0x2880aB155794e7179c9eE2e38200202908C17B43'),
+    FuturesMarket: getAddress('0x181eaedd3C9C6848921867Ea494406Fcd174EAF4'),
+    PythOracle: getAddress('0x51b7bf333aa6425B951da4C42105d94F68F6e80E'),
+    TradingCompetitionRegistration: getAddress(
+      '0x58e84BAc13e19966A17F7Df370d3452bb0c23BF7',
+    ),
   },
 }

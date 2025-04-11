@@ -21,9 +21,9 @@ export const formatDate = (date: Date): string =>
     year: '2-digit',
     month: 'short',
     day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
+    // hour: '2-digit',
+    // minute: '2-digit',
+    // hour12: false,
   })
     .format(date.setDate(date.getDate()))
     .replace(',', '')

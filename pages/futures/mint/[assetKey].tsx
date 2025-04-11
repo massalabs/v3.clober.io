@@ -7,7 +7,6 @@ import { isAddressEqual } from 'viem'
 import { TRADING_VIEW_SYMBOLS } from '../../../constants/futures/asset'
 import { useChainContext } from '../../../contexts/chain-context'
 import { FuturesManagerContainer } from '../../../containers/futures/futures-manager-container'
-import { CurrencyIcon } from '../../../components/icon/currency-icon'
 import BackSvg from '../../../components/svg/back-svg'
 import { TradingViewContainer } from '../../../containers/chart/trading-view-container'
 import { useFuturesContext } from '../../../contexts/futures/futures-context'
@@ -36,13 +35,8 @@ export default function MintFutureAssetManage() {
             href={`/futures?chain=${selectedChain.id}`}
           >
             <BackSvg className="w-4 h-4 sm:w-8 sm:h-8" />
-            <div className="flex gap-2">
-              Short
-              <CurrencyIcon
-                currency={asset.currency}
-                className="w-6 h-6 sm:w-8 sm:h-8"
-              />
-              {asset.currency.symbol}
+            <div className="flex gap-2 lg:gap-4">
+              Mint <span>{asset.currency.symbol}</span>
             </div>
           </Link>
           <div className="flex flex-col lg:flex-row sm:items-center lg:items-start justify-center gap-4 mb-4 px-2 md:px-0">
