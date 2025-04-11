@@ -45,10 +45,6 @@ const toLiquidityVaultPoint = (
       const pointsPerSecond =
         LIQUIDITY_VAULT_POINT_PER_SECOND?.[chainId]?.[vaultBalance.pool.id] ?? 0
       if (startedAt === 0 || pointsPerSecond === 0 || startedAt > now) {
-        console.error(`Invalid point data`, {
-          chainId,
-          vaultKey: vaultBalance.pool.id,
-        })
         return acc
       }
       const timeDelta =
