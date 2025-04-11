@@ -28,7 +28,7 @@ export const Default: Story = {
       title: 'Confirm',
       txHash: `0x${BigInt(1234567890).toString(16)}`,
       chain: base,
-      type: 'type',
+      type: 'approve',
       success: true,
       blockNumber: 123456,
       timestamp: currentTimestampInSeconds(),

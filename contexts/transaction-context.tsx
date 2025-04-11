@@ -7,6 +7,7 @@ import ConfirmationModal from '../components/modal/confirmation-modal'
 import { Currency } from '../model/currency'
 import { Chain } from '../model/chain'
 import { currentTimestampInSeconds } from '../utils/date'
+import { TransactionType } from '../model/transaction-type'
 
 import { useChainContext } from './chain-context'
 
@@ -24,7 +25,7 @@ export type Confirmation = {
 
 export type Transaction = Confirmation & {
   txHash: `0x${string}`
-  type: string
+  type: TransactionType
   timestamp: number
   blockNumber: number
   success: boolean

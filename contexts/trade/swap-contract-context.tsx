@@ -2,12 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import { getAddress, isAddressEqual, zeroAddress } from 'viem'
 import { useDisconnect, useWalletClient } from 'wagmi'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  getContractAddresses,
-  Market,
-  marketOrder,
-  Transaction,
-} from '@clober/v2-sdk'
+import { Transaction as SdkTransaction } from '@clober/v2-sdk'
 
 import { Currency } from '../../model/currency'
 import { formatUnits } from '../../utils/bigint'
@@ -19,7 +14,6 @@ import { maxApprove } from '../../utils/approve20'
 import { Aggregator } from '../../model/aggregator'
 import { WETH } from '../../constants/currency'
 import { useChainContext } from '../chain-context'
-import { RPC_URL } from '../../constants/rpc-url'
 import { currentTimestampInSeconds } from '../../utils/date'
 
 type SwapContractContext = {
@@ -33,19 +27,10 @@ type SwapContractContext = {
     userAddress: `0x${string}`,
     aggregator: Aggregator,
   ) => Promise<void>
-  market: (
-    inputCurrency: Currency,
-    amountIn: bigint,
-    outputCurrency: Currency,
-    slippageLimitPercent: number,
-    userAddress: `0x${string}`,
-    selectedMarket: Market,
-  ) => Promise<void>
 }
 
 const Context = React.createContext<SwapContractContext>({
   swap: () => Promise.resolve(),
-  market: () => Promise.resolve(),
 })
 
 export const SwapContractProvider = ({
@@ -178,7 +163,7 @@ export const SwapContractProvider = ({
         const transactionReceipt = await sendTransaction(
           selectedChain,
           walletClient,
-          swapData.transaction as Transaction,
+          swapData.transaction as SdkTransaction,
           disconnectAsync,
         )
         if (transactionReceipt) {
@@ -187,7 +172,7 @@ export const SwapContractProvider = ({
             txHash: transactionReceipt.transactionHash,
             success: transactionReceipt.status === 'success',
             blockNumber: Number(transactionReceipt.blockNumber),
-            type: 'swap',
+            type: aggregator.name === 'CloberV2' ? 'market' : 'swap',
             timestamp: currentTimestampInSeconds(),
           })
         }
@@ -214,140 +199,10 @@ export const SwapContractProvider = ({
     ],
   )
 
-  const market = useCallback(
-    async (
-      inputCurrency: Currency,
-      amountIn: bigint,
-      outputCurrency: Currency,
-      slippageLimitPercent: number,
-      userAddress: `0x${string}`,
-    ) => {
-      if (!walletClient) {
-        return
-      }
-
-      try {
-        setConfirmation({
-          title: 'Swap',
-          body: 'Please confirm in your wallet.',
-          chain: selectedChain,
-          fields: [],
-        })
-
-        const spender = getContractAddresses({
-          chainId: selectedChain.id,
-        }).Controller
-        if (
-          !isAddressEqual(spender, WETH[selectedChain.id].address) &&
-          !isAddressEqual(inputCurrency.address, zeroAddress) &&
-          allowances[getAddress(spender)][getAddress(inputCurrency.address)] <
-            amountIn
-        ) {
-          const confirmation = {
-            title: `Max Approve ${inputCurrency.symbol}`,
-            body: 'Please confirm in your wallet.',
-            chain: selectedChain,
-            fields: [],
-          }
-          setConfirmation(confirmation)
-          const transactionReceipt = await maxApprove(
-            selectedChain,
-            walletClient,
-            inputCurrency,
-            spender,
-            disconnectAsync,
-          )
-          if (transactionReceipt) {
-            queuePendingTransaction({
-              ...confirmation,
-              txHash: transactionReceipt.transactionHash,
-              success: transactionReceipt.status === 'success',
-              blockNumber: Number(transactionReceipt.blockNumber),
-              type: 'approve',
-              timestamp: currentTimestampInSeconds(),
-            })
-          }
-        }
-
-        const { transaction, result } = await marketOrder({
-          chainId: selectedChain.id,
-          userAddress,
-          inputToken: inputCurrency.address,
-          outputToken: outputCurrency.address,
-          amountIn: formatUnits(amountIn, inputCurrency.decimals),
-          options: {
-            rpcUrl: RPC_URL[selectedChain.id],
-            slippage: slippageLimitPercent,
-          },
-        })
-
-        const confirmation = {
-          title: 'Swap',
-          body: 'Please confirm in your wallet.',
-          chain: selectedChain,
-          fields: [
-            {
-              currency: inputCurrency,
-              label: inputCurrency.symbol,
-              direction: 'in',
-              value: formatUnits(
-                amountIn,
-                inputCurrency.decimals,
-                prices[inputCurrency.address] ?? 0,
-              ),
-            },
-            {
-              currency: outputCurrency,
-              label: outputCurrency.symbol,
-              direction: 'out',
-              value: result.taken.amount,
-            },
-          ] as Confirmation['fields'],
-        }
-        setConfirmation(confirmation)
-        const transactionReceipt = await sendTransaction(
-          selectedChain,
-          walletClient,
-          transaction,
-          disconnectAsync,
-        )
-        if (transactionReceipt) {
-          queuePendingTransaction({
-            ...confirmation,
-            txHash: transactionReceipt.transactionHash,
-            success: transactionReceipt.status === 'success',
-            blockNumber: Number(transactionReceipt.blockNumber),
-            type: 'market',
-            timestamp: currentTimestampInSeconds(),
-          })
-        }
-      } catch (e) {
-        console.error(e)
-      } finally {
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['balances'] }),
-          queryClient.invalidateQueries({ queryKey: ['allowances'] }),
-        ])
-        setConfirmation(undefined)
-      }
-    },
-    [
-      walletClient,
-      setConfirmation,
-      selectedChain,
-      allowances,
-      prices,
-      disconnectAsync,
-      queuePendingTransaction,
-      queryClient,
-    ],
-  )
-
   return (
     <Context.Provider
       value={{
         swap,
-        market,
       }}
     >
       {children}
