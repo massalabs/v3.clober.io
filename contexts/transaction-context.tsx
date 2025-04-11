@@ -108,6 +108,23 @@ export const TransactionProvider = ({
           )
           return updatedTransactions
         })
+
+        try {
+          // @ts-ignore
+          window.gtag('event', transaction.type, {
+            user_address: userAddress,
+            chain_id: transaction.chain?.id,
+            transaction: {
+              tx_hash: transaction.txHash,
+              timestamp: transaction.timestamp,
+              block_number: transaction.blockNumber,
+              success: transaction.success,
+              currency_flow: transaction.fields,
+            },
+          })
+        } catch (e) {
+          console.error('Error sending transaction event', e)
+        }
       }
     },
     [userAddress],
