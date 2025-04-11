@@ -187,7 +187,7 @@ export const TransactionProvider = ({
       }
     },
     initialData: { blockNumber: 0, chainId: selectedChain.id },
-    refetchInterval: 2 * 1000, // checked
+    refetchInterval: 1000, // checked
     refetchIntervalInBackground: true,
   })
 

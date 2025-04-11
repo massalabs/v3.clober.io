@@ -13,6 +13,7 @@ import { RPC_URL } from '../constants/rpc-url'
 import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 import { TriangleDownSvg } from '../components/svg/triangle-down-svg'
 import { Market } from '../model/market'
+import { useTransactionContext } from '../contexts/transaction-context'
 
 type Column =
   | 'market'
@@ -56,6 +57,7 @@ const TriangleDown = ({
 export const DiscoverContainer = () => {
   const { selectedChain } = useChainContext()
   const { whitelistCurrencies, prices } = useCurrencyContext()
+  const { latestSubgraphBlockNumber } = useTransactionContext()
   const publicClient = useMemo(() => {
     return createPublicClient({
       chain: supportChains.find((chain) => chain.id === selectedChain.id),
@@ -63,6 +65,7 @@ export const DiscoverContainer = () => {
     })
   }, [selectedChain.id])
   const prevMarkets = useRef<Market[]>([])
+  const prevSubgraphBlockNumber = useRef<number>(0)
 
   const [searchValue, setSearchValue] = React.useState('')
   const [sortOption, setSortOption] = useState<SortOption>('none')
@@ -70,17 +73,27 @@ export const DiscoverContainer = () => {
   const { data: markets } = useQuery({
     queryKey: ['markets', selectedChain.id],
     queryFn: async () => {
-      const market = await fetchAllMarkets(
-        publicClient,
-        selectedChain,
-        prices,
-        whitelistCurrencies.map((currency) => currency.address),
-        prevMarkets.current,
-      )
-      prevMarkets.current = market
-      return market
+      if (latestSubgraphBlockNumber.blockNumber === 0) {
+        return [] as Market[]
+      }
+      if (
+        prevSubgraphBlockNumber.current !==
+        latestSubgraphBlockNumber.blockNumber
+      ) {
+        const market = await fetchAllMarkets(
+          publicClient,
+          selectedChain,
+          prices,
+          whitelistCurrencies.map((currency) => currency.address),
+          prevMarkets.current,
+        )
+        prevMarkets.current = market
+        prevSubgraphBlockNumber.current = latestSubgraphBlockNumber.blockNumber
+        return market
+      }
+      return prevMarkets.current
     },
-    refetchInterval: 2 * 1000, // checked
+    refetchInterval: 1000, // checked
     refetchIntervalInBackground: true,
   })
 
