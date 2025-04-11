@@ -38,12 +38,24 @@ export const MarketCard = ({
   const [flashState, setFlashState] = useState<'green' | 'red' | null>(null)
 
   useEffect(() => {
-    if (isBidTaken) {
+    if (isBidTaken && isAskTaken) {
       setFlashState('green')
-      setTimeout(() => setFlashState(null), 500)
+      const greenTimeout = setTimeout(() => {
+        setFlashState('red')
+        const redTimeout = setTimeout(() => {
+          setFlashState(null)
+        }, 500)
+        return () => clearTimeout(redTimeout)
+      }, 500)
+      return () => clearTimeout(greenTimeout)
+    } else if (isBidTaken) {
+      setFlashState('green')
+      const bidTimeout = setTimeout(() => setFlashState(null), 500)
+      return () => clearTimeout(bidTimeout)
     } else if (isAskTaken) {
       setFlashState('red')
-      setTimeout(() => setFlashState(null), 500)
+      const askTimeout = setTimeout(() => setFlashState(null), 500)
+      return () => clearTimeout(askTimeout)
     }
   }, [isBidTaken, isAskTaken])
 
