@@ -15,7 +15,7 @@ export const PointContainer = () => {
       <div className="flex justify-center w-auto">
         <div className="w-[960px] mt-8 flex flex-col sm:gap-12 items-center">
           <div className="flex w-full h-12 sm:h-[72px] flex-col justify-start items-center gap-2 sm:gap-3">
-            <div className="self-stretch text-center text-white text-lg sm:text-4xl font-bold">
+            <div className="self-stretch text-center text-white text-lg sm:text-4xl font-bold tracking-wide">
               Clober Point
             </div>
           </div>
