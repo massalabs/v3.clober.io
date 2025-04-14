@@ -1,7 +1,10 @@
 import React from 'react'
-
-import { TradeContainer } from '../containers/trade-container'
+import { useRouter } from 'next/router'
 
 export default function Home() {
-  return <TradeContainer />
+  const router = useRouter()
+  if (router.pathname === '/') {
+    router.push('/trade')
+  }
+  return <></>
 }
