@@ -29,9 +29,13 @@ export const HistogramChart = ({
   }
   const last = useMemo(
     () =>
-      data[data.length - 1].values[
-        totalKey as keyof StackedHistogramData['values']
-      ] ?? 0,
+      data[
+        data.length > 2
+          ? data.length - 2
+          : data.length > 1
+            ? data.length - 1
+            : 0
+      ].values[totalKey as keyof StackedHistogramData['values']] ?? 0,
     [data, totalKey],
   )
 
