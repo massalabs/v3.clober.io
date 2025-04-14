@@ -18,25 +18,22 @@ export default function Analytics() {
     queryKey: ['analytics', selectedChain.id],
     queryFn: async () => {
       try {
-        if (selectedChain.id === monadTestnet.id) {
-          const {
-            data: { snapshots },
-          } = await axios.get<{
-            snapshots: {
-              timestamp: number
-              googleAnalyticsActiveUsers: number
-              walletCount: number
-              transactionCount: number
-              volumeSnapshots: {
-                symbol: string
-                amount: number
-                address: `0x${string}`
-              }[]
+        const {
+          data: { snapshots },
+        } = await axios.get<{
+          snapshots: {
+            timestamp: number
+            googleAnalyticsActiveUsers: number
+            walletCount: number
+            transactionCount: number
+            volumeSnapshots: {
+              symbol: string
+              amount: number
+              address: `0x${string}`
             }[]
-          }>(`/api/chains/${selectedChain.id}/analytics`)
-          return snapshots.sort((a, b) => a.timestamp - b.timestamp)
-        }
-        return []
+          }[]
+        }>(`/api/chains/${selectedChain.id}/analytics`)
+        return snapshots.sort((a, b) => a.timestamp - b.timestamp)
       } catch {
         return []
       }

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
 import { CHAIN_IDS, getSubgraphEndpoint } from '@clober/v2-sdk'
 import { getAddress, isAddressEqual, zeroAddress } from 'viem'
+import { monadTestnet } from 'viem/chains'
 
 import { Subgraph } from '../../../../../model/subgraph'
 import { formatUnits } from '../../../../../utils/bigint'
@@ -150,6 +151,13 @@ export default async function handler(
       res.json({
         status: 'error',
         message: 'URL should be /api/chains/[chainId]/analytics',
+      })
+      return
+    }
+    if (!([monadTestnet.id] as number[]).includes(Number(chainId))) {
+      res.json({
+        status: 'error',
+        message: 'Chain not supported',
       })
       return
     }
