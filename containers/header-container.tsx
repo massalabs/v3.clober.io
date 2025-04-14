@@ -81,7 +81,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             </Link>
           )}
           <div className="hidden xl:flex py-1 justify-start items-center gap-8">
-            {chainId === monadTestnet.id && (
+            {selectedChain.id === monadTestnet.id && (
               <PageButton
                 disabled={router.pathname.includes('/discover')}
                 onClick={() => {
