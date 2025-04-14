@@ -1,6 +1,5 @@
 import { getAddress, isAddressEqual } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
-import { monadTestnet } from 'viem/chains'
 
 import { Asset } from '../../model/futures/asset'
 import { Subgraph } from '../../model/subgraph'
@@ -33,7 +32,7 @@ type AssetDto = {
 export const fetchFuturesAssets = async (
   chainId: CHAIN_IDS,
 ): Promise<Asset[]> => {
-  if (chainId !== monadTestnet.id) {
+  if (!FUTURES_SUBGRAPH_ENDPOINT[chainId]) {
     return []
   }
   const {

@@ -1,4 +1,3 @@
-import { monadTestnet } from 'viem/chains'
 import { createPublicClient, getAddress, http, isAddressEqual } from 'viem'
 
 import { FuturesPosition } from '../../model/futures/futures-position'
@@ -80,7 +79,7 @@ export const fetchFuturesPositions = async (
   assets: Asset[],
 ): Promise<FuturesPosition[]> => {
   if (
-    chain.id !== monadTestnet.id ||
+    !FUTURES_SUBGRAPH_ENDPOINT[chain.id] ||
     !FUTURES_CONTRACT_ADDRESSES[chain.id]?.FuturesMarket
   ) {
     return []
