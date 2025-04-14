@@ -4,18 +4,14 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { NextRouter } from 'next/router'
 import { CHAIN_IDS } from '@clober/v2-sdk'
-import { monadTestnet } from 'viem/chains'
+
+import { PAGE_BUTTONS } from '../constants/buttons'
 
 import { TwitterLogoSvg } from './svg/twitter-logo-svg'
 import { DiscordLogoSvg } from './svg/discord-logo-svg'
 import { DocsIconSvg } from './svg/docs-icon-svg'
-import { SwapPageSvg } from './svg/swap-page-svg'
 import { PageButton } from './button/page-button'
-import { VaultPageSvg } from './svg/vault-page-svg'
 import { GithubLogoSvg } from './svg/github-logo-svg'
-import { LimitPageSvg } from './svg/limit-page-svg'
-import { DiscoverPageSvg } from './svg/discover-page-svg'
-import { PointPageSvg } from './svg/point-page-svg'
 
 const Panel = ({
   chainId,
@@ -64,87 +60,21 @@ const Panel = ({
                     </div>
                     <div className="flex flex-col text-white text-base font-bold relative mb-6 flex-1 pl-8 pr-16 gap-[40px]">
                       <div className="flex flex-col gap-8 items-start">
-                        {chainId === monadTestnet.id && (
-                          <PageButton
-                            disabled={router.pathname.includes('/discover')}
-                            onClick={() => {
-                              router.push('/discover')
-                              setOpen(false)
-                            }}
-                          >
-                            <DiscoverPageSvg className="w-4 h-4" />
-                            Discover
-                          </PageButton>
-                        )}
-
-                        <PageButton
-                          disabled={router.pathname.includes('/trade')}
-                          onClick={() => {
-                            router.push('/trade')
-                            setOpen(false)
-                          }}
-                        >
-                          <SwapPageSvg className="w-4 h-4" />
-                          Trade
-                        </PageButton>
-
-                        <PageButton
-                          disabled={router.pathname.includes('/earn')}
-                          onClick={() => {
-                            router.push('/earn')
-                            setOpen(false)
-                          }}
-                        >
-                          <VaultPageSvg className="w-4 h-4" />
-                          Earn
-                        </PageButton>
-
-                        {chainId === monadTestnet.id && (
-                          <>
-                            <PageButton
-                              disabled={router.pathname.includes('/point')}
-                              onClick={() => {
-                                router.push('/point')
-                                setOpen(false)
-                              }}
-                            >
-                              <PointPageSvg className="w-4 h-4" />
-                              Point
-                            </PageButton>
-
-                            <PageButton
-                              disabled={router.pathname.includes('/futures')}
-                              onClick={() => {
-                                router.push('/futures')
-                                setOpen(false)
-                              }}
-                            >
-                              <LimitPageSvg className="w-4 h-4" />
-                              Futures
-                            </PageButton>
-
-                            <PageButton
-                              disabled={router.pathname.includes('/analytics')}
-                              onClick={() => {
-                                router.push('/analytics')
-                                setOpen(false)
-                              }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="17"
-                                height="16"
-                                viewBox="0 0 17 16"
-                                fill="none"
+                        {PAGE_BUTTONS.map(
+                          (button, index) =>
+                            (button.chains as number[]).includes(chainId) && (
+                              <PageButton
+                                key={index}
+                                disabled={router.pathname.includes(button.path)}
+                                onClick={() => {
+                                  router.push(button.path)
+                                  setOpen(false)
+                                }}
                               >
-                                <path
-                                  d="M8.56634 0C6.18614 0 0.323975 5.6896 0.323975 7.99995C0.323975 10.3103 6.18614 16 8.56634 16C10.9465 16 16.8088 10.3102 16.8088 7.99995C16.8088 5.6897 10.9467 0 8.56634 0ZM7.28192 12.5746C6.2782 12.3092 3.57963 7.7275 3.85319 6.7533C4.12674 5.77905 8.84715 3.15989 9.85082 3.4254C10.8546 3.69087 13.5532 8.27245 13.2796 9.2467C13.0061 10.2209 8.28564 12.8401 7.28192 12.5746Z"
-                                  fill="#6B7280"
-                                />
-                              </svg>
-                              Analytics
-                            </PageButton>
-                          </>
+                                {button.icon}
+                                {button.label}
+                              </PageButton>
+                            ),
                         )}
                       </div>
 
