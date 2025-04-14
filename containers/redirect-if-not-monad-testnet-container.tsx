@@ -17,7 +17,7 @@ const RedirectIfNotMonadTestnetContainer = ({
     }
   }, [selectedChain])
 
-  return <>{children}</>
+  return <>{selectedChain.id !== monadTestnet.id ? null : children}</>
 }
 
 export default RedirectIfNotMonadTestnetContainer
