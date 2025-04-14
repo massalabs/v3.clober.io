@@ -68,7 +68,7 @@ export const MarketCard = ({
         rel="noreferrer"
         className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/30' : flashState === 'red' ? 'bg-red-500/30' : 'bg-gray-800'} hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 hover:bg-gray-700 rounded-2xl justify-start items-center gap-4`}
       >
-        <div className="flex w-[300px] items-center gap-3">
+        <div className="flex w-[280px] items-center gap-3">
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
               chain={chain}
