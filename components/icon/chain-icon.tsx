@@ -14,7 +14,7 @@ export default function ChainIcon({
       <img
         src={chain.icon || `https://assets.odos.xyz/chains/${name}.png`}
         alt="ChainIcon"
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain rounded-full"
       />
     </div>
   )
