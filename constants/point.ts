@@ -7,6 +7,7 @@ export const LIQUIDITY_VAULT_POINT_SUBGRAPH_ENDPOINT: {
     'https://subgraph.satsuma-prod.com/f6a8c4889b7b/clober/liquidity-vault-point-base/api',
   [CHAIN_IDS.MONAD_TESTNET]:
     'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/liquidity-vault-point-monad-testnet/v1.1.3/gn',
+  [CHAIN_IDS.RISE_SEPOLIA]: undefined,
 }
 
 export const LIQUIDITY_VAULT_POINT_START_AT: {
@@ -22,6 +23,7 @@ export const LIQUIDITY_VAULT_POINT_START_AT: {
   [CHAIN_IDS.MONAD_TESTNET]: {
     ['0xad46920833ad7a1ba8e74cc241faf9ae4fd3dc4616ad9648b13160f8453e444f']: 1743465600,
   },
+  [CHAIN_IDS.RISE_SEPOLIA]: {},
 }
 
 export const LIQUIDITY_VAULT_POINT_PER_SECOND: {
@@ -37,4 +39,5 @@ export const LIQUIDITY_VAULT_POINT_PER_SECOND: {
   [CHAIN_IDS.MONAD_TESTNET]: {
     ['0xad46920833ad7a1ba8e74cc241faf9ae4fd3dc4616ad9648b13160f8453e444f']: 0.000001,
   },
+  [CHAIN_IDS.RISE_SEPOLIA]: {},
 }

@@ -5,4 +5,5 @@ export const PYTH_HERMES_ENDPOINT: {
 } = {
   [CHAIN_IDS.BASE]: 'https://hermes.pyth.network',
   [CHAIN_IDS.MONAD_TESTNET]: 'https://hermes-beta.pyth.network',
+  [CHAIN_IDS.RISE_SEPOLIA]: 'https://hermes-beta.pyth.network',
 }

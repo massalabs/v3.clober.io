@@ -98,4 +98,5 @@ export const WHITELISTED_VAULTS: {
       },
     },
   ],
+  [CHAIN_IDS.RISE_SEPOLIA]: [],
 }

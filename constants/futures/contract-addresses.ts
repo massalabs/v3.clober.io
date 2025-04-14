@@ -18,4 +18,5 @@ export const FUTURES_CONTRACT_ADDRESSES: {
       '0x58e84BAc13e19966A17F7Df370d3452bb0c23BF7',
     ),
   },
+  [CHAIN_IDS.RISE_SEPOLIA]: undefined,
 }

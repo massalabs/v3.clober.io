@@ -57,6 +57,23 @@ export const PRICE_FEED_ID_LIST: {
         '0x41f3625971ca2ed2263e78573fe5ce23e13d2558ed3f2e47ab0f84fb9e7ae722',
     },
   ],
+  [CHAIN_IDS.RISE_SEPOLIA]: [
+    {
+      address: '0x0000000000000000000000000000000000000000', // ETH
+      priceFeedId:
+        '0xca80ba6dc32e08d06f1aa886011eed1d77c77be9eb761cc10d72b7d0a2fd57a6',
+    },
+    {
+      address: '0x4200000000000000000000000000000000000006', // WETH
+      priceFeedId:
+        '0xca80ba6dc32e08d06f1aa886011eed1d77c77be9eb761cc10d72b7d0a2fd57a6',
+    },
+    {
+      address: '0xA985e387dDF21b87c1Fe8A0025D827674040221E', // cUSDC
+      priceFeedId:
+        '0x41f3625971ca2ed2263e78573fe5ce23e13d2558ed3f2e47ab0f84fb9e7ae722',
+    },
+  ],
 }
 
 export const WETH: {
@@ -72,6 +89,12 @@ export const WETH: {
     address: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701',
     name: 'Wrapped Monad Token',
     symbol: 'WMON',
+    decimals: 18,
+  },
+  [CHAIN_IDS.RISE_SEPOLIA]: {
+    address: '0x4200000000000000000000000000000000000006',
+    name: 'Wrapped ETH',
+    symbol: 'WETH',
     decimals: 18,
   },
 }
@@ -227,6 +250,26 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/images.png/public',
     },
   ],
+  [CHAIN_IDS.RISE_SEPOLIA]: [
+    {
+      address: zeroAddress,
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    {
+      address: '0x4200000000000000000000000000000000000006',
+      name: 'Wrapped ETH',
+      symbol: 'WETH',
+      decimals: 18,
+    },
+    {
+      address: '0xA985e387dDF21b87c1Fe8A0025D827674040221E',
+      name: 'Clober USDC',
+      symbol: 'cUSDC',
+      decimals: 6,
+    },
+  ],
 }
 
 export const DEFAULT_INPUT_CURRENCY: {
@@ -245,6 +288,12 @@ export const DEFAULT_INPUT_CURRENCY: {
     decimals: 18,
     icon: '/monad.png',
   },
+  [CHAIN_IDS.RISE_SEPOLIA]: {
+    address: zeroAddress,
+    name: 'Ethereum',
+    symbol: 'ETH',
+    decimals: 18,
+  },
 }
 
 export const DEFAULT_OUTPUT_CURRENCY: {
@@ -260,6 +309,12 @@ export const DEFAULT_OUTPUT_CURRENCY: {
     address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
     name: 'USD Coin',
     symbol: 'USDC',
+    decimals: 6,
+  },
+  [CHAIN_IDS.RISE_SEPOLIA]: {
+    address: '0xA985e387dDF21b87c1Fe8A0025D827674040221E',
+    name: 'Clober USDC',
+    symbol: 'cUSDC',
     decimals: 6,
   },
 }

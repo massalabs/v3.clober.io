@@ -5,6 +5,7 @@ import { http } from 'viem'
 import { Chain } from '../model/chain'
 
 import { RPC_URL } from './rpc-url'
+import { riseSepolia } from './chains/rise-sepolia'
 
 let config: any | null = null
 
@@ -14,14 +15,17 @@ export const getChain = (): Chain => {
     ...monadTestnet,
     icon: '/monad.png',
   }
+  const _riseTestnet: Chain = {
+    ...riseSepolia,
+    icon: '/rise.png',
+  }
   if (url.includes('alpha.clober.io')) {
     return _monadTestnet
   } else if (url.includes('base.clober.io')) {
     return base
+  } else if (url.includes('rise.clober.io')) {
+    return _riseTestnet
   }
-  // else if (url.includes('rise.clober.io')) {
-  //   return 11155931 // todo
-  // }
   return _monadTestnet
 }
 
