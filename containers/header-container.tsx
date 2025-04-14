@@ -7,25 +7,18 @@ import {
   useChainModal,
   useConnectModal,
 } from '@rainbow-me/rainbowkit'
-import { base, monadTestnet } from 'viem/chains'
 
 import { useChainContext } from '../contexts/chain-context'
 import MenuSvg from '../components/svg/menu-svg'
 import { PageButton } from '../components/button/page-button'
-import { SwapPageSvg } from '../components/svg/swap-page-svg'
-import { VaultPageSvg } from '../components/svg/vault-page-svg'
-import { LimitPageSvg } from '../components/svg/limit-page-svg'
 import { ConnectButton } from '../components/button/connect-button'
 import { UserButton } from '../components/button/user-button'
 import { UserTransactionsModal } from '../components/modal/user-transactions-modal'
 import { useTransactionContext } from '../contexts/transaction-context'
 import { UserPointButton } from '../components/button/user-point-button'
 import { usePointContext } from '../contexts/point-context'
-import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
-import { PointPageSvg } from '../components/svg/point-page-svg'
 import ChainIcon from '../components/icon/chain-icon'
 import { textStyles } from '../themes/text-styles'
-import { riseSepolia } from '../constants/chains/rise-sepolia'
 import { PAGE_BUTTONS } from '../constants/buttons'
 
 const WrongNetwork = ({
