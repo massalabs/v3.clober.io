@@ -26,7 +26,9 @@ import { PointPageSvg } from '../components/svg/point-page-svg'
 import ChainIcon from '../components/icon/chain-icon'
 import { textStyles } from '../themes/text-styles'
 
-const WrongNetwork = ({ openChainModal }: { openChainModal: () => void }) => {
+const WrongNetwork = ({
+  openChainModal,
+}: { openChainModal: () => void } & any) => {
   return <>{openChainModal && openChainModal()}</>
 }
 
