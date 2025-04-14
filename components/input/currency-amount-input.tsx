@@ -6,10 +6,12 @@ import { TriangleDownSvg } from '../svg/triangle-down-svg'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { toPlacesString } from '../../utils/bignumber'
+import { Chain } from '../../model/chain'
 
 import NumberInput from './number-input'
 
 const CurrencyAmountInput = ({
+  chain,
   currency,
   value,
   onValueChange,
@@ -18,6 +20,7 @@ const CurrencyAmountInput = ({
   onCurrencyClick,
   ...props
 }: {
+  chain: Chain
   currency?: Currency
   value: string
   onValueChange: (value: string) => void
@@ -61,7 +64,7 @@ const CurrencyAmountInput = ({
               onClick={onCurrencyClick}
             >
               <div className="w-4 h-4 sm:w-5 sm:h-5 relative">
-                <CurrencyIcon currency={currency} />
+                <CurrencyIcon chain={chain} currency={currency} />
               </div>
               <div className="text-sm sm:text-base text-white">
                 {currency.symbol}
@@ -95,7 +98,7 @@ const CurrencyAmountInput = ({
         ) : currency ? (
           <div className="flex h-7 sm:h-8 w-fit items-center rounded-full bg-gray-700 py-1 pl-2 pr-3 gap-2">
             <div className="w-5 h-5 relative">
-              <CurrencyIcon currency={currency} />
+              <CurrencyIcon chain={chain} currency={currency} />
             </div>
             <div className="text-sm sm:text-base text-white">
               {currency.symbol}

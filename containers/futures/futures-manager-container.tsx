@@ -90,6 +90,7 @@ export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
     </Modal>
   ) : (
     <MintFuturesAssetForm
+      chain={selectedChain}
       asset={asset}
       maxBorrowAmount={maxBorrowAmount}
       borrowLTV={calculateLtv(
@@ -131,7 +132,7 @@ export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
           }
           const hash = await borrow(asset, collateralAmount, debtAmount)
           if (hash) {
-            await router.replace(`/futures?chain=${selectedChain.id}`)
+            await router.replace('/futures')
           }
         },
         text:

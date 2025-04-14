@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
 import { isAddressEqual, parseUnits } from 'viem'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import CurrencyAmountInput from '../input/currency-amount-input'
 import { Currency } from '../../model/currency'
@@ -12,10 +11,10 @@ import { Balances } from '../../model/balances'
 import { ExchangeSvg } from '../svg/exchange-svg'
 import CloseSvg from '../svg/close-svg'
 import { SlippageToggle } from '../toggle/slippage-toggle'
-import { testnetChainIds } from '../../constants/chain'
+import { Chain } from '../../model/chain'
 
 export const SwapForm = ({
-  chainId,
+  chain,
   explorerUrl,
   currencies,
   setCurrencies,
@@ -42,7 +41,7 @@ export const SwapForm = ({
   closeSwapFormAction,
   actionButtonProps,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   explorerUrl: string
   currencies: Currency[]
   setCurrencies: (currencies: Currency[]) => void
@@ -97,7 +96,7 @@ export const SwapForm = ({
 
   return showInputCurrencySelect ? (
     <CurrencySelect
-      chainId={chainId}
+      chain={chain}
       explorerUrl={explorerUrl}
       currencies={
         outputCurrency
@@ -129,7 +128,7 @@ export const SwapForm = ({
     />
   ) : showOutputCurrencySelect ? (
     <CurrencySelect
-      chainId={chainId}
+      chain={chain}
       explorerUrl={explorerUrl}
       currencies={
         inputCurrency
@@ -190,6 +189,7 @@ export const SwapForm = ({
                 </div>
               </div>
               <CurrencyAmountInput
+                chain={chain}
                 currency={inputCurrency}
                 value={inputCurrencyAmount}
                 onValueChange={setInputCurrencyAmount}
@@ -212,6 +212,7 @@ export const SwapForm = ({
                 Receive
               </div>
               <CurrencyAmountInput
+                chain={chain}
                 currency={outputCurrency}
                 value={outputCurrencyAmount}
                 onValueChange={() => {}}
@@ -257,7 +258,7 @@ export const SwapForm = ({
 
         <div className="flex flex-col gap-5 mb-1 md:mb-2 text-[13px] sm:text-sm font-medium">
           <div className="flex flex-col items-start gap-3 md:gap-4 self-stretch justify-end text-white text-[13px] sm:text-sm">
-            {!testnetChainIds.includes(chainId) ? (
+            {!chain.testnet ? (
               <div className="flex items-center gap-2 self-stretch">
                 <div className="text-gray-400">Price Impact</div>
                 <div className="flex ml-auto">

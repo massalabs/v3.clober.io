@@ -7,8 +7,10 @@ import { ActionButton, ActionButtonProps } from '../../button/action-button'
 import LpCurrencyAmountInput from '../../input/lp-currency-amount-input'
 import { formatDollarValue, formatUnits } from '../../../utils/bigint'
 import { SlippageToggle } from '../../toggle/slippage-toggle'
+import { Chain } from '../../../model/chain'
 
 export const RemoveLiquidityForm = ({
+  chain,
   vault,
   prices,
   lpCurrencyAmount,
@@ -20,6 +22,7 @@ export const RemoveLiquidityForm = ({
   isCalculatingReceiveCurrencies,
   actionButtonProps,
 }: {
+  chain: Chain
   vault: Vault
   prices: Prices
   lpCurrencyAmount: string
@@ -38,6 +41,7 @@ export const RemoveLiquidityForm = ({
           Enter amount you’d like to withdraw.
         </div>
         <LpCurrencyAmountInput
+          chain={chain}
           currency={vault.lpCurrency}
           currency0={vault.currency0}
           currency1={vault.currency1}

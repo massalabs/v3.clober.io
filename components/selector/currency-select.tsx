@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { getAddress, isAddress, isAddressEqual } from 'viem'
 import Image from 'next/image'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Currency } from '../../model/currency'
 import { LeftBracketAngleSvg } from '../svg/left-bracket-angle-svg'
@@ -16,9 +15,10 @@ import {
   fetchCurrency,
 } from '../../utils/currency'
 import InspectCurrencyModal from '../modal/inspect-currency-modal'
+import { Chain } from '../../model/chain'
 
 const CurrencySelect = ({
-  chainId,
+  chain,
   explorerUrl,
   currencies,
   balances,
@@ -27,7 +27,7 @@ const CurrencySelect = ({
   onCurrencySelect,
   defaultBlacklistedCurrency,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   explorerUrl: string
   currencies: Currency[]
   balances: Balances
@@ -61,7 +61,7 @@ const CurrencySelect = ({
         ) {
           setCustomizedCurrencies(undefined)
         } else {
-          const currency = await fetchCurrency(chainId, value)
+          const currency = await fetchCurrency(chain, value)
           if (currency) {
             setCustomizedCurrencies([currency])
           } else {
@@ -69,7 +69,7 @@ const CurrencySelect = ({
           }
         }
       } else if (!isAddress(value)) {
-        const currencies = await fetchCurrenciesByName(chainId, value)
+        const currencies = await fetchCurrenciesByName(chain, value)
         if (currencies.length > 0) {
           setCustomizedCurrencies(currencies)
         } else {
@@ -78,12 +78,13 @@ const CurrencySelect = ({
       }
       setLoadingCurrencies(false)
     },
-    [chainId, currencies, defaultBlacklistedCurrency],
+    [chain, currencies, defaultBlacklistedCurrency],
   )
 
   return (
     <>
       <InspectCurrencyModal
+        chain={chain}
         currency={inspectingCurrency}
         onCurrencySelect={onCurrencySelect}
         setInspectingCurrency={setInspectingCurrency}
@@ -167,6 +168,7 @@ const CurrencySelect = ({
               >
                 <div className="flex items-center gap-3">
                   <CurrencyIcon
+                    chain={chain}
                     currency={currency}
                     className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
                   />

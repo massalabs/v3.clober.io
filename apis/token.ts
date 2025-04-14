@@ -7,11 +7,11 @@ import {
 } from '@clober/v2-sdk'
 import { getCurrentTimestamp } from 'hardhat/internal/hardhat-network/provider/utils/getCurrentTimestamp'
 
-import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-url'
 import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { DEFAULT_TOKEN_INFO, TokenInfo } from '../model/token-info'
 import { formatUnits } from '../utils/bigint'
+import { Chain } from '../model/chain'
 
 const buildTotalSupplyCacheKey = (
   chainId: CHAIN_IDS,
@@ -34,28 +34,28 @@ const setTotalSupplyToCache = (
   )
 
 export async function fetchTotalSupply(
-  chainId: CHAIN_IDS,
+  chain: Chain,
   tokenAddress: `0x${string}`,
 ): Promise<bigint> {
-  const cachedTotalSupply = getTotalSupplyFromCache(chainId, tokenAddress)
+  const cachedTotalSupply = getTotalSupplyFromCache(chain.id, tokenAddress)
   if (cachedTotalSupply !== undefined) {
     return cachedTotalSupply
   }
-  const totalSupply = await fetchTotalSupplyInner(chainId, tokenAddress)
-  setTotalSupplyToCache(chainId, tokenAddress, totalSupply)
+  const totalSupply = await fetchTotalSupplyInner(chain, tokenAddress)
+  setTotalSupplyToCache(chain.id, tokenAddress, totalSupply)
   return totalSupply
 }
 
 async function fetchTotalSupplyInner(
-  chainId: CHAIN_IDS,
+  chain: Chain,
   tokenAddress: `0x${string}`,
 ): Promise<bigint> {
   if (isAddressEqual(tokenAddress, zeroAddress)) {
     return 120_000_000n * 1000000000000000000n // DEV: 120M for ETH
   }
   const publicClient = createPublicClient({
-    chain: supportChains.find((chain) => chain.id === chainId),
-    transport: http(RPC_URL[chainId]),
+    chain,
+    transport: http(RPC_URL[chain.id]),
   })
   return publicClient.readContract({
     address: tokenAddress,
@@ -65,15 +65,15 @@ async function fetchTotalSupplyInner(
 }
 
 export async function fetchTokenInfoFromOrderBook(
-  chainId: CHAIN_IDS,
+  chain: Chain,
   selectedMarket: Market,
   quoteValue: number,
 ): Promise<TokenInfo> {
   const currentTimestampInSeconds = getCurrentTimestamp()
   const [totalSupply, chartLog] = await Promise.all([
-    fetchTotalSupply(chainId, selectedMarket.base.address),
+    fetchTotalSupply(chain, selectedMarket.base.address),
     getChartLogs({
-      chainId: chainId,
+      chainId: chain.id,
       quote: selectedMarket.quote.address,
       base: selectedMarket.base.address,
       intervalType: CHART_LOG_INTERVALS.fiveMinutes,

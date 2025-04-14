@@ -1,27 +1,25 @@
 import React from 'react'
 import { Connector } from 'wagmi'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { textStyles } from '../../themes/text-styles'
 import { formatAddress } from '../../utils/string'
 import ChainIcon from '../icon/chain-icon'
-import { supportChains } from '../../constants/chain'
 import UserIcon from '../icon/user-icon'
+import { Chain } from '../../model/chain'
 
 export const UserButton = ({
+  chain,
   address,
   connector,
-  chainId,
   openTransactionHistoryModal,
   shiny,
 }: {
+  chain: Chain
   address: `0x${string}`
   connector: Connector
-  chainId: CHAIN_IDS
   openTransactionHistoryModal: () => void
   shiny?: boolean
 }) => {
-  const chain = supportChains.find((chain) => chain.id === chainId)!
   return (
     <button
       className="group"

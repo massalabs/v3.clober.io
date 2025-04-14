@@ -10,13 +10,11 @@ import { toCommaSeparated } from '../../utils/number'
 import { VaultCard } from '../../components/card/vault-card'
 import { formatUnits } from '../../utils/bigint'
 import { VaultPositionCard } from '../../components/card/vault-position-card'
-import { usePointContext } from '../../contexts/point-context'
 import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 
 export const VaultContainer = () => {
   const router = useRouter()
   const { address: userAddress } = useAccount()
-  const { myVaultPoint } = usePointContext()
   const { vaults, vaultLpBalances } = useVaultContext()
   const { selectedChain } = useChainContext()
 
@@ -153,7 +151,7 @@ export const VaultContainer = () => {
                 <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
                   {vaults.map((vault, index) => (
                     <VaultCard
-                      chainId={selectedChain.id}
+                      chain={selectedChain}
                       key={index}
                       vault={vault}
                       router={router}
@@ -173,8 +171,8 @@ export const VaultContainer = () => {
                   }
                   return (
                     <VaultPositionCard
+                      chain={selectedChain}
                       key={vault.key}
-                      chainId={selectedChain.id}
                       vaultPosition={{
                         vault,
                         amount,

@@ -8,8 +8,10 @@ import { Balances } from '../../../model/balances'
 import { Prices } from '../../../model/prices'
 import { Asset } from '../../../model/futures/asset'
 import { formatDollarValue } from '../../../utils/bigint'
+import { Chain } from '../../../model/chain'
 
 export const MintFuturesAssetForm = ({
+  chain,
   asset,
   maxBorrowAmount,
   borrowLTV,
@@ -23,6 +25,7 @@ export const MintFuturesAssetForm = ({
   actionButtonProps,
   children,
 }: {
+  chain: Chain
   asset: Asset
   maxBorrowAmount: bigint
   borrowLTV: number
@@ -43,6 +46,7 @@ export const MintFuturesAssetForm = ({
             How much collateral would you like to add?
           </div>
           <CurrencyAmountInput
+            chain={chain}
             currency={asset.collateral}
             value={collateralValue}
             onValueChange={setCollateralValue}
@@ -57,6 +61,7 @@ export const MintFuturesAssetForm = ({
             How much would you like to borrow?
           </div>
           <CurrencyAmountInput
+            chain={chain}
             currency={asset.currency}
             value={borrowValue}
             onValueChange={setBorrowValue}

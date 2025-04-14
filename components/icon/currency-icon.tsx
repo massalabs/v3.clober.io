@@ -1,40 +1,33 @@
 import React from 'react'
-import { isAddressEqual } from 'viem'
 
 import { Currency, getLogo } from '../../model/currency'
-import { DEFAULT_CHAIN_ID, supportChains } from '../../constants/chain'
-import { LOCAL_STORAGE_CHAIN_KEY } from '../../contexts/chain-context'
-import { WHITELISTED_CURRENCIES } from '../../constants/currency'
+import { Chain } from '../../model/chain'
 
 export const CurrencyIcon = ({
+  chain,
   currency,
   ...props
 }: {
+  chain: Chain
   currency: Currency
 } & React.ImgHTMLAttributes<HTMLImageElement>) => {
   const [tryCount, setTryCount] = React.useState(0)
-  const chainId = Number(
-    localStorage.getItem(LOCAL_STORAGE_CHAIN_KEY) ?? DEFAULT_CHAIN_ID,
-  )
-  const _currency = WHITELISTED_CURRENCIES[chainId].find((c) =>
-    isAddressEqual(c.address, currency.address),
-  )
-  const chain = supportChains.find((chain) => chain.id === chainId)
   return (
     <img
       className="rounded-full"
-      src={_currency && _currency.icon ? _currency.icon : getLogo(currency)}
+      src={currency && currency.icon ? currency.icon : getLogo(currency)}
       onError={(e) => {
-        if (tryCount >= 1) {
+        if (chain.testnet || tryCount >= 1) {
           e.currentTarget.src = '/unknown.svg'
           return
+        } else {
+          e.currentTarget.src = chain
+            ? `https://dd.dexscreener.com/ds-data/tokens/${
+                chain.name
+              }/${currency.address.toLowerCase()}.png?size=lg`
+            : '/unknown.svg'
+          setTryCount((count) => count + 1)
         }
-        e.currentTarget.src = chain
-          ? `https://dd.dexscreener.com/ds-data/tokens/${
-              chain.name
-            }/${currency.address.toLowerCase()}.png?size=lg`
-          : '/unknown.svg'
-        setTryCount((count) => count + 1)
       }}
       {...props}
     />

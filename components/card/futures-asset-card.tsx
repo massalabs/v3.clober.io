@@ -1,5 +1,4 @@
 import React from 'react'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 import { getAddress } from 'viem'
 import Link from 'next/link'
@@ -7,13 +6,14 @@ import Link from 'next/link'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { Asset } from '../../model/futures/asset'
 import { formatDate } from '../../utils/date'
+import { Chain } from '../../model/chain'
 
 export const FuturesAssetCard = ({
-  chainId,
+  chain,
   asset,
   router,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   asset: Asset
   router: NextRouter
 }) => {
@@ -24,6 +24,7 @@ export const FuturesAssetCard = ({
         <div className="flex w-44 items-center gap-2">
           <div className="w-8 h-8 shrink-0 relative">
             <CurrencyIcon
+              chain={chain}
               currency={asset.currency}
               className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
             />
@@ -35,6 +36,7 @@ export const FuturesAssetCard = ({
         <div className="flex w-36 items-center gap-2">
           <div className="w-8 h-8 shrink-0 relative">
             <CurrencyIcon
+              chain={chain}
               currency={asset.collateral}
               className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
             />
@@ -52,7 +54,7 @@ export const FuturesAssetCard = ({
         <div className="flex flex-row gap-2">
           <Link
             target="_blank"
-            href={`https://alpha.clober.io/trade?chain=${chainId}&inputCurrency=${asset.currency.address}&outputCurrency=${asset.collateral.address}`}
+            href={`https://alpha.clober.io/trade?inputCurrency=${asset.currency.address}&outputCurrency=${asset.collateral.address}`}
             rel="noreferrer"
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
           >
@@ -61,9 +63,7 @@ export const FuturesAssetCard = ({
             </div>
           </Link>
           <button
-            onClick={() =>
-              router.push(`/futures/mint/${asset.id}?chain=${chainId}`)
-            }
+            onClick={() => router.push(`/futures/mint/${asset.id}`)}
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
             rel="noreferrer"
           >
@@ -78,6 +78,7 @@ export const FuturesAssetCard = ({
         <div className="flex items-center gap-2 self-stretch">
           <div className="w-6 h-6 relative">
             <CurrencyIcon
+              chain={chain}
               currency={asset.currency}
               className="w-6 h-6 absolute left-0 top-0 z-[1] rounded-full"
             />
@@ -88,11 +89,7 @@ export const FuturesAssetCard = ({
             </div>
           </div>
           <button
-            onClick={() =>
-              router.push(
-                `/futures/mint/${getAddress(asset.id)}?chain=${chainId}`,
-              )
-            }
+            onClick={() => router.push(`/futures/mint/${getAddress(asset.id)}`)}
             className="flex ml-auto"
             rel="noreferrer"
           >

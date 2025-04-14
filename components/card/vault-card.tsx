@@ -1,5 +1,4 @@
 import React from 'react'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 import { base } from 'viem/chains'
 import BigNumber from 'bignumber.js'
@@ -10,32 +9,35 @@ import { CurrencyIcon } from '../icon/currency-icon'
 import { toCommaSeparated } from '../../utils/number'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
+import { Chain } from '../../model/chain'
 
 export const VaultCard = ({
-  chainId,
+  chain,
   vault,
   router,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   vault: Vault
   router: NextRouter
 }) => {
   const hasDashboard =
-    WHITELISTED_VAULTS[chainId].find((info) => info.key === vault.key)
+    WHITELISTED_VAULTS[chain.id].find((info) => info.key === vault.key)
       ?.hasDashboard ?? false
 
   return (
     <>
       <div
-        className={`hidden lg:flex w-[${chainId === base.id ? '1040px' : '960px'}] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4`}
+        className={`hidden lg:flex w-[${chain.id === base.id ? '1040px' : '960px'}] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4`}
       >
         <div className="flex w-60 items-center gap-2">
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
+              chain={chain}
               currency={vault.currency0}
               className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
             />
             <CurrencyIcon
+              chain={chain}
               currency={vault.currency1}
               className="w-8 h-8 absolute left-6 top-0 rounded-full"
             />
@@ -58,9 +60,7 @@ export const VaultCard = ({
         <div className="flex gap-2">
           {hasDashboard && (
             <button
-              onClick={() =>
-                router.push(`/earn/${vault.key}/dashboard?chain=${chainId}`)
-              }
+              onClick={() => router.push(`/earn/${vault.key}/dashboard`)}
               className="flex w-[130px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
               rel="noreferrer"
             >
@@ -70,7 +70,7 @@ export const VaultCard = ({
             </button>
           )}
           <button
-            onClick={() => router.push(`/earn/${vault.key}?chain=${chainId}`)}
+            onClick={() => router.push(`/earn/${vault.key}`)}
             className={`flex w-[${hasDashboard ? '160px' : '180px'}] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1`}
             rel="noreferrer"
           >
@@ -84,10 +84,12 @@ export const VaultCard = ({
         <div className="flex items-center gap-2 self-stretch">
           <div className="w-10 h-6 relative">
             <CurrencyIcon
+              chain={chain}
               currency={vault.currency0}
               className="w-6 h-6 absolute left-0 top-0 z-[1] rounded-full"
             />
             <CurrencyIcon
+              chain={chain}
               currency={vault.currency1}
               className="w-6 h-6 absolute left-[16px] top-0 rounded-full"
             />
@@ -102,7 +104,7 @@ export const VaultCard = ({
             </div>
           </div>
           <button
-            onClick={() => router.push(`/earn/${vault.key}?chain=${chainId}`)}
+            onClick={() => router.push(`/earn/${vault.key}`)}
             className="flex ml-auto"
             rel="noreferrer"
           >

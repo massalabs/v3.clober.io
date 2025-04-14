@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { isAddressEqual } from 'viem'
 
 import { TRADING_VIEW_SYMBOLS } from '../../../constants/futures/asset'
-import { useChainContext } from '../../../contexts/chain-context'
 import { FuturesManagerContainer } from '../../../containers/futures/futures-manager-container'
 import BackSvg from '../../../components/svg/back-svg'
 import { TradingViewContainer } from '../../../containers/chart/trading-view-container'
@@ -14,7 +13,6 @@ import { NativeChartContainer } from '../../../containers/chart/native-chart-con
 
 export default function MintFutureAssetManage() {
   const router = useRouter()
-  const { selectedChain } = useChainContext()
   const { assets } = useFuturesContext()
   const asset = assets?.find(
     (asset) =>
@@ -33,7 +31,7 @@ export default function MintFutureAssetManage() {
           <Link
             className="flex items-center font-bold text-base sm:text-2xl gap-2 sm:gap-3 mt-4 mb-2 sm:mb-2 ml-4 sm:ml-6"
             replace={true}
-            href={`/futures?chain=${selectedChain.id}`}
+            href="/futures"
           >
             <BackSvg className="w-4 h-4 sm:w-8 sm:h-8" />
             <div className="flex gap-2 lg:gap-4">

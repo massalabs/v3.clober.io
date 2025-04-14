@@ -7,7 +7,6 @@ import {
 } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 
-import { findSupportChain, supportChains } from '../constants/chain'
 import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { Currency } from '../model/currency'
 import { WETH } from '../constants/currency'
@@ -48,20 +47,16 @@ export const deduplicateCurrencies = (currencies: Currency[]) => {
 }
 
 export const fetchCurrency = async (
-  chainId: CHAIN_IDS,
+  chain: Chain,
   address: `0x${string}`,
 ): Promise<Currency | undefined> => {
   if (isAddressEqual(address, zeroAddress)) {
-    const chain = findSupportChain(chainId)
-    if (!chain) {
-      return undefined
-    }
     return { ...chain.nativeCurrency, address: zeroAddress }
   }
 
   const publicClient = createPublicClient({
-    chain: supportChains.find((chain) => chain.id === chainId),
-    transport: http(RPC_URL[chainId]),
+    chain,
+    transport: http(RPC_URL[chain.id]),
   })
   const [{ result: name }, { result: symbol }, { result: decimals }] =
     await publicClient.multicall({
@@ -96,7 +91,7 @@ export const fetchCurrency = async (
 }
 
 export const fetchCurrenciesByName = async (
-  chainId: CHAIN_IDS,
+  chain: Chain,
   name: string,
 ): Promise<Currency[]> => {
   if (fetchCurrencyJobId) {
@@ -106,7 +101,7 @@ export const fetchCurrenciesByName = async (
   const previousCode = fetchCurrencyJobResultCode
   // @ts-ignore
   fetchCurrencyJobId = setTimeout(async () => {
-    fetchCurrencyJobResult = await fetchCurrencyByNameImpl(chainId, name)
+    fetchCurrencyJobResult = await fetchCurrencyByNameImpl(chain, name)
     fetchCurrencyJobResultCode = Math.random()
   }, 500)
 
@@ -117,15 +112,10 @@ export const fetchCurrenciesByName = async (
 }
 
 export const fetchCurrencyByNameImpl = async (
-  chainId: CHAIN_IDS,
+  chain: Chain,
   name: string,
 ): Promise<Currency[]> => {
-  const chain = findSupportChain(chainId)
-  if (!chain) {
-    return []
-  }
-
-  const cacheKey = getCurrencyCacheKey(chainId, name)
+  const cacheKey = getCurrencyCacheKey(chain.id, name)
   if (currencyCache[cacheKey] !== undefined) {
     return currencyCache[cacheKey]
   }
@@ -164,7 +154,7 @@ export const fetchCurrencyByNameImpl = async (
     )
     const tokens = (
       await Promise.all(
-        addresses.map((address) => fetchCurrency(chainId, address)),
+        addresses.map((address) => fetchCurrency(chain, address)),
       )
     ).filter((token) => token !== undefined) as Currency[]
     currencyCache[cacheKey] = tokens

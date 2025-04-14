@@ -6,10 +6,12 @@ import { TriangleDownSvg } from '../svg/triangle-down-svg'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { toPlacesString } from '../../utils/bignumber'
+import { Chain } from '../../model/chain'
 
 import NumberInput from './number-input'
 
 const LpCurrencyAmountInput = ({
+  chain,
   currency,
   currency0,
   currency1,
@@ -20,6 +22,7 @@ const LpCurrencyAmountInput = ({
   onCurrencyClick,
   ...props
 }: {
+  chain: Chain
   currency: Currency
   currency0: Currency
   currency1: Currency
@@ -66,10 +69,12 @@ const LpCurrencyAmountInput = ({
             >
               <div className="w-8 h-5 shrink-0 relative">
                 <CurrencyIcon
+                  chain={chain}
                   currency={currency0}
                   className="w-5 h-5 absolute left-0 top-0 z-[1] rounded-full"
                 />
                 <CurrencyIcon
+                  chain={chain}
                   currency={currency1}
                   className="w-5 h-5 absolute left-4 top-0 rounded-full"
                 />
@@ -90,10 +95,12 @@ const LpCurrencyAmountInput = ({
           <div className="flex w-fit items-center rounded-full bg-gray-700 py-1 pl-2 pr-3 gap-2">
             <div className="w-8 h-5 shrink-0 relative">
               <CurrencyIcon
+                chain={chain}
                 currency={currency0}
                 className="w-5 h-5 absolute left-0 top-0 z-[1] rounded-full"
               />
               <CurrencyIcon
+                chain={chain}
                 currency={currency1}
                 className="w-5 h-5 absolute left-4 top-0 rounded-full"
               />

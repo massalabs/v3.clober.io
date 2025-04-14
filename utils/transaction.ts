@@ -5,9 +5,8 @@ import {
   TransactionReceipt,
   WalletClient,
 } from 'viem'
-import { CHAIN_IDS, Transaction } from '@clober/v2-sdk'
+import { Transaction } from '@clober/v2-sdk'
 
-import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-url'
 import { Chain } from '../model/chain'
 
@@ -25,8 +24,8 @@ export async function sendTransaction(
   }
   try {
     const publicClient = createPublicClient({
-      chain: supportChains.find((chain) => chain.id === walletClient.chain!.id),
-      transport: http(RPC_URL[walletClient.chain!.id]),
+      chain,
+      transport: http(RPC_URL[chain.id]),
     })
     const hash = await walletClient.sendTransaction({
       data: transaction.data,
@@ -43,13 +42,10 @@ export async function sendTransaction(
   }
 }
 
-export async function waitTransaction(
-  chainId: CHAIN_IDS,
-  hash: Hash,
-): Promise<void> {
+export async function waitTransaction(chain: Chain, hash: Hash): Promise<void> {
   const publicClient = createPublicClient({
-    chain: supportChains.find((chain) => chain.id === chainId),
-    transport: http(RPC_URL[chainId]),
+    chain,
+    transport: http(RPC_URL[chain.id]),
   })
   await publicClient.waitForTransactionReceipt({ hash })
 }

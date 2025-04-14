@@ -1,11 +1,6 @@
 import React from 'react'
 import { isAddressEqual } from 'viem'
-import {
-  CHAIN_IDS,
-  getMarketPrice,
-  getPriceNeighborhood,
-  Market,
-} from '@clober/v2-sdk'
+import { getMarketPrice, getPriceNeighborhood, Market } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 
 import NumberInput from '../input/number-input'
@@ -19,9 +14,10 @@ import CheckIcon from '../icon/check-icon'
 import { toPlacesString } from '../../utils/bignumber'
 import { getPriceDecimals } from '../../utils/prices'
 import CloseSvg from '../svg/close-svg'
+import { Chain } from '../../model/chain'
 
 export const LimitForm = ({
-  chainId,
+  chain,
   explorerUrl,
   currencies,
   setCurrencies,
@@ -55,7 +51,7 @@ export const LimitForm = ({
   closeLimitFormAction,
   actionButtonProps,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   explorerUrl: string
   currencies: Currency[]
   setCurrencies: (currencies: Currency[]) => void
@@ -113,7 +109,7 @@ export const LimitForm = ({
   )
   return showInputCurrencySelect ? (
     <CurrencySelect
-      chainId={chainId}
+      chain={chain}
       explorerUrl={explorerUrl}
       currencies={
         outputCurrency
@@ -145,7 +141,7 @@ export const LimitForm = ({
     />
   ) : showOutputCurrencySelect ? (
     <CurrencySelect
-      chainId={chainId}
+      chain={chain}
       explorerUrl={explorerUrl}
       currencies={
         inputCurrency
@@ -257,7 +253,7 @@ export const LimitForm = ({
                             now: { tick },
                           },
                         } = getPriceNeighborhood({
-                          chainId,
+                          chainId: chain.id,
                           price: priceInput,
                           currency0: inputCurrency,
                           currency1: outputCurrency,
@@ -320,7 +316,7 @@ export const LimitForm = ({
                             now: { tick },
                           },
                         } = getPriceNeighborhood({
-                          chainId,
+                          chainId: chain.id,
                           price: priceInput,
                           currency0: inputCurrency,
                           currency1: outputCurrency,
@@ -376,6 +372,7 @@ export const LimitForm = ({
                   Pay
                 </div>
                 <CurrencyAmountInput
+                  chain={chain}
                   currency={inputCurrency}
                   value={inputCurrencyAmount}
                   onValueChange={setInputCurrencyAmount}
@@ -398,6 +395,7 @@ export const LimitForm = ({
                   Receive
                 </div>
                 <CurrencyAmountInput
+                  chain={chain}
                   currency={outputCurrency}
                   value={outputCurrencyAmount}
                   onValueChange={setOutputCurrencyAmount}

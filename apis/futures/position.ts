@@ -1,10 +1,8 @@
-import { CHAIN_IDS } from '@clober/v2-sdk'
 import { monadTestnet } from 'viem/chains'
 import { createPublicClient, getAddress, http, isAddressEqual } from 'viem'
 
 import { FuturesPosition } from '../../model/futures/futures-position'
 import { Prices } from '../../model/prices'
-import { supportChains } from '../../constants/chain'
 import { RPC_URL } from '../../constants/rpc-url'
 import { WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
 import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/futures/contract-addresses'
@@ -12,6 +10,7 @@ import { Asset } from '../../model/futures/asset'
 import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
 import { FUTURES_SUBGRAPH_ENDPOINT } from '../../constants/futures/subgraph-endpoint'
 import { Subgraph } from '../../model/subgraph'
+import { Chain } from '../../model/chain'
 
 type PositionDto = {
   id: string
@@ -75,20 +74,20 @@ const _abi = [
 ] as const
 
 export const fetchFuturesPositions = async (
-  chainId: CHAIN_IDS,
+  chain: Chain,
   userAddress: `0x${string}`,
   prices: Prices,
   assets: Asset[],
 ): Promise<FuturesPosition[]> => {
   if (
-    chainId !== monadTestnet.id ||
-    !FUTURES_CONTRACT_ADDRESSES[chainId]?.FuturesMarket
+    chain.id !== monadTestnet.id ||
+    !FUTURES_CONTRACT_ADDRESSES[chain.id]?.FuturesMarket
   ) {
     return []
   }
   const publicClient = createPublicClient({
-    chain: supportChains.find((chain) => chain.id === chainId),
-    transport: http(RPC_URL[chainId]),
+    chain,
+    transport: http(RPC_URL[chain.id]),
   })
 
   const {
@@ -98,7 +97,7 @@ export const fetchFuturesPositions = async (
       positions: PositionDto[]
     }
   }>(
-    FUTURES_SUBGRAPH_ENDPOINT[chainId]!,
+    FUTURES_SUBGRAPH_ENDPOINT[chain.id]!,
     'getPositions',
     'query getPositions($userAddress: String!) { positions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV settlePrice liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
     {
@@ -108,7 +107,7 @@ export const fetchFuturesPositions = async (
 
   const results = await publicClient.multicall({
     contracts: WHITE_LISTED_ASSETS.map((asset) => ({
-      address: FUTURES_CONTRACT_ADDRESSES[chainId]!.FuturesMarket,
+      address: FUTURES_CONTRACT_ADDRESSES[chain.id]!.FuturesMarket,
       abi: _abi,
       functionName: 'getPosition',
       args: [asset, userAddress],

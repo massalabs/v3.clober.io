@@ -244,6 +244,7 @@ export const UserTransactionsModal = ({
                   {getTimeAgo(transaction.timestamp, cache)}
                 </div>
                 <UserTransactionCard
+                  chain={chain}
                   transaction={transaction}
                   key={transaction.txHash}
                   isPending={tab === 'pending'}

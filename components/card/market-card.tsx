@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CHAIN_IDS, Currency } from '@clober/v2-sdk'
+import { Currency } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
 import Link from 'next/link'
@@ -9,9 +9,10 @@ import { toHumanReadableString, toShortNumber } from '../../utils/number'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
 import { VerifiedSvg } from '../svg/verified-svg'
 import { convertShortTimeAgo } from '../../utils/time'
+import { Chain } from '../../model/chain'
 
 export const MarketCard = ({
-  chainId,
+  chain,
   baseCurrency,
   quoteCurrency,
   createAt,
@@ -23,7 +24,7 @@ export const MarketCard = ({
   isBidTaken,
   isAskTaken,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   baseCurrency: Currency
   quoteCurrency: Currency
   createAt: number
@@ -63,17 +64,19 @@ export const MarketCard = ({
     <>
       <Link
         target="_blank"
-        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}&chainId=${chainId}`}
+        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}`}
         rel="noreferrer"
         className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/30' : flashState === 'red' ? 'bg-red-500/30' : 'bg-gray-800'} hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 hover:bg-gray-700 rounded-2xl justify-start items-center gap-4`}
       >
         <div className="flex w-[300px] items-center gap-3">
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
+              chain={chain}
               currency={baseCurrency}
               className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
             />
             <CurrencyIcon
+              chain={chain}
               currency={quoteCurrency}
               className="w-8 h-8 absolute left-6 top-0 rounded-full"
             />
@@ -124,17 +127,19 @@ export const MarketCard = ({
 
       <Link
         target="_blank"
-        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}&chainId=${chainId}`}
+        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}`}
         rel="noreferrer"
         className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/30' : flashState === 'red' ? 'bg-red-500/30' : 'bg-gray-800'} flex lg:hidden w-full h-[168px] p-4 bg-gray-800 rounded-xl flex-col justify-center items-start gap-4`}
       >
         <div className="flex items-center gap-2 self-stretch">
           <div className="w-10 h-6 relative">
             <CurrencyIcon
+              chain={chain}
               currency={baseCurrency}
               className="w-6 h-6 absolute left-0 top-0 z-[1] rounded-full"
             />
             <CurrencyIcon
+              chain={chain}
               currency={quoteCurrency}
               className="w-6 h-6 absolute left-[16px] top-0 rounded-full"
             />

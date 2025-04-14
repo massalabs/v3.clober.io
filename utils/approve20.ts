@@ -6,7 +6,6 @@ import {
 } from 'viem'
 
 import { Currency } from '../model/currency'
-import { supportChains } from '../constants/chain'
 import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { RPC_URL } from '../constants/rpc-url'
 import { Chain } from '../model/chain'
@@ -25,8 +24,8 @@ export const maxApprove = async (
     return
   }
   const publicClient = createPublicClient({
-    chain: supportChains.find((chain) => chain.id === walletClient.chain!.id),
-    transport: http(RPC_URL[walletClient.chain!.id]),
+    chain,
+    transport: http(RPC_URL[chain.id]),
   })
   const transaction = await buildTransaction(publicClient, {
     address: currency.address,

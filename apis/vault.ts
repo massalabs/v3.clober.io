@@ -1,5 +1,4 @@
 import {
-  CHAIN_IDS,
   CHART_LOG_INTERVALS,
   getContractAddresses,
   getPool,
@@ -15,10 +14,10 @@ import { Vault } from '../model/vault'
 import { calculateApy } from '../utils/apy'
 import { StackedLineData } from '../components/chart/tvl-chart-model'
 import { RPC_URL } from '../constants/rpc-url'
-import { testnetChainIds } from '../constants/chain'
+import { Chain } from '../model/chain'
 
 export async function fetchVaults(
-  chainId: CHAIN_IDS,
+  chain: Chain,
   prices: Prices,
 ): Promise<Vault[]> {
   const currentTimestampInSeconds = Math.floor(new Date().getTime() / 1000)
@@ -31,19 +30,19 @@ export async function fetchVaults(
     vault: SdkPool
     vaultPerformanceData: PoolPerformanceData
   }[] = await Promise.all(
-    WHITELISTED_VAULTS[chainId].map(async ({ token0, token1, salt }) => {
+    WHITELISTED_VAULTS[chain.id].map(async ({ token0, token1, salt }) => {
       const vault = await getPool({
-        chainId,
+        chainId: chain.id,
         token0,
         token1,
         salt,
         options: {
           useSubgraph: true,
-          rpcUrl: RPC_URL[chainId],
+          rpcUrl: RPC_URL[chain.id],
         },
       })
       const vaultPerformanceData = await getPoolPerformance({
-        chainId,
+        chainId: chain.id,
         token0,
         token1,
         salt,
@@ -74,7 +73,7 @@ export async function fetchVaults(
     const spreadProfits = vaultPerformanceData.poolSpreadProfits.sort(
       (a, b) => a.timestamp - b.timestamp,
     )
-    const startLPInfo = WHITELISTED_VAULTS[chainId].find(
+    const startLPInfo = WHITELISTED_VAULTS[chain.id].find(
       ({ key }) => key.toLowerCase() === vault.key.toLowerCase(),
     )?.startLPInfo
     if (!startLPInfo) {
@@ -130,7 +129,7 @@ export async function fetchVaults(
     return {
       key: vault.key,
       lpCurrency: {
-        address: getContractAddresses({ chainId }).Rebalancer,
+        address: getContractAddresses({ chainId: chain.id }).Rebalancer,
         name: `Clober LP ${vault.currencyA.symbol}/${vault.currencyB.symbol}`,
         symbol: `${vault.currencyA.symbol}/${vault.currencyB.symbol}`,
         decimals: 18,
@@ -141,7 +140,7 @@ export async function fetchVaults(
       reserve0: Number(vault.liquidityA.total.value),
       reserve1: Number(vault.liquidityB.total.value),
       tvl,
-      apy: testnetChainIds.includes(chainId)
+      apy: chain.testnet
         ? calculateApy(1 + totalSpreadProfit / tvl, 24 * 60 * 60)
         : calculateApy(
             historicalLpPrices.sort((a, b) => b.time - a.time)[0].pnl,

@@ -11,14 +11,17 @@ import { Asset } from '../../model/futures/asset'
 import { Prices } from '../../model/prices'
 import { ActionButtonProps } from '../button/action-button'
 import { toCommaSeparated } from '../../utils/number'
+import { Chain } from '../../model/chain'
 
 export const FuturesRedeemCard = ({
+  chain,
   asset,
   balance,
   prices,
   redeemableCollateral,
   actionButtonProps,
 }: {
+  chain: Chain
   asset: Asset
   balance: bigint
   prices: Prices
@@ -32,6 +35,7 @@ export const FuturesRedeemCard = ({
       <div className="flex p-4 items-center self-stretch">
         <div className="flex items-center gap-3 flex-grow shrink-0 basis-0">
           <CurrencyIcon
+            chain={chain}
             currency={asset.currency}
             className="w-8 h-8 sm:w-10 sm:h-10"
           />

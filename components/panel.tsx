@@ -68,7 +68,7 @@ const Panel = ({
                           <PageButton
                             disabled={router.pathname.includes('/discover')}
                             onClick={() => {
-                              router.push(`/discover?chain=${monadTestnet.id}`)
+                              router.push('/discover')
                               setOpen(false)
                             }}
                           >
@@ -80,7 +80,7 @@ const Panel = ({
                         <PageButton
                           disabled={router.pathname.includes('/trade')}
                           onClick={() => {
-                            router.push(`/trade?chain=${chainId}`)
+                            router.push('/trade')
                             setOpen(false)
                           }}
                         >
@@ -91,7 +91,7 @@ const Panel = ({
                         <PageButton
                           disabled={router.pathname.includes('/earn')}
                           onClick={() => {
-                            router.push(`/earn?chain=${chainId}`)
+                            router.push('/earn')
                             setOpen(false)
                           }}
                         >
@@ -104,7 +104,7 @@ const Panel = ({
                             <PageButton
                               disabled={router.pathname.includes('/point')}
                               onClick={() => {
-                                router.push(`/point?chain=${chainId}`)
+                                router.push('/point')
                                 setOpen(false)
                               }}
                             >
@@ -115,7 +115,7 @@ const Panel = ({
                             <PageButton
                               disabled={router.pathname.includes('/futures')}
                               onClick={() => {
-                                router.push(`/futures?chain=${monadTestnet.id}`)
+                                router.push('/futures')
                                 setOpen(false)
                               }}
                             >
@@ -126,9 +126,7 @@ const Panel = ({
                             <PageButton
                               disabled={router.pathname.includes('/analytics')}
                               onClick={() => {
-                                router.push(
-                                  `/analytics?chain=${monadTestnet.id}`,
-                                )
+                                router.push('/analytics')
                                 setOpen(false)
                               }}
                             >

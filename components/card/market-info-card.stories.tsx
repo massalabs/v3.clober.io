@@ -2,6 +2,7 @@ import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
+import { base } from 'viem/chains'
 
 import { MarketInfoCard } from './market-info-card'
 
@@ -22,6 +23,7 @@ type Story = StoryObj<typeof MarketInfoCard>
 
 export const Default: Story = {
   args: {
+    chain: base,
     baseCurrency: {
       symbol: 'Bitcoin',
       name: 'Bitcoin',
@@ -48,6 +50,7 @@ export const Default: Story = {
 
 export const Social: Story = {
   args: {
+    chain: base,
     baseCurrency: {
       symbol: 'Bitcoin',
       name: 'Bitcoin',
@@ -74,6 +77,7 @@ export const Social: Story = {
 
 export const Loading: Story = {
   args: {
+    chain: base,
     baseCurrency: {
       symbol: 'Bitcoin',
       name: 'Bitcoin',

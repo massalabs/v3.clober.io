@@ -24,6 +24,7 @@ type Story = StoryObj<typeof UserTransactionCard>
 
 export const Default: Story = {
   args: {
+    chain: base,
     transaction: {
       title: 'Confirm',
       txHash: `0x${BigInt(1234567890).toString(16)}`,

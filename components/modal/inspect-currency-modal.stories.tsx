@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
-
 import '../../styles/globals.css'
-import InspectCurrencyModal from './inspect-currency-modal'
+import { base } from 'viem/chains'
 
+import InspectCurrencyModal from './inspect-currency-modal'
 export default {
   title: 'Modal/InspectCurrencyModal',
   component: InspectCurrencyModal,
@@ -15,6 +15,7 @@ type Story = StoryObj<typeof InspectCurrencyModal>
 
 export const Default: Story = {
   args: {
+    chain: base,
     currency: {
       address: '0x0000000000000000000000000000000000000003',
       name: 'ETH',

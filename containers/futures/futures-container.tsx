@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
-import { getAddress, parseUnits } from 'viem'
+import { parseUnits } from 'viem'
 import Link from 'next/link'
 
 import { FuturesAssetCard } from '../../components/card/futures-asset-card'
-import { useChainContext } from '../../contexts/chain-context'
 import { FuturesPosition } from '../../model/futures/futures-position'
 import { FuturesPositionCard } from '../../components/card/futures-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
@@ -16,13 +15,14 @@ import { formatUnits } from '../../utils/bigint'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 import { WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
 import Modal from '../../components/modal/modal'
+import { useChainContext } from '../../contexts/chain-context'
 
 import { FuturesPositionAdjustModalContainer } from './futures-position-adjust-modal-container'
 import { FuturesPositionEditCollateralModalContainer } from './futures-position-edit-collateral-modal-container'
 
 export const FuturesContainer = () => {
-  const { selectedChain } = useChainContext()
   const router = useRouter()
+  const { selectedChain } = useChainContext()
   const { settle, close, redeem, pendingPositionCurrencies } =
     useFuturesContractContext()
   const { prices, balances } = useCurrencyContext()
@@ -141,7 +141,7 @@ export const FuturesContainer = () => {
                   )
                   .map((asset, index) => (
                     <FuturesAssetCard
-                      chainId={selectedChain.id}
+                      chain={selectedChain}
                       key={`mint-${asset.id}-${index}`}
                       asset={asset}
                       router={router}
@@ -165,6 +165,7 @@ export const FuturesContainer = () => {
                   )
                   .map((asset, index) => (
                     <FuturesRedeemCard
+                      chain={selectedChain}
                       key={`redeem-${asset.id}-${index}`}
                       asset={asset}
                       balance={balances[asset.currency.address] ?? 0n}
@@ -209,6 +210,7 @@ export const FuturesContainer = () => {
                 .filter((position) => position.averagePrice > 0)
                 .map((position, index) => (
                   <FuturesPositionCard
+                    chain={selectedChain}
                     key={`${position.asset.id}-${index}`}
                     position={position}
                     loanAssetPrice={

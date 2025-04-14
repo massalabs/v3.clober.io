@@ -29,7 +29,6 @@ import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/futures/contract-add
 import { useChainContext } from '../chain-context'
 import { formatUnits } from '../../utils/bigint'
 import { FUTURES_MARKET_ABI } from '../../abis/futures/futures-market-abi'
-import { supportChains } from '../../constants/chain'
 import { PYTH_ORACLE_ABI } from '../../abis/futures/pyth-oracle-abi'
 import { FuturesPosition } from '../../model/futures/futures-position'
 import { buildTransaction } from '../../utils/build-transaction'
@@ -99,10 +98,10 @@ export const FuturesContractProvider = ({
   const { allowances, prices, balances } = useCurrencyContext()
   const publicClient = useMemo(() => {
     return createPublicClient({
-      chain: supportChains.find((chain) => chain.id === selectedChain.id),
+      chain: selectedChain,
       transport: http(RPC_URL[selectedChain.id]),
     })
-  }, [selectedChain.id])
+  }, [selectedChain])
 
   const [pendingPositionCurrencies, setPendingPositionCurrencies] =
     React.useState<Currency[]>([])

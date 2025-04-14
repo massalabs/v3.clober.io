@@ -11,8 +11,10 @@ import { handleCopyClipBoard } from '../../utils/string'
 import { ClipboardSvg } from '../svg/clipboard-svg'
 import { Toast } from '../toast'
 import { ActionButton } from '../button/action-button'
+import { Chain } from '../../model/chain'
 
 export const MarketInfoCard = ({
+  chain,
   baseCurrency,
   quoteCurrency,
   price,
@@ -25,6 +27,7 @@ export const MarketInfoCard = ({
   twitterUrl,
   telegramUrl,
 }: {
+  chain: Chain
   baseCurrency: Currency
   quoteCurrency: Currency
   price: number
@@ -56,10 +59,12 @@ export const MarketInfoCard = ({
           <div className="justify-start items-center gap-2.5 flex w-full">
             <div className="justify-start items-center flex relative w-14">
               <CurrencyIcon
+                chain={chain}
                 currency={baseCurrency}
                 className="rounded-full w-6 lg:w-[30px] h-6 lg:h-[30px] z-[1]"
               />
               <CurrencyIcon
+                chain={chain}
                 currency={quoteCurrency}
                 className="rounded-full absolute top-0 left-4 lg:left-[18px] w-6 lg:w-[30px] h-6 lg:h-[30px]"
               />

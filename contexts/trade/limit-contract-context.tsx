@@ -354,7 +354,7 @@ export const LimitContractProvider = ({
             },
           })
           if (hash) {
-            await waitTransaction(walletClient.chain.id, hash)
+            await waitTransaction(walletClient.chain, hash)
           }
         }
 
@@ -441,7 +441,7 @@ export const LimitContractProvider = ({
             },
           })
           if (hash) {
-            await waitTransaction(walletClient.chain.id, hash)
+            await waitTransaction(walletClient.chain, hash)
           }
         }
 

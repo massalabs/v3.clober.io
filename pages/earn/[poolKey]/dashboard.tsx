@@ -17,7 +17,7 @@ export default function PoolManage() {
         (v) => v.key.toLowerCase() === router.query.poolKey,
       )
     ) {
-      router.push(`/earn?chainId=${selectedChain.id}`)
+      router.push('/earn')
     }
   }, [router, selectedChain.id])
 

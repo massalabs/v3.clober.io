@@ -8,13 +8,16 @@ import { Toast } from '../toast'
 import { handleCopyClipBoard } from '../../utils/string'
 import { ActionButton } from '../button/action-button'
 import { shortAddress } from '../../utils/address'
+import { Chain } from '../../model/chain'
 
 const InspectCurrencyModal = ({
+  chain,
   currency,
   onCurrencySelect,
   setInspectingCurrency,
   explorerUrl,
 }: {
+  chain: Chain
   currency: Currency | undefined
   onCurrencySelect: (currency: Currency) => void
   setInspectingCurrency: (currency: Currency | undefined) => void
@@ -86,6 +89,7 @@ const InspectCurrencyModal = ({
           >
             <div className="flex items-center gap-3">
               <CurrencyIcon
+                chain={chain}
                 currency={currency}
                 className="w-8 h-8 rounded-full"
               />

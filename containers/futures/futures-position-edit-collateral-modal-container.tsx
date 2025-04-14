@@ -8,6 +8,7 @@ import { max } from '../../utils/bigint'
 import { FuturesPositionEditCollateralModal } from '../../components/modal/futures-position-edit-collateral-modal'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 import { isMarketClose } from '../../utils/date'
+import { useChainContext } from '../../contexts/chain-context'
 
 export const FuturesPositionEditCollateralModalContainer = ({
   userPosition,
@@ -19,6 +20,7 @@ export const FuturesPositionEditCollateralModalContainer = ({
   onClose: () => void
 }) => {
   const { prices, balances } = useCurrencyContext()
+  const { selectedChain } = useChainContext()
   const { addCollateral, removeCollateral } = useFuturesContractContext()
 
   const [value, setValue] = useState('')
@@ -70,6 +72,7 @@ export const FuturesPositionEditCollateralModalContainer = ({
 
   return (
     <FuturesPositionEditCollateralModal
+      chain={selectedChain}
       asset={userPosition.asset}
       onClose={onClose}
       value={value}

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
-
 import '../../../styles/globals.css'
+import { base } from 'viem/chains'
+
 import { RemoveLiquidityForm } from './remove-liquidity-form'
 
 export default {
@@ -21,6 +22,7 @@ type Story = StoryObj<typeof RemoveLiquidityForm>
 
 export const Default: Story = {
   args: {
+    chain: base,
     vault: {
       historicalPriceIndex: [],
       key: '0x',

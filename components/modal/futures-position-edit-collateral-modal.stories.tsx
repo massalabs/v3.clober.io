@@ -1,6 +1,7 @@
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
+import { base } from 'viem/chains'
 
 import { FuturesPositionEditCollateralModal } from './futures-position-edit-collateral-modal'
 
@@ -16,6 +17,7 @@ type Story = StoryObj<typeof FuturesPositionEditCollateralModal>
 
 export const Deposit: Story = {
   args: {
+    chain: base,
     asset: {
       id: '0x',
       currency: {

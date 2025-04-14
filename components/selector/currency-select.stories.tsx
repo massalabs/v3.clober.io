@@ -1,7 +1,7 @@
 import React from 'react'
-import { Meta, StoryObj } from '@storybook/react'
-
 import '../../styles/globals.css'
+import { Meta, StoryObj } from '@storybook/react'
+import { base } from 'viem/chains'
 
 import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
 
@@ -23,7 +23,7 @@ export default {
 type Story = StoryObj<typeof CurrencySelect>
 export const Default: Story = {
   args: {
-    chainId: 1,
+    chain: base,
     explorerUrl: 'https://etherscan.io',
     currencies: dummyCurrencies,
     balances: {

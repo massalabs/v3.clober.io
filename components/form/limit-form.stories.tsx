@@ -1,6 +1,7 @@
 import React from 'react'
-import { Meta, StoryObj } from '@storybook/react'
 import '../../styles/globals.css'
+import { Meta, StoryObj } from '@storybook/react'
+import { base } from 'viem/chains'
 
 import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
 
@@ -23,7 +24,7 @@ type Story = StoryObj<typeof LimitForm>
 
 export const Default: Story = {
   args: {
-    chainId: 1,
+    chain: base,
     explorerUrl: 'https://etherscan.io',
     currencies: dummyCurrencies,
     setCurrencies: () => {},
@@ -53,7 +54,7 @@ export const Default: Story = {
 
 export const Selected: Story = {
   args: {
-    chainId: 1,
+    chain: base,
     currencies: dummyCurrencies,
     setCurrencies: () => {},
     balances: {},
@@ -84,7 +85,7 @@ export const Selected: Story = {
 
 export const IsFetchingPrice: Story = {
   args: {
-    chainId: 1,
+    chain: base,
     currencies: dummyCurrencies,
     setCurrencies: () => {},
     balances: {},

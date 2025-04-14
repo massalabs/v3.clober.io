@@ -22,7 +22,7 @@ type Story = StoryObj<typeof VaultPositionCard>
 
 export const Default: Story = {
   args: {
-    chainId: base.id,
+    chain: base,
     vaultPosition: {
       vault: {
         historicalPriceIndex: [],

@@ -2,6 +2,7 @@ import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
+import { base } from 'viem/chains'
 
 import { FuturesPositionCard } from './futures-position-card'
 
@@ -22,6 +23,7 @@ type Story = StoryObj<typeof FuturesPositionCard>
 
 export const Default: Story = {
   args: {
+    chain: base,
     position: {
       user: zeroAddress,
       asset: {

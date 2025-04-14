@@ -1,5 +1,5 @@
 import React from 'react'
-import { CHAIN_IDS, OpenOrder } from '@clober/v2-sdk'
+import { OpenOrder } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 
 import { OutlinkSvg } from '../svg/outlink-svg'
@@ -8,14 +8,12 @@ import { toPlacesString } from '../../utils/bignumber'
 import { toShortNumber } from '../../utils/number'
 
 export const OpenOrderCard = ({
-  chainId,
   openOrder,
   router,
   claimActionButtonProps,
   cancelActionButtonProps,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
-  chainId: CHAIN_IDS
   openOrder: OpenOrder
   router: NextRouter
   claimActionButtonProps: ActionButtonProps
@@ -37,7 +35,7 @@ export const OpenOrderCard = ({
               <button
                 onClick={() =>
                   router.push(
-                    `/trade?inputCurrency=${openOrder.inputCurrency.address}&outputCurrency=${openOrder.outputCurrency.address}&chain=${chainId}`,
+                    `/trade?inputCurrency=${openOrder.inputCurrency.address}&outputCurrency=${openOrder.outputCurrency.address}`,
                   )
                 }
               >
@@ -123,7 +121,7 @@ export const OpenOrderCard = ({
             <button
               onClick={() =>
                 router.push(
-                  `/trade?inputCurrency=${openOrder.inputCurrency.address}&outputCurrency=${openOrder.outputCurrency.address}&chain=${chainId}`,
+                  `/trade?inputCurrency=${openOrder.inputCurrency.address}&outputCurrency=${openOrder.outputCurrency.address}`,
                 )
               }
             >

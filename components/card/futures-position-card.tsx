@@ -10,14 +10,17 @@ import { formatDollarValue, formatUnits } from '../../utils/bigint'
 import { FuturesPosition } from '../../model/futures/futures-position'
 import { toCommaSeparated } from '../../utils/number'
 import { EditSvg } from '../svg/edit-svg'
+import { Chain } from '../../model/chain'
 
 export const FuturesPositionCard = ({
+  chain,
   position,
   loanAssetPrice,
   onEditCollateral,
   onClickButton,
   isPending,
 }: {
+  chain: Chain
   position: FuturesPosition
   loanAssetPrice: number
   onEditCollateral: () => void
@@ -31,6 +34,7 @@ export const FuturesPositionCard = ({
       <div className="flex p-4 items-center self-stretch">
         <div className="flex items-center gap-3 flex-grow shrink-0 basis-0">
           <CurrencyIcon
+            chain={chain}
             currency={position.asset.currency}
             className="w-8 h-8 sm:w-10 sm:h-10"
           />

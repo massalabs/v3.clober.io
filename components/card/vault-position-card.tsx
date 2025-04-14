@@ -1,18 +1,18 @@
 import React from 'react'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 import { NextRouter } from 'next/router'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { formatUnits } from '../../utils/bigint'
 import { toCommaSeparated } from '../../utils/number'
 import { VaultPosition } from '../../model/vault'
+import { Chain } from '../../model/chain'
 
 export const VaultPositionCard = ({
-  chainId,
+  chain,
   vaultPosition,
   router,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   vaultPosition: VaultPosition
   router: NextRouter
 }) => {
@@ -23,10 +23,12 @@ export const VaultPositionCard = ({
           <div className="flex justify-center items-center gap-2 self-stretch">
             <div className="w-14 h-8 relative">
               <CurrencyIcon
+                chain={chain}
                 currency={vaultPosition.vault.currency0}
                 className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
               />
               <CurrencyIcon
+                chain={chain}
                 currency={vaultPosition.vault.currency1}
                 className="w-8 h-8 absolute left-6 top-0 rounded-full"
               />
@@ -59,9 +61,7 @@ export const VaultPositionCard = ({
         </div>
         <div className="flex self-stretch h-8 px-3 py-2 rounded-lg border-2 border-blue-500 border-solid justify-center items-center gap-1">
           <button
-            onClick={() =>
-              router.push(`/earn/${vaultPosition.vault.key}?chain=${chainId}`)
-            }
+            onClick={() => router.push(`/earn/${vaultPosition.vault.key}`)}
             className="grow shrink basis-0 opacity-90 text-center text-blue-500 text-sm font-bold"
             rel="noreferrer"
           >
@@ -73,10 +73,12 @@ export const VaultPositionCard = ({
         <div className="flex items-center gap-2 self-stretch">
           <div className="w-10 h-6 relative">
             <CurrencyIcon
+              chain={chain}
               currency={vaultPosition.vault.currency0}
               className="w-6 h-6 absolute left-0 top-0 z-[1]"
             />
             <CurrencyIcon
+              chain={chain}
               currency={vaultPosition.vault.currency1}
               className="w-6 h-6 absolute left-[16px] top-0"
             />
@@ -110,9 +112,7 @@ export const VaultPositionCard = ({
         </div>
         <div className="flex self-stretch h-8 px-3 py-2 rounded-lg border border-solid border-blue-500 justify-center items-center gap-1">
           <button
-            onClick={() =>
-              router.push(`/earn/${vaultPosition.vault.key}?chain=${chainId}`)
-            }
+            onClick={() => router.push(`/earn/${vaultPosition.vault.key}`)}
             className="grow shrink basis-0 opacity-90 text-center text-blue-500 text-sm font-bold"
             rel="noreferrer"
           >

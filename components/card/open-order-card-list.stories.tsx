@@ -2,7 +2,6 @@ import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
-import { arbitrumSepolia } from 'viem/chains'
 import { OpenOrder } from '@clober/v2-sdk'
 
 import { dummyCurrencies } from '../../.storybook/dummy-data/currencies'
@@ -59,7 +58,6 @@ const bidOpenOrder = {
 
 export const Bid: Story = {
   args: {
-    chainId: arbitrumSepolia.id,
     userAddress: zeroAddress,
     openOrders: [bidOpenOrder, bidOpenOrder] as OpenOrder[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -104,7 +102,6 @@ const askOpenOrder = {
 
 export const Ask: Story = {
   args: {
-    chainId: arbitrumSepolia.id,
     userAddress: zeroAddress,
     openOrders: [askOpenOrder, askOpenOrder] as OpenOrder[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

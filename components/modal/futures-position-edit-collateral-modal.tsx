@@ -6,8 +6,10 @@ import { Asset } from '../../model/futures/asset'
 import { ArrowSvg } from '../svg/arrow-svg'
 import { ActionButton, ActionButtonProps } from '../button/action-button'
 import CurrencyAmountInput from '../input/currency-amount-input'
+import { Chain } from '../../model/chain'
 
 export const FuturesPositionEditCollateralModal = ({
+  chain,
   asset,
   onClose,
   value,
@@ -20,6 +22,7 @@ export const FuturesPositionEditCollateralModal = ({
   collateralPrice,
   actionButtonProps,
 }: {
+  chain: Chain
   asset: Asset
   onClose: () => void
   value: string
@@ -53,6 +56,7 @@ export const FuturesPositionEditCollateralModal = ({
       </div>
       <div className="mb-4">
         <CurrencyAmountInput
+          chain={chain}
           currency={asset.collateral}
           value={value}
           onValueChange={setValue}

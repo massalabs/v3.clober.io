@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { readContracts } from '@wagmi/core'
 import { getContractAddresses } from '@clober/v2-sdk'
 import { useAccount } from 'wagmi'
+import { createPublicClient, http } from 'viem'
 
 import { Balances } from '../../model/balances'
 import { Vault } from '../../model/vault'
@@ -13,8 +13,8 @@ import {
 import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
-import { wagmiConfig } from '../../constants/chain'
 import { fetchVaults } from '../../apis/vault'
+import { RPC_URL } from '../../constants/rpc-url'
 
 type VaultContext = {
   lpCurrencyAmount: string
@@ -55,11 +55,17 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [currency1Amount, setCurrency1Amount] = React.useState('')
   const [disableSwap, setDisableSwap] = React.useState(false)
   const [slippageInput, setSlippageInput] = React.useState('1')
+  const publicClient = useMemo(() => {
+    return createPublicClient({
+      chain: selectedChain,
+      transport: http(RPC_URL[selectedChain.id]),
+    })
+  }, [selectedChain])
 
   const { data: vaults } = useQuery({
     queryKey: ['vaults', selectedChain.id, Object.keys(prices).length !== 0],
     queryFn: async () => {
-      return fetchVaults(selectedChain.id, prices)
+      return fetchVaults(selectedChain, prices)
     },
     initialData: [],
     refetchInterval: 5 * 1000,
@@ -79,7 +85,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (!userAddress) {
         return {}
       }
-      const results = await readContracts(wagmiConfig, {
+      const results = await publicClient.multicall({
         contracts: WHITELISTED_VAULTS[selectedChain.id].map(({ key }) => ({
           chainId: selectedChain.id,
           address: getContractAddresses({ chainId: selectedChain.id })
@@ -136,11 +142,7 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
       setCurrencies(deduplicateCurrencies(whitelistCurrencies))
 
       const url = new URL(window.location.href)
-      window.history.pushState(
-        {},
-        '',
-        `${url.origin}${url.pathname}?chain=${selectedChain.id}`,
-      )
+      window.history.pushState({}, '', `${url.origin}${url.pathname}`)
     }
     if (window.location.href.includes('/earn')) {
       action()

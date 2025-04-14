@@ -1,5 +1,4 @@
 import React from 'react'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Vault } from '../../../model/vault'
 import { Prices } from '../../../model/prices'
@@ -8,10 +7,10 @@ import CurrencyAmountInput from '../../input/currency-amount-input'
 import { toPlacesString } from '../../../utils/bignumber'
 import { formatDollarValue, formatUnits } from '../../../utils/bigint'
 import { SlippageToggle } from '../../toggle/slippage-toggle'
-import { testnetChainIds } from '../../../constants/chain'
+import { Chain } from '../../../model/chain'
 
 export const AddLiquidityForm = ({
-  chainId,
+  chain,
   vault,
   prices,
   currency0Amount,
@@ -29,7 +28,7 @@ export const AddLiquidityForm = ({
   isCalculatingReceiveLpAmount,
   actionButtonProps,
 }: {
-  chainId: CHAIN_IDS
+  chain: Chain
   vault: Vault
   prices: Prices
   currency0Amount: string
@@ -55,6 +54,7 @@ export const AddLiquidityForm = ({
         </div>
         <div className="flex flex-col relative gap-4 self-stretch">
           <CurrencyAmountInput
+            chain={chain}
             currency={vault.currency0}
             value={currency0Amount}
             onValueChange={setCurrency0Amount}
@@ -62,6 +62,7 @@ export const AddLiquidityForm = ({
             price={prices[vault.currency0.address] ?? 0}
           />
           <CurrencyAmountInput
+            chain={chain}
             currency={vault.currency1}
             value={currency1Amount}
             onValueChange={setCurrency1Amount}
@@ -79,8 +80,7 @@ export const AddLiquidityForm = ({
               className="sr-only peer"
               disabled={disableDisableSwap}
               defaultChecked={
-                vault.reserve0 + vault.reserve1 > 0 &&
-                !testnetChainIds.includes(chainId)
+                vault.reserve0 + vault.reserve1 > 0 && !chain.testnet
               }
               onChange={() => {
                 setDisableSwap(!disableSwap)

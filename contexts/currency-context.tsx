@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
-import { getAddress, isAddressEqual, zeroAddress } from 'viem'
-import { getBalance, readContracts } from '@wagmi/core'
+import {
+  createPublicClient,
+  getAddress,
+  http,
+  isAddressEqual,
+  zeroAddress,
+} from 'viem'
 import { getContractAddresses } from '@clober/v2-sdk'
 
 import { Currency } from '../model/currency'
@@ -13,11 +18,11 @@ import { ERC20_PERMIT_ABI } from '../abis/@openzeppelin/erc20-permit-abi'
 import { fetchPrices } from '../apis/swap/price'
 import { AGGREGATORS } from '../constants/aggregators'
 import { Allowances } from '../model/allowances'
-import { wagmiConfig } from '../constants/chain'
 import { deduplicateCurrencies } from '../utils/currency'
 import { FUTURES_CONTRACT_ADDRESSES } from '../constants/futures/contract-addresses'
 import { fetchPricesFromPyth } from '../apis/price'
 import { PRICE_FEED_ID_LIST } from '../constants/currency'
+import { RPC_URL } from '../constants/rpc-url'
 
 import { useChainContext } from './chain-context'
 
@@ -71,6 +76,13 @@ const _abi = [
 export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { address: userAddress } = useAccount()
   const { selectedChain } = useChainContext()
+  const publicClient = useMemo(() => {
+    return createPublicClient({
+      chain: selectedChain,
+      transport: http(RPC_URL[selectedChain.id]),
+    })
+  }, [selectedChain])
+
   const { data: whitelistCurrencies } = useQuery({
     queryKey: ['currencies', selectedChain.id],
     queryFn: async () => {
@@ -100,7 +112,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
         (currency) => !isAddressEqual(currency.address, zeroAddress),
       )
       const [results, balance] = await Promise.all([
-        readContracts(wagmiConfig, {
+        publicClient.multicall({
           contracts: uniqueCurrencies.map((currency) => ({
             chainId: selectedChain.id,
             address: currency.address,
@@ -109,9 +121,8 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
             args: [userAddress],
           })),
         }),
-        getBalance(wagmiConfig, {
+        publicClient.getBalance({
           address: userAddress,
-          chainId: selectedChain.id,
         }),
       ])
       return results.reduce(
@@ -124,7 +135,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
           }
         },
         {
-          [zeroAddress]: balance?.value ?? 0n,
+          [zeroAddress]: balance ?? 0n,
         },
       )
     },
@@ -211,7 +222,7 @@ export const CurrencyProvider = ({ children }: React.PropsWithChildren<{}>) => {
           ],
         },
       ]
-      const results = await readContracts(wagmiConfig, {
+      const results = await publicClient.multicall({
         contracts,
       })
       return {

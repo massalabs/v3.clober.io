@@ -90,8 +90,9 @@ const ConfirmationModal = ({
               )}
               <div className="flex w-full items-center justify-between bg-gray-700 px-3 py-1.5 text-sm rounded-lg">
                 <div className="flex items-center gap-2 truncate">
-                  {field.currency ? (
+                  {field.currency && confirmation.chain ? (
                     <CurrencyIcon
+                      chain={confirmation.chain}
                       currency={field.currency}
                       className="w-5 h-5 rounded-full"
                     />

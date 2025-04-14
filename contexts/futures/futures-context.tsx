@@ -42,12 +42,7 @@ export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (!userAddress) {
         return []
       }
-      return fetchFuturesPositions(
-        selectedChain.id,
-        userAddress,
-        prices,
-        assets,
-      )
+      return fetchFuturesPositions(selectedChain, userAddress, prices, assets)
     },
     initialData: [],
     refetchIntervalInBackground: true,

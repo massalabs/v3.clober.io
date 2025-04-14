@@ -3,11 +3,14 @@ import React from 'react'
 import { Transaction } from '../../contexts/transaction-context'
 import { CurrencyIcon } from '../icon/currency-icon'
 import ChainIcon from '../icon/chain-icon'
+import { Chain } from '../../model/chain'
 
 const UserTransactionCard = ({
+  chain,
   transaction,
   isPending,
 }: {
+  chain: Chain
   transaction: Transaction
   isPending: boolean
 }) => {
@@ -122,6 +125,7 @@ const UserTransactionCard = ({
                   <div className="flex items-center gap-1.5 truncate">
                     {field.currency ? (
                       <CurrencyIcon
+                        chain={chain}
                         currency={field.currency}
                         className="w-4 h-4 rounded-full"
                       />
@@ -167,6 +171,7 @@ const UserTransactionCard = ({
                   <div className="flex items-center gap-1.5 truncate">
                     {field.currency ? (
                       <CurrencyIcon
+                        chain={chain}
                         currency={field.currency}
                         className="w-4 h-4 rounded-full"
                       />

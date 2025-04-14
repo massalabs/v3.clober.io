@@ -6,7 +6,6 @@ import { ActionButton } from '../components/button/action-button'
 import { shortAddress } from '../utils/address'
 import { toCommaSeparated } from '../utils/number'
 import { buildTransaction } from '../utils/build-transaction'
-import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-url'
 import { useChainContext } from '../contexts/chain-context'
 import { sendTransaction } from '../utils/transaction'
@@ -49,10 +48,10 @@ export const TradingCompetitionContainer = () => {
 
   const publicClient = useMemo(() => {
     return createPublicClient({
-      chain: supportChains.find((chain) => chain.id === selectedChain.id),
+      chain: selectedChain,
       transport: http(RPC_URL[selectedChain.id]),
     })
-  }, [selectedChain.id])
+  }, [selectedChain])
 
   const register = useCallback(async () => {
     try {

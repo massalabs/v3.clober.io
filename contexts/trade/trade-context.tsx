@@ -183,7 +183,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
               ),
             ) ??
             (await fetchCurrency(
-              selectedChain.id,
+              selectedChain,
               getAddress(inputCurrencyAddress),
             )))
           : DEFAULT_INPUT_CURRENCY[selectedChain.id]
@@ -195,7 +195,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
               ),
             ) ??
             (await fetchCurrency(
-              selectedChain.id,
+              selectedChain,
               getAddress(outputCurrencyAddress),
             )))
           : DEFAULT_OUTPUT_CURRENCY[selectedChain.id]
@@ -243,11 +243,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
           }
           const url = new URL(window.location.href)
           // remove `inputCurrency` and `outputCurrency` query params
-          window.history.pushState(
-            {},
-            '',
-            `${url.origin}${url.pathname}?chain=${selectedChain.id}`,
-          )
+          window.history.pushState({}, '', `${url.origin}${url.pathname}`)
         } else {
           setIsBid(true)
         }

@@ -17,7 +17,6 @@ import { toPlacesAmountString } from '../../utils/bignumber'
 import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form'
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
-import { testnetChainIds } from '../../constants/chain'
 import { VaultDashboardContainer } from '../chart/vault-dashboard-container'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
 
@@ -135,10 +134,10 @@ export const VaultManagerContainer = ({
   }, [vault.reserve0, vault.reserve1, setDisableSwap])
 
   useEffect(() => {
-    if (testnetChainIds.includes(selectedChain.id)) {
+    if (selectedChain.testnet) {
       setDisableSwap(true)
     }
-  }, [selectedChain.id, setDisableSwap, currency0Amount, currency1Amount])
+  }, [selectedChain.testnet, setDisableSwap])
 
   useEffect(() => {
     setCurrency0Amount('')
@@ -200,7 +199,7 @@ export const VaultManagerContainer = ({
       <div className="w-full lg:w-[992px] h-full flex flex-col items-start gap-8 md:gap-12 px-4 lg:px-0">
         <div className="flex w-full h-full items-center">
           <button
-            onClick={() => router.push(`/earn?chain=${selectedChain.id}`)}
+            onClick={() => router.push('/earn')}
             className="flex items-center gap-2"
           >
             <svg
@@ -222,10 +221,12 @@ export const VaultManagerContainer = ({
             <div className="flex items-center relative -left-1/2 w-full h-full gap-2 md:gap-4">
               <div className="w-10 h-6 md:w-14 md:h-8 shrink-0 relative">
                 <CurrencyIcon
+                  chain={selectedChain}
                   currency={vault.currency0}
                   className="w-6 h-6 md:w-8 md:h-8 absolute left-0 top-0 z-[1] rounded-full"
                 />
                 <CurrencyIcon
+                  chain={selectedChain}
                   currency={vault.currency1}
                   className="w-6 h-6 md:w-8 md:h-8 absolute left-4 md:left-6 top-0 rounded-full"
                 />
@@ -247,12 +248,8 @@ export const VaultManagerContainer = ({
                 <button
                   onClick={() =>
                     showDashboard
-                      ? router.push(
-                          `/earn/${vault.key}?chain=${selectedChain.id}`,
-                        )
-                      : router.push(
-                          `/earn/${vault.key}/dashboard?chain=${selectedChain.id}`,
-                        )
+                      ? router.push(`/earn/${vault.key}`)
+                      : router.push(`/earn/${vault.key}/dashboard`)
                   }
                   className="hidden lg:flex w-full h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
                   rel="noreferrer"
@@ -279,6 +276,7 @@ export const VaultManagerContainer = ({
                   <div className="flex justify-center gap-2 md:gap-4">
                     <div className="flex items-center gap-1 md:gap-2">
                       <CurrencyIcon
+                        chain={selectedChain}
                         currency={vault.currency0}
                         className="w-5 h-5 md:w-6 md:h-6 rounded-full"
                       />
@@ -296,6 +294,7 @@ export const VaultManagerContainer = ({
                   <div className="flex justify-center gap-2 md:gap-4">
                     <div className="flex items-center gap-1 md:gap-2">
                       <CurrencyIcon
+                        chain={selectedChain}
                         currency={vault.currency1}
                         className="w-5 h-5 md:w-6 md:h-6 rounded-full"
                       />
@@ -334,9 +333,7 @@ export const VaultManagerContainer = ({
                   </div>
                 </div>
                 <div className="text-sm font-semibold flex h-14 px-8 py-4 bg-gray-800 rounded-xl justify-center items-center gap-8 md:gap-12">
-                  {testnetChainIds.includes(selectedChain.id)
-                    ? '-'
-                    : latestValue.toFixed(4)}
+                  {selectedChain.testnet ? '-' : latestValue.toFixed(4)}
                 </div>
               </div>
               <div className="flex-col items-start gap-3 md:gap-4 self-stretch hidden sm:flex">
@@ -400,9 +397,7 @@ export const VaultManagerContainer = ({
                 </div>
                 <VaultChartContainer
                   historicalPriceIndex={
-                    testnetChainIds.includes(selectedChain.id)
-                      ? []
-                      : vault.historicalPriceIndex
+                    selectedChain.testnet ? [] : vault.historicalPriceIndex
                   }
                   showPnL={showPnL}
                 />
@@ -462,7 +457,7 @@ export const VaultManagerContainer = ({
               <div className="p-6 bg-gray-900 rounded-2xl border flex-col justify-start items-start gap-6 md:gap-8 flex w-full">
                 {tab === 'add-liquidity' ? (
                   <AddLiquidityForm
-                    chainId={selectedChain.id}
+                    chain={selectedChain}
                     vault={vault}
                     prices={prices}
                     currency0Amount={currency0Amount}
@@ -479,7 +474,7 @@ export const VaultManagerContainer = ({
                     setDisableSwap={setDisableSwap}
                     disableDisableSwap={
                       vault.reserve0 + vault.reserve1 === 0 ||
-                      testnetChainIds.includes(selectedChain.id)
+                      selectedChain.testnet === true
                     }
                     slippageInput={slippageInput}
                     setSlippageInput={setSlippageInput}
@@ -541,6 +536,7 @@ export const VaultManagerContainer = ({
                   />
                 ) : (
                   <RemoveLiquidityForm
+                    chain={selectedChain}
                     vault={vault}
                     prices={{
                       ...prices,

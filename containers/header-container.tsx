@@ -10,8 +10,6 @@ import {
 import { monadTestnet } from 'viem/chains'
 
 import { useChainContext } from '../contexts/chain-context'
-import ChainSelector from '../components/selector/chain-selector'
-import { supportChains } from '../constants/chain'
 import MenuSvg from '../components/svg/menu-svg'
 import { PageButton } from '../components/button/page-button'
 import { SwapPageSvg } from '../components/svg/swap-page-svg'
@@ -26,10 +24,12 @@ import { UserPointButton } from '../components/button/user-point-button'
 import { usePointContext } from '../contexts/point-context'
 import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
 import { PointPageSvg } from '../components/svg/point-page-svg'
+import ChainIcon from '../components/icon/chain-icon'
+import { textStyles } from '../themes/text-styles'
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
-  const { selectedChain, setSelectedChain } = useChainContext()
+  const { selectedChain } = useChainContext()
   const { chainId, address, status, connector } = useAccount()
   const { openChainModal } = useChainModal()
   const { openConnectModal } = useConnectModal()
@@ -60,7 +60,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <Link
               className="flex gap-2 items-center"
               target="_blank"
-              href="https://alpha.clober.io/futures?chain=10143"
+              href="https://alpha.clober.io/futures"
               rel="noreferrer"
             >
               <img className="h-7 sm:h-9" src="/futures-logo.svg" alt="logo" />
@@ -80,7 +80,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               <PageButton
                 disabled={router.pathname.includes('/discover')}
                 onClick={() => {
-                  router.push(`/discover?chain=${monadTestnet.id}`)
+                  router.push('/discover')
                 }}
               >
                 <DiscoverPageSvg className="w-4 h-4" />
@@ -91,7 +91,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <PageButton
               disabled={router.pathname.includes('/trade')}
               onClick={() => {
-                router.push(`/trade?chain=${selectedChain.id}`)
+                router.push('/trade')
               }}
             >
               <SwapPageSvg className="w-4 h-4" />
@@ -101,7 +101,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <PageButton
               disabled={router.pathname.includes('/earn')}
               onClick={() => {
-                router.push(`/earn?chain=${selectedChain.id}`)
+                router.push('/earn')
               }}
             >
               <VaultPageSvg className="w-4 h-4" />
@@ -113,7 +113,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 <PageButton
                   disabled={router.pathname.includes('/point')}
                   onClick={() => {
-                    router.push(`/point?chain=${selectedChain.id}`)
+                    router.push('/point')
                   }}
                 >
                   <PointPageSvg className="w-4 h-4" />
@@ -123,7 +123,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 <PageButton
                   disabled={router.pathname.includes('/futures')}
                   onClick={() => {
-                    router.push(`/futures?chain=${monadTestnet.id}`)
+                    router.push('/futures')
                   }}
                 >
                   <LimitPageSvg className="w-4 h-4" />
@@ -133,7 +133,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 <PageButton
                   disabled={router.pathname.includes('/analytics')}
                   onClick={() => {
-                    router.push(`/analytics?chain=${monadTestnet.id}`)
+                    router.push('/analytics')
                   }}
                 >
                   <svg
@@ -155,15 +155,15 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </div>
         </div>
         <div className="flex gap-2 w-auto md:gap-4 ml-auto">
-          {supportChains.length > 1 ? (
-            <ChainSelector
-              chain={selectedChain}
-              setChain={setSelectedChain}
-              chains={supportChains}
-            />
-          ) : (
-            <></>
-          )}
+          <div className="flex relative justify-center items-center">
+            <div className="flex items-center justify-center lg:justify-start h-8 w-8 lg:w-auto p-0 lg:px-4 lg:gap-2 rounded bg-gray-800 hover:bg-gray-700 text-white">
+              <ChainIcon className="w-4 h-4" chain={selectedChain} />
+              <p className={`hidden lg:block ${textStyles.body3Bold}`}>
+                {selectedChain.name}
+              </p>
+            </div>
+          </div>
+
           <div className="flex items-center flex-row gap-1 sm:gap-3">
             {address && (
               <div className="flex w-full">
@@ -174,12 +174,12 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
               <ConnectButton openConnectModal={openConnectModal} />
             ) : openAccountModal && address && connector && chainId ? (
               <UserButton
+                chain={selectedChain}
                 address={address}
                 openTransactionHistoryModal={() =>
                   setOpenTransactionHistoryModal(true)
                 }
                 connector={connector}
-                chainId={chainId}
                 shiny={pendingTransactions.length > 0}
               />
             ) : openChainModal ? (

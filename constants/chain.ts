@@ -1,29 +1,20 @@
 import { base, monadTestnet } from 'viem/chains'
-import { createConfig, http } from 'wagmi'
-import { CHAIN_IDS } from '@clober/v2-sdk'
 
 import { Chain } from '../model/chain'
 
-import { RPC_URL } from './rpc-url'
-
-export const DEFAULT_CHAIN_ID = base.id
-
-export const supportChains: Chain[] = [
-  base,
-  {
+export const getChain = (): Chain => {
+  const url = window.location.href
+  const _monadTestnet: Chain = {
     ...monadTestnet,
     icon: '/monad.png',
-  },
-]
-
-export const testnetChainIds: number[] = [monadTestnet.id]
-
-export const findSupportChain = (chainId: CHAIN_IDS): Chain | undefined =>
-  supportChains.find((chain) => chain.id === chainId)
-
-export const wagmiConfig = createConfig({
-  chains: supportChains as any,
-  transports: Object.fromEntries(
-    supportChains.map((chain) => [chain.id, http(RPC_URL[chain.id])]),
-  ),
-})
+  }
+  if (url.includes('alpha.clober.io')) {
+    return _monadTestnet
+  } else if (url.includes('base.clober.io')) {
+    return base
+  }
+  // else if (url.includes('rise.clober.io')) {
+  //   return 11155931 // todo
+  // }
+  return _monadTestnet
+}

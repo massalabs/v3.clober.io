@@ -23,7 +23,6 @@ import { MarketInfoCard } from '../components/card/market-info-card'
 import { OpenOrderCardList } from '../components/card/open-order-card-list'
 import { ActionButton } from '../components/button/action-button'
 import { Currency } from '../model/currency'
-import { testnetChainIds } from '../constants/chain'
 import WarningLimitModal from '../components/modal/warning-limit-modal'
 import { useTradeContext } from '../contexts/trade/trade-context'
 import { SwapForm } from '../components/form/swap-form'
@@ -112,12 +111,12 @@ export const TradeContainer = () => {
   )
 
   useEffect(() => {
-    if (testnetChainIds.includes(selectedChain.id)) {
+    if (selectedChain.testnet) {
       setShowOrderBook(true)
     } else {
       setShowOrderBook(false)
     }
-  }, [selectedChain.id])
+  }, [selectedChain.testnet])
 
   const marketId = selectedMarket
     ? getMarketId(selectedChain.id, [
@@ -147,9 +146,9 @@ export const TradeContainer = () => {
       if (!selectedMarket) {
         return DEFAULT_TOKEN_INFO
       }
-      if (testnetChainIds.includes(selectedChain.id)) {
+      if (selectedChain.testnet) {
         return fetchTokenInfoFromOrderBook(
-          selectedChain.id,
+          selectedChain,
           selectedMarket,
           prices[selectedMarket.quote.address] ?? 0,
         )
@@ -163,7 +162,7 @@ export const TradeContainer = () => {
         return tokenInfo
       } else {
         return fetchTokenInfoFromOrderBook(
-          selectedChain.id,
+          selectedChain,
           selectedMarket,
           prices[selectedMarket.quote.address] ?? 0,
         )
@@ -479,6 +478,7 @@ export const TradeContainer = () => {
             {baseCurrency && quoteCurrency ? (
               <>
                 <MarketInfoCard
+                  chain={selectedChain}
                   baseCurrency={
                     {
                       ...baseCurrency,
@@ -529,7 +529,7 @@ export const TradeContainer = () => {
               </div>
 
               {!showOrderBook && baseCurrency ? (
-                !testnetChainIds.includes(selectedChain.id) ? (
+                !selectedChain.testnet ? (
                   <IframeChartContainer
                     setShowOrderBook={setShowOrderBook}
                     baseCurrency={
@@ -593,7 +593,7 @@ export const TradeContainer = () => {
             <div className="hidden sm:flex flex-col rounded-2xl bg-[#171b24] p-6 w-fit sm:w-[480px] h-[644px]">
               {tab === 'limit' ? (
                 <LimitForm
-                  chainId={selectedChain.id}
+                  chain={selectedChain}
                   explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                   prices={prices}
                   balances={balances}
@@ -702,7 +702,7 @@ export const TradeContainer = () => {
                 />
               ) : (
                 <SwapForm
-                  chainId={selectedChain.id}
+                  chain={selectedChain}
                   explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                   currencies={currencies}
                   setCurrencies={setCurrencies}
@@ -894,7 +894,6 @@ export const TradeContainer = () => {
                 </div>
 
                 <OpenOrderCardList
-                  chainId={selectedChain.id}
                   userAddress={userAddress}
                   openOrders={filteredOpenOrders}
                   claims={claims}
@@ -935,7 +934,6 @@ export const TradeContainer = () => {
                 )}
 
                 <OpenOrderCardList
-                  chainId={selectedChain.id}
                   userAddress={userAddress}
                   openOrders={filteredOpenOrders}
                   claims={claims}
@@ -965,7 +963,7 @@ export const TradeContainer = () => {
           >
             {tab === 'limit' ? (
               <LimitForm
-                chainId={selectedChain.id}
+                chain={selectedChain}
                 explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                 prices={prices}
                 balances={balances}
@@ -1066,7 +1064,7 @@ export const TradeContainer = () => {
               />
             ) : (
               <SwapForm
-                chainId={selectedChain.id}
+                chain={selectedChain}
                 explorerUrl={selectedChain.blockExplorers?.default?.url ?? ''}
                 currencies={currencies}
                 setCurrencies={setCurrencies}

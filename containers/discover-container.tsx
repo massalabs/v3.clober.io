@@ -8,7 +8,6 @@ import { useChainContext } from '../contexts/chain-context'
 import { SearchSvg } from '../components/svg/search-svg'
 import { fetchAllMarkets } from '../apis/market'
 import { useCurrencyContext } from '../contexts/currency-context'
-import { supportChains } from '../constants/chain'
 import { RPC_URL } from '../constants/rpc-url'
 import { QuestionMarkSvg } from '../components/svg/question-mark-svg'
 import { TriangleDownSvg } from '../components/svg/triangle-down-svg'
@@ -60,10 +59,10 @@ export const DiscoverContainer = () => {
   const { latestSubgraphBlockNumber } = useTransactionContext()
   const publicClient = useMemo(() => {
     return createPublicClient({
-      chain: supportChains.find((chain) => chain.id === selectedChain.id),
+      chain: selectedChain,
       transport: http(RPC_URL[selectedChain.id]),
     })
-  }, [selectedChain.id])
+  }, [selectedChain])
   const prevMarkets = useRef<Market[]>([])
   const prevSubgraphBlockNumber = useRef<number>(0)
 
@@ -263,8 +262,8 @@ export const DiscoverContainer = () => {
             {filteredMarkets.map((market) => {
               return (
                 <MarketCard
+                  chain={selectedChain}
                   key={`${market.baseCurrency.address}-${market.quoteCurrency.address}`}
-                  chainId={selectedChain.id}
                   baseCurrency={market.baseCurrency}
                   quoteCurrency={market.quoteCurrency}
                   createAt={market.createAt}
