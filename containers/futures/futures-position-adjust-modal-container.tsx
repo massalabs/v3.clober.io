@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
 
 import { FuturesPositionAdjustModal } from '../../components/modal/futures-position-adjust-modal'
-import { UserPosition } from '../../model/futures/user-position'
+import { FuturesPosition } from '../../model/futures/futures-position'
 import { calculateLtv, calculateMaxLoanableAmount } from '../../utils/ltv'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { applyPercent, formatUnits } from '../../utils/bigint'
@@ -14,7 +14,7 @@ export const FuturesPositionAdjustModalContainer = ({
   setIsMarketClose,
   onClose,
 }: {
-  userPosition: UserPosition
+  userPosition: FuturesPosition
   setIsMarketClose: (isMarketClose: boolean) => void
   onClose: () => void
 }) => {

@@ -1,17 +1,19 @@
-import { getAddress, isAddressEqual } from 'viem'
 import { CHAIN_IDS } from '@clober/v2-sdk'
 import { monadTestnet } from 'viem/chains'
+import { createPublicClient, getAddress, http, isAddressEqual } from 'viem'
 
-import { Subgraph } from '../../model/subgraph'
-import { UserPosition } from '../../model/futures/user-position'
+import { FuturesPosition } from '../../model/futures/futures-position'
 import { Prices } from '../../model/prices'
+import { supportChains } from '../../constants/chain'
+import { RPC_URL } from '../../constants/rpc-url'
+import { WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
+import { FUTURES_CONTRACT_ADDRESSES } from '../../constants/futures/contract-addresses'
+import { Asset } from '../../model/futures/asset'
 import { calculateLiquidationPrice, calculateLtv } from '../../utils/ltv'
-import { formatUnits } from '../../utils/bigint'
-import { FUTURES_COLLATERALS } from '../../constants/futures/collaterals'
-import { ASSET_ICONS, WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
 import { FUTURES_SUBGRAPH_ENDPOINT } from '../../constants/futures/subgraph-endpoint'
+import { Subgraph } from '../../model/subgraph'
 
-type ShortPositionDto = {
+type PositionDto = {
   id: string
   user: string
   asset: {
@@ -40,97 +42,126 @@ type ShortPositionDto = {
   averagePrice: string
 }
 
+const _abi = [
+  {
+    type: 'function',
+    name: 'getPosition',
+    inputs: [
+      {
+        name: 'debtToken',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'user',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: 'collateral',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
+      {
+        name: 'debt',
+        type: 'uint128',
+        internalType: 'uint128',
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const
+
 export const fetchFuturesPositions = async (
   chainId: CHAIN_IDS,
   userAddress: `0x${string}`,
   prices: Prices,
-): Promise<UserPosition[]> => {
-  if (chainId !== monadTestnet.id) {
+  assets: Asset[],
+): Promise<FuturesPosition[]> => {
+  if (
+    chainId !== monadTestnet.id ||
+    !FUTURES_CONTRACT_ADDRESSES[chainId]?.FuturesMarket
+  ) {
     return []
   }
+  const publicClient = createPublicClient({
+    chain: supportChains.find((chain) => chain.id === chainId),
+    transport: http(RPC_URL[chainId]),
+  })
+
   const {
-    data: { shortPositions },
+    data: { positions },
   } = await Subgraph.get<{
     data: {
-      shortPositions: ShortPositionDto[]
+      positions: PositionDto[]
     }
   }>(
     FUTURES_SUBGRAPH_ENDPOINT[chainId]!,
     'getPositions',
-    'query getPositions($userAddress: String!) { shortPositions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV settlePrice liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
+    'query getPositions($userAddress: String!) { positions (where: {user: $userAddress }) { id user asset { id assetId currency { id name symbol decimals } collateral { id name symbol decimals } expiration maxLTV settlePrice liquidationThreshold minDebt } collateralAmount debtAmount averagePrice } }',
     {
       userAddress: userAddress.toLowerCase(),
     },
   )
 
-  return [
-    ...shortPositions.map((position) => {
-      const debtCurrency = {
-        address: getAddress(position.asset.currency.id),
-        name: position.asset.currency.name,
-        symbol: position.asset.currency.symbol,
-        decimals: Number(position.asset.currency.decimals),
-        priceFeedId: position.asset.assetId as `0x${string}`,
-      }
-      const averagePrice = Number(position.averagePrice)
-      const debtAmountDB = Number(
-        formatUnits(BigInt(position.debtAmount), debtCurrency.decimals),
+  const results = await publicClient.multicall({
+    contracts: WHITE_LISTED_ASSETS.map((asset) => ({
+      address: FUTURES_CONTRACT_ADDRESSES[chainId]!.FuturesMarket,
+      abi: _abi,
+      functionName: 'getPosition',
+      args: [asset, userAddress],
+    })),
+  })
+  return results
+    .map((result, index) => {
+      const asset = assets.find((asset) =>
+        isAddressEqual(asset.currency.address, WHITE_LISTED_ASSETS[index]),
       )
-      const collateral = FUTURES_COLLATERALS.find((collateral) =>
-        isAddressEqual(
-          collateral.address,
-          position.asset.collateral.id as `0x${string}`,
-        ),
-      )
-      if (!collateral) {
-        return undefined
+      if (result.error || !asset) {
+        return null
       }
+      const offChainPosition = positions.find(
+        (position) =>
+          `${userAddress.toLowerCase()}-${asset.id.toLowerCase()}` ===
+          position.id,
+      )
+      if (!offChainPosition) {
+        return null
+      }
+      const collateralAmount = BigInt(result.result[0])
+      const debtAmount = BigInt(result.result[1])
       return {
-        user: getAddress(position.user),
-        asset: {
-          id: getAddress(position.asset.id),
-          currency: {
-            ...debtCurrency,
-            icon: ASSET_ICONS[position.asset.assetId],
-          },
-          collateral,
-          expiration: Number(position.asset.expiration),
-          maxLTV: BigInt(position.asset.maxLTV),
-          liquidationThreshold: BigInt(position.asset.liquidationThreshold),
-          ltvPrecision: 1000000n,
-          minDebt: BigInt(position.asset.minDebt),
-          settlePrice: Number(position.asset.settlePrice),
-        },
-        type: 'short' as const,
-        collateralAmount: BigInt(position.collateralAmount),
-        debtAmount: BigInt(position.debtAmount),
+        user: getAddress(userAddress),
+        asset,
+        collateralAmount,
+        debtAmount,
         liquidationPrice: calculateLiquidationPrice(
-          debtCurrency,
-          prices[debtCurrency.address],
-          collateral,
-          prices[collateral.address],
-          BigInt(position.debtAmount),
-          BigInt(position.collateralAmount),
-          BigInt(position.asset.liquidationThreshold),
+          asset.currency,
+          prices[asset.currency.address],
+          asset.collateral,
+          prices[asset.collateral.address],
+          BigInt(debtAmount),
+          BigInt(collateralAmount),
+          BigInt(asset.liquidationThreshold),
           1000000n,
         ),
         ltv: calculateLtv(
-          debtCurrency,
-          prices[debtCurrency.address],
-          BigInt(position.debtAmount),
-          collateral,
-          prices[collateral.address],
-          BigInt(position.collateralAmount),
+          asset.currency,
+          prices[asset.currency.address],
+          debtAmount,
+          asset.collateral,
+          prices[asset.collateral.address],
+          collateralAmount,
         ),
-        averagePrice,
-        pnl: averagePrice / prices[debtCurrency.address],
-        profit: debtAmountDB * (averagePrice - prices[debtCurrency.address]),
-      }
-    }),
-  ].filter(
-    (position) =>
-      position &&
-      prices[position.asset.currency.address] > 0 &&
-      WHITE_LISTED_ASSETS.includes(position.asset.currency.address),
-  ) as UserPosition[]
+        averagePrice: Number(offChainPosition.averagePrice),
+      } as FuturesPosition
+    })
+    .filter(
+      (position) =>
+        position &&
+        position.debtAmount > 0n &&
+        prices[position.asset.currency.address] > 0,
+    ) as FuturesPosition[]
 }

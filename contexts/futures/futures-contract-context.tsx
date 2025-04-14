@@ -31,7 +31,7 @@ import { formatUnits } from '../../utils/bigint'
 import { FUTURES_MARKET_ABI } from '../../abis/futures/futures-market-abi'
 import { supportChains } from '../../constants/chain'
 import { PYTH_ORACLE_ABI } from '../../abis/futures/pyth-oracle-abi'
-import { UserPosition } from '../../model/futures/user-position'
+import { FuturesPosition } from '../../model/futures/futures-position'
 import { buildTransaction } from '../../utils/build-transaction'
 import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-url'
@@ -50,7 +50,7 @@ type FuturesContractContext = {
     debtAmount: bigint,
   ) => Promise<Hash | undefined>
   repay: (asset: Asset, debtAmount: bigint) => Promise<Hash | undefined>
-  repayAll: (position: UserPosition) => Promise<Hash | undefined>
+  repayAll: (position: FuturesPosition) => Promise<Hash | undefined>
   settle: (asset: Asset) => Promise<Hash | undefined>
   close: (asset: Asset, collateralReceived: bigint) => Promise<Hash | undefined>
   redeem: (
@@ -579,7 +579,7 @@ export const FuturesContractProvider = ({
   )
 
   const repayAll = useCallback(
-    async (userPosition: UserPosition): Promise<Hash | undefined> => {
+    async (userPosition: FuturesPosition): Promise<Hash | undefined> => {
       if (!walletClient) {
         return
       }

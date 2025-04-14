@@ -6,13 +6,13 @@ import { deduplicateCurrencies } from '../../utils/currency'
 import { useCurrencyContext } from '../currency-context'
 import { useChainContext } from '../chain-context'
 import { fetchFuturesPositions } from '../../apis/futures/position'
-import { UserPosition } from '../../model/futures/user-position'
+import { FuturesPosition } from '../../model/futures/futures-position'
 import { fetchFuturesAssets } from '../../apis/futures/asset'
 import { Asset } from '../../model/futures/asset'
 
 type FuturesContext = {
   assets: Asset[]
-  positions: UserPosition[]
+  positions: FuturesPosition[]
 }
 
 const Context = React.createContext<FuturesContext>({
@@ -42,13 +42,18 @@ export const FuturesProvider = ({ children }: React.PropsWithChildren<{}>) => {
       if (!userAddress) {
         return []
       }
-      return fetchFuturesPositions(selectedChain.id, userAddress, prices)
+      return fetchFuturesPositions(
+        selectedChain.id,
+        userAddress,
+        prices,
+        assets,
+      )
     },
     initialData: [],
     refetchIntervalInBackground: true,
     refetchInterval: 2 * 1000, // checked
   }) as {
-    data: UserPosition[]
+    data: FuturesPosition[]
   }
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
 
-import { UserPosition } from '../../model/futures/user-position'
+import { FuturesPosition } from '../../model/futures/futures-position'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { calculateLtv, calculateMinCollateralAmount } from '../../utils/ltv'
 import { max } from '../../utils/bigint'
@@ -14,7 +14,7 @@ export const FuturesPositionEditCollateralModalContainer = ({
   setIsMarketClose,
   onClose,
 }: {
-  userPosition: UserPosition
+  userPosition: FuturesPosition
   setIsMarketClose: (isMarketClose: boolean) => void
   onClose: () => void
 }) => {

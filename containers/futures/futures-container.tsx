@@ -6,8 +6,8 @@ import Link from 'next/link'
 
 import { FuturesAssetCard } from '../../components/card/futures-asset-card'
 import { useChainContext } from '../../contexts/chain-context'
-import { UserPosition } from '../../model/futures/user-position'
-import { FuturesAssetShortPositionCard } from '../../components/card/futures-asset-short-position-card'
+import { FuturesPosition } from '../../model/futures/futures-position'
+import { FuturesPositionCard } from '../../components/card/futures-position-card'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { currentTimestampInSeconds } from '../../utils/date'
 import { useFuturesContext } from '../../contexts/futures/futures-context'
@@ -40,11 +40,11 @@ export const FuturesContainer = () => {
     }
   }, [pendingPositionCurrencies.length])
 
-  const [adjustPosition, setAdjustPosition] = useState<UserPosition | null>(
+  const [adjustPosition, setAdjustPosition] = useState<FuturesPosition | null>(
     null,
   )
   const [editCollateralPosition, setEditCollateralPosition] =
-    useState<UserPosition | null>(null)
+    useState<FuturesPosition | null>(null)
   const now = currentTimestampInSeconds()
 
   const calculateSettledCollateral = useCallback(
@@ -207,45 +207,36 @@ export const FuturesContainer = () => {
             <div className="flex flex-1 flex-col w-full h-full sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8 justify-center">
               {positions
                 .filter((position) => position.averagePrice > 0)
-                .map((position, index) =>
-                  position.type === 'short' ? (
-                    <FuturesAssetShortPositionCard
-                      key={`${position.type}-${position.asset.id}-${index}`}
-                      position={position}
-                      loanAssetPrice={
-                        prices[position.asset.currency.address] ?? 0
-                      }
-                      isPending={pendingPositionCurrencies
-                        .map((currency) => getAddress(currency.address))
-                        .includes(getAddress(position.asset.currency.address))}
-                      onEditCollateral={() =>
-                        setEditCollateralPosition(position)
-                      }
-                      onClickButton={async () => {
-                        if (position.asset.expiration < now) {
-                          if (position.asset.settlePrice > 0) {
-                            const collateralReceived =
-                              (position?.collateralAmount ?? 0n) -
-                              calculateSettledCollateral(
-                                balances[position.asset.currency.address] ?? 0n,
-                                position.asset.settlePrice,
-                                position.asset.currency.decimals,
-                                position.asset.collateral.decimals,
-                              )
-                            await close(position.asset, collateralReceived)
-                          } else {
-                            await settle(position.asset)
-                          }
+                .map((position, index) => (
+                  <FuturesPositionCard
+                    key={`${position.asset.id}-${index}`}
+                    position={position}
+                    loanAssetPrice={
+                      prices[position.asset.currency.address] ?? 0
+                    }
+                    isPending={false} // We are using on-chain data
+                    onEditCollateral={() => setEditCollateralPosition(position)}
+                    onClickButton={async () => {
+                      if (position.asset.expiration < now) {
+                        if (position.asset.settlePrice > 0) {
+                          const collateralReceived =
+                            (position?.collateralAmount ?? 0n) -
+                            calculateSettledCollateral(
+                              balances[position.asset.currency.address] ?? 0n,
+                              position.asset.settlePrice,
+                              position.asset.currency.decimals,
+                              position.asset.collateral.decimals,
+                            )
+                          await close(position.asset, collateralReceived)
                         } else {
-                          setAdjustPosition(position)
+                          await settle(position.asset)
                         }
-                      }}
-                    />
-                  ) : (
-                    // todo: long position card
-                    <></>
-                  ),
-                )}
+                      } else {
+                        setAdjustPosition(position)
+                      }
+                    }}
+                  />
+                ))}
             </div>
           </div>
         </div>

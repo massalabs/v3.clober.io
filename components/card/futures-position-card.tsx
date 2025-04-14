@@ -7,18 +7,18 @@ import {
   getExpirationDateTextColor,
 } from '../../utils/date'
 import { formatDollarValue, formatUnits } from '../../utils/bigint'
-import { UserPosition } from '../../model/futures/user-position'
+import { FuturesPosition } from '../../model/futures/futures-position'
 import { toCommaSeparated } from '../../utils/number'
 import { EditSvg } from '../svg/edit-svg'
 
-export const FuturesAssetShortPositionCard = ({
+export const FuturesPositionCard = ({
   position,
   loanAssetPrice,
   onEditCollateral,
   onClickButton,
   isPending,
 }: {
-  position: UserPosition
+  position: FuturesPosition
   loanAssetPrice: number
   onEditCollateral: () => void
   onClickButton: () => void
@@ -101,28 +101,6 @@ export const FuturesAssetShortPositionCard = ({
             <div className="text-sm sm:text-base">
               ${toCommaSeparated((position?.liquidationPrice ?? 0).toFixed(2))}
             </div>
-          </div>
-
-          <div className="flex items-center gap-1 self-stretch">
-            <div className="flex-grow flex-shrink basis-0 text-gray-400 text-sm">
-              PnL
-            </div>
-            {position.pnl ? (
-              <div className="flex gap-1">
-                <div
-                  className={`text-sm sm:text-base flex gap-1 ${
-                    position.pnl >= 1 ? 'text-green-500' : 'text-red-500'
-                  }`}
-                >
-                  {position.pnl >= 1 ? '+' : '-'}$
-                  {toCommaSeparated(Math.abs(position.profit).toFixed(2))} (
-                  {position.pnl >= 1 ? '+' : ''}
-                  {position.pnl.toFixed(2)}%)
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
           </div>
 
           <div className="flex items-center gap-1 self-stretch">
