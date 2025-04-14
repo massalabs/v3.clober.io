@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Connector } from 'wagmi'
+import Image from 'next/image'
 
 import { Transaction } from '../../contexts/transaction-context'
 import UserTransactionCard from '../card/user-transaction-card'
@@ -80,9 +81,9 @@ export const UserTransactionsModal = ({
             <div className="flex flex-row gap-2 h-full items-center">
               <div className="flex w-8 sm:w-10 h-4 sm:h-6 relative items-center">
                 {connector?.icon ? (
-                  <img
+                  <Image
                     src={connector.icon}
-                    alt="user-icon"
+                    alt={connector.uid}
                     className="w-4 sm:w-6 h-4 sm:h-6 absolute left-0 top-0 z-[2] rounded-full"
                   />
                 ) : (
@@ -244,7 +245,6 @@ export const UserTransactionsModal = ({
                   {getTimeAgo(transaction.timestamp, cache)}
                 </div>
                 <UserTransactionCard
-                  chain={chain}
                   transaction={transaction}
                   key={transaction.txHash}
                   isPending={tab === 'pending'}

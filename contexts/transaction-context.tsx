@@ -14,7 +14,7 @@ import { useChainContext } from './chain-context'
 export type Confirmation = {
   title: string
   body?: string
-  chain?: Chain
+  chain: Chain
   fields: {
     direction?: 'in' | 'out'
     currency?: Currency
