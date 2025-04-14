@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
-import {
-  darkTheme,
-  getDefaultConfig,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit'
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
 import {
   QueryClient,
@@ -16,12 +12,11 @@ import type { AppProps } from 'next/app'
 import { WagmiProvider } from 'wagmi'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { http } from 'viem'
 
 import HeaderContainer from '../containers/header-container'
 import { ChainProvider, useChainContext } from '../contexts/chain-context'
 import { MarketProvider } from '../contexts/trade/market-context'
-import { getChain } from '../constants/chain'
+import { getClientConfig } from '../constants/chain'
 import {
   TransactionProvider,
   useTransactionContext,
@@ -36,7 +31,6 @@ import { TradeProvider } from '../contexts/trade/trade-context'
 import { SwapContractProvider } from '../contexts/trade/swap-contract-context'
 import { VaultProvider } from '../contexts/vault/vault-context'
 import { VaultContractProvider } from '../contexts/vault/vault-contract-context'
-import { RPC_URL } from '../constants/rpc-url'
 import { FuturesProvider } from '../contexts/futures/futures-context'
 import { FuturesContractProvider } from '../contexts/futures/futures-contract-context'
 import { PointProvider } from '../contexts/point-context'
@@ -53,17 +47,23 @@ const CacheProvider = ({ children }: React.PropsWithChildren) => {
 
 const queryClient = new QueryClient()
 const WalletProvider = ({ children }: React.PropsWithChildren) => {
-  const chain = getChain()
-  const config = getDefaultConfig({
-    appName: 'Clober',
-    projectId: '14e09398dd595b0d1dccabf414ac4531',
-    chains: [chain],
-    transports: {
-      [chain.id]: http(RPC_URL[chain.id]),
-    },
-  })
+  const [clientReady, setClientReady] = useState(false)
+  const [clientConfig, setClientConfig] = useState<any | null>(null)
+
+  useEffect(() => {
+    const config = getClientConfig()
+    if (config) {
+      setClientConfig(config)
+      setClientReady(true)
+    }
+  }, [])
+
+  if (!clientReady || !clientConfig) {
+    return null
+  }
+
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={clientConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={darkTheme()}>
           <CacheProvider>{children}</CacheProvider>

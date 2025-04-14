@@ -17,7 +17,6 @@ import { VaultPageSvg } from '../components/svg/vault-page-svg'
 import { LimitPageSvg } from '../components/svg/limit-page-svg'
 import { ConnectButton } from '../components/button/connect-button'
 import { UserButton } from '../components/button/user-button'
-import { WrongNetworkButton } from '../components/button/wrong-network-button'
 import { UserTransactionsModal } from '../components/modal/user-transactions-modal'
 import { useTransactionContext } from '../contexts/transaction-context'
 import { UserPointButton } from '../components/button/user-point-button'
@@ -26,6 +25,10 @@ import { DiscoverPageSvg } from '../components/svg/discover-page-svg'
 import { PointPageSvg } from '../components/svg/point-page-svg'
 import ChainIcon from '../components/icon/chain-icon'
 import { textStyles } from '../themes/text-styles'
+
+const WrongNetwork = ({ openChainModal }: { openChainModal: () => void }) => {
+  return <>{openChainModal && openChainModal()}</>
+}
 
 const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const router = useRouter()
@@ -183,7 +186,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 shiny={pendingTransactions.length > 0}
               />
             ) : openChainModal ? (
-              <WrongNetworkButton openChainModal={openChainModal} />
+              <WrongNetwork openChainModal={openChainModal} />
             ) : (
               <button
                 disabled={true}
