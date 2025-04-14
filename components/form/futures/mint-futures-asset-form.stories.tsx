@@ -2,7 +2,7 @@ import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import '../../../styles/globals.css'
 import { zeroAddress } from 'viem'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import { MintFuturesAssetForm } from './mint-futures-asset-form'
 
@@ -22,7 +22,7 @@ export default {
 type Story = StoryObj<typeof MintFuturesAssetForm>
 export const Default: Story = {
   args: {
-    chain: base,
+    chain: mainnet,
     asset: {
       id: '0x',
       currency: {

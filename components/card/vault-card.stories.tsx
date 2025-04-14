@@ -1,6 +1,6 @@
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import { VaultCard } from './vault-card'
 
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof VaultCard>
 
 export const Default: Story = {
   args: {
-    chain: base,
+    chain: mainnet,
     vault: {
       historicalPriceIndex: [],
       key: '0x',

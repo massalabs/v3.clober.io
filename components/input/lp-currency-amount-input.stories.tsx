@@ -1,7 +1,7 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import '../../styles/globals.css'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import LpCurrencyAmountInput from './lp-currency-amount-input'
 
@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof LpCurrencyAmountInput>
 export const Default: Story = {
   args: {
-    chain: base,
+    chain: mainnet,
     currency: {
       address: '0x0000000000000000000000000000000000000003',
       name: 'WETH-USDC-LP',
@@ -49,7 +49,7 @@ export const Default: Story = {
 
 export const SelectToken: Story = {
   args: {
-    chain: base,
+    chain: mainnet,
     value: '0',
     onValueChange: () => {},
     availableAmount: 1000000000000000000n,

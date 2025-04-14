@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import ConfirmationModal from './confirmation-modal'
 
@@ -25,7 +25,7 @@ export const Default: Story = {
     confirmation: {
       title: 'Confirm',
       body: 'Are you sure you want to do this?',
-      chain: base,
+      chain: mainnet,
       fields: [
         {
           currency: {
@@ -57,7 +57,7 @@ export const DefaultWithDirection: Story = {
     confirmation: {
       title: 'Confirm',
       body: 'Are you sure you want to do this?',
-      chain: base,
+      chain: mainnet,
       fields: [
         {
           direction: 'in',

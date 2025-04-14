@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import '../../styles/globals.css'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 import { Connector } from 'wagmi'
 
 import { UserButton } from './user-button'
@@ -18,7 +18,7 @@ type Story = StoryObj<typeof UserButton>
 export const Default: Story = {
   args: {
     address: '0x0F97F07d7473EFB5c846FB2b6c201eC1E316E994',
-    chain: base,
+    chain: mainnet,
     connector: {
       icon: undefined,
     } as Connector,
@@ -29,7 +29,7 @@ export const Default: Story = {
 export const Shiny: Story = {
   args: {
     address: '0x0F97F07d7473EFB5c846FB2b6c201eC1E316E994',
-    chain: base,
+    chain: mainnet,
     connector: {
       icon: undefined,
     } as Connector,

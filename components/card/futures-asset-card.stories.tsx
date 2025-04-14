@@ -1,7 +1,7 @@
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { zeroAddress } from 'viem'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import { FuturesAssetCard } from './futures-asset-card'
 
@@ -17,7 +17,7 @@ type Story = StoryObj<typeof FuturesAssetCard>
 
 export const Default: Story = {
   args: {
-    chain: base,
+    chain: mainnet,
     asset: {
       id: '0x',
       currency: {

@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import { currentTimestampInSeconds } from '../../utils/date'
 
@@ -22,13 +22,13 @@ const now = currentTimestampInSeconds() - 1000000
 
 export const Default: Story = {
   args: {
-    chain: base,
+    chain: mainnet,
     userAddress: '0xf4649Ecd9fcbd87b5D39dEf47786e1CE904d41fD',
     pendingTransactions: [
       {
         title: 'Pending',
         txHash: `0x${BigInt(1234567890).toString(16)}`,
-        chain: base,
+        chain: mainnet,
         type: 'approve',
         success: true,
         blockNumber: 123456,
@@ -72,7 +72,7 @@ export const Default: Story = {
       {
         title: 'Pending',
         txHash: `0x${BigInt(1234567890).toString(16)}`,
-        chain: base,
+        chain: mainnet,
         type: 'approve',
         success: true,
         blockNumber: 123456,
@@ -118,7 +118,7 @@ export const Default: Story = {
       {
         title: 'Confirm',
         txHash: `0x${BigInt(1234567890).toString(16)}`,
-        chain: base,
+        chain: mainnet,
         type: 'approve',
         success: true,
         blockNumber: 123456,
@@ -162,7 +162,7 @@ export const Default: Story = {
       {
         title: 'Confirm',
         txHash: `0x${BigInt(1234567890).toString(16)}`,
-        chain: base,
+        chain: mainnet,
         type: 'approve',
         success: true,
         blockNumber: 123456,

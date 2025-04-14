@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
-import { base } from 'viem/chains'
+import { mainnet } from 'viem/chains'
 
 import { currentTimestampInSeconds } from '../../utils/date'
 
@@ -24,11 +24,10 @@ type Story = StoryObj<typeof UserTransactionCard>
 
 export const Default: Story = {
   args: {
-    chain: base,
     transaction: {
       title: 'Confirm',
       txHash: `0x${BigInt(1234567890).toString(16)}`,
-      chain: base,
+      chain: mainnet,
       type: 'approve',
       success: true,
       blockNumber: 123456,
