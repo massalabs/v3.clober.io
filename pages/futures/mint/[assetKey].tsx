@@ -10,6 +10,7 @@ import { FuturesManagerContainer } from '../../../containers/futures/futures-man
 import BackSvg from '../../../components/svg/back-svg'
 import { TradingViewContainer } from '../../../containers/chart/trading-view-container'
 import { useFuturesContext } from '../../../contexts/futures/futures-context'
+import { NativeChartContainer } from '../../../containers/chart/native-chart-container'
 
 export default function MintFutureAssetManage() {
   const router = useRouter()
@@ -40,9 +41,16 @@ export default function MintFutureAssetManage() {
             </div>
           </Link>
           <div className="flex flex-col lg:flex-row sm:items-center lg:items-start justify-center gap-4 mb-4 px-2 md:px-0">
-            <TradingViewContainer
-              symbol={TRADING_VIEW_SYMBOLS[asset.currency.priceFeedId]}
-            />
+            {TRADING_VIEW_SYMBOLS[asset.currency.priceFeedId] ? (
+              <TradingViewContainer
+                symbol={TRADING_VIEW_SYMBOLS[asset.currency.priceFeedId]}
+              />
+            ) : (
+              <NativeChartContainer
+                baseCurrency={asset.currency}
+                quoteCurrency={asset.collateral}
+              />
+            )}
             <FuturesManagerContainer asset={asset} />
           </div>
         </div>

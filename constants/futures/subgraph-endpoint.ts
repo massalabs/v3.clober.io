@@ -5,5 +5,5 @@ export const FUTURES_SUBGRAPH_ENDPOINT: {
 } = {
   [CHAIN_IDS.BASE]: undefined,
   [CHAIN_IDS.MONAD_TESTNET]:
-    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/clober-futures-subgraph-monad-testnet/v1.0.5/gn',
+    'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/clober-futures-subgraph-monad-testnet/v1.0.7/gn',
 }

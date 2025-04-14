@@ -26,6 +26,7 @@ const nextConfig = {
       'i.imghippo.com',
       'assets.coingecko.com',
       'storage.nadapp.net',
+      'cdn.countryflags.com',
     ],
   },
 }

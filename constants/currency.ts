@@ -32,9 +32,14 @@ export const PRICE_FEED_ID_LIST: {
         '0x1fc18861232290221461220bd4e2acd1dcdfbc89c84092c93c18bdc7756c1588',
     },
     {
-      address: '0xAA290e3dF658269705D6C4F63FdE0f13E02e85B8', // IVV
+      address: '0xF8f1B89073E2A8443aE9A2B070AA353545e283c7', // IVV
       priceFeedId:
         '0x576eef18034939eb62e7736f6f9fb7eb6c67b5c6ed81605f4879057028d734bb',
+    },
+    {
+      address: '0x1D074e003E222905e31476A8398e36027141915b', // MON-TGE
+      priceFeedId:
+        '0xe786153cc54abd4b0e53b4c246d54d9f8eb3f3b5a34d4fc5a2e9a423b0ba5d6b',
     },
     {
       address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // USDC
@@ -98,11 +103,18 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 6,
     },
     {
-      address: '0xAA290e3dF658269705D6C4F63FdE0f13E02e85B8',
+      address: '0xF8f1B89073E2A8443aE9A2B070AA353545e283c7',
       name: 'S&P 500 2025-07-01',
       symbol: 'S&P500-250701',
       decimals: 18,
-      icon: 'https://www.pyth.network/_next/image?url=%2Ficons%2Fprice-feed-icons%2Flight%2Fequity-us-ivv-usd.inline.svg&w=3840&q=75',
+      icon: 'https://cdn.countryflags.com/thumbs/united-states-of-america/flag-round-500.png',
+    },
+    {
+      address: '0x1D074e003E222905e31476A8398e36027141915b',
+      name: 'Monad Pre-TGE Futures',
+      symbol: 'MON-TGE',
+      decimals: 18,
+      icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/I_t8rg_V_400x400.jpg/public',
     },
     {
       address: '0x836047a99e11f376522b447bffb6e3495dd0637c',

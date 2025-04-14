@@ -21,7 +21,7 @@ export const NativeChartContainer = ({
 }: {
   baseCurrency: Currency
   quoteCurrency: Currency
-  setShowOrderBook: (showOrderBook: boolean) => void
+  setShowOrderBook?: ((showOrderBook: boolean) => void) | undefined
   totalSupply?: number
 }) => {
   const { selectedChain } = useChainContext()

@@ -298,7 +298,7 @@ export const FuturesContractProvider = ({
 
       try {
         setConfirmation({
-          title: `Short ${asset.currency.symbol}`,
+          title: `Mint ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
           fields: [],
@@ -340,7 +340,7 @@ export const FuturesContractProvider = ({
         }
 
         const confirmation = {
-          title: `Short ${asset.currency.symbol}`,
+          title: `Mint ${asset.currency.symbol}`,
           body: 'Please confirm in your wallet.',
           chain: selectedChain,
           fields: [
