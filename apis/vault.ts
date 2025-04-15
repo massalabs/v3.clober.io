@@ -37,7 +37,7 @@ export async function fetchVaults(
         token1,
         salt,
         options: {
-          useSubgraph: false,
+          useSubgraph: true,
           rpcUrl: RPC_URL[chain.id],
         },
       })
