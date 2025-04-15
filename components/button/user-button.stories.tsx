@@ -23,6 +23,7 @@ export const Default: Story = {
       icon: undefined,
     } as Connector,
     openTransactionHistoryModal: () => {},
+    ens: null,
   },
 }
 
@@ -35,5 +36,6 @@ export const Shiny: Story = {
     } as Connector,
     openTransactionHistoryModal: () => {},
     shiny: true,
+    ens: null,
   },
 }

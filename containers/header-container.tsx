@@ -7,6 +7,7 @@ import {
   useChainModal,
   useConnectModal,
 } from '@rainbow-me/rainbowkit'
+import { useQuery } from '@tanstack/react-query'
 
 import { useChainContext } from '../contexts/chain-context'
 import MenuSvg from '../components/svg/menu-svg'
@@ -20,6 +21,7 @@ import { usePointContext } from '../contexts/point-context'
 import ChainIcon from '../components/icon/chain-icon'
 import { textStyles } from '../themes/text-styles'
 import { PAGE_BUTTONS } from '../constants/buttons'
+import { fetchEnsName } from '../apis/ens'
 
 const WrongNetwork = ({
   openChainModal,
@@ -63,6 +65,18 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
     useState(false)
   const { pendingTransactions, transactionHistory } = useTransactionContext()
 
+  const { data: ens } = useQuery({
+    queryKey: ['ens', selectedChain.id, address],
+    queryFn: async () => {
+      if (!address) {
+        return null
+      }
+      console.log('aa fetching ens name')
+      return fetchEnsName(selectedChain, address)
+    },
+    initialData: null,
+  })
+
   return (
     <>
       {openTransactionHistoryModal && address && connector && (
@@ -74,6 +88,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           transactionHistory={transactionHistory}
           disconnectAsync={disconnectAsync}
           onClose={() => setOpenTransactionHistoryModal(false)}
+          ens={ens}
         />
       )}
 
@@ -129,6 +144,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 }
                 connector={connector}
                 shiny={pendingTransactions.length > 0}
+                ens={ens}
               />
             ) : openChainModal ? (
               <WrongNetwork openChainModal={openChainModal} />

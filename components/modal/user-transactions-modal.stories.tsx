@@ -204,6 +204,7 @@ export const Default: Story = {
         ],
       },
     ],
+    ens: null,
   },
 }
 

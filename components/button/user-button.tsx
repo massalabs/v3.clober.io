@@ -13,12 +13,14 @@ export const UserButton = ({
   connector,
   openTransactionHistoryModal,
   shiny,
+  ens,
 }: {
   chain: Chain
   address: `0x${string}`
   connector: Connector
   openTransactionHistoryModal: () => void
   shiny?: boolean
+  ens: string | null
 }) => {
   return (
     <button
@@ -54,7 +56,7 @@ export const UserButton = ({
             <span
               className={`hidden md:block text-white ${textStyles.body3Bold}`}
             >
-              {formatAddress(address || '')}
+              {ens ?? formatAddress(address)}
             </span>
           </span>
           <span

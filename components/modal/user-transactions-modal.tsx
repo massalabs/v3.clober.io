@@ -39,6 +39,7 @@ export const UserTransactionsModal = ({
   transactionHistory,
   disconnectAsync,
   onClose,
+  ens,
 }: {
   chain: Chain
   userAddress: `0x${string}`
@@ -47,6 +48,7 @@ export const UserTransactionsModal = ({
   transactionHistory: Transaction[]
   disconnectAsync: () => Promise<void>
   onClose: () => void
+  ens: string | null
 }) => {
   const cache = new Map<string, boolean>()
   const [isCopyToast, setIsCopyToast] = useState(false)
@@ -101,7 +103,7 @@ export const UserTransactionsModal = ({
               <span
                 className={`block text-white text-sm sm:text-base font-semibold`}
               >
-                {formatAddress(userAddress || '', 6)}
+                {ens ?? formatAddress(userAddress || '', 6)}
               </span>
             </div>
 

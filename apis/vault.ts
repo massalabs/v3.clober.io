@@ -126,17 +126,6 @@ export async function fetchVaults(
       (acc, { accumulatedProfitInUsd }) => acc + Number(accumulatedProfitInUsd),
       0,
     )
-    console.log(
-      'vaultPerformanceData.poolVolumes',
-      vaultPerformanceData.poolVolumes.reduce(
-        (acc, { currencyAVolume, currencyBVolume }) =>
-          acc +
-          (isAddressEqual(currencyAVolume.currency.address, quote.address)
-            ? Number(currencyAVolume.value)
-            : Number(currencyBVolume.value)),
-        0,
-      ),
-    )
     return {
       key: vault.key,
       lpCurrency: {
