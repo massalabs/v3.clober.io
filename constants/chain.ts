@@ -21,6 +21,8 @@ export const getChain = (): Chain => {
   }
   if (url.includes('alpha.clober.io')) {
     return _monadTestnet
+  } else if (url.includes('monad-testnet.clober.io')) {
+    return _monadTestnet
   } else if (url.includes('base.clober.io')) {
     return base
   } else if (url.includes('rise.clober.io')) {
