@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Currency } from '@clober/v2-sdk'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toHumanReadableString, toShortNumber } from '../../utils/number'
@@ -37,6 +37,7 @@ export const MarketCard = ({
   isAskTaken: boolean
 }) => {
   const [flashState, setFlashState] = useState<'green' | 'red' | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     if (isBidTaken && isAskTaken) {
@@ -62,10 +63,12 @@ export const MarketCard = ({
 
   return (
     <>
-      <Link
-        target="_blank"
-        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}`}
-        rel="noreferrer"
+      <button
+        onClick={() => {
+          router.push(
+            `/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}`,
+          )
+        }}
         className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/30' : flashState === 'red' ? 'bg-red-500/30' : 'bg-gray-800'} hidden lg:flex max-w-[1072px] text-left h-16 px-5 py-4 hover:bg-gray-700 rounded-2xl justify-start items-center gap-4`}
       >
         <div className="flex w-[280px] items-center gap-3">
@@ -123,12 +126,14 @@ export const MarketCard = ({
         <div className="w-[59px] flex h-full text-white text-base font-bold items-center justify-center">
           {verified ? <VerifiedSvg /> : <></>}
         </div>
-      </Link>
+      </button>
 
-      <Link
-        target="_blank"
-        href={`https://alpha.clober.io/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}`}
-        rel="noreferrer"
+      <button
+        onClick={() => {
+          router.push(
+            `/trade?inputCurrency=${baseCurrency.address}&outputCurrency=${quoteCurrency.address}`,
+          )
+        }}
         className={`transition-colors duration-500 ${flashState === 'green' ? 'bg-[#39e79f]/30' : flashState === 'red' ? 'bg-red-500/30' : 'bg-gray-800'} flex lg:hidden w-full h-[168px] p-4 bg-gray-800 rounded-xl flex-col justify-center items-start gap-4`}
       >
         <div className="flex items-center gap-2 self-stretch">
@@ -242,7 +247,7 @@ export const MarketCard = ({
             <div className="flex w-full flex-col justify-start items-center gap-2"></div>
           </div>
         </div>
-      </Link>
+      </button>
     </>
   )
 }
