@@ -163,7 +163,7 @@ export const MarketCard = ({
         </div>
 
         <div className="flex flex-col w-full gap-[12px]">
-          <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
+          <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2 text-left">
             <div className="flex flex-1 w-full flex-col justify-start items-center gap-1">
               <div className="self-stretch text-gray-400 text-xs">Age</div>
               <div className="flex flex-row self-stretch text-white text-sm font-bold items-center gap-1 text-nowrap">
@@ -217,7 +217,7 @@ export const MarketCard = ({
             </div>
           </div>
 
-          <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2">
+          <div className="w-full flex flex-row flex-1 h-11 justify-start items-start gap-2 text-left">
             <div className="flex w-full flex-col justify-start items-center gap-2">
               <div className="self-stretch text-gray-400 text-xs">FDV</div>
               <div className="flex flex-row self-stretch text-white text-sm font-bold items-center gap-1">
