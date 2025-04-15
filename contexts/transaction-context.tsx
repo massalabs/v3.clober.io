@@ -96,8 +96,6 @@ export const TransactionProvider = ({
     )
   }, [userAddress])
 
-  console.log({ pendingTransactions, transactionHistory })
-
   const queuePendingTransaction = useCallback(
     (transaction: Transaction) => {
       if (userAddress) {

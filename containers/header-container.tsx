@@ -71,7 +71,6 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
       if (!address) {
         return null
       }
-      console.log('aa fetching ens name')
       return fetchEnsName(selectedChain, address)
     },
     initialData: null,
