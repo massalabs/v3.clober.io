@@ -154,6 +154,7 @@ export async function fetchVaults(
             : Number(currencyBVolume.value)),
         0,
       ),
+      totalSupply: Number(vault.totalSupply.value),
       historicalPriceIndex: historicalPriceIndex.slice(
         firstNonZeroIndex,
       ) as StackedLineData[],

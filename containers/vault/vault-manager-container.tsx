@@ -19,6 +19,7 @@ import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
 import { VaultDashboardContainer } from '../chart/vault-dashboard-container'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
+import { toCommaSeparated } from '../../utils/number'
 
 import { VaultChartContainer } from './vault-chart-container'
 
@@ -194,6 +195,16 @@ export const VaultManagerContainer = ({
     [vault.historicalPriceIndex],
   )
 
+  const ratio0 = useMemo(
+    () =>
+      Math.floor(
+        (100 * vault.reserve0 * prices[vault.currency0.address]) /
+          (vault.totalSupply * vault.lpUsdValue),
+      ),
+    [prices, vault],
+  )
+  console.log('ratio0', ratio0)
+
   return (
     <div className="flex w-full h-full justify-center mt-8 mb-[30px] md:mb-20">
       <div className="w-full lg:w-[992px] h-full flex flex-col items-start gap-8 md:gap-12 px-4 lg:px-0">
@@ -272,41 +283,62 @@ export const VaultManagerContainer = ({
                 <div className="text-white text-sm md:text-base font-bold">
                   Reserve
                 </div>
-                <div className="flex h-14 px-4 sm:px-8 py-4 bg-gray-800 rounded-xl justify-center items-center gap-8 md:gap-12">
-                  <div className="flex justify-center gap-2 md:gap-4">
-                    <div className="flex items-center gap-1 md:gap-2">
-                      <CurrencyIcon
-                        chain={selectedChain}
-                        currency={vault.currency0}
-                        className="w-5 h-5 md:w-6 md:h-6 rounded-full"
-                      />
-                      <div className="text-center text-gray-400 text-sm md:text-base font-semibold">
-                        {vault.currency0.symbol}
-                      </div>
-                    </div>
-                    <div className="text-center text-white text-sm md:text-lg font-bold ">
-                      {toPlacesAmountString(
-                        vault.reserve0.toString(),
-                        prices[vault.currency0.address] ?? 0,
-                      )}
-                    </div>
+                <div className="self-stretch p-4 sm:px-6 sm:py-5 bg-[#171b24] rounded-xl flex flex-col justify-center items-center gap-3 sm:gap-3.5">
+                  <div className="self-stretch w-full h-full inline-flex justify-start items-center gap-1">
+                    <div
+                      style={{
+                        width: `${ratio0}%`,
+                      }}
+                      className="h-1.5 bg-blue-500 rounded-tl rounded-bl"
+                    />
+                    <div
+                      style={{
+                        width: `${100 - ratio0}%`,
+                      }}
+                      className="h-1.5 bg-cyan-400 rounded-tr rounded-br"
+                    />
                   </div>
-                  <div className="flex justify-center gap-2 md:gap-4">
-                    <div className="flex items-center gap-1 md:gap-2">
-                      <CurrencyIcon
-                        chain={selectedChain}
-                        currency={vault.currency1}
-                        className="w-5 h-5 md:w-6 md:h-6 rounded-full"
-                      />
-                      <div className="text-center text-gray-400 text-sm md:text-base font-semibold">
-                        {vault.currency1.symbol}
+
+                  <div className="self-stretch inline-flex justify-between items-center">
+                    <div className="flex justify-center gap-2 md:gap-4">
+                      <div className="flex items-center gap-1 md:gap-2">
+                        <CurrencyIcon
+                          chain={selectedChain}
+                          currency={vault.currency0}
+                          className="w-5 h-5 md:w-6 md:h-6 rounded-full"
+                        />
+                        <div className="text-center text-gray-400 text-sm md:text-base font-semibold">
+                          {vault.currency0.symbol}
+                        </div>
+                      </div>
+                      <div className="text-center text-white text-sm md:text-lg font-bold ">
+                        {toCommaSeparated(
+                          toPlacesAmountString(
+                            vault.reserve0.toString(),
+                            prices[vault.currency0.address] ?? 0,
+                          ),
+                        )}
                       </div>
                     </div>
-                    <div className="text-center text-white text-sm md:text-lg font-bold ">
-                      {toPlacesAmountString(
-                        vault.reserve1.toString(),
-                        prices[vault.currency1.address] ?? 0,
-                      )}
+                    <div className="flex justify-center gap-2 md:gap-4">
+                      <div className="flex items-center gap-1 md:gap-2">
+                        <CurrencyIcon
+                          chain={selectedChain}
+                          currency={vault.currency1}
+                          className="w-5 h-5 md:w-6 md:h-6 rounded-full"
+                        />
+                        <div className="text-center text-gray-400 text-sm md:text-base font-semibold">
+                          {vault.currency1.symbol}
+                        </div>
+                      </div>
+                      <div className="text-center text-white text-sm md:text-lg font-bold ">
+                        {toCommaSeparated(
+                          toPlacesAmountString(
+                            vault.reserve1.toString(),
+                            prices[vault.currency1.address] ?? 0,
+                          ),
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

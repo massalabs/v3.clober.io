@@ -13,6 +13,7 @@ export type Vault = {
   volume24h: number
   reserve0: number
   reserve1: number
+  totalSupply: number
   historicalPriceIndex: StackedLineData[]
 }
 

@@ -25,6 +25,7 @@ export const Default: Story = {
     chain: mainnet,
     vaultPosition: {
       vault: {
+        totalSupply: 10000,
         historicalPriceIndex: [],
         key: '0x',
         lpUsdValue: 12344.3241,

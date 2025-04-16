@@ -24,6 +24,7 @@ export const Default: Story = {
   args: {
     chain: mainnet,
     vault: {
+      totalSupply: 10000,
       historicalPriceIndex: [],
       key: '0x',
       reserve0: 0,
