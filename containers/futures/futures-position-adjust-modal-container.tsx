@@ -7,15 +7,12 @@ import { calculateLtv, calculateMaxLoanableAmount } from '../../utils/ltv'
 import { useCurrencyContext } from '../../contexts/currency-context'
 import { applyPercent, formatUnits } from '../../utils/bigint'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
-import { isMarketClose } from '../../utils/date'
 
 export const FuturesPositionAdjustModalContainer = ({
   userPosition,
-  setIsMarketClose,
   onClose,
 }: {
   userPosition: FuturesPosition
-  setIsMarketClose: (isMarketClose: boolean) => void
   onClose: () => void
 }) => {
   const { prices, balances } = useCurrencyContext()
@@ -121,13 +118,6 @@ export const FuturesPositionAdjustModalContainer = ({
               onClose()
             }
           } else if (ltv < newLTV) {
-            const closed = isMarketClose(
-              userPosition.asset.currency.priceFeedId,
-            )
-            if (closed) {
-              setIsMarketClose(true)
-              return
-            }
             const hash = await borrow(userPosition.asset, 0n, debtAmountDelta)
             if (hash) {
               onClose()

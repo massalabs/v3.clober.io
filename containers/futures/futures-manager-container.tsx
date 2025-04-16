@@ -15,7 +15,6 @@ import { formatUnits } from '../../utils/bigint'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 import Modal from '../../components/modal/modal'
 import { useChainContext } from '../../contexts/chain-context'
-import { isMarketClose } from '../../utils/date'
 
 export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
   const router = useRouter()
@@ -125,11 +124,6 @@ export const FuturesManagerContainer = ({ asset }: { asset: Asset }) => {
           debtAmount > maxBorrowAmount ||
           isDeptSizeLessThanMinDebtSize,
         onClick: async () => {
-          const closed = isMarketClose(asset.currency.priceFeedId)
-          if (closed) {
-            setDisplayMarketClosedModal(true)
-            return
-          }
           const hash = await borrow(asset, collateralAmount, debtAmount)
           if (hash) {
             await router.replace('/futures')

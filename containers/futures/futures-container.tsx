@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 import { parseUnits } from 'viem'
-import Link from 'next/link'
 
 import { FuturesAssetCard } from '../../components/card/futures-asset-card'
 import { FuturesPosition } from '../../model/futures/futures-position'
@@ -14,7 +13,6 @@ import { FuturesRedeemCard } from '../../components/card/futures-redeem-card'
 import { formatUnits } from '../../utils/bigint'
 import { useFuturesContractContext } from '../../contexts/futures/futures-contract-context'
 import { WHITE_LISTED_ASSETS } from '../../constants/futures/asset'
-import Modal from '../../components/modal/modal'
 import { useChainContext } from '../../contexts/chain-context'
 
 import { FuturesPositionAdjustModalContainer } from './futures-position-adjust-modal-container'
@@ -29,7 +27,6 @@ export const FuturesContainer = () => {
   const { assets, positions } = useFuturesContext()
   const { address: userAddress } = useAccount()
 
-  const [isMarketClose, setIsMarketClose] = useState(false)
   const [tab, setTab] = React.useState<'my-cdp' | 'redeem' | 'mint'>(
     pendingPositionCurrencies.length > 0 ? 'my-cdp' : 'mint',
   )
@@ -270,35 +267,34 @@ export const FuturesContainer = () => {
         <></>
       )}
 
-      {isMarketClose ? (
-        <Modal
-          show
-          onClose={() => {}}
-          onButtonClick={() => setIsMarketClose(false)}
-        >
-          <h1 className="flex font-bold text-xl mb-2">Notice</h1>
-          <div className="text-sm">
-            our price feeds follow the traditional market hours of each asset
-            classes and will be available at the following hours:{' '}
-            <span>
-              <Link
-                className="text-blue-500 underline font-bold"
-                target="_blank"
-                href="https://docs.pyth.network/price-feeds/market-hours"
-              >
-                [Link]
-              </Link>
-            </span>
-          </div>
-        </Modal>
-      ) : (
-        <></>
-      )}
+      {/*{isMarketClose ? (*/}
+      {/*  <Modal*/}
+      {/*    show*/}
+      {/*    onClose={() => {}}*/}
+      {/*    onButtonClick={() => setIsMarketClose(false)}*/}
+      {/*  >*/}
+      {/*    <h1 className="flex font-bold text-xl mb-2">Notice</h1>*/}
+      {/*    <div className="text-sm">*/}
+      {/*      our price feeds follow the traditional market hours of each asset*/}
+      {/*      classes and will be available at the following hours:{' '}*/}
+      {/*      <span>*/}
+      {/*        <Link*/}
+      {/*          className="text-blue-500 underline font-bold"*/}
+      {/*          target="_blank"*/}
+      {/*          href="https://docs.pyth.network/price-feeds/market-hours"*/}
+      {/*        >*/}
+      {/*          [Link]*/}
+      {/*        </Link>*/}
+      {/*      </span>*/}
+      {/*    </div>*/}
+      {/*  </Modal>*/}
+      {/*) : (*/}
+      {/*  <></>*/}
+      {/*)}*/}
 
       {adjustPosition ? (
         <FuturesPositionAdjustModalContainer
           userPosition={adjustPosition}
-          setIsMarketClose={setIsMarketClose}
           onClose={() => setAdjustPosition(null)}
         />
       ) : (
@@ -308,7 +304,6 @@ export const FuturesContainer = () => {
       {editCollateralPosition ? (
         <FuturesPositionEditCollateralModalContainer
           userPosition={editCollateralPosition}
-          setIsMarketClose={setIsMarketClose}
           onClose={() => setEditCollateralPosition(null)}
         />
       ) : (

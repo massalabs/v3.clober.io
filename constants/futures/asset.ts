@@ -1,17 +1,5 @@
 import { getAddress } from 'viem'
 
-export const MARKET_HOURS: {
-  [assetId in string]: {
-    open: number
-    close: number
-  }
-} = {
-  '0x576eef18034939eb62e7736f6f9fb7eb6c67b5c6ed81605f4879057028d734bb': {
-    open: 1430,
-    close: 2100,
-  },
-}
-
 export const WHITE_LISTED_ASSETS: `0x${string}`[] = [
   '0x1D074e003E222905e31476A8398e36027141915b', // MON-TGE
   '0xcaeF04f305313080C2538e585089846017193033', // USOILSPOT
