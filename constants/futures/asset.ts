@@ -16,6 +16,21 @@ export const WHITE_LISTED_ASSETS: `0x${string}`[] = [
 export const TRADING_VIEW_SYMBOLS: {
   [assetId in string]: string
 } = {
-  '0x576eef18034939eb62e7736f6f9fb7eb6c67b5c6ed81605f4879057028d734bb':
-    'AMEX:IVV',
+  '0x24d84a7ab973231e4394015ece17a2155174123be2f8e38c751e17fbd2fcedad':
+    'USOILSPOT',
+  '0x30a19158f5a54c0adf8fb7560627343f22a1bc852b89d56be1accdc5dbf96d0e':
+    'XAUUSD',
+  '0xc1b12769f6633798d45adfd62bfc70114839232e2949b01fb3d3f927d2606154':
+    'EURUSD',
+  '0xf9c0172ba10dfa4d19088d94f5bf61d3b54d5bd7483a322a982e1373ee8ea31b':
+    'BINANCE:BTCUSDT',
+  '0xafcc9a5bb5eefd55e12b6f0b4c8e6bccf72b785134ee232a5d175afd082e8832':
+    'NASDAQ:AAPL',
+  '0x545b468a0fc88307cf64f7cda62b190363089527f4b597887be5611b6cefe4f1':
+    'NASDAQ:GOOGL',
+  '0x7dac7cafc583cc4e1ce5c6772c444b8cd7addeecd5bedb341dfa037c770ae71e':
+    'NASDAQ:TSLA',
+  '0xb3eaa2aef31b2999827f2183b5dded7553bf036cc927f1d60cf824f5ea1d428a':
+    'NYSE:BRK.A',
+  '0xf3030274adc132e3a31d43dd7f56ac82ae9d673aa0c15a0ce15455a9d00434e6': 'US30Y',
 }
