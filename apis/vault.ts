@@ -76,32 +76,31 @@ export async function fetchVaults(
     const startLPInfo = WHITELISTED_VAULTS[chain.id].find(
       ({ key }) => key.toLowerCase() === vault.key.toLowerCase(),
     )?.startLPInfo
-    if (!startLPInfo) {
-      throw new Error('startLPInfo not found')
-    }
-    const historicalLpPrices = vaultPerformanceData.poolSnapshots
-      .map(({ price, liquidityA, liquidityB, totalSupply, timestamp }) => {
-        const _price = Number(price) * startLPInfo.priceMultiplier
-        const onHoldValuePerLp =
-          (startLPInfo.quoteAmount + startLPInfo.baseAmount * _price) /
-          startLPInfo.lpAmount
-        const usdValue = isAddressEqual(
-          base.address,
-          liquidityA.currency.address,
-        )
-          ? Number(liquidityA.value) * _price + Number(liquidityB.value)
-          : Number(liquidityB.value) * _price + Number(liquidityA.value)
-        const lpPrice =
-          Number(totalSupply.value) === 0
-            ? 0
-            : usdValue / Number(totalSupply.value)
-        return {
-          lpPrice,
-          time: Number(timestamp),
-          pnl: lpPrice / onHoldValuePerLp,
-        }
-      })
-      .sort((a, b) => a.time - b.time)
+    const historicalLpPrices = startLPInfo
+      ? vaultPerformanceData.poolSnapshots
+          .map(({ price, liquidityA, liquidityB, totalSupply, timestamp }) => {
+            const _price = Number(price) * startLPInfo.priceMultiplier
+            const onHoldValuePerLp =
+              (startLPInfo.quoteAmount + startLPInfo.baseAmount * _price) /
+              startLPInfo.lpAmount
+            const usdValue = isAddressEqual(
+              base.address,
+              liquidityA.currency.address,
+            )
+              ? Number(liquidityA.value) * _price + Number(liquidityB.value)
+              : Number(liquidityB.value) * _price + Number(liquidityA.value)
+            const lpPrice =
+              Number(totalSupply.value) === 0
+                ? 0
+                : usdValue / Number(totalSupply.value)
+            return {
+              lpPrice,
+              time: Number(timestamp),
+              pnl: lpPrice / onHoldValuePerLp,
+            }
+          })
+          .sort((a, b) => a.time - b.time)
+      : []
     const firstNonZeroIndex = historicalLpPrices.findIndex(
       ({ lpPrice }) => lpPrice > 0,
     )
@@ -142,10 +141,12 @@ export async function fetchVaults(
       tvl,
       apy: chain.testnet
         ? calculateApy(1 + totalSpreadProfit / tvl, 24 * 60 * 60)
-        : calculateApy(
-            historicalLpPrices.sort((a, b) => b.time - a.time)[0].pnl,
-            currentTimestampInSeconds - startLPInfo.timestamp,
-          ),
+        : startLPInfo
+          ? calculateApy(
+              historicalLpPrices.sort((a, b) => b.time - a.time)[0].pnl,
+              currentTimestampInSeconds - startLPInfo.timestamp,
+            )
+          : 0,
       volume24h: vaultPerformanceData.poolVolumes.reduce(
         (acc, { currencyAVolume, currencyBVolume }) =>
           acc +

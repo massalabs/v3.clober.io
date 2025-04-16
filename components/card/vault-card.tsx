@@ -1,6 +1,5 @@
 import React from 'react'
 import { NextRouter } from 'next/router'
-import { base } from 'viem/chains'
 import BigNumber from 'bignumber.js'
 import { Tooltip } from 'react-tooltip'
 
@@ -26,10 +25,8 @@ export const VaultCard = ({
 
   return (
     <>
-      <div
-        className={`hidden lg:flex w-[${chain.id === base.id ? '1040px' : '960px'}] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4`}
-      >
-        <div className="flex w-60 items-center gap-2">
+      <div className="hidden lg:flex w-[1040px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
+        <div className="flex w-80 items-center gap-2">
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
               chain={chain}

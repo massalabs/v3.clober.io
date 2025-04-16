@@ -90,13 +90,11 @@ export const VaultContainer = () => {
         </div>
       </div>
       <div className="flex w-full flex-col items-center mt-6 px-4 lg:px-0 gap-4 sm:gap-8">
-        <div
-          className={`flex flex-col w-full lg:w-[${tab === 'vault' && selectedChain.id === base.id ? '1060px' : '960px'}] h-full gap-6`}
-        >
+        <div className="flex flex-col w-full lg:w-[1060px] h-full gap-6">
           {tab === 'vault' ? (
             <>
               <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-                <div className="w-60 text-gray-400 text-sm font-semibold">
+                <div className="w-80 text-gray-400 text-sm font-semibold">
                   Liquidity Vault
                 </div>
                 <div className="flex flex-row gap-2 w-[140px] text-gray-400 text-sm font-semibold">
