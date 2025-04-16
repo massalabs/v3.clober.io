@@ -30,7 +30,7 @@ export const FuturesAssetCard = ({
             />
           </div>
           <div className="flex items-center text-white text-base font-bold gap-1">
-            {asset.currency.symbol}
+            {asset.currency.symbol.split('-')[0]}
           </div>
         </div>
         <div className="flex w-36 items-center gap-2">

@@ -27,6 +27,7 @@ const nextConfig = {
       'assets.coingecko.com',
       'storage.nadapp.net',
       'cdn.countryflags.com',
+      's3-symbol-logo',
     ],
   },
 }

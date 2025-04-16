@@ -31,16 +31,58 @@ export const PRICE_FEED_ID_LIST: {
       priceFeedId:
         '0x1fc18861232290221461220bd4e2acd1dcdfbc89c84092c93c18bdc7756c1588',
     },
-    {
-      address: '0xF8f1B89073E2A8443aE9A2B070AA353545e283c7', // IVV
-      priceFeedId:
-        '0x576eef18034939eb62e7736f6f9fb7eb6c67b5c6ed81605f4879057028d734bb',
-    },
+    // futures
     {
       address: '0x1D074e003E222905e31476A8398e36027141915b', // MON-TGE
       priceFeedId:
         '0xe786153cc54abd4b0e53b4c246d54d9f8eb3f3b5a34d4fc5a2e9a423b0ba5d6b',
     },
+    {
+      address: '0xcaeF04f305313080C2538e585089846017193033', // USOILSPOT
+      priceFeedId:
+        '0x24d84a7ab973231e4394015ece17a2155174123be2f8e38c751e17fbd2fcedad',
+    },
+    {
+      address: '0xCAfFD292a5c578Dbd4BBff733F1553bF2cD8850c', // XAU
+      priceFeedId:
+        '0x30a19158f5a54c0adf8fb7560627343f22a1bc852b89d56be1accdc5dbf96d0e',
+    },
+    {
+      address: '0x746e48E2CDD8F6D0B672adAc7810f55658dC801b', // EUR
+      priceFeedId:
+        '0xc1b12769f6633798d45adfd62bfc70114839232e2949b01fb3d3f927d2606154',
+    },
+    {
+      address: '0x5F433CFeB6CB2743481a096a56007a175E12ae23', // BTC
+      priceFeedId:
+        '0xf9c0172ba10dfa4d19088d94f5bf61d3b54d5bd7483a322a982e1373ee8ea31b',
+    },
+    {
+      address: '0x53E2BB2d88DdC44CC395a0CbCDDC837AeF44116D', // AAPL
+      priceFeedId:
+        '0xafcc9a5bb5eefd55e12b6f0b4c8e6bccf72b785134ee232a5d175afd082e8832',
+    },
+    {
+      address: '0xd57e27D90e04eAE2EEcBc63BA28E433098F72855', // GOOGL
+      priceFeedId:
+        '0x545b468a0fc88307cf64f7cda62b190363089527f4b597887be5611b6cefe4f1',
+    },
+    {
+      address: '0xDB1Aa7232c2fF7bb480823af254453570d0E4A16', // TSLA
+      priceFeedId:
+        '0x7dac7cafc583cc4e1ce5c6772c444b8cd7addeecd5bedb341dfa037c770ae71e',
+    },
+    {
+      address: '0x24A08695F06A37C8882CD1588442eC40061e597B', // BRK-A
+      priceFeedId:
+        '0xb3eaa2aef31b2999827f2183b5dded7553bf036cc927f1d60cf824f5ea1d428a',
+    },
+    {
+      address: '0x41DF9f8a0c014a0ce398A3F2D1af3164ff0F492A', // US30Y
+      priceFeedId:
+        '0xf3030274adc132e3a31d43dd7f56ac82ae9d673aa0c15a0ce15455a9d00434e6',
+    },
+    //
     {
       address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // USDC
       priceFeedId:
@@ -125,13 +167,7 @@ export const WHITELISTED_CURRENCIES: {
       symbol: 'USDC',
       decimals: 6,
     },
-    {
-      address: '0xF8f1B89073E2A8443aE9A2B070AA353545e283c7',
-      name: 'S&P 500 2025-07-01',
-      symbol: 'S&P500-250701',
-      decimals: 18,
-      icon: 'https://cdn.countryflags.com/thumbs/united-states-of-america/flag-round-500.png',
-    },
+    // futures
     {
       address: '0x1D074e003E222905e31476A8398e36027141915b',
       name: 'Monad Pre-TGE Futures',
@@ -139,6 +175,70 @@ export const WHITELISTED_CURRENCIES: {
       decimals: 18,
       icon: 'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/I_t8rg_V_400x400.jpg/public',
     },
+    {
+      address: '0xcaeF04f305313080C2538e585089846017193033',
+      name: 'USOILSPOT 2025-05-16',
+      symbol: 'USOILSPOT-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/crude-oil--big.svg',
+    },
+    {
+      address: '0xCAfFD292a5c578Dbd4BBff733F1553bF2cD8850c',
+      name: 'XAU 2025-05-16',
+      symbol: 'XAU-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/metal/gold--big.svg',
+    },
+    {
+      address: '0x746e48E2CDD8F6D0B672adAc7810f55658dC801b',
+      name: 'EUR 2025-05-16',
+      symbol: 'EUR-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/country/EU--big.svg',
+    },
+    {
+      address: '0x5F433CFeB6CB2743481a096a56007a175E12ae23',
+      name: 'BTC 2025-05-16',
+      symbol: 'BTC-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC--big.svg',
+    },
+    {
+      address: '0x53E2BB2d88DdC44CC395a0CbCDDC837AeF44116D',
+      name: 'AAPL 2025-05-16',
+      symbol: 'AAPL-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/apple--big.svg',
+    },
+    {
+      address: '0xd57e27D90e04eAE2EEcBc63BA28E433098F72855',
+      name: 'GOOGL 2025-05-16',
+      symbol: 'GOOGL-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/alphabet--big.svg',
+    },
+    {
+      address: '0xDB1Aa7232c2fF7bb480823af254453570d0E4A16',
+      name: 'TSLA 2025-05-16',
+      symbol: 'TSLA-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/tesla--big.svg',
+    },
+    {
+      address: '0x24A08695F06A37C8882CD1588442eC40061e597B',
+      name: 'BRK-A 2025-05-16',
+      symbol: 'BRK-A-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/berkshire-hathaway--big.svg',
+    },
+    {
+      address: '0x41DF9f8a0c014a0ce398A3F2D1af3164ff0F492A',
+      name: 'US30Y 2025-05-16',
+      symbol: 'US30Y-250516',
+      decimals: 18,
+      icon: 'https://s3-symbol-logo.tradingview.com/country/US--big.svg',
+    },
+    //
     {
       address: '0x836047a99e11f376522b447bffb6e3495dd0637c',
       name: 'Orbiter Wrapped ETH',

@@ -12,18 +12,17 @@ export const MARKET_HOURS: {
   },
 }
 
-export const ASSET_ICONS: {
-  [assetId in string]: string
-} = {
-  '0x576eef18034939eb62e7736f6f9fb7eb6c67b5c6ed81605f4879057028d734bb':
-    'https://cdn.countryflags.com/thumbs/united-states-of-america/flag-round-500.png',
-  '0xe786153cc54abd4b0e53b4c246d54d9f8eb3f3b5a34d4fc5a2e9a423b0ba5d6b':
-    'https://imagedelivery.net/cBNDGgkrsEA-b_ixIp9SkQ/MON.png/public',
-}
-
 export const WHITE_LISTED_ASSETS: `0x${string}`[] = [
-  '0xF8f1B89073E2A8443aE9A2B070AA353545e283c7', /// IVV
   '0x1D074e003E222905e31476A8398e36027141915b', // MON-TGE
+  '0xcaeF04f305313080C2538e585089846017193033', // USOILSPOT
+  '0xCAfFD292a5c578Dbd4BBff733F1553bF2cD8850c', // XAU
+  '0x746e48E2CDD8F6D0B672adAc7810f55658dC801b', // EUR
+  '0x5F433CFeB6CB2743481a096a56007a175E12ae23', // BTC
+  '0x53E2BB2d88DdC44CC395a0CbCDDC837AeF44116D', // AAPL
+  '0xd57e27D90e04eAE2EEcBc63BA28E433098F72855', // GOOGL
+  '0xDB1Aa7232c2fF7bb480823af254453570d0E4A16', // TSLA
+  '0x24A08695F06A37C8882CD1588442eC40061e597B', // BRK-A
+  '0x41DF9f8a0c014a0ce398A3F2D1af3164ff0F492A', // US30Y
 ].map((address) => getAddress(address))
 
 export const TRADING_VIEW_SYMBOLS: {
