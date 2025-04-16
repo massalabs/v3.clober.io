@@ -190,7 +190,7 @@ export const DiscoverContainer = () => {
             type="search"
             name="search"
             id="search"
-            className="inline w-full pl-10 py-2 lg:py-3 text-white bg-transparent rounded-xl border border-solid border-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-400 flex-col placeholder:text-gray-400 text-xs sm:text-sm"
+            className="inline w-full pl-10 py-2 lg:py-3 text-white bg-gray-800 rounded-xl border border-solid border-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-400 flex-col placeholder:text-gray-400 text-xs sm:text-sm"
             placeholder="Search markets"
             value={searchValue}
             onChange={(event) => setSearchValue(event.target.value)}
