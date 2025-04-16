@@ -1,9 +1,8 @@
 import React, { useCallback, useMemo } from 'react'
-import { createPublicClient, http, isAddressEqual, zeroAddress } from 'viem'
+import { createPublicClient, http, zeroAddress } from 'viem'
 import { useAccount, useDisconnect, useWalletClient } from 'wagmi'
 
 import { ActionButton } from '../components/button/action-button'
-import { shortAddress } from '../utils/address'
 import { toCommaSeparated } from '../utils/number'
 import { buildTransaction } from '../utils/build-transaction'
 import { RPC_URL } from '../constants/rpc-url'
@@ -12,6 +11,7 @@ import { sendTransaction } from '../utils/transaction'
 import { useTransactionContext } from '../contexts/transaction-context'
 import { currentTimestampInSeconds } from '../utils/date'
 import { FUTURES_CONTRACT_ADDRESSES } from '../constants/futures/contract-addresses'
+import { LeaderBoard } from '../components/leader-board'
 
 const Profit = ({ profit }: { profit: number }) => {
   return (
@@ -343,52 +343,24 @@ export const TradingCompetitionContainer = () => {
             </div>
           </div>
 
-          <div className="self-stretch w-full flex flex-col justify-start items-start gap-1 sm:gap-2 overflow-y-scroll max-h-[500px]">
-            {userAddress && profits.length > 0 && myProfit && (
-              <div className="self-stretch px-4 sm:px-8 min-h-10 bg-[#75b3ff]/20 flex rounded-lg justify-center items-center gap-1.5 sm:text-sm text-xs">
-                <div className="w-16 flex justify-start items-center gap-2.5 text-white font-bold">
-                  {profits.find((rank) =>
-                    isAddressEqual(rank.userAddress, userAddress),
-                  )?.rank ?? '-'}
-                </div>
-                <div className="flex w-full">
-                  <div className="flex flex-1 justify-start text-blue-400 gap-1">
-                    Me
-                    <span className="hidden sm:flex">
-                      ({shortAddress(userAddress, 6)})
-                    </span>
-                  </div>
-                  <Profit profit={myProfit.profit} />
-                </div>
-              </div>
-            )}
-
-            {profits
+          <LeaderBoard
+            myValue={
+              userAddress
+                ? {
+                    address: userAddress,
+                    value: <Profit profit={myProfit.profit} />,
+                  }
+                : undefined
+            }
+            values={profits
+              .sort((a, b) => b.profit - a.profit)
               .slice(0, 100)
-              .map(({ userAddress, profit, rank }, index) => (
-                <div
-                  key={`rank-${userAddress}`}
-                  className={`self-stretch px-4 sm:px-8 min-h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-sm text-xs`}
-                >
-                  <div
-                    className={`${rank === 1 ? 'text-[#ffe607]' : rank === 2 ? 'text-[#e4e5f5]' : rank === 3 ? 'text-[#ffc038]' : 'text-white'} w-16 flex justify-start items-center gap-2.5 text-white font-bold`}
-                  >
-                    {index + 1}
-                  </div>
-                  <div className="flex w-full">
-                    <div className="flex flex-1 justify-start text-white gap-1">
-                      <span className="flex sm:hidden">
-                        {shortAddress(userAddress, 2)}
-                      </span>
-                      <span className="hidden sm:flex">
-                        {shortAddress(userAddress, 8)}
-                      </span>
-                    </div>
-                    <Profit profit={profit} />
-                  </div>
-                </div>
-              ))}
-          </div>
+              .map((rank, index) => ({
+                address: rank.userAddress,
+                value: <Profit profit={myProfit.profit} />,
+                rank: index + 1,
+              }))}
+          />
         </div>
       </div>
     </div>
