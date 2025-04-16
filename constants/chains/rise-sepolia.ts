@@ -2,7 +2,7 @@ import { defineChain } from 'viem'
 
 export const riseSepolia = /*#__PURE__*/ defineChain({
   id: 11155931,
-  name: 'Rise Sepolia',
+  name: 'RISE Testnet',
   nativeCurrency: {
     decimals: 18,
     name: 'Rise Sepolia Ethereum',
