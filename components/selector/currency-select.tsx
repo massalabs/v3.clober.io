@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { getAddress, isAddress, isAddressEqual } from 'viem'
 import Image from 'next/image'
 
@@ -81,6 +81,12 @@ const CurrencySelect = ({
     [chain, currencies, defaultBlacklistedCurrency],
   )
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
   return (
     <>
       <InspectCurrencyModal
@@ -117,9 +123,10 @@ const CurrencySelect = ({
               type="search"
               name="search"
               id="search"
-              className="inline w-full rounded-md border-0 pl-10 py-3 text-gray-500 bg-gray-800 placeholder:text-gray-500 text-xs sm:text-sm"
+              className="focus:ring-2 inline w-full rounded-md border-0 pl-10 py-3 text-gray-500 bg-gray-800 placeholder:text-gray-500 text-xs sm:text-sm"
               placeholder="Search by token name, symbol, or address"
               value={value}
+              ref={inputRef}
               onChange={(event) => setValue(event.target.value)}
             />
           </div>

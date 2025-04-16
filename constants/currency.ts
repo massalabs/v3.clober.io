@@ -295,26 +295,3 @@ export const DEFAULT_INPUT_CURRENCY: {
     decimals: 18,
   },
 }
-
-export const DEFAULT_OUTPUT_CURRENCY: {
-  [chain in CHAIN_IDS]: Currency
-} = {
-  [CHAIN_IDS.BASE]: {
-    address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-    name: 'USD Coin',
-    symbol: 'USDC',
-    decimals: 6,
-  },
-  [CHAIN_IDS.MONAD_TESTNET]: {
-    address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
-    name: 'USD Coin',
-    symbol: 'USDC',
-    decimals: 6,
-  },
-  [CHAIN_IDS.RISE_SEPOLIA]: {
-    address: '0xA985e387dDF21b87c1Fe8A0025D827674040221E',
-    name: 'Clober USDC',
-    symbol: 'cUSDC',
-    decimals: 6,
-  },
-}

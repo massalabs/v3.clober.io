@@ -12,10 +12,7 @@ import {
   LOCAL_STORAGE_OUTPUT_CURRENCY_KEY,
 } from '../../utils/currency'
 import { getQueryParams } from '../../utils/url'
-import {
-  DEFAULT_INPUT_CURRENCY,
-  DEFAULT_OUTPUT_CURRENCY,
-} from '../../constants/currency'
+import { DEFAULT_INPUT_CURRENCY } from '../../constants/currency'
 import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
 
@@ -198,7 +195,7 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
               selectedChain,
               getAddress(outputCurrencyAddress),
             )))
-          : DEFAULT_OUTPUT_CURRENCY[selectedChain.id]
+          : undefined
 
         if (previousChain.current.chain.id !== selectedChain.id) {
           return
