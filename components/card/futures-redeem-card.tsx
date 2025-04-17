@@ -37,7 +37,7 @@ export const FuturesRedeemCard = ({
           <CurrencyIcon
             chain={chain}
             currency={asset.currency}
-            className="w-8 h-8 sm:w-10 sm:h-10"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
           />
           <div className="flex flex-col">
             <div className="w-[89px] text-xs text-green-400 font-semibold">
