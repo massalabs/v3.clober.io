@@ -67,7 +67,8 @@ export class CloberV2Aggregator implements Aggregator {
         [zeroAddress]: monPrice,
         [getAddress('0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701')]: monPrice,
         [getAddress('0x0EfeD4D9fB7863ccC7bb392847C08dCd00FE9bE2')]: muBondPrice,
-        [getAddress('0xb2f82D0f38dc453D596Ad40A37799446Cc89274A')]: aprMonPrice,
+        [getAddress('0xb2f82D0f38dc453D596Ad40A37799446Cc89274A')]:
+          monPrice * aprMonPrice,
       }
     }
     return {} as Prices
