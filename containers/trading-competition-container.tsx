@@ -105,14 +105,13 @@ export const TradingCompetitionContainer = () => {
           type: 'register',
           timestamp: currentTimestampInSeconds(),
         })
-
-        dequeuePendingTransaction(transactionReceipt.transactionHash)
       }
     } catch (error) {
       console.error('Error registering for trading competition:', error)
+    } finally {
+      setConfirmation(undefined)
     }
   }, [
-    dequeuePendingTransaction,
     disconnectAsync,
     publicClient,
     queuePendingTransaction,
