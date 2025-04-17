@@ -5,7 +5,6 @@ import { useAccount } from 'wagmi'
 import { createPublicClient, http } from 'viem'
 
 import { Balances } from '../../model/balances'
-import { Vault } from '../../model/vault'
 import {
   deduplicateCurrencies,
   fetchCurrenciesDone,
@@ -13,7 +12,6 @@ import {
 import { useChainContext } from '../chain-context'
 import { useCurrencyContext } from '../currency-context'
 import { WHITELISTED_VAULTS } from '../../constants/vault'
-import { fetchVaults } from '../../apis/vault'
 import { RPC_URL } from '../../constants/rpc-url'
 
 type VaultContext = {
@@ -28,7 +26,6 @@ type VaultContext = {
   slippageInput: string
   setSlippageInput: (slippageInput: string) => void
   vaultLpBalances: Balances
-  vaults: Vault[]
 }
 
 const Context = React.createContext<VaultContext>({
@@ -43,7 +40,6 @@ const Context = React.createContext<VaultContext>({
   slippageInput: '1',
   setSlippageInput: () => {},
   vaultLpBalances: {},
-  vaults: [],
 })
 
 export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
@@ -61,18 +57,6 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
       transport: http(RPC_URL[selectedChain.id]),
     })
   }, [selectedChain])
-
-  const { data: vaults } = useQuery({
-    queryKey: ['vaults', selectedChain.id, Object.keys(prices).length !== 0],
-    queryFn: async () => {
-      return fetchVaults(selectedChain, prices)
-    },
-    initialData: [],
-    refetchInterval: 5 * 1000,
-    refetchIntervalInBackground: true,
-  }) as {
-    data: Vault[]
-  }
 
   const { data: vaultLpBalances } = useQuery({
     queryKey: [
@@ -163,7 +147,6 @@ export const VaultProvider = ({ children }: React.PropsWithChildren<{}>) => {
         slippageInput,
         setSlippageInput,
         vaultLpBalances: vaultLpBalances ?? {},
-        vaults: vaults ?? [],
       }}
     >
       {children}

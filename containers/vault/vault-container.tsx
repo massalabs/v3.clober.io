@@ -1,24 +1,35 @@
 import React from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
-import { base } from 'viem/chains'
 import { Tooltip } from 'react-tooltip'
+import { useQuery } from '@tanstack/react-query'
 
 import { useVaultContext } from '../../contexts/vault/vault-context'
 import { useChainContext } from '../../contexts/chain-context'
 import { toCommaSeparated } from '../../utils/number'
-import { VaultCard } from '../../components/card/vault-card'
-import { formatUnits } from '../../utils/bigint'
-import { VaultPositionCard } from '../../components/card/vault-position-card'
 import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
+import { fetchVaults } from '../../apis/vault'
+import { useCurrencyContext } from '../../contexts/currency-context'
+import { VaultPositionCard } from '../../components/card/vault-position-card'
+import { formatUnits } from '../../utils/bigint'
+import { VaultCard } from '../../components/card/vault-card'
 
 export const VaultContainer = () => {
   const router = useRouter()
   const { address: userAddress } = useAccount()
-  const { vaults, vaultLpBalances } = useVaultContext()
+  const { vaultLpBalances } = useVaultContext()
   const { selectedChain } = useChainContext()
+  const { prices } = useCurrencyContext()
 
   const [tab, setTab] = React.useState<'my-liquidity' | 'vault'>('vault')
+
+  const { data: vaults } = useQuery({
+    queryKey: ['vaults', selectedChain.id, Object.keys(prices).length !== 0],
+    queryFn: async () => {
+      return fetchVaults(selectedChain, prices)
+    },
+    initialData: [],
+  })
 
   return (
     <div className="w-full flex flex-col text-white mb-4">
@@ -90,14 +101,14 @@ export const VaultContainer = () => {
         </div>
       </div>
       <div className="flex w-full flex-col items-center mt-6 px-4 lg:px-0 gap-4 sm:gap-8">
-        <div className="flex flex-col w-full lg:w-[1060px] h-full gap-6">
+        <div className={`flex flex-col w-full lg:w-[1060px] h-full gap-6`}>
           {tab === 'vault' ? (
             <>
               <div className="hidden lg:flex self-stretch px-4 justify-start items-center gap-4">
-                <div className="w-80 text-gray-400 text-sm font-semibold">
+                <div className="w-72 text-gray-400 text-sm font-semibold">
                   Liquidity Vault
                 </div>
-                <div className="flex flex-row gap-2 w-[140px] text-gray-400 text-sm font-semibold">
+                <div className="flex flex-row gap-2 w-[120px] text-gray-400 text-sm font-semibold">
                   APY
                   <div className="flex mr-auto justify-center items-center">
                     <QuestionMarkSvg
@@ -113,7 +124,7 @@ export const VaultContainer = () => {
                     />
                   </div>
                 </div>
-                <div className="w-[140px] text-gray-400 text-sm font-semibold">
+                <div className="w-[120px] text-gray-400 text-sm font-semibold">
                   Total Liquidity
                 </div>
                 <div className="w-[140px] text-gray-400 text-sm font-semibold">

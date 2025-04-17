@@ -26,8 +26,6 @@ import { sendTransaction } from '../../utils/transaction'
 import { RPC_URL } from '../../constants/rpc-url'
 import { currentTimestampInSeconds } from '../../utils/date'
 
-import { useVaultContext } from './vault-context'
-
 type VaultContractContext = {
   mint: (
     currency0: Currency,
@@ -64,7 +62,6 @@ export const VaultContractProvider = ({
     dequeuePendingTransaction,
   } = useTransactionContext()
   const { selectedChain } = useChainContext()
-  const { vaults } = useVaultContext()
   const { allowances, prices } = useCurrencyContext()
 
   useEffect(() => {
@@ -77,7 +74,7 @@ export const VaultContractProvider = ({
         dequeuePendingTransaction(transaction.txHash)
       }
     })
-  }, [dequeuePendingTransaction, pendingTransactions, vaults])
+  }, [dequeuePendingTransaction, pendingTransactions])
 
   const mint = useCallback(
     async (
@@ -270,7 +267,7 @@ export const VaultContractProvider = ({
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
           queryClient.invalidateQueries({ queryKey: ['allowances'] }),
-          queryClient.invalidateQueries({ queryKey: ['vaults'] }),
+          queryClient.invalidateQueries({ queryKey: ['vault'] }),
           queryClient.invalidateQueries({ queryKey: ['vault-lp-balances'] }),
         ])
         setConfirmation(undefined)
@@ -404,7 +401,7 @@ export const VaultContractProvider = ({
       } finally {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['balances'] }),
-          queryClient.invalidateQueries({ queryKey: ['vaults'] }),
+          queryClient.invalidateQueries({ queryKey: ['vault'] }),
           queryClient.invalidateQueries({ queryKey: ['vault-lp-balances'] }),
         ])
         setConfirmation(undefined)

@@ -3,8 +3,7 @@ import { CHAIN_IDS } from '@clober/v2-sdk'
 export const LIQUIDITY_VAULT_POINT_SUBGRAPH_ENDPOINT: {
   [chainId in CHAIN_IDS]: string | undefined
 } = {
-  [CHAIN_IDS.BASE]:
-    'https://subgraph.satsuma-prod.com/f6a8c4889b7b/clober/liquidity-vault-point-base/api',
+  [CHAIN_IDS.BASE]: undefined,
   [CHAIN_IDS.MONAD_TESTNET]:
     'https://api.goldsky.com/api/public/project_clsljw95chutg01w45cio46j0/subgraphs/liquidity-vault-point-monad-testnet/v1.1.5/gn',
   [CHAIN_IDS.RISE_SEPOLIA]: undefined,

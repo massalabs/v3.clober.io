@@ -2,6 +2,21 @@ import { StackedLineData } from '../components/chart/tvl-chart-model'
 
 import { Currency } from './currency'
 
+export type VaultImmutableInfo = {
+  currencyA: Currency
+  currencyB: Currency
+  salt: `0x${string}`
+  key: `0x${string}`
+  hasDashboard: boolean
+  hasPoint: boolean
+  initialLPInfo?: {
+    quoteTokenAmount: number
+    baseTokenAmount: number
+    lpTokenAmount: number
+    timestamp: number
+  }
+}
+
 export type Vault = {
   key: `0x${string}`
   lpCurrency: Currency

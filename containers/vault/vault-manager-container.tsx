@@ -203,7 +203,6 @@ export const VaultManagerContainer = ({
       ),
     [prices, vault],
   )
-  console.log('ratio0', ratio0)
 
   return (
     <div className="flex w-full h-full justify-center mt-8 mb-[30px] md:mb-20">

@@ -39,7 +39,7 @@ export const VaultCard = ({
               className="w-8 h-8 absolute left-6 top-0 rounded-full"
             />
           </div>
-          <div className="flex items-center text-white text-base font-bold gap-1">
+          <div className="flex items-center text-white text-base font-bold gap-1 text-nowrap">
             <div>{vault.currency0.symbol}</div>
             <div>-</div>
             <div>{vault.currency1.symbol}</div>
@@ -55,7 +55,7 @@ export const VaultCard = ({
           ${toCommaSeparated(vault.volume24h.toFixed(0))}
         </div>
         <div className="flex gap-2">
-          {hasDashboard && (
+          {hasDashboard ? (
             <button
               onClick={() => router.push(`/earn/${vault.key}/dashboard`)}
               className="flex w-[130px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
@@ -65,10 +65,24 @@ export const VaultCard = ({
                 Dashboard
               </div>
             </button>
+          ) : (
+            <button
+              onClick={() =>
+                router.push(
+                  `/trade?inputCurrency=${vault.currency0.address}&outputCurrency=${vault.currency1.address}`,
+                )
+              }
+              className="flex w-[130px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
+              rel="noreferrer"
+            >
+              <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
+                Trade
+              </div>
+            </button>
           )}
           <button
             onClick={() => router.push(`/earn/${vault.key}`)}
-            className={`flex w-[${hasDashboard ? '160px' : '180px'}] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1`}
+            className={`flex w-40 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1`}
             rel="noreferrer"
           >
             <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
