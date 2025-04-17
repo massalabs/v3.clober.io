@@ -2,6 +2,7 @@ import React from 'react'
 import '../../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { mainnet } from 'viem/chains'
+import { zeroHash } from 'viem'
 
 import { AddLiquidityForm } from './add-liquidity-form'
 
@@ -27,6 +28,9 @@ export const Default: Story = {
       totalSupply: 10000,
       historicalPriceIndex: [],
       key: '0x',
+      salt: zeroHash,
+      hasDashboard: false,
+      hasPoint: false,
       reserveA: 0,
       reserveB: 0,
       lpUsdValue: 12344.3241,

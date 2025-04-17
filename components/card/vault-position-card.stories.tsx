@@ -2,6 +2,7 @@ import React from 'react'
 import '../../styles/globals.css'
 import { Meta, StoryObj } from '@storybook/react'
 import { mainnet } from 'viem/chains'
+import { zeroHash } from 'viem'
 
 import { VaultPositionCard } from './vault-position-card'
 
@@ -28,6 +29,9 @@ export const Default: Story = {
         totalSupply: 10000,
         historicalPriceIndex: [],
         key: '0x',
+        salt: zeroHash,
+        hasDashboard: false,
+        hasPoint: false,
         lpUsdValue: 12344.3241,
         lpCurrency: {
           address: '0x0000000000000000000000000000000000000003',
