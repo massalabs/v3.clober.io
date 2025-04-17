@@ -18,7 +18,7 @@ export const UserPointButton = ({ score }: { score: number }) => {
           duration={1}
         />
       </span>
-      <span className="text-gray-400 hidden sm:flex">points</span>
+      <span className="text-gray-400 hidden sm:flex">Points</span>
       <span className="text-gray-400 flex sm:hidden">P</span>
     </div>
   )

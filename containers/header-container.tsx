@@ -8,6 +8,7 @@ import {
   useConnectModal,
 } from '@rainbow-me/rainbowkit'
 import { useQuery } from '@tanstack/react-query'
+import { monadTestnet } from 'viem/chains'
 
 import { useChainContext } from '../contexts/chain-context'
 import MenuSvg from '../components/svg/menu-svg'
@@ -127,7 +128,7 @@ const HeaderContainer = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </div>
 
           <div className="flex items-center flex-row gap-1 sm:gap-3">
-            {address && (
+            {address && selectedChain.id === monadTestnet.id && (
               <div className="flex w-full">
                 <UserPointButton score={myVaultPoint?.point ?? 0} />
               </div>
