@@ -156,7 +156,7 @@ export const VaultContainer = () => {
                 </div>
               )}
 
-              <div className="relative flex justify-center w-full h-full lg:h-[360px]">
+              <div className="relative flex justify-center w-full h-full lg:h-[660px]">
                 <div className="lg:absolute lg:top-0 lg:overflow-x-scroll w-full h-full items-center flex flex-1 flex-col md:grid md:grid-cols-2 lg:flex gap-3">
                   {vaults.map((vault, index) => (
                     <VaultCard
