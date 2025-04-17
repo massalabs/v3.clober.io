@@ -35,13 +35,13 @@ export const Default: Story = {
           symbol: 'ETH-USDC-LP',
           decimals: 18,
         },
-        currency0: {
+        currencyA: {
           address: '0x0000000000000000000000000000000000000003',
           name: 'ETH',
           symbol: 'ETH',
           decimals: 18,
         },
-        currency1: {
+        currencyB: {
           address: '0x0000000000000000000000000000000000000003',
           name: 'USDC',
           symbol: 'USDC',
@@ -50,8 +50,8 @@ export const Default: Story = {
         apy: 120.5434,
         tvl: 43123123.0123455,
         volume24h: 123123.123411,
-        reserve0: 123123.123411,
-        reserve1: 123123.123411,
+        reserveA: 123123.123411,
+        reserveB: 123123.123411,
       },
       amount: BigInt('1231231231230000000000'),
       value: 123,

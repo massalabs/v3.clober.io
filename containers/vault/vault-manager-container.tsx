@@ -82,11 +82,11 @@ export const VaultManagerContainer = ({
       const totalInputUsdValue = new BigNumber(
         new BigNumber(currency0Amount).isNaN() ? 0 : currency0Amount,
       )
-        .times(prices[vault.currency0.address] ?? 0)
+        .times(prices[vault.currencyA.address] ?? 0)
         .plus(
           new BigNumber(
             new BigNumber(currency1Amount).isNaN() ? 0 : currency1Amount,
-          ).times(prices[vault.currency1.address] ?? 0),
+          ).times(prices[vault.currencyB.address] ?? 0),
         )
       return parseUnits(
         totalInputUsdValue
@@ -115,8 +115,8 @@ export const VaultManagerContainer = ({
       const { result } = await removeLiquidity({
         chainId: selectedChain.id,
         userAddress: zeroAddress,
-        token0: vault.currency0.address,
-        token1: vault.currency1.address,
+        token0: vault.currencyA.address,
+        token1: vault.currencyB.address,
         salt: zeroHash,
         amount: lpCurrencyAmount,
         options: {
@@ -131,8 +131,8 @@ export const VaultManagerContainer = ({
   })
 
   useEffect(() => {
-    setDisableSwap(vault.reserve0 + vault.reserve1 === 0)
-  }, [vault.reserve0, vault.reserve1, setDisableSwap])
+    setDisableSwap(vault.reserveA + vault.reserveB === 0)
+  }, [vault.reserveA, vault.reserveB, setDisableSwap])
 
   useEffect(() => {
     if (selectedChain.testnet) {
@@ -147,12 +147,12 @@ export const VaultManagerContainer = ({
 
   useEffect(
     () => {
-      if (disableSwap && vault.reserve0 + vault.reserve1 > 0) {
+      if (disableSwap && vault.reserveA + vault.reserveB > 0) {
         // when change currency0Amount
         if (previousValues.current.currency0Amount !== currency0Amount) {
           const _currency1Amount = new BigNumber(currency0Amount)
-            .div(vault.reserve0)
-            .times(vault.reserve1)
+            .div(vault.reserveA)
+            .times(vault.reserveB)
             .toFixed()
           setCurrency1Amount(
             new BigNumber(_currency1Amount).isNaN() ? '0' : _currency1Amount,
@@ -167,8 +167,8 @@ export const VaultManagerContainer = ({
         // when change currency1Amount
         else if (previousValues.current.currency1Amount !== currency1Amount) {
           const _currency0Amount = new BigNumber(currency1Amount)
-            .div(vault.reserve1)
-            .times(vault.reserve0)
+            .div(vault.reserveB)
+            .times(vault.reserveA)
             .toFixed()
           setCurrency0Amount(
             new BigNumber(_currency0Amount).isNaN() ? '0' : _currency0Amount,
@@ -198,7 +198,7 @@ export const VaultManagerContainer = ({
   const ratio0 = useMemo(
     () =>
       Math.floor(
-        (100 * vault.reserve0 * prices[vault.currency0.address]) /
+        (100 * vault.reserveA * prices[vault.currencyA.address]) /
           (vault.totalSupply * vault.lpUsdValue),
       ),
     [prices, vault],
@@ -232,25 +232,25 @@ export const VaultManagerContainer = ({
               <div className="w-10 h-6 md:w-14 md:h-8 shrink-0 relative">
                 <CurrencyIcon
                   chain={selectedChain}
-                  currency={vault.currency0}
+                  currency={vault.currencyA}
                   className="w-6 h-6 md:w-8 md:h-8 absolute left-0 top-0 z-[1] rounded-full"
                 />
                 <CurrencyIcon
                   chain={selectedChain}
-                  currency={vault.currency1}
+                  currency={vault.currencyB}
                   className="w-6 h-6 md:w-8 md:h-8 absolute left-4 md:left-6 top-0 rounded-full"
                 />
               </div>
 
               <div className="flex justify-center items-start gap-1 md:gap-2">
                 <div className="text-center text-white md:text-3xl font-bold">
-                  {vault.currency0.symbol}
+                  {vault.currencyA.symbol}
                 </div>
                 <div className="text-center text-white md:text-3xl font-bold">
                   -
                 </div>
                 <div className="text-center text-white md:text-3xl font-bold">
-                  {vault.currency1.symbol}
+                  {vault.currencyB.symbol}
                 </div>
               </div>
 
@@ -303,18 +303,18 @@ export const VaultManagerContainer = ({
                       <div className="flex items-center gap-1 md:gap-2">
                         <CurrencyIcon
                           chain={selectedChain}
-                          currency={vault.currency0}
+                          currency={vault.currencyA}
                           className="w-5 h-5 md:w-6 md:h-6 rounded-full"
                         />
                         <div className="text-center text-gray-400 text-sm md:text-base font-semibold">
-                          {vault.currency0.symbol}
+                          {vault.currencyA.symbol}
                         </div>
                       </div>
                       <div className="text-center text-white text-sm md:text-lg font-bold ">
                         {toCommaSeparated(
                           toPlacesAmountString(
-                            vault.reserve0.toString(),
-                            prices[vault.currency0.address] ?? 0,
+                            vault.reserveA.toString(),
+                            prices[vault.currencyA.address] ?? 0,
                           ),
                         )}
                       </div>
@@ -323,18 +323,18 @@ export const VaultManagerContainer = ({
                       <div className="flex items-center gap-1 md:gap-2">
                         <CurrencyIcon
                           chain={selectedChain}
-                          currency={vault.currency1}
+                          currency={vault.currencyB}
                           className="w-5 h-5 md:w-6 md:h-6 rounded-full"
                         />
                         <div className="text-center text-gray-400 text-sm md:text-base font-semibold">
-                          {vault.currency1.symbol}
+                          {vault.currencyB.symbol}
                         </div>
                       </div>
                       <div className="text-center text-white text-sm md:text-lg font-bold ">
                         {toCommaSeparated(
                           toPlacesAmountString(
-                            vault.reserve1.toString(),
-                            prices[vault.currency1.address] ?? 0,
+                            vault.reserveB.toString(),
+                            prices[vault.currencyB.address] ?? 0,
                           ),
                         )}
                       </div>
@@ -494,17 +494,17 @@ export const VaultManagerContainer = ({
                     currency0Amount={currency0Amount}
                     setCurrency0Amount={setCurrency0Amount}
                     availableCurrency0Balance={
-                      balances[vault.currency0.address] ?? 0n
+                      balances[vault.currencyA.address] ?? 0n
                     }
                     currency1Amount={currency1Amount}
                     setCurrency1Amount={setCurrency1Amount}
                     availableCurrency1Balance={
-                      balances[vault.currency1.address] ?? 0n
+                      balances[vault.currencyB.address] ?? 0n
                     }
                     disableSwap={disableSwap}
                     setDisableSwap={setDisableSwap}
                     disableDisableSwap={
-                      vault.reserve0 + vault.reserve1 === 0 ||
+                      vault.reserveA + vault.reserveB === 0 ||
                       selectedChain.testnet === true
                     }
                     slippageInput={slippageInput}
@@ -524,20 +524,20 @@ export const VaultManagerContainer = ({
                         !walletClient ||
                         (Number(currency0Amount) === 0 &&
                           Number(currency1Amount) === 0) ||
-                        parseUnits(currency0Amount, vault.currency0.decimals) >
-                          balances[vault.currency0.address] ||
-                        parseUnits(currency1Amount, vault.currency1.decimals) >
-                          balances[vault.currency1.address] ||
+                        parseUnits(currency0Amount, vault.currencyA.decimals) >
+                          balances[vault.currencyA.address] ||
+                        parseUnits(currency1Amount, vault.currencyB.decimals) >
+                          balances[vault.currencyB.address] ||
                         (disableSwap &&
                           (Number(currency0Amount) === 0 ||
                             Number(currency1Amount) === 0)),
                       onClick: async () => {
                         await mint(
-                          vault.currency0,
-                          vault.currency1,
+                          vault.currencyA,
+                          vault.currencyB,
                           currency0Amount,
                           currency1Amount,
-                          vault.reserve0 + vault.reserve1 > 0
+                          vault.reserveA + vault.reserveB > 0
                             ? disableSwap
                             : true,
                           Number(slippageInput),
@@ -550,14 +550,14 @@ export const VaultManagerContainer = ({
                           ? 'Enter amount'
                           : parseUnits(
                                 currency0Amount,
-                                vault.currency0.decimals,
-                              ) > balances[vault.currency0.address]
-                            ? `Insufficient ${vault.currency0.symbol} balance`
+                                vault.currencyA.decimals,
+                              ) > balances[vault.currencyA.address]
+                            ? `Insufficient ${vault.currencyA.symbol} balance`
                             : parseUnits(
                                   currency1Amount,
-                                  vault.currency1.decimals,
-                                ) > balances[vault.currency1.address]
-                              ? `Insufficient ${vault.currency1.symbol} balance`
+                                  vault.currencyB.decimals,
+                                ) > balances[vault.currencyB.address]
+                              ? `Insufficient ${vault.currencyB.symbol} balance`
                               : disableSwap &&
                                   (Number(currency0Amount) === 0 ||
                                     Number(currency1Amount) === 0)
@@ -598,11 +598,11 @@ export const VaultManagerContainer = ({
                           ]
                         : [
                             {
-                              currency: vault.currency0,
+                              currency: vault.currencyA,
                               amount: 0n,
                             },
                             {
-                              currency: vault.currency1,
+                              currency: vault.currencyB,
                               amount: 0n,
                             },
                           ]
@@ -621,8 +621,8 @@ export const VaultManagerContainer = ({
                           vaultLpBalances[vault.key],
                       onClick: async () => {
                         await burn(
-                          vault.currency0,
-                          vault.currency1,
+                          vault.currencyA,
+                          vault.currencyB,
                           lpCurrencyAmount,
                           slippageInput,
                         )

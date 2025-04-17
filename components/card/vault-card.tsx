@@ -30,19 +30,19 @@ export const VaultCard = ({
           <div className="w-14 h-8 shrink-0 relative">
             <CurrencyIcon
               chain={chain}
-              currency={vault.currency0}
+              currency={vault.currencyA}
               className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
             />
             <CurrencyIcon
               chain={chain}
-              currency={vault.currency1}
+              currency={vault.currencyB}
               className="w-8 h-8 absolute left-6 top-0 rounded-full"
             />
           </div>
           <div className="flex items-center text-white text-base font-bold gap-1 text-nowrap">
-            <div>{vault.currency0.symbol}</div>
+            <div>{vault.currencyA.symbol}</div>
             <div>-</div>
-            <div>{vault.currency1.symbol}</div>
+            <div>{vault.currencyB.symbol}</div>
           </div>
         </div>
         <div className="w-[140px] text-white text-base font-bold flex flex-row gap-2">
@@ -69,7 +69,7 @@ export const VaultCard = ({
             <button
               onClick={() =>
                 router.push(
-                  `/trade?inputCurrency=${vault.currency0.address}&outputCurrency=${vault.currency1.address}`,
+                  `/trade?inputCurrency=${vault.currencyA.address}&outputCurrency=${vault.currencyB.address}`,
                 )
               }
               className="flex w-[130px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
@@ -96,22 +96,22 @@ export const VaultCard = ({
           <div className="w-10 h-6 relative">
             <CurrencyIcon
               chain={chain}
-              currency={vault.currency0}
+              currency={vault.currencyA}
               className="w-6 h-6 absolute left-0 top-0 z-[1] rounded-full"
             />
             <CurrencyIcon
               chain={chain}
-              currency={vault.currency1}
+              currency={vault.currencyB}
               className="w-6 h-6 absolute left-[16px] top-0 rounded-full"
             />
           </div>
           <div className="flex gap-1 justify-start items-center">
             <div className="text-white text-base font-bold">
-              {vault.currency0.symbol}
+              {vault.currencyA.symbol}
             </div>
             <div className="text-white text-base font-bold">-</div>
             <div className="text-white text-base font-bold">
-              {vault.currency1.symbol}
+              {vault.currencyB.symbol}
             </div>
           </div>
           <button

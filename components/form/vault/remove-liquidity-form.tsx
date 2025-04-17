@@ -43,8 +43,8 @@ export const RemoveLiquidityForm = ({
         <LpCurrencyAmountInput
           chain={chain}
           currency={vault.lpCurrency}
-          currency0={vault.currency0}
-          currency1={vault.currency1}
+          currency0={vault.currencyA}
+          currency1={vault.currencyB}
           value={lpCurrencyAmount}
           onValueChange={setLpCurrencyAmount}
           availableAmount={availableLpCurrencyBalance}

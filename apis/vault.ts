@@ -138,10 +138,10 @@ export async function fetchOffChainVault(
       decimals: 18,
     },
     lpUsdValue: tvl / totalSupply,
-    currency0: vaultImmutableInfo.currencyA,
-    currency1: vaultImmutableInfo.currencyB,
-    reserve0,
-    reserve1,
+    currencyA: vaultImmutableInfo.currencyA,
+    currencyB: vaultImmutableInfo.currencyB,
+    reserveA: reserve0,
+    reserveB: reserve1,
     tvl,
     apy: chain.testnet
       ? calculateApy(1 + totalSpreadProfit / tvl, 24 * 60 * 60)
@@ -273,10 +273,10 @@ export async function fetchOnChainVault(
       decimals: 18,
     },
     lpUsdValue: tvl / Number(vault.totalSupply.value),
-    currency0: vault.currencyA,
-    currency1: vault.currencyB,
-    reserve0: Number(vault.liquidityA.total.value),
-    reserve1: Number(vault.liquidityB.total.value),
+    currencyA: vault.currencyA,
+    currencyB: vault.currencyB,
+    reserveA: Number(vault.liquidityA.total.value),
+    reserveB: Number(vault.liquidityB.total.value),
     tvl,
     apy: chain.testnet
       ? calculateApy(1 + totalSpreadProfit / tvl, 24 * 60 * 60)

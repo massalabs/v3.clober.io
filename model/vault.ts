@@ -22,13 +22,13 @@ export type Vault = {
   key: `0x${string}`
   lpCurrency: Currency
   lpUsdValue: number
-  currency0: Currency
-  currency1: Currency
+  currencyA: Currency
+  currencyB: Currency
   apy: number
   tvl: number
   volume24h: number
-  reserve0: number
-  reserve1: number
+  reserveA: number
+  reserveB: number
   totalSupply: number
   historicalPriceIndex: StackedLineData[]
 }

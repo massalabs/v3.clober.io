@@ -24,22 +24,22 @@ export const VaultPositionCard = ({
             <div className="w-14 h-8 relative">
               <CurrencyIcon
                 chain={chain}
-                currency={vaultPosition.vault.currency0}
+                currency={vaultPosition.vault.currencyA}
                 className="w-8 h-8 absolute left-0 top-0 z-[1] rounded-full"
               />
               <CurrencyIcon
                 chain={chain}
-                currency={vaultPosition.vault.currency1}
+                currency={vaultPosition.vault.currencyB}
                 className="w-8 h-8 absolute left-6 top-0 rounded-full"
               />
             </div>
             <div className="flex gap-1 items-center">
               <div className="text-white text-base font-bold">
-                {vaultPosition.vault.currency0.symbol}
+                {vaultPosition.vault.currencyA.symbol}
               </div>
               <div className="text-white text-base font-bold">-</div>
               <div className="text-white text-base font-bold">
-                {vaultPosition.vault.currency1.symbol}
+                {vaultPosition.vault.currencyB.symbol}
               </div>
             </div>
           </div>
@@ -74,22 +74,22 @@ export const VaultPositionCard = ({
           <div className="w-10 h-6 relative">
             <CurrencyIcon
               chain={chain}
-              currency={vaultPosition.vault.currency0}
+              currency={vaultPosition.vault.currencyA}
               className="w-6 h-6 absolute left-0 top-0 z-[1]"
             />
             <CurrencyIcon
               chain={chain}
-              currency={vaultPosition.vault.currency1}
+              currency={vaultPosition.vault.currencyB}
               className="w-6 h-6 absolute left-[16px] top-0"
             />
           </div>
           <div className="flex gap-1 items-center">
             <div className="text-white text-base font-bold">
-              {vaultPosition.vault.currency0.symbol}
+              {vaultPosition.vault.currencyA.symbol}
             </div>
             <div className="text-white text-base font-bold">-</div>
             <div className="text-white text-base font-bold">
-              {vaultPosition.vault.currency1.symbol}
+              {vaultPosition.vault.currencyB.symbol}
             </div>
           </div>
         </div>

@@ -27,8 +27,8 @@ export const Default: Story = {
       totalSupply: 10000,
       historicalPriceIndex: [],
       key: '0x',
-      reserve0: 0,
-      reserve1: 0,
+      reserveA: 0,
+      reserveB: 0,
       lpUsdValue: 12344.3241,
       lpCurrency: {
         address: '0x0000000000000000000000000000000000000001',
@@ -36,13 +36,13 @@ export const Default: Story = {
         symbol: 'ETH-USDC-LP',
         decimals: 18,
       },
-      currency0: {
+      currencyA: {
         address: '0x0000000000000000000000000000000000000002',
         name: 'ETH',
         symbol: 'ETH',
         decimals: 18,
       },
-      currency1: {
+      currencyB: {
         address: '0x0000000000000000000000000000000000000003',
         name: 'USDC',
         symbol: 'USDC',

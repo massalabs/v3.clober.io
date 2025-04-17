@@ -55,19 +55,19 @@ export const AddLiquidityForm = ({
         <div className="flex flex-col relative gap-4 self-stretch">
           <CurrencyAmountInput
             chain={chain}
-            currency={vault.currency0}
+            currency={vault.currencyA}
             value={currency0Amount}
             onValueChange={setCurrency0Amount}
             availableAmount={availableCurrency0Balance}
-            price={prices[vault.currency0.address] ?? 0}
+            price={prices[vault.currencyA.address] ?? 0}
           />
           <CurrencyAmountInput
             chain={chain}
-            currency={vault.currency1}
+            currency={vault.currencyB}
             value={currency1Amount}
             onValueChange={setCurrency1Amount}
             availableAmount={availableCurrency1Balance}
-            price={prices[vault.currency1.address] ?? 0}
+            price={prices[vault.currencyB.address] ?? 0}
           />
         </div>
         <div className="flex items-center gap-3 ml-auto">
@@ -80,7 +80,7 @@ export const AddLiquidityForm = ({
               className="sr-only peer"
               disabled={disableDisableSwap}
               defaultChecked={
-                vault.reserve0 + vault.reserve1 > 0 && !chain.testnet
+                vault.reserveA + vault.reserveB > 0 && !chain.testnet
               }
               onChange={() => {
                 setDisableSwap(!disableSwap)
