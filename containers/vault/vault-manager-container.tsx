@@ -18,7 +18,6 @@ import { QuestionMarkSvg } from '../../components/svg/question-mark-svg'
 import { AddLiquidityForm } from '../../components/form/vault/add-liquidity-form'
 import { RemoveLiquidityForm } from '../../components/form/vault/remove-liquidity-form'
 import { VaultDashboardContainer } from '../chart/vault-dashboard-container'
-import { WHITELISTED_VAULTS } from '../../constants/vault'
 import { toCommaSeparated } from '../../utils/number'
 
 import { VaultChartContainer } from './vault-chart-container'
@@ -36,10 +35,6 @@ export const VaultManagerContainer = ({
   const router = useRouter()
   const { data: walletClient } = useWalletClient()
   const { selectedChain } = useChainContext()
-  const hashDashboard =
-    WHITELISTED_VAULTS[selectedChain.id].find(
-      (v) => v.key.toLowerCase() === vault.key.toLowerCase(),
-    )?.hasDashboard ?? false
   const { balances, prices } = useCurrencyContext()
   const {
     currency0Amount,
@@ -254,7 +249,7 @@ export const VaultManagerContainer = ({
                 </div>
               </div>
 
-              {hashDashboard && (
+              {vault.hasDashboard && (
                 <button
                   onClick={() =>
                     showDashboard

@@ -6,7 +6,6 @@ import { Tooltip } from 'react-tooltip'
 import { Vault } from '../../model/vault'
 import { CurrencyIcon } from '../icon/currency-icon'
 import { toCommaSeparated } from '../../utils/number'
-import { WHITELISTED_VAULTS } from '../../constants/vault'
 import { QuestionMarkSvg } from '../svg/question-mark-svg'
 import { Chain } from '../../model/chain'
 
@@ -19,10 +18,6 @@ export const VaultCard = ({
   vault: Vault
   router: NextRouter
 }) => {
-  const hasDashboard =
-    WHITELISTED_VAULTS[chain.id].find((info) => info.key === vault.key)
-      ?.hasDashboard ?? false
-
   return (
     <>
       <div className="hidden lg:flex w-[1040px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
@@ -55,7 +50,7 @@ export const VaultCard = ({
           ${toCommaSeparated(vault.volume24h.toFixed(0))}
         </div>
         <div className="flex gap-2">
-          {hasDashboard ? (
+          {vault.hasDashboard ? (
             <button
               onClick={() => router.push(`/earn/${vault.key}/dashboard`)}
               className="flex w-[130px] h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"

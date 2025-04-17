@@ -131,6 +131,9 @@ export async function fetchOffChainVault(
 
   return {
     key: vaultImmutableInfo.key,
+    salt: vaultImmutableInfo.salt,
+    hasDashboard: vaultImmutableInfo.hasDashboard,
+    hasPoint: vaultImmutableInfo.hasPoint,
     lpCurrency: {
       address: getContractAddresses({ chainId: chain.id }).Rebalancer,
       name: `Clober LP ${vaultImmutableInfo.currencyA.symbol}/${vaultImmutableInfo.currencyB.symbol}`,
@@ -266,6 +269,9 @@ export async function fetchOnChainVault(
 
   return {
     key: vault.key,
+    salt: vaultImmutableInfo.salt,
+    hasDashboard: vaultImmutableInfo.hasDashboard,
+    hasPoint: vaultImmutableInfo.hasPoint,
     lpCurrency: {
       address: getContractAddresses({ chainId: chain.id }).Rebalancer,
       name: `Clober LP ${vault.currencyA.symbol}/${vault.currencyB.symbol}`,

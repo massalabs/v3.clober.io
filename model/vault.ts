@@ -18,12 +18,9 @@ export type VaultImmutableInfo = {
   }
 }
 
-export type Vault = {
-  key: `0x${string}`
+export type Vault = VaultImmutableInfo & {
   lpCurrency: Currency
   lpUsdValue: number
-  currencyA: Currency
-  currencyB: Currency
   apy: number
   tvl: number
   volume24h: number
