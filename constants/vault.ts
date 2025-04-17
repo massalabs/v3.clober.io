@@ -30,6 +30,7 @@ export const WHITELISTED_VAULTS: {
         baseTokenAmount: 0.1,
         lpTokenAmount: 271.254,
         timestamp: 1739260397,
+        initialPriceMultiplier: 1,
       },
     },
   ],

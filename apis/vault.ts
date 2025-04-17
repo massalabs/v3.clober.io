@@ -61,6 +61,7 @@ export async function fetchOffChainVault(
     baseTokenAmount: 1,
     lpTokenAmount: 1,
     timestamp: Math.floor(Date.now() / 1000),
+    initialPriceMultiplier: 1e10,
   }
   const [baseCurrency, quoteCurrency] = isAddressEqual(
     getQuoteToken({
@@ -75,17 +76,21 @@ export async function fetchOffChainVault(
 
   const historicalLpPrices = vaultPerformanceData.poolSnapshots
     .map(({ price, liquidityA, liquidityB, totalSupply, timestamp }) => {
-      const basePrice = Number(price) * (prices[quoteCurrency.address] ?? 1)
+      const quotePrice = prices[quoteCurrency.address] ?? 1
+      const basePrice =
+        Number(price) * quotePrice * initialLPInfo.initialPriceMultiplier
       const onHoldUSDValuePerLp =
-        (initialLPInfo.quoteTokenAmount +
+        (initialLPInfo.quoteTokenAmount * quotePrice +
           initialLPInfo.baseTokenAmount * basePrice) /
         initialLPInfo.lpTokenAmount
       const tvl = isAddressEqual(
         baseCurrency.address,
         liquidityA.currency.address,
       )
-        ? Number(liquidityA.value) * basePrice + Number(liquidityB.value)
-        : Number(liquidityB.value) * basePrice + Number(liquidityA.value)
+        ? Number(liquidityA.value) * basePrice +
+          Number(liquidityB.value) * quotePrice
+        : Number(liquidityB.value) * basePrice +
+          Number(liquidityA.value) * quotePrice
       const lpPrice =
         Number(totalSupply.value) === 0 ? 0 : tvl / Number(totalSupply.value)
       return {
@@ -208,21 +213,25 @@ export async function fetchOnChainVault(
     baseTokenAmount: 1,
     lpTokenAmount: 1,
     timestamp: Math.floor(Date.now() / 1000),
+    initialPriceMultiplier: 1e10,
   }
   const historicalLpPrices = vaultPerformanceData.poolSnapshots
     .map(({ price, liquidityA, liquidityB, totalSupply, timestamp }) => {
+      const quotePrice = prices[vault.market.quote.address] ?? 1
       const basePrice =
-        Number(price) * (prices[vault.market.quote.address] ?? 1)
+        Number(price) * quotePrice * initialLPInfo.initialPriceMultiplier
       const onHoldUSDValuePerLp =
-        (initialLPInfo.quoteTokenAmount +
+        (initialLPInfo.quoteTokenAmount * quotePrice +
           initialLPInfo.baseTokenAmount * basePrice) /
         initialLPInfo.lpTokenAmount
       const tvl = isAddressEqual(
         vault.market.base.address,
         liquidityA.currency.address,
       )
-        ? Number(liquidityA.value) * basePrice + Number(liquidityB.value)
-        : Number(liquidityB.value) * basePrice + Number(liquidityA.value)
+        ? Number(liquidityA.value) * basePrice +
+          Number(liquidityB.value) * quotePrice
+        : Number(liquidityB.value) * basePrice +
+          Number(liquidityA.value) * quotePrice
       const lpPrice =
         Number(totalSupply.value) === 0 ? 0 : tvl / Number(totalSupply.value)
       return {

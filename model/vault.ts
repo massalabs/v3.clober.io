@@ -14,6 +14,7 @@ export type VaultImmutableInfo = {
     baseTokenAmount: number
     lpTokenAmount: number
     timestamp: number
+    initialPriceMultiplier: number
   }
 }
 
