@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import {
@@ -29,6 +29,10 @@ export const FuturesRedeemCard = ({
   actionButtonProps: ActionButtonProps
 }) => {
   const now = currentTimestampInSeconds()
+  const symbol = useMemo(() => {
+    const symbol = asset.currency.symbol
+    return symbol.slice(0, symbol.lastIndexOf('-'))
+  }, [asset.currency.symbol])
 
   return (
     <div className="flex w-full pb-4 flex-col items-center gap-3 shrink-0 bg-[#171b24] rounded-xl">
@@ -43,7 +47,7 @@ export const FuturesRedeemCard = ({
             <div className="w-[89px] text-xs text-green-400 font-semibold">
               Long
             </div>
-            <div className="text-base font-bold">{asset.currency.symbol}</div>
+            <div className="text-base font-bold">{symbol}</div>
           </div>
         </div>
         <div className="flex flex-col justify-center items-end gap-0.5 font-bold">
@@ -75,7 +79,7 @@ export const FuturesRedeemCard = ({
                   asset.currency.decimals,
                   prices[asset.currency.address] ?? 0,
                 )}{' '}
-                {asset.currency.symbol}
+                {symbol}
               </div>
             </div>
           </div>

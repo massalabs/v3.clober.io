@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { NextRouter } from 'next/router'
 import { getAddress } from 'viem'
 import Link from 'next/link'
@@ -18,6 +18,11 @@ export const FuturesAssetCard = ({
   router: NextRouter
 }) => {
   const ltv = (Number(asset.maxLTV) * 100) / Number(asset.ltvPrecision)
+  const symbol = useMemo(() => {
+    const symbol = asset.currency.symbol
+    return symbol.slice(0, symbol.lastIndexOf('-'))
+  }, [asset.currency.symbol])
+
   return (
     <>
       <div className="hidden lg:flex w-[1040px] h-16 px-5 py-4 bg-gray-800 rounded-2xl justify-start items-center gap-4">
@@ -30,7 +35,7 @@ export const FuturesAssetCard = ({
             />
           </div>
           <div className="flex items-center text-white text-base font-bold gap-1">
-            {asset.currency.symbol.split('-')[0]}
+            {symbol}
           </div>
         </div>
         <div className="flex w-36 items-center gap-2">
@@ -84,9 +89,7 @@ export const FuturesAssetCard = ({
             />
           </div>
           <div className="flex gap-1 justify-start items-center">
-            <div className="text-white text-base font-bold">
-              {asset.currency.symbol}
-            </div>
+            <div className="text-white text-base font-bold">{symbol}</div>
           </div>
           <button
             onClick={() => router.push(`/futures/mint/${getAddress(asset.id)}`)}

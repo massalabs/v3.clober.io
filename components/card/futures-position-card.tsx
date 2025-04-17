@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import {
@@ -28,6 +28,10 @@ export const FuturesPositionCard = ({
   isPending: boolean
 }) => {
   const now = currentTimestampInSeconds()
+  const symbol = useMemo(() => {
+    const symbol = position.asset.currency.symbol
+    return symbol.slice(0, symbol.lastIndexOf('-'))
+  }, [position.asset.currency.symbol])
 
   return (
     <div className="flex w-full pb-4 flex-col items-center gap-3 shrink-0 bg-[#171b24] rounded-xl">
@@ -42,9 +46,7 @@ export const FuturesPositionCard = ({
             <div className="w-[89px] text-xs text-red-400 font-semibold">
               Short
             </div>
-            <div className="text-base font-bold">
-              {position.asset.currency.symbol}
-            </div>
+            <div className="text-base font-bold">{symbol}</div>
           </div>
         </div>
         <div className="flex flex-col justify-center items-end gap-0.5 font-bold">
@@ -76,7 +78,7 @@ export const FuturesPositionCard = ({
                   position.asset.currency.decimals,
                   loanAssetPrice,
                 )}{' '}
-                {position.asset.currency.symbol}
+                {symbol}
               </div>
               <button>
                 {!isPending && <EditSvg onClick={onEditCollateral} />}
