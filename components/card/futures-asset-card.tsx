@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { NextRouter } from 'next/router'
 import { getAddress } from 'viem'
-import Link from 'next/link'
 
 import { CurrencyIcon } from '../icon/currency-icon'
 import { Asset } from '../../model/futures/asset'
@@ -57,16 +56,18 @@ export const FuturesAssetCard = ({
           {ltv.toFixed(2)} %
         </div>
         <div className="flex flex-row gap-2">
-          <Link
-            target="_blank"
-            href={`https://alpha.clober.io/trade?inputCurrency=${asset.currency.address}&outputCurrency=${asset.collateral.address}`}
-            rel="noreferrer"
+          <button
+            onClick={() => {
+              router.push(
+                `/trade?inputCurrency=${asset.currency.address}&outputCurrency=${asset.collateral.address}`,
+              )
+            }}
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
           >
             <div className="grow shrink basis-0 opacity-90 text-center text-white text-sm font-bold">
               Trade
             </div>
-          </Link>
+          </button>
           <button
             onClick={() => router.push(`/futures/mint/${asset.id}`)}
             className="flex w-32 h-8 px-3 py-2 bg-blue-500 rounded-lg justify-center items-center gap-1"
