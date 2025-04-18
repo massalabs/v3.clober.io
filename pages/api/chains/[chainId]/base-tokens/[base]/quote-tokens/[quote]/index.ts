@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import { getAddress, isAddress, isAddressEqual, zeroAddress } from 'viem'
 import axios from 'axios'
 
@@ -79,13 +78,11 @@ const buildTokenInfo = (pairs: PairDto[]): TokenInfo => {
 }
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>,
-) {
+  chainId: string,
+  base: string,
+  quote: string,
+): Promise<{ tokenInfo: TokenInfo | undefined }> {
   try {
-    const query = req.query
-    // eslint-disable-next-line prefer-const
-    let { chainId, base, quote } = query
     if (
       !chainId ||
       !base ||
@@ -94,19 +91,21 @@ export default async function handler(
       typeof base !== 'string' ||
       typeof quote !== 'string'
     ) {
-      res.json({
-        status: 'error',
-        message:
-          'URL should be /api/chains/[chainId]/base-tokens/[base]/quote-tokens/[quote]',
-      })
-      return
+      throw new Error(
+        JSON.stringify({
+          status: 'error',
+          message:
+            'URL should be /api/chains/[chainId]/base-tokens/[base]/quote-tokens/[quote]',
+        }),
+      )
     }
     if (!isAddress(base) && !isAddress(quote)) {
-      res.json({
-        status: 'error',
-        message: 'Invalid address',
-      })
-      return
+      throw new Error(
+        JSON.stringify({
+          status: 'error',
+          message: 'Invalid address',
+        }),
+      )
     }
 
     const id = Number(chainId)
@@ -119,8 +118,7 @@ export default async function handler(
 
     const key = `${baseAddress}-${quoteAddress}`
     if (cache[key] && Date.now() - cache[key].timestamp < 1000 * 3) {
-      res.json({ tokenInfo: cache[key].tokenInfo })
-      return
+      return { tokenInfo: cache[key].tokenInfo }
     }
 
     const {
@@ -141,21 +139,21 @@ export default async function handler(
         isAddressEqual(getAddress(pair.baseToken.address), baseAddress),
       )
       if (filterPairsByBase.length === 0) {
-        res.json({
-          status: 'error',
-          message: 'Pair not found',
-        })
-        return
+        throw new Error(
+          JSON.stringify({
+            status: 'error',
+            message: 'Pair not found',
+          }),
+        )
       }
       const tokenInfo = buildTokenInfo(filterPairsByBase)
       cache[key] = {
         tokenInfo,
         timestamp: Date.now(),
       }
-      res.json({
+      return {
         tokenInfo,
-      })
-      return
+      }
     }
 
     const tokenInfo = buildTokenInfo(filterPairs)
@@ -163,14 +161,16 @@ export default async function handler(
       tokenInfo,
       timestamp: Date.now(),
     }
-    res.json({
+    return {
       tokenInfo,
-    })
+    }
   } catch (error) {
     console.log('fetchTokenInfo error', error)
-    res.json({
-      status: 'error',
-      message: 'Internal server error',
-    })
+    throw new Error(
+      JSON.stringify({
+        status: 'error',
+        message: 'Internal server error',
+      }),
+    )
   }
 }
