@@ -109,6 +109,26 @@ export const WHITELISTED_VAULTS: {
     },
     {
       currencyA: {
+        address: '0x0000000000000000000000000000000000000000',
+        name: 'Monad Token',
+        symbol: 'MON',
+        decimals: 18,
+      },
+      currencyB: {
+        address: '0xaEef2f6B429Cb59C9B2D7bB2141ADa993E8571c3',
+        name: 'gMON',
+        symbol: 'gMON',
+        decimals: 18,
+      },
+      salt: '0x0000000000000000000000000000000000000000000000000000000000000000',
+      key: '0xb93510cb90a836b00a33a7452fde41230b3a53fbb804e64737c7cd7533ea14f8',
+      hasDashboard: false,
+      hasPoint: false,
+    },
+
+    // futures
+    {
+      currencyA: {
         address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea',
         name: 'USD Coin',
         symbol: 'USDC',
