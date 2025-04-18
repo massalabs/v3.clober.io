@@ -125,6 +125,42 @@ export const WHITELISTED_VAULTS: {
       hasDashboard: false,
       hasPoint: false,
     },
+    {
+      currencyA: {
+        address: '0x0000000000000000000000000000000000000000',
+        name: 'Monad Token',
+        symbol: 'MON',
+        decimals: 18,
+      },
+      currencyB: {
+        address: '0xe1d2439b75fb9746E7Bc6cB777Ae10AA7f7ef9c5',
+        name: 'Kintsu Staked Monad',
+        symbol: 'sMON',
+        decimals: 18,
+      },
+      salt: '0x0000000000000000000000000000000000000000000000000000000000000000',
+      key: '0x5913968b69d49b992c13c017d99f982eaa0764b6f6c8d6709e6061f7cdbe1d8c',
+      hasDashboard: false,
+      hasPoint: false,
+    },
+    {
+      currencyA: {
+        address: '0x0000000000000000000000000000000000000000',
+        name: 'Monad Token',
+        symbol: 'MON',
+        decimals: 18,
+      },
+      currencyB: {
+        address: '0x3a98250F98Dd388C211206983453837C8365BDc1',
+        name: 'ShMonad',
+        symbol: 'shMON',
+        decimals: 18,
+      },
+      salt: '0x0000000000000000000000000000000000000000000000000000000000000000',
+      key: '0xd1e33fe9673f7b2957cf31bea350b7f99795ee9cfea2392e9a92be6ba32e9a32',
+      hasDashboard: false,
+      hasPoint: false,
+    },
 
     // futures
     {
