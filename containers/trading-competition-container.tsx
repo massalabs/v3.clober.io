@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
-import { createPublicClient, http, zeroAddress } from 'viem'
+import { createPublicClient, getAddress, http } from 'viem'
 import { useAccount, useDisconnect, useWalletClient } from 'wagmi'
+import { useQuery } from '@tanstack/react-query'
 
 import { ActionButton } from '../components/button/action-button'
 import { toCommaSeparated } from '../utils/number'
@@ -12,6 +13,9 @@ import { useTransactionContext } from '../contexts/transaction-context'
 import { currentTimestampInSeconds } from '../utils/date'
 import { FUTURES_CONTRACT_ADDRESSES } from '../constants/futures/contract-addresses'
 import { LeaderBoard } from '../components/leader-board'
+import { fetchTradingCompetitionLeaderboard } from '../apis/trading-competition'
+import { useCurrencyContext } from '../contexts/currency-context'
+import { TradingCompetitionPnl } from '../model/trading-competition-pnl'
 
 const Profit = ({ profit }: { profit: number }) => {
   return (
@@ -23,28 +27,13 @@ const Profit = ({ profit }: { profit: number }) => {
   )
 }
 
-const myProfit = {
-  userAddress: zeroAddress,
-  profit: 100,
-  rank: 123,
-}
-
-const profits = Array.from({ length: 100 }, (_, i) => ({
-  userAddress: zeroAddress,
-  profit: Math.random() * (Math.random() > 0.5 ? 1 : -1),
-  rank: i + 1,
-}))
-
 export const TradingCompetitionContainer = () => {
-  const {
-    setConfirmation,
-    queuePendingTransaction,
-    dequeuePendingTransaction,
-  } = useTransactionContext()
+  const { setConfirmation, queuePendingTransaction } = useTransactionContext()
   const { disconnectAsync } = useDisconnect()
   const { data: walletClient } = useWalletClient()
   const { address: userAddress } = useAccount()
   const { selectedChain } = useChainContext()
+  const { prices } = useCurrencyContext()
 
   const publicClient = useMemo(() => {
     return createPublicClient({
@@ -52,6 +41,29 @@ export const TradingCompetitionContainer = () => {
       transport: http(RPC_URL[selectedChain.id]),
     })
   }, [selectedChain])
+
+  const { data } = useQuery({
+    queryKey: [
+      'trading-competition-leader-board',
+      selectedChain.id,
+      userAddress,
+      Object.keys(prices).length !== 0,
+    ],
+    queryFn: async () => {
+      return fetchTradingCompetitionLeaderboard(
+        selectedChain.id,
+        prices,
+        userAddress,
+      )
+    },
+  }) as {
+    data: {
+      userPnL: TradingCompetitionPnl
+      allUsersPnL: {
+        [user: `0x${string}`]: TradingCompetitionPnl
+      }
+    }
+  }
 
   const register = useCallback(async () => {
     try {
@@ -344,19 +356,19 @@ export const TradingCompetitionContainer = () => {
 
           <LeaderBoard
             myValue={
-              userAddress
+              userAddress && (data?.userPnL?.totalPnl ?? 0) !== 0
                 ? {
                     address: userAddress,
-                    value: <Profit profit={myProfit.profit} />,
+                    value: <Profit profit={data?.userPnL?.totalPnl ?? 0} />,
                   }
                 : undefined
             }
-            values={profits
-              .sort((a, b) => b.profit - a.profit)
+            values={Object.entries(data?.allUsersPnL ?? {})
+              .sort(([, a], [, b]) => b.totalPnl - a.totalPnl)
               .slice(0, 100)
-              .map((rank, index) => ({
-                address: rank.userAddress,
-                value: <Profit profit={myProfit.profit} />,
+              .map(([address, { totalPnl }], index) => ({
+                address: getAddress(address),
+                value: <Profit profit={totalPnl} />,
                 rank: index + 1,
               }))}
           />

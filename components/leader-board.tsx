@@ -48,7 +48,7 @@ export const LeaderBoard = ({
         )
         .map(({ address, value, rank }) => (
           <div
-            key={`vault-liquidity-point-rank-${address}`}
+            key={`vault-liquidity-point-rank-${address}-${rank}`}
             className={`self-stretch px-4 sm:px-8 min-h-10 ${rank === 1 ? 'bg-[#ffce50]/20' : rank === 2 ? 'bg-[#d0d6ec]/20' : rank === 3 ? 'bg-[#ffc581]/20' : 'bg-gray-900'} flex rounded-lg justify-center items-center gap-1.5 sm:text-sm text-xs`}
           >
             <div
