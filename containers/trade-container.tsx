@@ -72,8 +72,6 @@ export const TradeContainer = () => {
     setOutputCurrency,
     outputCurrencyAmount,
     setOutputCurrencyAmount,
-    isPostOnly,
-    setIsPostOnly,
     priceInput,
     setPriceInput,
     slippageInput,
@@ -446,7 +444,6 @@ export const TradeContainer = () => {
               outputCurrency,
               inputCurrencyAmount,
               priceInput,
-              isPostOnly,
               selectedMarket,
             )
           }}
@@ -603,8 +600,6 @@ export const TradeContainer = () => {
                   setPriceInput={setPriceInput}
                   selectedMarket={selectedMarket}
                   isBid={isBid}
-                  isPostOnly={isPostOnly}
-                  setIsPostOnly={setIsPostOnly}
                   showInputCurrencySelect={showInputCurrencySelect}
                   setShowInputCurrencySelect={setShowInputCurrencySelect}
                   inputCurrency={inputCurrency}
@@ -683,7 +678,6 @@ export const TradeContainer = () => {
                         outputCurrency,
                         inputCurrencyAmount,
                         priceInput,
-                        isPostOnly,
                         selectedMarket,
                       )
                     },
@@ -973,8 +967,6 @@ export const TradeContainer = () => {
                 setPriceInput={setPriceInput}
                 selectedMarket={selectedMarket}
                 isBid={isBid}
-                isPostOnly={isPostOnly}
-                setIsPostOnly={setIsPostOnly}
                 showInputCurrencySelect={showInputCurrencySelect}
                 setShowInputCurrencySelect={setShowInputCurrencySelect}
                 inputCurrency={inputCurrency}
@@ -1045,7 +1037,6 @@ export const TradeContainer = () => {
                       outputCurrency,
                       inputCurrencyAmount,
                       priceInput,
-                      isPostOnly,
                       selectedMarket,
                     )
                   },

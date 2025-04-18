@@ -31,7 +31,6 @@ type LimitContractContext = {
     outputCurrency: Currency,
     amount: string,
     price: string,
-    postOnly: boolean,
     selectedMarket: Market,
   ) => Promise<void>
   cancels: (openOrders: OpenOrder[]) => Promise<void>
@@ -106,7 +105,6 @@ export const LimitContractProvider = ({
       outputCurrency: Currency,
       amount: string,
       price: string,
-      postOnly: boolean,
       selectedMarket: Market,
     ) => {
       if (!walletClient || !selectedChain) {
@@ -201,7 +199,6 @@ export const LimitContractProvider = ({
           amount: amount,
           price: price,
           options: {
-            postOnly,
             rpcUrl: RPC_URL[selectedChain.id],
             roundingDownTakenBid: true,
             roundingDownMakeAsk: true,

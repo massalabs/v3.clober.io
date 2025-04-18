@@ -31,8 +31,6 @@ type TradeContext = {
   setOutputCurrency: (currency: Currency | undefined) => void
   outputCurrencyAmount: string
   setOutputCurrencyAmount: (amount: string) => void
-  isPostOnly: boolean
-  setIsPostOnly: (isPostOnly: (prevState: boolean) => boolean) => void
   priceInput: string
   setPriceInput: (priceInput: string) => void
   slippageInput: string
@@ -54,8 +52,6 @@ const Context = React.createContext<TradeContext>({
   setOutputCurrency: () => {},
   outputCurrencyAmount: '',
   setOutputCurrencyAmount: () => {},
-  isPostOnly: false,
-  setIsPostOnly: () => {},
   priceInput: '',
   setPriceInput: () => {},
   slippageInput: '1',
@@ -87,7 +83,6 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
   )
   const [outputCurrencyAmount, setOutputCurrencyAmount] = useState('')
 
-  const [isPostOnly, setIsPostOnly] = useState(false)
   const [priceInput, setPriceInput] = useState('')
   const [slippageInput, _setSlippageInput] = useState('1')
 
@@ -281,8 +276,6 @@ export const TradeProvider = ({ children }: React.PropsWithChildren<{}>) => {
         setOutputCurrency,
         outputCurrencyAmount,
         setOutputCurrencyAmount,
-        isPostOnly,
-        setIsPostOnly,
         priceInput,
         setPriceInput,
         slippageInput,

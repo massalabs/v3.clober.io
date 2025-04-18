@@ -10,7 +10,6 @@ import { ActionButton, ActionButtonProps } from '../button/action-button'
 import CurrencySelect from '../selector/currency-select'
 import { Balances } from '../../model/balances'
 import { Prices } from '../../model/prices'
-import CheckIcon from '../icon/check-icon'
 import { toPlacesString } from '../../utils/bignumber'
 import { getPriceDecimals } from '../../utils/prices'
 import CloseSvg from '../svg/close-svg'
@@ -27,8 +26,6 @@ export const LimitForm = ({
   setPriceInput,
   selectedMarket,
   isBid,
-  isPostOnly,
-  setIsPostOnly,
   showInputCurrencySelect,
   setShowInputCurrencySelect,
   inputCurrency,
@@ -61,8 +58,6 @@ export const LimitForm = ({
   setPriceInput: (priceInput: string) => void
   selectedMarket?: Market
   isBid: boolean
-  isPostOnly: boolean
-  setIsPostOnly: (isPostOnly: (prevState: boolean) => boolean) => void
   showInputCurrencySelect: boolean
   setShowInputCurrencySelect:
     | ((showInputCurrencySelect: boolean) => void)
@@ -438,12 +433,12 @@ export const LimitForm = ({
             </div>
           </div>
 
-          <div className="flex justify-end text-white text-[13px] sm:text-sm">
-            <CheckIcon
-              checked={isPostOnly}
-              onCheck={() => setIsPostOnly((prevState) => !prevState)}
-              text="Post Only"
-            />
+          <div className="flex justify-end text-white text-[13px] sm:text-sm h-5">
+            {/*<CheckIcon*/}
+            {/*  checked={isPostOnly}*/}
+            {/*  onCheck={() => setIsPostOnly((prevState) => !prevState)}*/}
+            {/*  text="Post Only"*/}
+            {/*/>*/}
           </div>
         </div>
       </div>
