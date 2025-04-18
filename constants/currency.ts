@@ -329,7 +329,7 @@ export const WHITELISTED_CURRENCIES: {
       icon: 'https://www.magmastaking.xyz/gMON.png',
     },
     {
-      address: '0x07AabD925866E8353407E67C1D157836f7Ad923e',
+      address: '0xe1d2439b75fb9746E7Bc6cB777Ae10AA7f7ef9c5',
       name: 'StakedMonad',
       symbol: 'sMON',
       decimals: 18,
