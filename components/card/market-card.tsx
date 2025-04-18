@@ -84,7 +84,7 @@ export const MarketCard = ({
               className="w-8 h-8 absolute left-6 top-0 rounded-full"
             />
           </div>
-          <div className="flex items-center text-white text-base font-bold gap-1">
+          <div className="flex items-center text-white text-base font-bold gap-1 text-nowrap overflow-y-scroll max-w-[185px]">
             <div>{baseCurrency.symbol}</div>
             <div>-</div>
             <div>{quoteCurrency.symbol}</div>
