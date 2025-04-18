@@ -47,24 +47,35 @@ export class CloberV2Aggregator implements Aggregator {
   public async prices(): Promise<Prices> {
     if (this.chain.id === monadTestnet.id) {
       const {
-        data: { monChartLogs, muBondChartLogs, aprMonChartLogs, gMonChartLogs },
+        data: {
+          monChartLogs,
+          muBondChartLogs,
+          aprMonChartLogs,
+          gMonChartLogs,
+          sMonChartLogs,
+          shMonChartLogs,
+        },
       } = await Subgraph.get<{
         data: {
           monChartLogs: { id: string; close: string }[]
           muBondChartLogs: { id: string; close: string }[]
           aprMonChartLogs: { id: string; close: string }[]
           gMonChartLogs: { id: string; close: string }[]
+          sMonChartLogs: { id: string; close: string }[]
+          shMonChartLogs: { id: string; close: string }[]
         }
       }>(
         getSubgraphEndpoint({ chainId: this.chain.id }),
         '',
-        '{ monChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0000000000000000000000000000000000000000/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } muBondChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0efed4d9fb7863ccc7bb392847c08dcd00fe9be2/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } aprMonChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0xb2f82d0f38dc453d596ad40a37799446cc89274a/0x0000000000000000000000000000000000000000"} ) { id close } gMonChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0xaeef2f6b429cb59c9b2d7bb2141ada993e8571c3/0x0000000000000000000000000000000000000000"} ) { id close } }',
+        '{ monChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0000000000000000000000000000000000000000/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } muBondChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x0efed4d9fb7863ccc7bb392847c08dcd00fe9be2/0xf817257fed379853cde0fa4f97ab987181b1e5ea"} ) { id close } aprMonChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0xb2f82d0f38dc453d596ad40a37799446cc89274a/0x0000000000000000000000000000000000000000"} ) { id close } gMonChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0xaeef2f6b429cb59c9b2d7bb2141ada993e8571c3/0x0000000000000000000000000000000000000000"} ) { id close } sMonChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0xe1d2439b75fb9746e7bc6cb777ae10aa7f7ef9c5/0x0000000000000000000000000000000000000000"} ) { id close } shMonChartLogs: chartLogs( first: 1 orderBy: timestamp orderDirection: desc where: {marketCode: "0x3a98250f98dd388c211206983453837c8365bdc1/0x0000000000000000000000000000000000000000"} ) { id close } }',
         {},
       )
       const monPrice = Number(monChartLogs?.[0]?.close ?? 0)
       const muBondPrice = Number(muBondChartLogs?.[0]?.close ?? 0)
       const aprMonPrice = Number(aprMonChartLogs?.[0]?.close ?? 0)
       const gMonPrice = Number(gMonChartLogs?.[0]?.close ?? 0)
+      const sMonPrice = Number(sMonChartLogs?.[0]?.close ?? 0)
+      const shMonPrice = Number(shMonChartLogs?.[0]?.close ?? 0)
       return {
         [zeroAddress]: monPrice,
         [getAddress('0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701')]: monPrice,
@@ -73,6 +84,10 @@ export class CloberV2Aggregator implements Aggregator {
           monPrice * aprMonPrice,
         [getAddress('0xaEef2f6B429Cb59C9B2D7bB2141ADa993E8571c3')]:
           monPrice * gMonPrice,
+        [getAddress('0xe1D2439B75FB9746e7Bc6cb777AE10AA7F7EF9C5')]:
+          monPrice * sMonPrice,
+        [getAddress('0x3A98250F98dd388C211206983453837C8365bdC1')]:
+          monPrice * shMonPrice,
       }
     }
     return {} as Prices
