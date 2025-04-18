@@ -301,7 +301,7 @@ export const VaultManagerContainer = ({
                         {vault.currencyA.symbol}
                       </div>
                     </div>
-                    <div className="text-center text-white text-sm md:text-lg font-bold ">
+                    <div className="text-center text-blue-500 text-sm md:text-lg font-bold ">
                       {toCommaSeparated(
                         toPlacesAmountString(
                           vault.reserveA.toString(),
@@ -321,7 +321,7 @@ export const VaultManagerContainer = ({
                         {vault.currencyB.symbol}
                       </div>
                     </div>
-                    <div className="text-center text-white text-sm md:text-lg font-bold ">
+                    <div className="text-center text-cyan-400 text-sm md:text-lg font-bold ">
                       {toCommaSeparated(
                         toPlacesAmountString(
                           vault.reserveB.toString(),
