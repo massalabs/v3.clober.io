@@ -19,13 +19,13 @@ export const getChain = (): Chain => {
     ...riseSepolia,
     icon: '/rise.png',
   }
-  if (url.includes('alpha.clober.io')) {
+  if (url.includes('clober-monad')) {
     return _monadTestnet
   } else if (url.includes('monad-testnet.clober.io')) {
     return _monadTestnet
-  } else if (url.includes('base.clober.io')) {
+  } else if (url.includes('clober-base')) {
     return base
-  } else if (url.includes('rise.clober.io')) {
+  } else if (url.includes('clober-rise')) {
     return _riseTestnet
   }
   return _monadTestnet
