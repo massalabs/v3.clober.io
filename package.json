@@ -18,7 +18,7 @@
     "@pythnetwork/pyth-evm-js": "^1.83.0",
     "@rainbow-me/rainbowkit": "^2.2.4",
     "@tamagui/config": "^1.112.22",
-    "@tamagui/next-plugin": "^1.112.22",
+    "@tamagui/next-plugin": "^1.126.1",
     "@tanstack/react-query": "^5.62.8",
     "axios": "^1.5.0",
     "bignumber.js": "^9.1.1",
