@@ -1,0 +1,15 @@
+{
+  "node_url": "https://mainnet.massa.net/api/v2",
+  "metadatas": {
+    "TITLE": "Clober hosted on Massa",
+    "DESCRIPTION": "Clober Dex.",
+    "KEYWORD1": "Clober",
+    "KEYWORD2": "Dex",
+    "KEYWORD3": "Massa",
+    "KEYWORD4": "DeWeb",
+    "KEYWORD5": "censorproof",
+    "http-header:Access-Control-Allow-Origin": "*",
+    "http-header:Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "http-header:Access-Control-Allow-Credentials:": "true"
+  }
+}
